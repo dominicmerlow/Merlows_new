@@ -18,7 +18,7 @@
         <div class="container header-content">
             <div class="logo-area">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" class="site-logo">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg" alt="Merlows" class="site-logo">
                 </a>
             </div>
 
