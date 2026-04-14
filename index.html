@@ -9427,7 +9427,7 @@ function removeSourceLink(index) {
   renderSourceLinks();
 }
 
-function handleAbraham AccordsFileSelect(event) {
+function handleAbrahamAccordsFileSelect(event) {
   const f = event.target.files[0];
   if (f) {
     processFile(f).then(() => {
@@ -9438,7 +9438,7 @@ function handleAbraham AccordsFileSelect(event) {
   }
 }
 
-function removeAbraham AccordsFile() {
+function removeAbrahamAccordsFile() {
   extractedText = '';
   currentFile = null;
   document.getElementById('infographicFileInfo').style.display = 'none';
