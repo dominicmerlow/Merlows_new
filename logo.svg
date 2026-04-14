@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <!-- Background -->
+  <rect width="200" height="60" fill="#ffffff" rx="0"/>
+  <!-- Accent bar -->
+  <rect x="0" y="0" width="4" height="60" fill="#D4AF37"/>
+  <!-- M mark -->
+  <text x="14" y="38" font-family="Georgia, serif" font-size="32" font-weight="700" fill="#1B4F8A" letter-spacing="-1">M</text>
+  <!-- Brand name -->
+  <text x="40" y="30" font-family="Georgia, serif" font-size="16" font-weight="700" fill="#1B4F8A" letter-spacing="2">MERLOWS</text>
+  <!-- Tagline -->
+  <text x="40" y="46" font-family="Arial, sans-serif" font-size="7.5" font-weight="400" fill="#8B1A1A" letter-spacing="1.5">CONTENT GENERATOR</text>
+</svg>
