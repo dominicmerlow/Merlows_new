@@ -61,7 +61,7 @@
                 <input type="text" name="blood_pressure" id="modal-blood_pressure" placeholder="e.g. 120/80" style="width:100%; padding:10px; border:1px solid #E2E8F0; border-radius:0; font-size:14px;">
             </div>
 
-            <button type="submit" style="width:100%; background:#9F2B68; color:white; border:none; padding:12px; border-radius:0; font-weight:700; cursor:pointer;">Update Profile Information</button>
+            <button type="submit" style="width:100%; background:#1B4F8A; color:white; border:none; padding:12px; border-radius:0; font-weight:700; cursor:pointer;">Update Profile Information</button>
         </form>
     </div>
 </div>
@@ -98,7 +98,7 @@ jQuery('#modal-clinical-profile-form').on('submit', function(e) {
     btn.prop('disabled', true).text('Updating...');
     jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', jQuery(this).serialize(), function(res) {
         if(res.success) {
-            btn.text('Updated Successfully!').css('background', '#9F2B68');
+            btn.text('Updated Successfully!').css('background', '#1B4F8A');
             setTimeout(() => {
                 closeClinicalInfoModal();
                 location.reload(); 

@@ -15,7 +15,7 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 <style>
 /* ── Tool Hero (shared with sibling tool pages) ── */
 .tool-hero {
-    background: linear-gradient(135deg, #0F172A 0%, #5C1742 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #8B1A1A 100%);
     padding: 80px 0 60px;
     color: white;
     position: relative;
@@ -28,7 +28,7 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
     right: -80px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(159,43,104,0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(27,79,138,0.2) 0%, transparent 70%);
     pointer-events: none;
 }
 .tool-hero h1 {
@@ -257,8 +257,8 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
     transition: all 0.2s;
 }
 .sibling-tool-card:hover {
-    border-color: #9F2B68;
-    background: #E6E6FA;
+    border-color: #1B4F8A;
+    background: #F5E6A3;
     transform: translateX(4px);
 }
 .sibling-tool-icon {
@@ -363,8 +363,8 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
                 </div>
             </a>
             <a href="/tools/malnutrition-calculator/" class="sibling-tool-card">
-                <div class="sibling-tool-icon" style="background: #E6E6FA;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <div class="sibling-tool-icon" style="background: #F5E6A3;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                 </div>
                 <div>
                     <h4>Malnutrition Calculator</h4>

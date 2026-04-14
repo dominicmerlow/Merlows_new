@@ -42,7 +42,7 @@ get_header(); ?>
     $res_colors = array(
         1 => 'var(--primary-color), #e04f00',
         2 => '#0ea5e9, #0284c7',
-        3 => '#9F2B68, #059669',
+        3 => '#1B4F8A, #059669',
         4 => '#C75D8E, #B8447A',
     );
     $res_icons = array(
@@ -89,7 +89,7 @@ get_header(); ?>
     );
     $collab_colors = array(
         1 => 'var(--primary-color)',
-        2 => '#9F2B68',
+        2 => '#1B4F8A',
         3 => '#0ea5e9',
         4 => '#C75D8E',
     );

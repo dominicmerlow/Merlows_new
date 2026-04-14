@@ -27,10 +27,10 @@ if ( isset($_GET['print_note']) && is_user_logged_in() ) {
             <title><?php echo esc_html($target_note['title']); ?> - PDF</title>
             <style>
                 body { font-family: sans-serif; padding: 40px; color: #333; line-height: 1.6; max-width: 800px; margin: 0 auto; }
-                .header { border-bottom: 2px solid #9F2B68; padding-bottom: 20px; margin-bottom: 40px; }
+                .header { border-bottom: 2px solid #1B4F8A; padding-bottom: 20px; margin-bottom: 40px; }
                 .logo-area { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
                 .logo { font-size: 24px; font-weight: 800; color: #0F172A; }
-                .badge { background: #9F2B68; color: white; padding: 4px 12px; border-radius: 0; font-size: 12px; font-weight: 700; }
+                .badge { background: #1B4F8A; color: white; padding: 4px 12px; border-radius: 0; font-size: 12px; font-weight: 700; }
                 .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; color: #64748B; background: #F8FAFC; padding: 15px; border-radius: 0; }
                 h1 { font-size: 28px; margin: 0 0 20px 0; color: #0F172A; }
                 .content { font-size: 14px; white-space: pre-wrap; }
@@ -72,7 +72,7 @@ get_header();
     <!-- LOGIN VIEW (Retained from previous version) -->
     <div class="container" style="padding-top: 100px;">
         <div class="login-hero" style="max-width: 500px; margin: 0 auto; background: white; padding: 40px; border-radius: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center;">
-            <div style="width: 64px; height: 64px; background: #9F2B68; border-radius: 0; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 64px; height: 64px; background: #1B4F8A; border-radius: 0; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
                 <svg width="32" height="32" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
             </div>
             <h1 style="margin-bottom: 12px; color: #0f172a;">Welcome to Your Hub</h1>
@@ -81,7 +81,7 @@ get_header();
             <?php echo do_shortcode('[google_login]'); ?>
             
             <div style="margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                <p style="font-size: 14px; color: #94a3b8;">Don't have an account? <a href="<?php echo esc_url( home_url( '/register/' ) ); ?>" style="color: #9F2B68; font-weight: 600;">Register Now</a></p>
+                <p style="font-size: 14px; color: #94a3b8;">Don't have an account? <a href="<?php echo esc_url( home_url( '/register/' ) ); ?>" style="color: #1B4F8A; font-weight: 600;">Register Now</a></p>
             </div>
         </div>
     </div>
@@ -99,12 +99,12 @@ get_header();
     $is_practitioner = in_array( 'practitioner', $user_roles );
     
     // Theme Vars based on Role
-    $theme_primary = $is_practitioner ? '#0F172A' : '#9F2B68'; // Navy vs Orange
+    $theme_primary = $is_practitioner ? '#0F172A' : '#1B4F8A'; // Navy vs Orange
     $theme_sidebar = $is_practitioner ? '#0F172A' : '#FFFFFF';
     $theme_sidebar_text = $is_practitioner ? '#94a3b8' : '#64748B';
     $sidebar_logo_color = $is_practitioner ? '#FFFFFF' : '#0F172A';
     $nav_hover_bg = $is_practitioner ? 'rgba(255,255,255,0.1)' : '#F1F5F9';
-    $nav_active_color = $is_practitioner ? '#9F2B68' : '#9F2B68';
+    $nav_active_color = $is_practitioner ? '#1B4F8A' : '#1B4F8A';
     $nav_active_bg = $is_practitioner ? 'rgba(255,90,0,0.1)' : '#F5F0FA';
 
     // Navigation Configuration (Global) - Using inline SVGs for reliable cross-platform rendering
@@ -188,7 +188,7 @@ get_header();
 .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .card-title { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 10px; margin: 0; }
 .card-icon { width: 36px; height: 36px; background: #F8FAFC; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--dash-primary); }
-.card-link { font-size: 13px; font-weight: 600; color: <?php echo $is_practitioner ? '#0369A1' : '#9F2B68'; ?>; text-decoration: none; cursor: pointer; border: none; background: none; }
+.card-link { font-size: 13px; font-weight: 600; color: <?php echo $is_practitioner ? '#0369A1' : '#1B4F8A'; ?>; text-decoration: none; cursor: pointer; border: none; background: none; }
 
 /* List Items */
 .dash-list { display: flex; flex-direction: column; gap: 0; }
@@ -593,7 +593,7 @@ get_header();
                             <?php if(empty($quiz_results)): ?>
                                 <div style="text-align:center; padding:40px;">
                                     <p style="color:#64748B; margin-bottom:20px;">You haven't completed your clinical profile responses yet.</p>
-                                    <button onclick="openQuizModal()" class="btn-primary" style="display:inline-block; background:#9F2B68; color:white; border:none; padding:10px 24px; border-radius:0; font-weight:600; cursor:pointer;">Start Discovery Quiz</button>
+                                    <button onclick="openQuizModal()" class="btn-primary" style="display:inline-block; background:#1B4F8A; color:white; border:none; padding:10px 24px; border-radius:0; font-weight:600; cursor:pointer;">Start Discovery Quiz</button>
                                 </div>
                             <?php else: ?>
                                 <div class="dash-list">
@@ -610,18 +610,18 @@ get_header();
                                             <span style="font-size:13px; font-weight:600; color:#64748B;"><?php echo $labels[$key]; ?></span>
                                             <div style="display:flex; align-items:center; gap:8px;">
                                                 <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo esc_html(ucfirst($val)); ?></span>
-                                                <span style="font-size:12px; color:#9F2B68; opacity:0; transition:opacity 0.2s;" class="edit-hint">Edit &rarr;</span>
+                                                <span style="font-size:12px; color:#1B4F8A; opacity:0; transition:opacity 0.2s;" class="edit-hint">Edit &rarr;</span>
                                             </div>
                                         </div>
                                     <?php endif; endforeach; ?>
                                 </div>
                                 <div style="margin-top:24px; text-align:center; display:flex; flex-direction:column; gap:12px;">
-                                    <button onclick="openQuizModal()" style="font-size:12px; color:#9F2B68; font-weight:600; background:none; border:none; cursor:pointer;">Retake Entire Quiz &rarr;</button>
+                                    <button onclick="openQuizModal()" style="font-size:12px; color:#1B4F8A; font-weight:600; background:none; border:none; cursor:pointer;">Retake Entire Quiz &rarr;</button>
                                     <div style="display:flex; gap:12px;">
                                         <a href="/ask-ai/?context=clinical_eval" class="btn-primary" style="flex: 1; background:#0F172A; color:white; text-decoration:none; padding:12px; border-radius:0; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Ask IBDi
                                         </a>
-                                        <a href="/ask-ai/?context=suggest_content" class="btn-primary" style="flex: 1; background:#9F2B68; color:white; text-decoration:none; padding:12px; border-radius:0; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                        <a href="/ask-ai/?context=suggest_content" class="btn-primary" style="flex: 1; background:#1B4F8A; color:white; text-decoration:none; padding:12px; border-radius:0; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg> Suggest Content
                                         </a>
                                     </div>
@@ -727,7 +727,7 @@ get_header();
                                     </div>
                                     <div style="display:flex; gap:12px; align-items:center;">
                                         <a href="/ask-ai/?context=document_eval&doc_id=<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>" class="card-link" style="color:#0F172A; font-weight:700;">Ask IBDi</a>
-                                        <a href="/ask-ai/?context=view_eval&doc_id=<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>" class="card-link" style="color:#9F2B68; font-weight:700;">View IBDi</a>
+                                        <a href="/ask-ai/?context=view_eval&doc_id=<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>" class="card-link" style="color:#1B4F8A; font-weight:700;">View IBDi</a>
                                         <a href="<?php echo esc_url($poster['url']); ?>" target="_blank" class="card-link">View</a>
                                         <button onclick="deletePoster(<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>)" style="color:#EF4444; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600;">Delete</button>
                                     </div>
@@ -741,7 +741,7 @@ get_header();
                     <style>
                         .bt-section-header { display:flex; align-items:center; justify-content:space-between; margin:32px 0 16px; }
                         .bt-section-title { font-size:18px; font-weight:800; color:#0F172A; font-family:'Outfit',sans-serif; display:flex; align-items:center; gap:10px; }
-                        .bt-section-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; background:#F5F0FA; color:#9F2B68; border:1px solid rgba(255,90,0,0.2); padding:3px 10px; border-radius:0; }
+                        .bt-section-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; background:#F5F0FA; color:#1B4F8A; border:1px solid rgba(255,90,0,0.2); padding:3px 10px; border-radius:0; }
                         .bt-tool-card { background:white; border:1px solid #E2E8F0; border-radius:0; overflow:hidden; box-shadow:0 4px 16px rgba(10,25,41,0.06); }
                         .bt-tool-bar { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; }
                         .bt-tool-bar-left { display:flex; align-items:center; gap:10px; }
@@ -1012,7 +1012,7 @@ get_header();
                                 html += '<div class="result-entry">' +
                                     '<div class="result-entry-left">' +
                                     '<div class="result-entry-date">' + dateStr + '</div>' +
-                                    '<div class="result-entry-label" style="color:' + (r.risk_level==='low'?'#16a34a':r.risk_level==='medium'?'#d97706':'#9F2B68') + '">' + (r.risk_label || 'Result') + '</div>' +
+                                    '<div class="result-entry-label" style="color:' + (r.risk_level==='low'?'#16a34a':r.risk_level==='medium'?'#d97706':'#1B4F8A') + '">' + (r.risk_label || 'Result') + '</div>' +
                                     '<div class="result-entry-detail">Score: <strong>' + (r.score||'—') + '</strong>' + extra + '</div>' +
                                     '</div>' +
                                     '<span class="result-risk-badge ' + riskClass + '">' + (r.risk_label || 'Recorded') + '</span>' +
@@ -1413,7 +1413,7 @@ get_header();
             
             // Format legacy You: / IBDi: speakers into styled pills
             rawContent = rawContent.replace(/<strong>You:<\/strong>|You:/gi, '<br><div style="background:#F1F5F9; color:#64748B; padding:4px 12px; border-radius:12px; display:inline-block; font-size:11px; font-weight:700; margin-bottom:8px; margin-top:20px; line-height:1;">USER</div><br>');
-            rawContent = rawContent.replace(/<strong>IBDi:<\/strong>|IBDi:/gi, '<br><div style="background:#F5F0FA; color:#9F2B68; border:1px solid #E8DDF0; padding:4px 12px; border-radius:12px; display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; margin-bottom:8px; margin-top:20px; line-height:1;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> IBDi</div><br>');
+            rawContent = rawContent.replace(/<strong>IBDi:<\/strong>|IBDi:/gi, '<br><div style="background:#F5F0FA; color:#1B4F8A; border:1px solid #E8DDF0; padding:4px 12px; border-radius:12px; display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; margin-bottom:8px; margin-top:20px; line-height:1;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> IBDi</div><br>');
             
             // Remove lingering empty paragraphs if any
             rawContent = rawContent.replace(/<p>\s*<\/p>/gi, '');

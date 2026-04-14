@@ -215,7 +215,7 @@ while ( have_posts() ) :
                     <?php 
                         $is_logged_in = is_user_logged_in();
                         $is_saved = $is_logged_in ? mlws_is_bookmarked() : false;
-                        $saved_bg = $is_saved ? '#9F2B68' : '#9F2B68'; // Green if saved, Orange if not
+                        $saved_bg = $is_saved ? '#1B4F8A' : '#1B4F8A'; // Green if saved, Orange if not
                     ?>
                     <div class="oped-sidebar-block" style="padding: 0; background: transparent; border: none; margin-bottom: 24px;">
                         <button id="ibd-bookmark-sidebar-btn" style="width: 100%; padding: 16px; background: <?php echo $saved_bg; ?>; border: none; border-radius: 12px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" data-post-id="<?php the_ID(); ?>" data-nonce="<?php echo wp_create_nonce('mlws_dashboard_nonce'); ?>" data-logged-in="<?php echo $is_logged_in ? '1' : '0'; ?>">
@@ -255,11 +255,11 @@ while ( have_posts() ) :
                                 btn.css('opacity', '1');
                                 if(res.success) {
                                     if(res.data.action === 'added') {
-                                        btn.css('background', '#9F2B68');
+                                        btn.css('background', '#1B4F8A');
                                         icon.html('★');
                                         text.text('Article Saved');
                                     } else {
-                                        btn.css('background', '#9F2B68');
+                                        btn.css('background', '#1B4F8A');
                                         icon.html('☆');
                                         text.text('Save This Article');
                                     }

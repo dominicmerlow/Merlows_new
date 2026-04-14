@@ -17,7 +17,7 @@
     height: 450px;
     display: flex;
     align-items: flex-end;
-    background: linear-gradient(135deg, #5C1742 0%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #581c87 100%);
     overflow: hidden;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .oped-hero-placeholder {
-    background: linear-gradient(135deg, #5C1742 0%, #9F2B68 50%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #1B4F8A 50%, #581c87 100%);
 }
 
 .oped-hero-overlay {
@@ -244,7 +244,7 @@
 }
 
 .oped-asset-icon.oped-icon-video {
-    background: linear-gradient(135deg, #E6E6FA 0%, #EDE9FE 100%);
+    background: linear-gradient(135deg, #F5E6A3 0%, #EDE9FE 100%);
     color: #2563EB;
 }
 
@@ -327,7 +327,7 @@
 
 /* Quiz Section */
 .oped-quiz-wrapper {
-    background: linear-gradient(135deg, #F5F3FF 0%, #E6E6FA 100%);
+    background: linear-gradient(135deg, #F5F3FF 0%, #F5E6A3 100%);
     border-radius: var(--radius-md);
     padding: 32px;
     min-height: 300px;
@@ -438,7 +438,7 @@
 
 /* Audio Player */
 .oped-audio-summary {
-    background: linear-gradient(135deg, #5C1742 0%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #581c87 100%);
 }
 
 .oped-audio-summary h4 {
@@ -499,7 +499,7 @@
 
 .oped-share-copy:hover,
 .oped-share-copy.copied {
-    background: #9F2B68;
+    background: #1B4F8A;
     color: white;
 }
 
@@ -601,7 +601,7 @@
 }
 
 .oped-nav-link:hover {
-    background: #E6E6FA;
+    background: #F5E6A3;
     transform: translateY(-2px);
 }
 

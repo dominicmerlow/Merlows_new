@@ -44,7 +44,7 @@ $cats = get_categories( array(
                 $icon_img_style = "width: 12px; height: 12px; object-fit: contain;";
                 
                 if ( $is_active ) {
-                    $card_style .= " border-color: #9F2B68; background: #F5F0FA;"; 
+                    $card_style .= " border-color: #1B4F8A; background: #F5F0FA;"; 
                     $text_style = "font-size: 12px; font-weight: 700; color: #c2410c;";
                 }
             ?>
@@ -98,6 +98,6 @@ $cats = get_categories( array(
 .cat-mini-card:hover { 
     transform: translateY(-2px); 
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
-    border-color: #9F2B68 !important;
+    border-color: #1B4F8A !important;
 }
 </style>

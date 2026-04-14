@@ -214,7 +214,7 @@ h6 {
 .main-nav > ul > li > a:hover,
 .main-nav > .nav-menu > li > a:hover {
     color: var(--primary-color);
-    background: #E6E6FA;
+    background: #F5E6A3;
 }
 
 .main-nav > ul > li.current-menu-item > a,
@@ -305,7 +305,7 @@ h6 {
 }
 
 .sub-menu li a:hover {
-    background: #E6E6FA !important;
+    background: #F5E6A3 !important;
     color: var(--primary-color) !important;
     padding-left: 20px !important;
 }
@@ -334,9 +334,9 @@ h6 {
 
 /* Hero Section */
 .hero {
-    background-color: #5C1742;
+    background-color: #8B1A1A;
     /* Darker blue as per mockup */
-    background: linear-gradient(135deg, #3f0f5c 0%, #5C1742 100%);
+    background: linear-gradient(135deg, #3f0f5c 0%, #8B1A1A 100%);
     color: white;
     padding: 100px 0 160px;
     min-height: 460px;
@@ -456,7 +456,7 @@ h6 {
 .category-card label {
     font-size: 13px;
     font-weight: 700;
-    color: #7A1F50;
+    color: #153D6E;
     line-height: 1.3;
     cursor: pointer;
 }
@@ -467,7 +467,7 @@ h6 {
     align-items: center;
     justify-content: space-between;
     padding: 20px 32px;
-    background: linear-gradient(135deg, #9F2B68 0%, #7A1F50 50%, #5C1742 100%);
+    background: linear-gradient(135deg, #1B4F8A 0%, #153D6E 50%, #8B1A1A 100%);
     border-radius: var(--radius-lg);
     text-decoration: none;
     color: white;
@@ -773,7 +773,7 @@ h6 {
 }
 
 .download-item:hover {
-    border-color: #9F2B68;
+    border-color: #1B4F8A;
     box-shadow: var(--shadow-sm);
 }
 
@@ -806,7 +806,7 @@ h6 {
 .download-action {
     width: 36px;
     height: 36px;
-    background: #9F2B68;
+    background: #1B4F8A;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -1031,7 +1031,7 @@ h6 {
 /* EPAVANCE Banner Inline */
 .epavance-banner-inline {
     display: block;
-    background: linear-gradient(135deg, #5C1742 0%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #581c87 100%);
     border-radius: var(--radius-lg);
     padding: 40px;
     margin-bottom: 60px;
@@ -1093,7 +1093,7 @@ h6 {
 }
 
 .epavance-banner-footer:hover {
-    border-color: rgba(159, 43, 104, 0.4);
+    border-color: rgba(27, 79, 138, 0.4);
 }
 
 /* Footer */
@@ -1150,7 +1150,7 @@ h6 {
 }
 
 .footer-bottom .copyright {
-    color: #9F2B68;
+    color: #1B4F8A;
 }
 
 .footer-links {
@@ -1159,12 +1159,12 @@ h6 {
 }
 
 .footer-links a {
-    color: #9F2B68;
+    color: #1B4F8A;
     transition: color 0.2s;
 }
 
 .footer-links a:hover {
-    color: #7A1F50;
+    color: #153D6E;
 }
 
 /* ============================================
@@ -1176,7 +1176,7 @@ h6 {
     height: 450px;
     display: flex;
     align-items: flex-end;
-    background: linear-gradient(135deg, #5C1742 0%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #581c87 100%);
     overflow: hidden;
 }
 
@@ -1190,7 +1190,7 @@ h6 {
 }
 
 .oped-hero-placeholder {
-    background: linear-gradient(135deg, #5C1742 0%, #9F2B68 50%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #1B4F8A 50%, #581c87 100%);
 }
 
 .oped-hero-overlay {
@@ -1365,7 +1365,7 @@ h6 {
 }
 
 .oped-asset-icon.oped-icon-video {
-    background: linear-gradient(135deg, #E6E6FA 0%, #EDE9FE 100%);
+    background: linear-gradient(135deg, #F5E6A3 0%, #EDE9FE 100%);
     color: #2563EB;
 }
 
@@ -1418,7 +1418,7 @@ h6 {
 }
 
 .oped-quiz-wrapper {
-    background: linear-gradient(135deg, #F5F3FF 0%, #E6E6FA 100%);
+    background: linear-gradient(135deg, #F5F3FF 0%, #F5E6A3 100%);
     border-radius: var(--radius-lg);
     padding: 24px;
     border: 1px solid #E0E7FF;
@@ -1555,7 +1555,7 @@ h6 {
 }
 
 .oped-audio-summary {
-    background: linear-gradient(135deg, #5C1742 0%, #581c87 100%);
+    background: linear-gradient(135deg, #8B1A1A 0%, #581c87 100%);
 }
 
 .oped-audio-summary h4 {
@@ -1602,7 +1602,7 @@ h6 {
 
 .oped-share-copy:hover,
 .oped-share-copy.copied {
-    background: #9F2B68;
+    background: #1B4F8A;
     color: white;
 }
 
@@ -1668,7 +1668,7 @@ h6 {
 }
 
 .oped-nav-link:hover {
-    background: #E6E6FA;
+    background: #F5E6A3;
     transform: translateY(-2px);
 }
 
@@ -1881,7 +1881,7 @@ h6 {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
     position: relative;
-    border: 1px solid #E6E6FA;
+    border: 1px solid #F5E6A3;
     overflow: hidden;
 }
 
@@ -2285,7 +2285,7 @@ h6 {
 
     .main-nav .sub-menu li a:hover {
         padding-left: 12px !important;
-        background: #E6E6FA !important;
+        background: #F5E6A3 !important;
     }
 
     /* Hide the default CSS arrow on mobile - replaced by JS toggle button */
@@ -2324,7 +2324,7 @@ h6 {
     }
     .submenu-toggle-btn:hover,
     .submenu-toggle-btn:active {
-        background: #E6E6FA;
+        background: #F5E6A3;
         color: var(--primary-color);
     }
     .submenu-toggle-btn svg {
@@ -2421,7 +2421,7 @@ h6 {
 }
 
 .mobile-menu-toggle:hover {
-    background: #E6E6FA;
+    background: #F5E6A3;
 }
 
 .mobile-menu-toggle span {

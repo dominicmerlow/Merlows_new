@@ -108,7 +108,7 @@
                 <?php echo do_shortcode('[google_login]'); ?>
             </div>
             
-            <p style="font-size: 14px; color: #94a3b8; margin: 0;">Already have an account? <a href="<?php echo wp_login_url(); ?>" style="color: #9F2B68; font-weight: 600; text-decoration: none;">Sign In</a></p>
+            <p style="font-size: 14px; color: #94a3b8; margin: 0;">Already have an account? <a href="<?php echo wp_login_url(); ?>" style="color: #1B4F8A; font-weight: 600; text-decoration: none;">Sign In</a></p>
         </div>
     </div>
 

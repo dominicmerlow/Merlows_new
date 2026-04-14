@@ -16,9 +16,9 @@
                 </div>
                 
                 <div class="footer-links" style="font-size: 13px;">
-                    <a href="https://merlows.com/privacy-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
-                    <a href="https://merlows.com/terms-of-use/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Terms of Use</a>
-                    <a href="https://merlows.com/cookie-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Cookie Policy</a>
+                    <a href="https://merlows.com/privacy-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#1B4F8A'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                    <a href="https://merlows.com/terms-of-use/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#1B4F8A'" onmouseout="this.style.color='#64748b'">Terms of Use</a>
+                    <a href="https://merlows.com/cookie-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#1B4F8A'" onmouseout="this.style.color='#64748b'">Cookie Policy</a>
                 </div>
             </div>
         </div>

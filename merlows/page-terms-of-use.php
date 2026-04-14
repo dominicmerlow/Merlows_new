@@ -125,7 +125,7 @@ $updated   = '1 April 2026';
 <p>The Site may contain links to third-party websites. We are not responsible for the content, accuracy, or practices of any third-party sites. Inclusion of a link does not imply endorsement.</p>
 
 <h2>9. Privacy</h2>
-<p>Your use of the Site is also governed by our <a href="/privacy-policy/" style="color: #9F2B68; font-weight: 600;">Privacy Policy</a>, which is incorporated into these Terms by reference.</p>
+<p>Your use of the Site is also governed by our <a href="/privacy-policy/" style="color: #1B4F8A; font-weight: 600;">Privacy Policy</a>, which is incorporated into these Terms by reference.</p>
 
 <h2>10. Limitation of Liability</h2>
 <p><?php echo esc_html($site_name); ?> and its operators, contributors, and affiliates shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from your use of the Site or any content, tools, or services provided.</p>
@@ -134,7 +134,7 @@ $updated   = '1 April 2026';
 <p>We reserve the right to update these Terms of Use at any time. Changes will be effective immediately upon posting. Your continued use of the Site after changes constitutes acceptance of the revised terms.</p>
 
 <h2>12. Contact</h2>
-<p>If you have questions about these Terms, please contact us at <a href="mailto:<?php echo esc_attr($email); ?>" style="color: #9F2B68; font-weight: 600;"><?php echo esc_html($email); ?></a>.</p>
+<p>If you have questions about these Terms, please contact us at <a href="mailto:<?php echo esc_attr($email); ?>" style="color: #1B4F8A; font-weight: 600;"><?php echo esc_html($email); ?></a>.</p>
 
 </div>
 

@@ -8,7 +8,7 @@ get_header();
 
 <style>
 .community-hero {
-    background: linear-gradient(135deg, #0F172A 0%, #5C1742 50%, #9F2B68 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #8B1A1A 50%, #1B4F8A 100%);
     padding: 100px 0 80px;
     color: white;
     text-align: center;
@@ -22,7 +22,7 @@ get_header();
     right: -100px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(159,43,104,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(27,79,138,0.3) 0%, transparent 70%);
     pointer-events: none;
 }
 .community-hero h1 {
@@ -61,7 +61,7 @@ get_header();
 .community-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-    border-color: #9F2B68;
+    border-color: #1B4F8A;
 }
 .community-card-icon {
     width: 64px;
@@ -105,7 +105,7 @@ get_header();
 .value-icon {
     width: 44px;
     height: 44px;
-    background: #E6E6FA;
+    background: #F5E6A3;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -126,7 +126,7 @@ get_header();
     line-height: 1.5;
 }
 .cta-banner {
-    background: linear-gradient(135deg, #9F2B68 0%, #7A1F50 100%);
+    background: linear-gradient(135deg, #1B4F8A 0%, #153D6E 100%);
     border-radius: var(--radius-xl);
     padding: 60px;
     text-align: center;
@@ -159,7 +159,7 @@ get_header();
     <div class="container">
         <h1>Our Community</h1>
         <p>A trusted space for patients, carers, and healthcare professionals navigating inflammatory bowel disease together.</p>
-        <a href="<?php echo wp_registration_url(); ?>" class="btn btn-primary" style="background: white; color: #9F2B68; padding: 14px 32px; font-weight: 700; border-radius: var(--radius-md);">Join the Community</a>
+        <a href="<?php echo wp_registration_url(); ?>" class="btn btn-primary" style="background: white; color: #1B4F8A; padding: 14px 32px; font-weight: 700; border-radius: var(--radius-md);">Join the Community</a>
     </div>
 </section>
 
@@ -172,8 +172,8 @@ get_header();
         </div>
         <div class="community-grid">
             <div class="community-card">
-                <div class="community-card-icon" style="background: #E6E6FA;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="community-card-icon" style="background: #F5E6A3;">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
                 <h3>Patient Support</h3>
                 <p>Connect with others living with Crohn's disease, ulcerative colitis, and microscopic colitis. Share experiences and find understanding.</p>
@@ -208,7 +208,7 @@ get_header();
             </div>
             <div class="community-card">
                 <div class="community-card-icon" style="background: #ECFDF5;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                 </div>
                 <h3>Ask IBDi</h3>
                 <p>Our AI-powered clinical assistant answers your IBD questions using evidence from peer-reviewed research and clinical guidelines.</p>
@@ -263,7 +263,7 @@ get_header();
         <div class="cta-banner">
             <h2>Ready to Join?</h2>
             <p>Create your free account and start building your personalised IBD health library today.</p>
-            <a href="<?php echo wp_registration_url(); ?>" class="btn" style="background: white; color: #9F2B68; padding: 14px 36px; font-weight: 700; border-radius: var(--radius-md); font-size: 16px;">Create Free Account</a>
+            <a href="<?php echo wp_registration_url(); ?>" class="btn" style="background: white; color: #1B4F8A; padding: 14px 36px; font-weight: 700; border-radius: var(--radius-md); font-size: 16px;">Create Free Account</a>
         </div>
     </div>
 </section>

@@ -146,7 +146,7 @@ get_header(); ?>
                                 'value' => $detail_hours,
                                 'href'  => false,
                                 'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-                                'color' => '#9F2B68',
+                                'color' => '#1B4F8A',
                             ),
                             array(
                                 'label' => 'Address',
@@ -228,7 +228,7 @@ get_header(); ?>
 
                     <?php if ( $contact_sent ) : ?>
                     <div style="text-align: center; padding: 40px 0;">
-                        <div style="width: 72px; height: 72px; background: #9F2B68; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                        <div style="width: 72px; height: 72px; background: #1B4F8A; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
                             <svg width="36" height="36" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="M20 6L9 17l-5-5"/>
                             </svg>

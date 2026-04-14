@@ -106,7 +106,7 @@
         <div class="container">
             <div class="hero-content" style="max-width: 800px;">
                 <?php if ( is_category() && $category_tagline ) : ?>
-                    <span class="eyebrow" style="display: inline-block; background: #ffffff; color: #9F2B68; padding: 6px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;"><?php echo esc_html( $category_tagline ); ?></span>
+                    <span class="eyebrow" style="display: inline-block; background: #ffffff; color: #1B4F8A; padding: 6px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;"><?php echo esc_html( $category_tagline ); ?></span>
                 <?php endif; ?>
                 
                 <?php

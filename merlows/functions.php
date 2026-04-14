@@ -1426,7 +1426,7 @@ function mlws_customize_register( $wp_customize ) {
 
     // Pathway card hover colour
     $wp_customize->add_setting( 'mlws_pathway_card_hover_color', array(
-        'default'           => '#9F2B68',
+        'default'           => '#1B4F8A',
         'sanitize_callback' => 'sanitize_hex_color',
     ) );
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_pathway_card_hover_color', array(
@@ -1866,7 +1866,7 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_discovery_filters_title_size', array( 'default' => 12, 'sanitize_callback' => 'absint' ) );
     $wp_customize->add_control( 'mlws_discovery_filters_title_size', array( 'label' => '"Discovery Filters" Title Size (px)', 'section' => 'mlws_discovery_styling', 'type' => 'number', 'input_attrs' => array('min' => 8, 'max' => 30) ) );
 
-    $wp_customize->add_setting( 'mlws_disc_header_title_color', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_header_title_color', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_header_title_color', array( 'label' => '"Discovery Filters" Title Color', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     $wp_customize->add_setting( 'mlws_disc_status_dot_color', array( 'default' => '#22c55e', 'sanitize_callback' => 'sanitize_text_field' ) );
@@ -1892,7 +1892,7 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_disc_chip_text', array( 'default' => 'rgba(255,255,255,0.75)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_text', array( 'label' => 'Chip — Text', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_chip_hover_bg', array( 'default' => 'rgba(159,43,104,0.12)', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_chip_hover_bg', array( 'default' => 'rgba(27,79,138,0.12)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_hover_bg', array( 'label' => 'Chip Hover — Background', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     $wp_customize->add_setting( 'mlws_disc_chip_hover_border', array( 'default' => '#C75D8E', 'sanitize_callback' => 'sanitize_text_field' ) );
@@ -1901,27 +1901,27 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_disc_chip_hover_text', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_hover_text', array( 'label' => 'Chip Hover — Text', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_chip_selected_bg', array( 'default' => 'rgba(159,43,104,0.25)', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_chip_selected_bg', array( 'default' => 'rgba(27,79,138,0.25)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_selected_bg', array( 'label' => 'Chip Selected — Background', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_chip_selected_border', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_chip_selected_border', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_selected_border', array( 'label' => 'Chip Selected — Border', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_chip_selected_text', array( 'default' => '#E6E6FA', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_chip_selected_text', array( 'default' => '#F5E6A3', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_chip_selected_text', array( 'label' => 'Chip Selected — Text', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     // ── TOGGLES ──
     $wp_customize->add_setting( 'mlws_disc_toggle_bg', array( 'default' => 'rgba(255,255,255,0.1)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_toggle_bg', array( 'label' => 'Toggle Off — Background', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_toggle_active_bg', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_toggle_active_bg', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_toggle_active_bg', array( 'label' => 'Toggle On — Background', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     // ── GO BUTTON ──
-    $wp_customize->add_setting( 'mlws_disc_go_btn_bg', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    $wp_customize->add_setting( 'mlws_disc_go_btn_bg', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_hex_color' ) );
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_disc_go_btn_bg', array( 'label' => 'GO Button — Gradient Start', 'section' => 'mlws_discovery_styling' ) ) );
 
-    $wp_customize->add_setting( 'mlws_disc_go_btn_bg_end', array( 'default' => '#7A1F50', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    $wp_customize->add_setting( 'mlws_disc_go_btn_bg_end', array( 'default' => '#153D6E', 'sanitize_callback' => 'sanitize_hex_color' ) );
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_disc_go_btn_bg_end', array( 'label' => 'GO Button — Gradient End', 'section' => 'mlws_discovery_styling' ) ) );
 
     $wp_customize->add_setting( 'mlws_disc_go_btn_hover_bg', array( 'default' => '#B8447A', 'sanitize_callback' => 'sanitize_hex_color' ) );
@@ -1934,7 +1934,7 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_disc_secondary_btn_text', array( 'default' => 'rgba(255,255,255,0.8)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_secondary_btn_text', array( 'label' => 'Clear/Save Button — Text', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_secondary_btn_hover_bg', array( 'default' => 'rgba(159,43,104,0.2)', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_secondary_btn_hover_bg', array( 'default' => 'rgba(27,79,138,0.2)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_secondary_btn_hover_bg', array( 'label' => 'Clear/Save Button — Hover BG', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     // ── KEYWORD INPUT ──
@@ -1950,11 +1950,11 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_disc_input_placeholder', array( 'default' => 'rgba(255,255,255,0.4)', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_input_placeholder', array( 'label' => 'Search Input — Placeholder Color', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_disc_input_focus_border', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_disc_input_focus_border', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_disc_input_focus_border', array( 'label' => 'Search Input — Focus Border', 'section' => 'mlws_discovery_styling', 'type' => 'text' ) );
 
     // ── PANEL CONTAINER ──
-    $wp_customize->add_setting( 'mlws_discovery_border_color', array( 'default' => '#9F2B68', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    $wp_customize->add_setting( 'mlws_discovery_border_color', array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_hex_color' ) );
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_discovery_border_color', array( 'label' => 'Panel Accent Color', 'section' => 'mlws_discovery_styling' ) ) );
 
     $wp_customize->add_setting( 'mlws_discovery_button_radius', array( 'default' => 8, 'sanitize_callback' => 'absint' ) );
@@ -2596,7 +2596,7 @@ function mlws_login_logo() {
         }
         body.login { background-color: #f8fafc; }
         .login form { box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-radius: 0; border: 1px solid #e2e8f0; }
-        .wp-core-ui .button-primary { background: #9F2B68; border-color: #9F2B68; }
+        .wp-core-ui .button-primary { background: #1B4F8A; border-color: #1B4F8A; }
     </style>
     <?php 
 }
@@ -2686,13 +2686,13 @@ function mlws_enhanced_login_styles() {
         }
         
         .login form .input:focus {
-            border-color: #9F2B68;
+            border-color: #1B4F8A;
             box-shadow: 0 0 0 3px rgba(255, 90, 0, 0.1);
         }
         
         .wp-core-ui .button-primary {
-            background: #9F2B68;
-            border-color: #9F2B68;
+            background: #1B4F8A;
+            border-color: #1B4F8A;
             border-radius: 0;
             padding: 8px 24px;
             font-weight: 700;
@@ -2720,13 +2720,13 @@ function mlws_enhanced_login_styles() {
         
         .login #nav a:hover,
         .login #backtoblog a:hover {
-            color: #9F2B68;
+            color: #1B4F8A;
         }
         
         .login .message,
         .login .success {
             background: #F5F0FA;
-            border-left: 4px solid #9F2B68;
+            border-left: 4px solid #1B4F8A;
             border-radius: 0;
             padding: 12px 16px;
         }
@@ -2747,7 +2747,7 @@ add_action('login_enqueue_scripts', 'mlws_enhanced_login_styles');
  */
 function mlws_add_register_link_to_login() {
     echo '<p style="text-align: center; margin-top: 20px;">
-        <a href="' . home_url('/register/') . '" style="color: white; font-weight: 600; text-decoration: none; background: #9F2B68; padding: 10px 24px; border-radius: 0; display: inline-block; box-shadow: 0 4px 12px rgba(255, 90, 0, 0.3);">Create New Account</a>
+        <a href="' . home_url('/register/') . '" style="color: white; font-weight: 600; text-decoration: none; background: #1B4F8A; padding: 10px 24px; border-radius: 0; display: inline-block; box-shadow: 0 4px 12px rgba(255, 90, 0, 0.3);">Create New Account</a>
     </p>';
 }
 add_action('login_footer', 'mlws_add_register_link_to_login');
@@ -2953,7 +2953,7 @@ function mlws_testimonials_shortcode( $atts ) {
             <?php if ( $query->have_posts() ) : ?>
                 <?php if ( $heading ) : ?>
                     <div class="section-label" style="display: flex; align-items: center; gap: 12px; margin-bottom: 40px; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
-                        <div class="color-bar" style="background: #9F2B68; width: 6px; height: 24px; border-radius: 0;"></div>
+                        <div class="color-bar" style="background: #1B4F8A; width: 6px; height: 24px; border-radius: 0;"></div>
                         <h2 style="margin: 0; font-size: 24px; font-weight: 800; color: #0F172A; font-family: 'Outfit', sans-serif; text-transform: uppercase;"><?php echo esc_html( $heading ); ?></h2>
                     </div>
                 <?php endif; ?>
@@ -2965,7 +2965,7 @@ function mlws_testimonials_shortcode( $atts ) {
                         <div style="background: white; border-radius: 0; padding: 40px 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; display: flex; flex-direction: column; position: relative;">
                             <!-- Quote Icon -->
                             <div style="position: absolute; top: 24px; right: 24px;">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#9F2B68" style="opacity: 0.1;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="#1B4F8A" style="opacity: 0.1;">
                                     <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.01697 21L5.01697 18C5.01697 16.8954 5.9124 16 7.01697 16H10.017C10.5693 16 11.017 15.5523 11.017 15V9C11.017 8.44772 10.5693 8 10.017 8H6.01697C5.46468 8 5.01697 8.44772 5.01697 9V11C5.01697 11.5523 4.56925 12 4.01697 12H3.01697V5H13.017V15C13.017 18.3137 10.3307 21 7.01697 21H5.01697Z"></path>
                                 </svg>
                             </div>
@@ -3076,9 +3076,9 @@ function mlws_quiz_modal_styles() {
         .modal-option-item {
             display: flex; align-items: center; gap: 15px; padding: 16px 20px; border: 2px solid #f1f5f9; border-radius: 0; cursor: pointer; transition: all 0.2s;
         }
-        .modal-option-item:hover { border-color: #9F2B68; background: #fffcf9; }
-        .modal-option-item.selected { border-color: #9F2B68; background: #F5F0FA; }
-        .modal-option-item.selected .modal-option-radio { border-color: #9F2B68 !important; background: #9F2B68; box-shadow: inset 0 0 0 4px white; }
+        .modal-option-item:hover { border-color: #1B4F8A; background: #fffcf9; }
+        .modal-option-item.selected { border-color: #1B4F8A; background: #F5F0FA; }
+        .modal-option-item.selected .modal-option-radio { border-color: #1B4F8A !important; background: #1B4F8A; box-shadow: inset 0 0 0 4px white; }
         .option-text { font-size: 15px; font-weight: 600; color: #334155; }
         .modal-btn-save { background: transparent; color: #94a3b8; border: 1px solid #e2e8f0; padding: 14px 24px; border-radius: 0; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         .modal-btn-save:hover { background: #f8fafc; color: #475569; }

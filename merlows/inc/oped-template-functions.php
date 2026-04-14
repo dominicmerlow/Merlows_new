@@ -98,7 +98,7 @@ function mlws_digital_assets_meta_box_callback( $post ) {
             gap: 8px;
         }
         .oped-meta-section h4 .dashicons {
-            color: #9F2B68;
+            color: #1B4F8A;
         }
         .oped-meta-section p {
             margin: 0 0 12px 0;
@@ -124,7 +124,7 @@ function mlws_digital_assets_meta_box_callback( $post ) {
             margin-left: 12px;
         }
         .oped-upload-btn {
-            background: #9F2B68;
+            background: #1B4F8A;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -232,8 +232,8 @@ function mlws_digital_assets_meta_box_callback( $post ) {
         </div>
         
         <!-- Flash Card App (CSV Upload) -->
-        <div class="oped-meta-section" style="border: 2px solid #9F2B68; background: #F5F0FA;">
-            <h4 style="color: #9F2B68;"><span class="dashicons dashicons-forms"></span> Flash Card App (CSV Upload)</h4>
+        <div class="oped-meta-section" style="border: 2px solid #1B4F8A; background: #F5F0FA;">
+            <h4 style="color: #1B4F8A;"><span class="dashicons dashicons-forms"></span> Flash Card App (CSV Upload)</h4>
             <p><strong>Option 1:</strong> Upload a CSV file to automatically generate beautiful flashcards. <a href="#" id="quiz-csv-template">Download CSV Template</a></p>
             <input type="hidden" name="oped_quiz_data" id="oped_quiz_data" value="<?php echo esc_attr( get_post_meta( $post->ID, '_oped_quiz_data', true ) ); ?>">
             <button type="button" class="oped-upload-btn" id="quiz-csv-upload-btn" style="background: #1f2937;">

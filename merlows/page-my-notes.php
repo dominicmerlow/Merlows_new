@@ -40,11 +40,11 @@ if ( $note_id ) {
         .toolbar button { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 0; color: #64748b; }
         .toolbar button:hover { background: #f1f5f9; color: #0f172a; }
         .editor-content { flex: 1; background: white; border-radius: 0; padding: 32px; border: 1px solid #e2e8f0; outline: none; overflow-y: auto; font-size: 16px; line-height: 1.6; color: #334155; min-height: 400px; }
-        .btn-save { background: #9F2B68; color: white; border: none; padding: 10px 20px; border-radius: 0; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-save { background: #1B4F8A; color: white; border: none; padding: 10px 20px; border-radius: 0; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         .btn-save:hover { background: #e04f00; }
         .btn-pdf { background: #fff; color: #64748b; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 0; font-weight: 600; cursor: pointer; margin-right: 8px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
         .btn-pdf:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
-        .status-msg { margin-right: 16px; font-size: 13px; color: #9F2B68; opacity: 0; transition: opacity 0.3s; }
+        .status-msg { margin-right: 16px; font-size: 13px; color: #1B4F8A; opacity: 0; transition: opacity 0.3s; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -140,7 +140,7 @@ function downloadPDF() {
     const element = document.createElement('div');
     element.innerHTML = `
         <div style="padding: 40px; font-family: Helvetica, Arial, sans-serif; color: #334155;">
-            <div style="border-bottom: 2px solid #9F2B68; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="border-bottom: 2px solid #1B4F8A; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
                    <div style="font-size: 24px; font-weight: 800; color: #0F172A; text-transform: uppercase; letter-spacing: 1px;">IBD Research Centre Note</div>
                    <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Merlows • IBD Research Centre</div>

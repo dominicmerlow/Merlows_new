@@ -39,7 +39,7 @@ $query = new WP_Query($args);
             <?php if (!empty($all_terms)) : ?>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px;">
                 <?php foreach($all_terms as $term) : ?>
-                    <span style="background: #9F2B68; color: white; padding: 6px 14px; border-radius: 0; font-size: 13px; font-weight: 600;"><?php echo esc_html($term); ?></span>
+                    <span style="background: #1B4F8A; color: white; padding: 6px 14px; border-radius: 0; font-size: 13px; font-weight: 600;"><?php echo esc_html($term); ?></span>
                 <?php endforeach; ?>
                 <a href="<?php echo home_url('/#pathway-control-center'); ?>" style="color: #64748b; font-size: 13px; display: flex; align-items: center; margin-left: 10px; font-weight: 600;">Edit Filters</a>
             </div>
@@ -58,7 +58,7 @@ $query = new WP_Query($args);
                         
                         <div style="padding: 24px; flex-grow: 1; display: flex; flex-direction: column;">
                             <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 11px; font-weight: 700; color: #9F2B68; text-transform: uppercase; letter-spacing: 0.5px;"><?php echo get_post_type(); ?></span>
+                                <span style="font-size: 11px; font-weight: 700; color: #1B4F8A; text-transform: uppercase; letter-spacing: 0.5px;"><?php echo get_post_type(); ?></span>
                                 <span style="font-size: 12px; color: #94a3b8;"><?php echo get_the_date(); ?></span>
                             </div>
                             
@@ -71,7 +71,7 @@ $query = new WP_Query($args);
                             </p>
                             
                             <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
-                                <a href="<?php the_permalink(); ?>" style="font-size: 14px; font-weight: 700; color: #9F2B68; text-decoration: none;">Read Article →</a>
+                                <a href="<?php the_permalink(); ?>" style="font-size: 14px; font-weight: 700; color: #1B4F8A; text-decoration: none;">Read Article →</a>
                                 <?php if (is_user_logged_in()) : 
                                     $is_saved = mlws_is_bookmarked(get_the_ID());
                                 ?>

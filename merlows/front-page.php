@@ -10,10 +10,10 @@ get_header();
 <style>
 /* --- MODERN CLINICAL HUB STYLES --- */
 :root {
-    --primary-color: #9F2B68;
-    --primary-hover: #7A1F50;
+    --primary-color: #1B4F8A;
+    --primary-hover: #153D6E;
     --secondary-color: #0F172A;
-    --accent-bg: #E6E6FA;
+    --accent-bg: #F5E6A3;
     --text-main: #1E293B;
     --text-light: #64748B;
     --border-color: #E2E8F0;
@@ -222,7 +222,7 @@ body {
     display: flex;
     align-items: center;
     min-height: 600px;
-    background: linear-gradient(135deg, #ffffff 0%, #F8FAFC 50%, #E6E6FA 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #F8FAFC 50%, #F5E6A3 100%);
     padding: 80px 0;
 }
 .hero-split-left {
@@ -313,7 +313,7 @@ body {
 }
 .pillar-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(159, 43, 104, 0.15);
+    box-shadow: 0 20px 60px rgba(27, 79, 138, 0.15);
     border-color: var(--primary-color);
 }
 .pillar-icon {
@@ -453,7 +453,7 @@ body {
 }
 .tool-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 48px rgba(159, 43, 104, 0.12);
+    box-shadow: 0 16px 48px rgba(27, 79, 138, 0.12);
     border-color: var(--primary-color);
 }
 .tool-icon {
@@ -589,7 +589,7 @@ body {
     <section class="hero-split">
         <div class="container" style="display: flex; align-items: center; flex-wrap: wrap;">
             <div class="hero-split-left">
-                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid rgba(159,43,104,0.15);"><?php echo esc_html($hero_tag); ?></span>
+                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid rgba(27,79,138,0.15);"><?php echo esc_html($hero_tag); ?></span>
                 <h1 style="font-size: <?php echo esc_attr($hero_title_size); ?>px; color: <?php echo esc_attr($hero_title_color); ?>; line-height: 1.08; margin: 0 0 20px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -1px;">
                     <?php
                     $title_display = wp_kses_post($hero_title);
@@ -617,29 +617,29 @@ body {
                 <div class="trust-badges">
                     <div class="trust-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        12,000+ Resources
+                        Independent Journalism
                     </div>
                     <div class="trust-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
-                        Evidence-Based
+                        Solutions-Focused
                     </div>
                     <div class="trust-badge">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                        Expert Reviewed
+                        Diplomatically Informed
                     </div>
                 </div>
             </div>
 
             <div class="hero-split-right">
                 <!-- Animated Merlows Logo in circular mask -->
-                <div style="width: 420px; height: 420px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(159, 43, 104, 0.15), 0 0 0 6px rgba(159, 43, 104, 0.08); margin: 0 auto;">
+                <div style="width: 420px; height: 420px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(27, 79, 138, 0.15), 0 0 0 6px rgba(27, 79, 138, 0.08); margin: 0 auto;">
                     <img src="<?php echo content_url(); ?>/uploads/2026/04/IBD_logo_anime.gif" alt="Merlows" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <!-- Original animated SVG removed - hidden, pending full cleanup -->
                 <svg viewBox="0 0 500 520" style="display:none;" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#9F2B68" stop-opacity="0.08"/>
+                            <stop offset="0%" stop-color="#1B4F8A" stop-opacity="0.08"/>
                             <stop offset="100%" stop-color="#B8447A" stop-opacity="0.03"/>
                         </linearGradient>
                     </defs>
@@ -655,19 +655,19 @@ body {
                          Gaps at ~120deg, ~240deg, ~360deg (where people sit).
                          ====================================================== -->
                     <!-- Arc 1: from ~40deg to ~140deg (top-right to bottom-right, passing through right side) -->
-                    <path d="M 349.5,185 A 130,130 0 0,1 315,365" fill="none" stroke="#9F2B68" stroke-width="14" stroke-linecap="round" opacity="0"
+                    <path d="M 349.5,185 A 130,130 0 0,1 315,365" fill="none" stroke="#1B4F8A" stroke-width="14" stroke-linecap="round" opacity="0"
                           stroke-dasharray="290" stroke-dashoffset="290">
                         <animate attributeName="opacity" from="0" to="1" begin="0.4s" dur="0.01s" fill="freeze"/>
                         <animate attributeName="stroke-dashoffset" from="290" to="0" dur="1s" begin="0.4s" fill="freeze" calcMode="spline" keySplines="0.42 0 0.58 1"/>
                     </path>
                     <!-- Arc 2: from ~160deg to ~260deg (bottom-right to bottom-left, passing through bottom) -->
-                    <path d="M 285,375 A 130,130 0 0,1 152,185" fill="none" stroke="#9F2B68" stroke-width="14" stroke-linecap="round" opacity="0"
+                    <path d="M 285,375 A 130,130 0 0,1 152,185" fill="none" stroke="#1B4F8A" stroke-width="14" stroke-linecap="round" opacity="0"
                           stroke-dasharray="290" stroke-dashoffset="290">
                         <animate attributeName="opacity" from="0" to="1" begin="0.7s" dur="0.01s" fill="freeze"/>
                         <animate attributeName="stroke-dashoffset" from="290" to="0" dur="1s" begin="0.7s" fill="freeze" calcMode="spline" keySplines="0.42 0 0.58 1"/>
                     </path>
                     <!-- Arc 3: from ~280deg to ~20deg (top-left to top-right, passing through top) -->
-                    <path d="M 170,165 A 130,130 0 0,1 330,165" fill="none" stroke="#9F2B68" stroke-width="14" stroke-linecap="round" opacity="0"
+                    <path d="M 170,165 A 130,130 0 0,1 330,165" fill="none" stroke="#1B4F8A" stroke-width="14" stroke-linecap="round" opacity="0"
                           stroke-dasharray="260" stroke-dashoffset="260">
                         <animate attributeName="opacity" from="0" to="1" begin="1s" dur="0.01s" fill="freeze"/>
                         <animate attributeName="stroke-dashoffset" from="260" to="0" dur="1s" begin="1s" fill="freeze" calcMode="spline" keySplines="0.42 0 0.58 1"/>
@@ -679,10 +679,10 @@ body {
                          All solid teal fills and thick strokes.
                          ====================================================== -->
                     <g opacity="0">
-                        <circle cx="250" cy="92" r="20" fill="#9F2B68"/>
-                        <path d="M 225,138 C 225,118 237,114 250,114 C 263,114 275,118 275,138" fill="none" stroke="#9F2B68" stroke-width="11" stroke-linecap="round"/>
-                        <path d="M 225,132 C 210,148 192,162 178,170" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
-                        <path d="M 275,132 C 290,148 308,162 322,170" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="250" cy="92" r="20" fill="#1B4F8A"/>
+                        <path d="M 225,138 C 225,118 237,114 250,114 C 263,114 275,118 275,138" fill="none" stroke="#1B4F8A" stroke-width="11" stroke-linecap="round"/>
+                        <path d="M 225,132 C 210,148 192,162 178,170" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M 275,132 C 290,148 308,162 322,170" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
                         <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.4s" fill="freeze"/>
                     </g>
 
@@ -690,10 +690,10 @@ body {
                          PERSON: BOTTOM-LEFT (~7 o'clock / ~220deg)
                          ====================================================== -->
                     <g opacity="0">
-                        <circle cx="130" cy="370" r="20" fill="#9F2B68"/>
-                        <path d="M 105,416 C 105,396 117,392 130,392 C 143,392 155,396 155,416" fill="none" stroke="#9F2B68" stroke-width="11" stroke-linecap="round"/>
-                        <path d="M 108,408 C 100,390 100,372 108,352" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
-                        <path d="M 152,408 C 168,398 186,390 202,386" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="130" cy="370" r="20" fill="#1B4F8A"/>
+                        <path d="M 105,416 C 105,396 117,392 130,392 C 143,392 155,396 155,416" fill="none" stroke="#1B4F8A" stroke-width="11" stroke-linecap="round"/>
+                        <path d="M 108,408 C 100,390 100,372 108,352" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M 152,408 C 168,398 186,390 202,386" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
                         <animate attributeName="opacity" from="0" to="1" begin="2s" dur="0.4s" fill="freeze"/>
                     </g>
 
@@ -701,10 +701,10 @@ body {
                          PERSON: BOTTOM-RIGHT (~5 o'clock / ~320deg)
                          ====================================================== -->
                     <g opacity="0">
-                        <circle cx="370" cy="370" r="20" fill="#9F2B68"/>
-                        <path d="M 345,416 C 345,396 357,392 370,392 C 383,392 395,396 395,416" fill="none" stroke="#9F2B68" stroke-width="11" stroke-linecap="round"/>
-                        <path d="M 392,408 C 400,390 400,372 392,352" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
-                        <path d="M 348,408 C 332,398 314,390 298,386" fill="none" stroke="#9F2B68" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="370" cy="370" r="20" fill="#1B4F8A"/>
+                        <path d="M 345,416 C 345,396 357,392 370,392 C 383,392 395,396 395,416" fill="none" stroke="#1B4F8A" stroke-width="11" stroke-linecap="round"/>
+                        <path d="M 392,408 C 400,390 400,372 392,352" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
+                        <path d="M 348,408 C 332,398 314,390 298,386" fill="none" stroke="#1B4F8A" stroke-width="10" stroke-linecap="round"/>
                         <animate attributeName="opacity" from="0" to="1" begin="2.3s" dur="0.4s" fill="freeze"/>
                     </g>
 
@@ -736,7 +736,7 @@ body {
                                  C -30,-30 -24,-38 -24,-48
                                  L -24,-62
                                  C -24,-74 -14,-80 0,-80 Z"
-                              fill="#9F2B68"
+                              fill="#1B4F8A"
                               opacity="0.9"
                               transform="scale(0)" transform-origin="0 0">
                             <animateTransform attributeName="transform" type="scale" from="0" to="1" begin="0.3s" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
@@ -777,17 +777,17 @@ body {
                          SUBTLE AMBIENT ANIMATIONS
                          ====================================================== -->
                     <!-- Pulse rings -->
-                    <circle cx="250" cy="250" r="140" fill="none" stroke="#9F2B68" stroke-width="1.5" opacity="0">
+                    <circle cx="250" cy="250" r="140" fill="none" stroke="#1B4F8A" stroke-width="1.5" opacity="0">
                         <animate attributeName="r" values="145;190" dur="3s" repeatCount="indefinite"/>
                         <animate attributeName="opacity" values="0.25;0" dur="3s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx="250" cy="250" r="140" fill="none" stroke="#9F2B68" stroke-width="1" opacity="0">
+                    <circle cx="250" cy="250" r="140" fill="none" stroke="#1B4F8A" stroke-width="1" opacity="0">
                         <animate attributeName="r" values="150;210" dur="3s" begin="1s" repeatCount="indefinite"/>
                         <animate attributeName="opacity" values="0.12;0" dur="3s" begin="1s" repeatCount="indefinite"/>
                     </circle>
 
                     <!-- Floating particles -->
-                    <circle cx="70" cy="170" r="4" fill="#9F2B68" opacity="0.2">
+                    <circle cx="70" cy="170" r="4" fill="#1B4F8A" opacity="0.2">
                         <animate attributeName="cy" values="170;155;170" dur="5s" repeatCount="indefinite"/>
                         <animate attributeName="opacity" values="0.2;0.4;0.2" dur="5s" repeatCount="indefinite"/>
                     </circle>
@@ -797,7 +797,7 @@ body {
                     <circle cx="90" cy="410" r="3" fill="#B8447A" opacity="0.15">
                         <animate attributeName="cy" values="410;398;410" dur="4.8s" repeatCount="indefinite"/>
                     </circle>
-                    <circle cx="410" cy="430" r="3.5" fill="#9F2B68" opacity="0.12">
+                    <circle cx="410" cy="430" r="3.5" fill="#1B4F8A" opacity="0.12">
                         <animate attributeName="cy" values="430;418;430" dur="5.5s" repeatCount="indefinite"/>
                     </circle>
                 </svg>
@@ -867,7 +867,7 @@ body {
         <div class="container">
             <div style="display: flex; align-items: center; <?php echo $justify_header; ?> margin-bottom: 32px; <?php echo $align_style; ?>">
                 <div style="<?php echo $align_style; ?>">
-                    <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid rgba(159,43,104,0.15);"><?php echo esc_html($latest_tag_label); ?></span>
+                    <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid rgba(27,79,138,0.15);"><?php echo esc_html($latest_tag_label); ?></span>
                     <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--secondary-color); margin: 0;"><?php echo esc_html($latest_title); ?></h3>
                 </div>
             </div>
@@ -1015,7 +1015,7 @@ body {
                 $image_radius = get_theme_mod('mlws_pathway_tile_image_radius', 8);
 
                 // Pathway Customizer values
-                $pathway_hover_color    = get_theme_mod('mlws_pathway_card_hover_color', '#9F2B68');
+                $pathway_hover_color    = get_theme_mod('mlws_pathway_card_hover_color', '#1B4F8A');
                 $pathway_icon_bg        = get_theme_mod('mlws_pathway_icon_bg_color', '#0F172A');
                 $pathway_icon_hover_bg  = get_theme_mod('mlws_pathway_icon_hover_bg_color', 'rgba(255,255,255,0.2)');
                 $pathway_who_label      = get_theme_mod('mlws_pathway_who_label', 'Who Am I?');
@@ -1043,7 +1043,7 @@ body {
         <div class="container">
             <!-- Section Header -->
             <div style="text-align: center; margin-bottom: 60px;">
-                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(159,43,104,0.15);">YOUR JOURNEY</span>
+                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">YOUR JOURNEY</span>
                 <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">Choose Your Health Pathway</h2>
                 <p style="color: var(--text-light); font-size: 17px; max-width: 580px; margin: 0 auto; line-height: 1.6;">Navigate evidence-based health information tailored to your role and needs.</p>
             </div>
@@ -1052,7 +1052,7 @@ body {
             <div class="journey-pillars">
                 <!-- Pillar 1: Understand (mapped from Practitioner tile) -->
                 <a href="<?php echo esc_url($prac_link); ?>" class="pillar-card">
-                    <div class="pillar-icon" style="background: linear-gradient(135deg, #9F2B68, #B8447A);">
+                    <div class="pillar-icon" style="background: linear-gradient(135deg, #1B4F8A, #B8447A);">
                         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
                     </div>
                     <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($prac_title); ?></h3>
@@ -1062,7 +1062,7 @@ body {
 
                 <!-- Pillar 2: Manage (mapped from Patient tile) -->
                 <a href="<?php echo esc_url($pat_link); ?>" class="pillar-card">
-                    <div class="pillar-icon" style="background: linear-gradient(135deg, #7A1F50, #9F2B68);">
+                    <div class="pillar-icon" style="background: linear-gradient(135deg, #153D6E, #1B4F8A);">
                         <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     </div>
                     <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($pat_title); ?></h3>
@@ -1097,7 +1097,7 @@ body {
                 ?>
     <!-- Social Proof Stats Bar -->
     <section style="padding: 55px 0; background: #0F172A; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(159,43,104,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(27,79,138,0.15) 0%, transparent 70%); pointer-events: none;"></div>
         <div style="position: absolute; bottom: -40px; left: -40px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 70%); pointer-events: none;"></div>
         <div class="container" style="position: relative; z-index: 1;">
             <div class="stats-bar">
@@ -1246,10 +1246,10 @@ body {
                 $tool3_link = get_theme_mod('mlws_tool_3_link', '/ask-ai/');
                 ?>
     <!-- Featured Tools Section -->
-    <section style="padding: 75px 0; background: #E6E6FA;">
+    <section style="padding: 75px 0; background: #F5E6A3;">
         <div class="container">
             <div style="text-align: center; margin-bottom: 60px;">
-                <span style="display: inline-block; background: white; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(159,43,104,0.15);">INTERACTIVE</span>
+                <span style="display: inline-block; background: white; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">INTERACTIVE</span>
                 <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">Interactive Health Tools</h2>
                 <p style="color: var(--text-light); font-size: 17px; max-width: 520px; margin: 0 auto; line-height: 1.6;">Clinical-grade calculators and trackers to support your health management.</p>
             </div>
@@ -1297,13 +1297,13 @@ body {
                 ?>
     <?php
     // Panel container
-    $border_color = get_theme_mod('mlws_discovery_border_color', '#9F2B68');
+    $border_color = get_theme_mod('mlws_discovery_border_color', '#1B4F8A');
     $section_bg   = get_theme_mod('mlws_discovery_section_bg', 'linear-gradient(160deg, #0F172A 0%, #0F2440 55%, #0F172A 100%)');
     $panel_bg     = get_theme_mod('mlws_discovery_panel_bg', 'rgba(255,255,255,0.04)');
 
     // Panel header
     $disc_filters_title_size = (int) get_theme_mod('mlws_discovery_filters_title_size', 12);
-    $disc_header_title_color = get_theme_mod('mlws_disc_header_title_color', '#9F2B68');
+    $disc_header_title_color = get_theme_mod('mlws_disc_header_title_color', '#1B4F8A');
     $disc_status_dot         = get_theme_mod('mlws_disc_status_dot_color', '#22c55e');
 
     // Filter labels
@@ -1315,37 +1315,37 @@ body {
     $c_chip_bg       = get_theme_mod('mlws_disc_chip_bg', 'rgba(255,255,255,0.06)');
     $c_chip_border   = get_theme_mod('mlws_disc_chip_border', 'rgba(255,255,255,0.12)');
     $c_chip_text     = get_theme_mod('mlws_disc_chip_text', 'rgba(255,255,255,0.75)');
-    $c_chip_h_bg     = get_theme_mod('mlws_disc_chip_hover_bg', 'rgba(159,43,104,0.12)');
+    $c_chip_h_bg     = get_theme_mod('mlws_disc_chip_hover_bg', 'rgba(27,79,138,0.12)');
     $c_chip_h_border = get_theme_mod('mlws_disc_chip_hover_border', '#C75D8E');
     $c_chip_h_text   = get_theme_mod('mlws_disc_chip_hover_text', '#ffffff');
-    $c_chip_s_bg     = get_theme_mod('mlws_disc_chip_selected_bg', 'rgba(159,43,104,0.25)');
-    $c_chip_s_border = get_theme_mod('mlws_disc_chip_selected_border', '#9F2B68');
-    $c_chip_s_text   = get_theme_mod('mlws_disc_chip_selected_text', '#E6E6FA');
+    $c_chip_s_bg     = get_theme_mod('mlws_disc_chip_selected_bg', 'rgba(27,79,138,0.25)');
+    $c_chip_s_border = get_theme_mod('mlws_disc_chip_selected_border', '#1B4F8A');
+    $c_chip_s_text   = get_theme_mod('mlws_disc_chip_selected_text', '#F5E6A3');
 
     // Toggles
     $c_toggle_bg        = get_theme_mod('mlws_disc_toggle_bg', 'rgba(255,255,255,0.1)');
-    $c_toggle_active_bg = get_theme_mod('mlws_disc_toggle_active_bg', '#9F2B68');
+    $c_toggle_active_bg = get_theme_mod('mlws_disc_toggle_active_bg', '#1B4F8A');
 
     // GO button
-    $c_go_bg      = get_theme_mod('mlws_disc_go_btn_bg', '#9F2B68');
-    $c_go_bg_end  = get_theme_mod('mlws_disc_go_btn_bg_end', '#7A1F50');
+    $c_go_bg      = get_theme_mod('mlws_disc_go_btn_bg', '#1B4F8A');
+    $c_go_bg_end  = get_theme_mod('mlws_disc_go_btn_bg_end', '#153D6E');
     $c_go_hover   = get_theme_mod('mlws_disc_go_btn_hover_bg', '#B8447A');
 
     // Secondary buttons
     $c_sec_border   = get_theme_mod('mlws_disc_secondary_btn_border', 'rgba(255,255,255,0.3)');
     $c_sec_text     = get_theme_mod('mlws_disc_secondary_btn_text', 'rgba(255,255,255,0.8)');
-    $c_sec_hover_bg = get_theme_mod('mlws_disc_secondary_btn_hover_bg', 'rgba(159,43,104,0.2)');
+    $c_sec_hover_bg = get_theme_mod('mlws_disc_secondary_btn_hover_bg', 'rgba(27,79,138,0.2)');
 
     // Input
     $c_input_bg          = get_theme_mod('mlws_disc_input_bg', 'rgba(255,255,255,0.08)');
     $c_input_border      = get_theme_mod('mlws_disc_input_border', 'rgba(255,255,255,0.25)');
     $c_input_text        = get_theme_mod('mlws_disc_input_text', '#ffffff');
     $c_input_placeholder = get_theme_mod('mlws_disc_input_placeholder', 'rgba(255,255,255,0.4)');
-    $c_input_focus       = get_theme_mod('mlws_disc_input_focus_border', '#9F2B68');
+    $c_input_focus       = get_theme_mod('mlws_disc_input_focus_border', '#1B4F8A');
     ?>
     <section id="discovery-suite" class="discovery-suite-section" style="padding: 75px 0; background: <?php echo esc_attr($section_bg); ?>; position: relative; overflow: hidden;">
         <!-- Background shimmer effects -->
-        <div style="position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(159,43,104,0.15) 0%, transparent 70%); pointer-events: none;"></div>
+        <div style="position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(27,79,138,0.15) 0%, transparent 70%); pointer-events: none;"></div>
         <div style="position: absolute; bottom: -60px; left: -60px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%); pointer-events: none;"></div>
 
         <div class="container" style="max-width: 1120px; margin: 0 auto; position: relative; z-index: 1;">
@@ -1664,7 +1664,7 @@ body {
             case 'quiz_cta':
                 ?>
     <!-- Quiz CTA Section -->
-    <section class="quiz-cta-section" style="padding: 75px 0; background: linear-gradient(135deg, #9F2B68 0%, #0F172A 100%); text-align: center; color: white; position: relative;">
+    <section class="quiz-cta-section" style="padding: 75px 0; background: linear-gradient(135deg, #1B4F8A 0%, #0F172A 100%); text-align: center; color: white; position: relative;">
         <div class="dot-overlay"></div>
         <div class="container" style="position: relative; z-index: 1; max-width: 700px;">
             <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
@@ -1739,7 +1739,7 @@ body {
             ));
 
             if (empty($posts_array)) continue;
-            $colors = array('#F59E0B', '#0EA5E9', '#9F2B68', '#9F2B68', '#C75D8E');
+            $colors = array('#F59E0B', '#0EA5E9', '#1B4F8A', '#1B4F8A', '#C75D8E');
             $color = $colors[array_rand($colors)];
 
             // Category-based default hero image map

@@ -10,7 +10,7 @@ get_header();
 <style>
 /* ── Tools Hub Page ──────────────────────────── */
 .tools-hero {
-    background: linear-gradient(135deg, #0F172A 0%, #5C1742 50%, #9F2B68 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #8B1A1A 50%, #1B4F8A 100%);
     padding: 100px 0 80px;
     color: white;
     text-align: center;
@@ -34,7 +34,7 @@ get_header();
     height: 400px;
     bottom: -150px;
     left: -100px;
-    background: radial-gradient(circle, rgba(159,43,104,0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(27,79,138,0.2) 0%, transparent 70%);
     pointer-events: none;
 }
 .tools-hero-badge {
@@ -113,7 +113,7 @@ get_header();
 .tool-featured-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-    border-color: #9F2B68;
+    border-color: #1B4F8A;
 }
 .tool-card-visual {
     height: 200px;
@@ -183,7 +183,7 @@ get_header();
 }
 .tool-card-feature svg {
     flex-shrink: 0;
-    color: #9F2B68;
+    color: #1B4F8A;
 }
 .tool-card-cta {
     display: inline-flex;
@@ -191,7 +191,7 @@ get_header();
     gap: 8px;
     font-size: 14px;
     font-weight: 700;
-    color: #9F2B68;
+    color: #1B4F8A;
     transition: gap 0.2s;
 }
 .tool-featured-card:hover .tool-card-cta {
@@ -223,8 +223,8 @@ get_header();
     transition: all 0.2s;
 }
 .tool-mini-card:hover {
-    border-color: #9F2B68;
-    background: #E6E6FA;
+    border-color: #1B4F8A;
+    background: #F5E6A3;
     transform: translateX(4px);
 }
 .tool-mini-icon {
@@ -255,7 +255,7 @@ get_header();
     background: #F8FAFC;
 }
 .tools-cta-inner {
-    background: linear-gradient(135deg, #0F172A 0%, #5C1742 100%);
+    background: linear-gradient(135deg, #0F172A 0%, #8B1A1A 100%);
     border-radius: var(--radius-xl);
     padding: 60px;
     text-align: center;
@@ -272,7 +272,7 @@ get_header();
     height: 300px;
     top: -100px;
     right: -100px;
-    background: radial-gradient(circle, rgba(159,43,104,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(27,79,138,0.3) 0%, transparent 70%);
     pointer-events: none;
 }
 .tools-cta-inner h2 {
@@ -371,14 +371,14 @@ get_header();
 
             <!-- Malnutrition Calculator -->
             <a href="/tools/malnutrition-calculator/" class="tool-featured-card">
-                <div class="tool-card-visual" style="background: linear-gradient(135deg, #E6E6FA, #D8D8F0);">
-                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="0.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
-                    <div class="tool-card-icon" style="background: #9F2B68;">
+                <div class="tool-card-visual" style="background: linear-gradient(135deg, #F5E6A3, #D8D8F0);">
+                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="0.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+                    <div class="tool-card-icon" style="background: #1B4F8A;">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
                     </div>
                 </div>
                 <div class="tool-card-body">
-                    <span class="tool-card-tag" style="background: #E6E6FA; color: #9F2B68;">Assessment</span>
+                    <span class="tool-card-tag" style="background: #F5E6A3; color: #1B4F8A;">Assessment</span>
                     <h3>Malnutrition Risk Calculator</h3>
                     <p>Screen for nutritional risk using validated criteria. Particularly relevant for IBD patients at risk of deficiencies.</p>
                     <div class="tool-card-features">
@@ -470,7 +470,7 @@ get_header();
 
             <a href="/my-notes/" class="tool-mini-card">
                 <div class="tool-mini-icon" style="background: #ECFDF5;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 </div>
                 <div>
                     <h4>My Notes</h4>
@@ -497,7 +497,7 @@ get_header();
         <div class="tools-cta-inner">
             <h2>All Tools. Always Free.</h2>
             <p>Create a free account to save your results and track your progress over time.</p>
-            <a href="<?php echo wp_registration_url(); ?>" class="btn" style="background: white; color: #9F2B68; padding: 14px 36px; font-weight: 700; border-radius: var(--radius-md); font-size: 16px; position: relative;">Get Started Free</a>
+            <a href="<?php echo wp_registration_url(); ?>" class="btn" style="background: white; color: #1B4F8A; padding: 14px 36px; font-weight: 700; border-radius: var(--radius-md); font-size: 16px; position: relative;">Get Started Free</a>
         </div>
     </div>
 </section>

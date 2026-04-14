@@ -13,7 +13,7 @@
         </div>
         
         <div class="progress-bar-container" style="height: 8px; background: #e2e8f0; width: 100%;">
-            <div class="progress-bar-fill" id="modal-progress-bar" style="height: 100%; background: #9F2B68; width: 0%; transition: width 0.4s ease;"></div>
+            <div class="progress-bar-fill" id="modal-progress-bar" style="height: 100%; background: #1B4F8A; width: 0%; transition: width 0.4s ease;"></div>
         </div>
 
         <form id="modal-health-quiz-form">
@@ -28,7 +28,7 @@
                     <p style="color:#94a3b8; font-size:15px; margin-bottom:24px;">Your basic profile is updated. Would you like to add more detailed clinical information for a deeper AI analysis?</p>
                     
                     <div style="display:flex; flex-direction:column; gap:12px;">
-                        <button type="button" onclick="openClinicalInfoFromQuiz()" class="btn-primary" style="background:#9F2B68; color:white; border:none; padding:14px 32px; border-radius:0; font-weight:700; font-family:'Outfit'; cursor:pointer; box-shadow:0 10px 20px rgba(255, 90, 0, 0.2);">Add Detailed Clinical Info &rarr;</button>
+                        <button type="button" onclick="openClinicalInfoFromQuiz()" class="btn-primary" style="background:#1B4F8A; color:white; border:none; padding:14px 32px; border-radius:0; font-weight:700; font-family:'Outfit'; cursor:pointer; box-shadow:0 10px 20px rgba(255, 90, 0, 0.2);">Add Detailed Clinical Info &rarr;</button>
                         <button type="button" onclick="handleQuizCompletion()" style="background:transparent; color:#cbd5e1; border:1px solid rgba(255,255,255,0.2); padding:10px 32px; border-radius:0; font-weight:600; font-family:'Outfit'; cursor:pointer;">No thanks, view my profile</button>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 <button type="button" class="btn-quiz modal-prev" id="modal-btn-prev" style="visibility:hidden; background:#f1f5f9; color:#64748b; border:none; padding:14px 24px; border-radius:0; cursor:pointer; font-weight:700;">Previous</button>
                 <div style="display:flex; gap:12px;">
                     <button type="button" class="modal-btn-save" id="modal-btn-save" onclick="submitQuiz(true)">Save & Exit</button>
-                    <button type="button" class="btn-quiz modal-next" id="modal-btn-next" disabled style="background:#9F2B68; color:white; border:none; padding:14px 32px; border-radius:0; cursor:pointer; font-weight:700; opacity:0.5;">Next Step</button>
+                    <button type="button" class="btn-quiz modal-next" id="modal-btn-next" disabled style="background:#1B4F8A; color:white; border:none; padding:14px 32px; border-radius:0; cursor:pointer; font-weight:700; opacity:0.5;">Next Step</button>
                 </div>
             </div>
         </form>
@@ -127,9 +127,9 @@ function renderQuizStep(num) {
         
         // Option HTML
         optionsHtml += `
-            <label class="modal-option-item ${isSelected ? 'selected' : ''}" style="padding:16px 20px; border:2px solid ${isSelected?'#9F2B68':'#e2e8f0'}; display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; background:${isSelected?'#F5F0FA':'white'};" onclick="handleOptionClick(this, ${num-1}, ${idx})">
+            <label class="modal-option-item ${isSelected ? 'selected' : ''}" style="padding:16px 20px; border:2px solid ${isSelected?'#1B4F8A':'#e2e8f0'}; display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; background:${isSelected?'#F5F0FA':'white'};" onclick="handleOptionClick(this, ${num-1}, ${idx})">
                 <input type="${typeStr}" name="${data.field}" value="${val}" ${isSelected ? 'checked' : ''} style="display:none;">
-                <div style="width:20px; height:20px; border:2px solid ${isSelected?'#9F2B68':'#cbd5e1'}; border-radius:${shapeStr}; display:flex; align-items:center; justify-content:center; background:${isSelected?'#9F2B68':'transparent'};">
+                <div style="width:20px; height:20px; border:2px solid ${isSelected?'#1B4F8A':'#cbd5e1'}; border-radius:${shapeStr}; display:flex; align-items:center; justify-content:center; background:${isSelected?'#1B4F8A':'transparent'};">
                     ${isSelected ? (isMulti ? '<span style="color:white;font-size:12px;">✓</span>' : '<div style="width:10px;height:10px;background:white;border-radius:50%;"></div>') : ''}
                 </div>
                 <span style="font-size:15px; font-weight:600; color:#334155;">${txt}</span>
@@ -160,9 +160,9 @@ function renderQuizStep(num) {
                 const dSelected = quizResults[depField].includes(dVal);
                 
                 depHtml += `
-                    <label class="modal-option-item ${dSelected ? 'selected' : ''}" style="padding:12px 16px; border:2px solid ${dSelected?'#9F2B68':'#e2e8f0'}; display:flex; align-items:center; gap:12px; cursor:pointer; background:${dSelected?'#F5F0FA':'white'};">
+                    <label class="modal-option-item ${dSelected ? 'selected' : ''}" style="padding:12px 16px; border:2px solid ${dSelected?'#1B4F8A':'#e2e8f0'}; display:flex; align-items:center; gap:12px; cursor:pointer; background:${dSelected?'#F5F0FA':'white'};">
                         <input type="checkbox" value="${dVal}" ${dSelected ? 'checked' : ''} style="display:none;" onchange="handleDepCheckboxChange(this, '${depField}', ${dIdx})">
-                        <div style="width:18px; height:18px; border:2px solid ${dSelected?'#9F2B68':'#cbd5e1'}; border-radius:4px; display:flex; align-items:center; justify-content:center; background:${dSelected?'#9F2B68':'transparent'};">
+                        <div style="width:18px; height:18px; border:2px solid ${dSelected?'#1B4F8A':'#cbd5e1'}; border-radius:4px; display:flex; align-items:center; justify-content:center; background:${dSelected?'#1B4F8A':'transparent'};">
                             ${dSelected ? '<span style="color:white;font-size:10px;">✓</span>' : ''}
                         </div>
                         <span style="font-size:14px; font-weight:600; color:#334155;">${dTxt}</span>
