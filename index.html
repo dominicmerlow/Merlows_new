@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>IBD Health Hub Content Generator</title>
+<title>Merlows Content Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Georgia:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
@@ -12,7 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ══════════════════════════════════════════════════
-   DESIGN TOKENS — IBD Health Hub Brand
+   DESIGN TOKENS — Merlows Brand
 ══════════════════════════════════════════════════ */
 :root {
   --sla-orange:   #0D9488;   /* teal accent — buttons, active states */
@@ -859,7 +859,7 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
 .cat-input-panel { display: none; }
 .cat-input-panel.active { display: block; }
 
-/* Source toggle tabs (Industry News) */
+/* Source toggle tabs (Breaking News) */
 .source-tabs { display: flex; gap: 0; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 0; overflow: hidden; }
 .source-tab-btn { flex: 1; padding: 7px 10px; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 700; background: #f8f9fa; border: none; cursor: pointer; color: var(--text-muted); transition: all 0.15s; letter-spacing: 0.3px; }
 .source-tab-btn.active { background: var(--sla-navy); color: #fff; }
@@ -2036,7 +2036,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 .mon-review     { --mc: #f59e0b; }
 .mon-awaiting   { --mc: #f47920; }
 .mon-approved   { --mc: #0d9488; }
-.mon-scheduled  { --mc: #8b5cf6; }
+.mon-scheduled  { --mc: #2A6DB5; }
 .mon-published  { --mc: #16a34a; }
 .mon-card .mon-card-header { border-top: 3px solid var(--mc); }
 .mon-card-icon  { background: color-mix(in srgb, var(--mc) 12%, transparent); color: var(--mc); }
@@ -2220,7 +2220,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 </style>
 <script>
 /* ── Per-domain branding override ──────────────────────────────────────────
-   Default branding = IBD Health Hub (ibdhealthhub.vercel.app).
+   Default branding = Merlows (merlows.vercel.app).
    Reserved for future domain overrides if needed.                         */
 </script>
 </head>
@@ -2229,9 +2229,9 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <!-- ══════════════════════════════ SIDEBAR NAV ══════════════════════════════ -->
 <aside class="sidebar">
   <a class="sidebar-logo" href="#">
-    <img class="sidebar-logo-img" id="brandLogoImg" src="logo.png" alt="IBD Health Hub"/>
+    <img class="sidebar-logo-img" id="brandLogoImg" src="logo.png" alt="Merlows"/>
     <div class="sidebar-logo-text">
-      <div class="sidebar-logo-name" id="brandName">IBD Health Hub<span> ■</span></div>
+      <div class="sidebar-logo-name" id="brandName">Merlows<span> ■</span></div>
       <div class="sidebar-logo-sub">Content Hub</div>
     </div>
   </a>
@@ -2392,12 +2392,12 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       </div>
       <div class="card-body">
         <select id="genCategorySelect" onchange="onGenCategoryChange()" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;font-family:'Montserrat',sans-serif;">
-          <option value="clinical-reviews">Clinical Reviews</option>
-          <option value="industry-news">Industry News</option>
+          <option value="diplomatic-analysis">Diplomatic Analysis</option>
+          <option value="breaking-news">Breaking News</option>
           <option value="op-eds">Op-Eds</option>
-          <option value="white-papers">White Papers</option>
-          <option value="infographics">Infographics</option>
-          <option value="ibd-living">IBD Living</option>
+          <option value="cyrus-accord">Cyrus Accord</option>
+          <option value="abraham-accords">Abraham Accords</option>
+          <option value="regional-voices">Regional Voices</option>
         </select>
         <!-- Custom categories injected by activateCustomCategories() -->
         <span id="customCatBtns-generator" style="display:none;"></span>
@@ -2509,7 +2509,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <button class="tone-btn" onclick="setTone('patient')" id="tone-patient">Patient-Facing</button>
           </div>
         </div>
-        <!-- Word Count (white-papers) -->
+        <!-- Word Count (cyrus-accord) -->
         <div id="genOptWordCount" style="display:none;margin-bottom:12px;">
           <div class="option-row">
             <label>Word Count</label>
@@ -2517,7 +2517,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <span style="font-size:0.68rem;color:var(--text-muted);">words (approx.)</span>
           </div>
         </div>
-        <!-- Design Style (white-papers) -->
+        <!-- Design Style (cyrus-accord) -->
         <div id="genOptDesign" style="display:none;margin-bottom:12px;">
           <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Design Style</div>
           <div class="design-options-grid" id="wpDesignGrid">
@@ -2527,10 +2527,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <button class="design-option-btn" onclick="setDesignOption(this,'Regulatory Briefing')" data-design="Regulatory Briefing">Regulatory Briefing<br><span style="font-weight:400;font-size:0.62rem;">Formal, compliance-ready</span></button>
           </div>
         </div>
-        <!-- Infographic notice -->
-        <div id="genOptInfographic" style="display:none;">
+        <!-- Abraham Accords notice -->
+        <div id="genOptAbraham Accords" style="display:none;">
           <div class="alert" style="background:rgba(244,121,32,0.08);border:1px solid rgba(244,121,32,0.25);color:var(--sla-orange);font-size:0.72rem;padding:8px 12px;border-radius:6px;margin-bottom:0;">
-            <strong>Note:</strong> Infographic generation uses models optimised for structured visual content. The model selector is pre-filtered to the most capable options.
+            <strong>Note:</strong> Abraham Accords generation uses models optimised for structured visual content. The model selector is pre-filtered to the most capable options.
           </div>
         </div>
       </div>
@@ -3081,12 +3081,12 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <!-- ══════════════════════════════ TAB 2: LIBRARY ══════════════════════════════ -->
 <div class="tab-view" id="view-archive">
 <div class="cat-bar" id="catBar-archive">
-  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
-  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+  <button class="cat-bar-btn active" data-cat="diplomatic-analysis" onclick="switchCategory('diplomatic-analysis')">Diplomatic Analysis</button>
+  <button class="cat-bar-btn" data-cat="breaking-news" onclick="switchCategory('breaking-news')">Breaking News</button>
   <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
-  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
-  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
-  <button class="cat-bar-btn" data-cat="ibd-living" onclick="switchCategory('ibd-living')">IBD Living</button>
+  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accord</button>
+  <button class="cat-bar-btn" data-cat="abraham-accords" onclick="switchCategory('abraham-accords')">Abraham Accords</button>
+  <button class="cat-bar-btn" data-cat="regional-voices" onclick="switchCategory('regional-voices')">Regional Voices</button>
   <span id="customCatBtns-archive"></span>
 </div>
   <div class="archive-container">
@@ -3196,11 +3196,11 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <!-- ══════════════════════════════ TAB 4: REPORTS ══════════════════════════════ -->
 <div class="tab-view" id="view-reports">
 <div class="cat-bar" id="catBar-reports">
-  <button class="cat-bar-btn active" data-cat="clinical-reviews" onclick="switchCategory('clinical-reviews')">Clinical Reviews</button>
-  <button class="cat-bar-btn" data-cat="industry-news" onclick="switchCategory('industry-news')">Industry News</button>
+  <button class="cat-bar-btn active" data-cat="diplomatic-analysis" onclick="switchCategory('diplomatic-analysis')">Diplomatic Analysis</button>
+  <button class="cat-bar-btn" data-cat="breaking-news" onclick="switchCategory('breaking-news')">Breaking News</button>
   <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
-  <button class="cat-bar-btn" data-cat="white-papers" onclick="switchCategory('white-papers')">White Papers</button>
-  <button class="cat-bar-btn" data-cat="infographics" onclick="switchCategory('infographics')">Infographics</button>
+  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accord</button>
+  <button class="cat-bar-btn" data-cat="abraham-accords" onclick="switchCategory('abraham-accords')">Abraham Accords</button>
 </div>
   <div class="reports-container">
     <div class="archive-header-row">
@@ -3294,7 +3294,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);display:block;margin-bottom:4px;">Company Name</label>
-            <input type="text" id="godCompanyInput" placeholder="e.g. IBD Health Hub" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.72rem;border-radius:0;" />
+            <input type="text" id="godCompanyInput" placeholder="e.g. Merlows" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.72rem;border-radius:0;" />
           </div>
           <div>
             <label style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);display:block;margin-bottom:4px;">Author Name(s)</label>
@@ -3425,10 +3425,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       </div>
       <div class="llm-section-body">
         <div class="llm-cat-grid">
-          <!-- Clinical Reviews -->
+          <!-- Diplomatic Analysis -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">Clinical Reviews</div>
-            <select id="llm-cat-clinical-reviews" class="llm-quick-select" onchange="saveCategoryModel('clinical-reviews',this.value);showToast('✓ Saved for Clinical Reviews')">
+            <div class="llm-cat-name">Diplomatic Analysis</div>
+            <select id="llm-cat-diplomatic-analysis" class="llm-quick-select" onchange="saveCategoryModel('diplomatic-analysis',this.value);showToast('✓ Saved for Diplomatic Analysis')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3454,10 +3454,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <div class="llm-save-row" style="margin-top:8px;">
             </div>
           </div>
-          <!-- Industry News -->
+          <!-- Breaking News -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">Industry News</div>
-            <select id="llm-cat-industry-news" class="llm-quick-select" onchange="saveCategoryModel('industry-news',this.value);showToast('✓ Saved for Industry News')">
+            <div class="llm-cat-name">Breaking News</div>
+            <select id="llm-cat-breaking-news" class="llm-quick-select" onchange="saveCategoryModel('breaking-news',this.value);showToast('✓ Saved for Breaking News')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3512,10 +3512,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <div class="llm-save-row" style="margin-top:8px;">
             </div>
           </div>
-          <!-- White Papers -->
+          <!-- Cyrus Accord -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">White Papers</div>
-            <select id="llm-cat-white-papers" class="llm-quick-select" onchange="saveCategoryModel('white-papers',this.value);showToast('✓ Saved for White Papers')">
+            <div class="llm-cat-name">Cyrus Accord</div>
+            <select id="llm-cat-cyrus-accord" class="llm-quick-select" onchange="saveCategoryModel('cyrus-accord',this.value);showToast('✓ Saved for Cyrus Accord')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3541,10 +3541,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <div class="llm-save-row" style="margin-top:8px;">
             </div>
           </div>
-          <!-- Infographics -->
+          <!-- Abraham Accords -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">Infographics</div>
-            <select id="llm-cat-infographics" class="llm-quick-select" onchange="saveCategoryModel('infographics',this.value);showToast('✓ Saved for Infographics')">
+            <div class="llm-cat-name">Abraham Accords</div>
+            <select id="llm-cat-abraham-accords" class="llm-quick-select" onchange="saveCategoryModel('abraham-accords',this.value);showToast('✓ Saved for Abraham Accords')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3570,10 +3570,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <div class="llm-save-row" style="margin-top:8px;">
             </div>
           </div>
-          <!-- IBD Living -->
+          <!-- Regional Voices -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">IBD Living</div>
-            <select id="llm-cat-ibd-living" class="llm-quick-select" onchange="saveCategoryModel('ibd-living',this.value);showToast('✓ Saved for IBD Living')">
+            <div class="llm-cat-name">Regional Voices</div>
+            <select id="llm-cat-regional-voices" class="llm-quick-select" onchange="saveCategoryModel('regional-voices',this.value);showToast('✓ Saved for Regional Voices')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3856,13 +3856,13 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
     <div class="settings-section">
       <div class="settings-section-header">
         <h3>WordPress Publishing</h3>
-        <p>Auto-publish approved content to ibdhealthhub.com</p>
+        <p>Auto-publish approved content to merlows.com</p>
       </div>
       <div class="settings-section-body">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
             <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Site URL</label>
-            <input type="text" value="https://ibdhealthhub.com" disabled style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:0.72rem;background:var(--bg);color:var(--text-muted);" />
+            <input type="text" value="https://merlows.com" disabled style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:0.72rem;background:var(--bg);color:var(--text-muted);" />
           </div>
           <div>
             <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Status</label>
@@ -3916,7 +3916,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <p style="font-size:0.63rem;color:var(--text-muted);margin:8px 0 0;line-height:1.5;">
               After saving credentials, use the <strong>Google Connections</strong> section above to connect.<br>
               Create OAuth credentials at <strong>console.cloud.google.com</strong> → APIs &amp; Services → Credentials. Enable <strong>Drive API</strong>, <strong>Gmail API</strong>, <strong>Calendar API</strong>, and <strong>Sheets API</strong>. Set the authorised redirect URI to:<br>
-              <code style="font-size:0.6rem;word-break:break-all;">https://ibdhealthhub.vercel.app/api/automation/auth/google/callback</code>
+              <code style="font-size:0.6rem;word-break:break-all;">https://merlows.vercel.app/api/automation/auth/google/callback</code>
             </p>
           </div>
 
@@ -3942,7 +3942,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             </div>
             <p style="font-size:0.63rem;color:var(--text-muted);margin:10px 0 0;line-height:1.5;">
               Create an app at <strong>dropbox.com/developers/apps</strong>. Choose <strong>Full Dropbox</strong> access. Set the OAuth redirect URI to:<br>
-              <code style="font-size:0.6rem;word-break:break-all;">https://ibdhealthhub.vercel.app/api/automation/auth/dropbox/callback</code>
+              <code style="font-size:0.6rem;word-break:break-all;">https://merlows.vercel.app/api/automation/auth/dropbox/callback</code>
             </p>
           </div>
 
@@ -4619,11 +4619,11 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           WordPress Category
         </label>
         <select id="schedCategory">
-          <option value="clinical-reviews">IBD Clinical Reviews</option>
-          <option value="industry-news">Gastroenterology Updates</option>
+          <option value="diplomatic-analysis">IBD Diplomatic Analysis</option>
+          <option value="breaking-news">Gastroenterology Updates</option>
           <option value="op-eds">Opinion &amp; Commentary</option>
-          <option value="white-papers">White Papers &amp; Guides</option>
-          <option value="ibd-living">IBD Living</option>
+          <option value="cyrus-accord">Cyrus Accord &amp; Guides</option>
+          <option value="regional-voices">Regional Voices</option>
         </select>
       </div>
       <div id="schedCategoryDisplay" style="display:none;font-size:0.72rem;color:var(--text-muted);display:none;align-items:center;gap:7px;">
@@ -4689,7 +4689,7 @@ const FALLBACK_MODELS = [
   'liquid/lfm-2.5-1.2b-instruct:free'
 ];
 
-// Models optimised for structured/visual content (Infographics)
+// Models optimised for structured/visual content (Abraham Accords)
 const INFOGRAPHIC_MODELS = [
   'arcee-ai/trinity-large-preview:free',
   'deepseek/deepseek-r1-0528:free',
@@ -4706,343 +4706,141 @@ const INFOGRAPHIC_MODELS = [
 const PEXELS_API_KEY = '61644jNcCg5JfspIckM3rGG4lDwaNuUVmbIXCjbxYZDeqGiaNBftxKdJ';
 
 const GH_API    = 'https://api.github.com';
-const GH_REPO   = 'slapharma/IBDHealthHub_Content_Generator';
+const GH_REPO   = 'slapharma/Merlows_Content_Generator';
 const GH_BRANCH = 'main';
 const GH_TOKEN  = String.fromCharCode(103,104,112,95,98,73,65,98,55,90,69,88,51,69,84,108,117,70,80,51,114,100,57,122,121,114,110,74,102,55,100,57,85,87,50,99,86,97,75,114);
 
 const CATEGORIES = [
-  { id: 'clinical-reviews', label: 'Clinical Reviews' },
-  { id: 'industry-news',    label: 'Industry News' },
+  { id: 'diplomatic-analysis', label: 'Diplomatic Analysis' },
+  { id: 'breaking-news',    label: 'Breaking News' },
   { id: 'op-eds',           label: 'Op-Eds' },
-  { id: 'white-papers',     label: 'White Papers' },
-  { id: 'infographics',     label: 'Infographics' },
-  { id: 'ibd-living',       label: 'IBD Living' }
+  { id: 'cyrus-accord',     label: 'Cyrus Accord' },
+  { id: 'abraham-accords',     label: 'Abraham Accords' },
+  { id: 'regional-voices',       label: 'Regional Voices' }
 ];
 
-const DEFAULT_PROMPT = `You are a medical writer creating a curated clinical paper review for publication on an IBD content hub website (IBDHealthHub.com). a structured, objective summary of a single published clinical trial intended for a physician audience. Your role is purely curatorial: you present what the paper reports, nothing more. You do not add clinical commentary, personal opinion, practice recommendations, or conclusions beyond those stated by the authors.
+const DEFAULT_PROMPT = `You are a journalist producing a Diplomatic Analysis piece for Merlows — an independent digital news portal covering Israel-Iran relations, the Cyrus Accord, and Middle East diplomacy. Produce a measured, authoritative analytical piece for merlows.com.
 
 TONE & STYLE
-Write in clear, precise clinical language appropriate for a practicing physician. Use correct medical and pharmacological terminology throughout. The tone is neutral, factual, and authoritative — like a well-written abstract expanded into a readable narrative. Avoid advocacy language, hedging phrases like "interestingly" or "remarkably," and any framing that implies editorial judgment. Use bullet points rarely in the body of the article. Write in continuous prose with section headers. Active voice is preferred where natural.
+Analytical, measured, non-partisan. Clear language accessible to an informed general audience. Avoid advocacy. Present multiple perspectives where relevant. Active voice preferred. Do not speculate beyond what the source material supports.
 
 STRUCTURE
-Produce the article in the following sections, in this order:
-1. Title (~5–12 words): a concise, descriptive version of the paper title — no category prefix. Article subheader: Authors, journal, year, volume, # pages (as listed in the paper). DOI if available, if unavailable, don't mention DOI.
-2. Subtitle (~5–12 words): a statement related to the conclusion of the source document.
-3. Background & Rationale (~100–150 words) Summarise the clinical problem or therapeutic question the study was designed to address. Include relevant disease context, the gap in evidence or unmet need identified by the authors, and the stated scientific rationale for the intervention being tested.
-4. Study Design (~100–150 words) Describe the trial design, setting, and timeline. State the study type (e.g., randomised, double-blind, placebo-controlled), the number of sites, duration of follow-up, and the treatment arms. Describe the patient population including key inclusion and exclusion criteria. State the primary and secondary endpoints exactly as the authors defined them. Note how randomisation and blinding were handled. Note the statistical approach used.
-5. Patient Population (~75–100 words) Summarise baseline demographics and key clinical characteristics of the enrolled population as reported. Note any relevant imbalances between groups if reported by the authors.
-6. Key Findings (~150–250 words) Report the results for primary and secondary endpoints, but avoid using technical statistical reporting e.g. confidence intervals, odds ratios, and p-values as presented in the paper; instead alter the wording to support the interpretation of the findings. Include simple numerical values e.g. percentages, numerical differences between groups. Report both the active and comparator arm results. Where the authors report a null result, state it clearly. Do not interpret results beyond what the paper states. If subgroup analyses or post-hoc analyses are reported, present them with that label.
-7. Discussion (150-200 words) Summarise the discussion and include any real world implications of the findings as mentioned by the authors, e.g. what do the findings mean for disease management or lifestyle management. Report the safety and tolerability briefly, including adverse events and tolerability data as described. Note whether serious adverse events were reported and their nature.
-8. Authors' Conclusions (~75–100 words) Reproduce the authors' own stated conclusions from the paper — do not paraphrase in a way that adds meaning. These should be clearly attributed to the authors of the study. Note any limitations the authors themselves acknowledged.
-9. Reference Full citation in Vancouver format.
+1. Title (~8–14 words): descriptive, no category prefix.
+2. Subtitle (~8–14 words): the key analytical insight from the piece.
+3. Overview (~100–150 words): what is being analysed and why it matters now.
+4. Historical Context (~150–200 words): relevant background for understanding the current situation.
+5. Key Actors & Positions (~150–200 words): who is involved and what each party seeks.
+6. Analysis (~200–300 words): implications, risks, and opportunities assessed objectively.
+7. Outlook (~100–150 words): realistic assessment of likely developments.
+8. Source references.
 
 OUTPUT FORMAT
-Output the article in markdown. The very first line MUST be the title prefixed with "# " — NO category prefix in the title line (e.g. "# Fish Oil Supplementation in Active Crohn's Disease"). The very next non-empty line MUST be the subtitle prefixed with "## " starting with "{{CATEGORY_PREFIX}}:" (e.g. "## {{CATEGORY_PREFIX}}: Enteric-coated fish oil reduced relapse rates at one year"). All other section headers (Background & Rationale, Study Design, etc.) MUST use "## ".
+Output the article in markdown. The very first line MUST be the title prefixed with "# " — NO category prefix in the title line. The very next non-empty line MUST be the subtitle prefixed with "## " starting with "{{CATEGORY_PREFIX}}:" (e.g. "## {{CATEGORY_PREFIX}}: Iran signals openness to a new diplomatic framework"). All other section headers MUST use "## ".
 
 FORMATTING RULES
-Total article length: 800–1000 words depending on the complexity and volume of data in the source paper. DO NOT EXCEED 1000 WORDS TOTAL. Do not pad.
-UK British English
-Use the section structure exactly as listed above.
-All data points must match the paper exactly, do not round or paraphrase statistics.
-Do not speculate about clinical implications. Do not compare the findings to other studies unless the authors themselves do so within the paper.
-Do not use hyphens or ems as punctuation or to join phrases. Only use hyphens as part of a word or compound term (for example: well-established, double-blind, COX-2, Omega-3).
-Do not use bolded words mid sentence or mid paragraph, only in titles or subheadings
-Terminology and abbreviation handling must be fully standardised. References to omega-3 must always be written as "omega-3" regardless of whether the source uses n-3, omega 3, or omega3 LC n-3 PUFAs). This rule applies broadly to all comparable terminology inconsistencies.
-Commonly abbreviated medical and scientific terms must always be introduced in full at first mention followed by the abbreviation in brackets. After first mention, the abbreviated form must be used consistently throughout. This includes widely recognised terms such as inflammatory bowel disease (IBD), eicosapentaenoic acid (EPA), and docosahexaenoic acid (DHA), among others. If a term is not clearly standardised or may introduce ambiguity, it must not be abbreviated.
-The original paper title must remain unchanged and must not be standardised or modified.
-Add a disclaimer in small italic writing, in this colour at the very bottom of the paper to say: This Scientific Publication Summary is an objective summary of the published trial for personal and educational use. It does not constitute clinical advice, endorsement of the intervention, or a recommendation to alter clinical practice.
-
-COPYRIGHT & REUSE COMPLIANCE RULES
-To avoid copyright issues, the following rules must always be followed:
-The summary must be written entirely in original wording. Do not copy or closely mirror sentences from the abstract, main text, discussion, or conclusions.
-Do not reproduce large verbatim excerpts from the source paper.
-Must paraphrase over direct quotation at all times.
-Do not reproduce or recreate figures, graphs, tables, diagrams, study schemas, or article screenshots from the original publication unless the article is confirmed to be open access under a licence that permits reuse.
-Facts, study design details, endpoint definitions, and numerical results may be reported, but they must still be presented in newly written language.
-Always attribute findings and conclusions clearly to the study authors.
-Always include the full citation and DOI where available.`;
+Total length: 800–1,100 words. UK British English. Attribute all findings clearly. Do not reproduce verbatim text from the source.`;
 
 // ─── Category-specific default prompts ───────────────────────────────────────
 
-const DEFAULT_PROMPT_INDUSTRY_NEWS = `You are a medical journalist writing for IBD Health Hub — a UK-based IBD and gastrointestinal health digital research platform. Transform the source material (a clinical paper, research summary, or healthcare press release) into a clear, engaging Industry News article for ibdhealthhub.com.
-
-IBD Health Hub's focus is IBD (Crohn's disease, ulcerative colitis), gastrointestinal nutrition, and longevity science. Readers include UK-based gastroenterologists, IBD nurses, dietitians, and GPs, as well as well-informed patients living with IBD and gastrointestinal conditions.
+const DEFAULT_PROMPT_INDUSTRY_NEWS = `You are a journalist writing breaking news for Merlows — an independent digital news portal covering Israel-Iran relations, the Cyrus Accord, and the Abraham Accords. Transform the source material into a concise, urgent, factual news report for merlows.com.
 
 TONE & STYLE
-Write in clear, engaging journalistic prose — authoritative but accessible. Use correct clinical terminology with brief contextual explanation where needed. Active voice throughout. Convey genuine clinical relevance without sensationalism. Avoid phrases like "groundbreaking" or "revolutionary." Do not speculate beyond what the source states.
+Urgent, factual, direct. Journalistic wire-service style. Active voice. No editorialising, no speculation beyond what is confirmed. Lead with the most important fact.
 
 STRUCTURE
-1. Headline (~10 words) — clear, informative, no clickbait.
-2. Lead Paragraph (50–75 words) — what happened, why it matters, who it affects.
-3. Background Context (75–125 words) — orient readers with relevant disease or treatment context from the source.
-4. Key Findings (150–200 words) — most important results or developments, plain numerical values, clearly attributed to the study authors or originating organisation.
-5. Clinical Relevance (75–125 words) — why this matters for IBD patients or the clinicians treating them, grounded in what the source states.
-6. Reference — full citation in Vancouver format with DOI where available.
+1. Headline (~8–12 words): factual, no clickbait.
+2. Lede (40–60 words): the 5 Ws — who, what, where, when, why.
+3. Background (75–100 words): essential context a general reader needs.
+4. Latest Developments (150–200 words): key facts from the source in chronological or order-of-importance sequence.
+5. What's Next (50–75 words): expected next steps, upcoming events, or open questions.
+6. Source attribution line.
 
 OUTPUT FORMAT
-Output the article in markdown. The very first line MUST be the headline prefixed with "# " — no category prefix in the title line (e.g. "# New Biologic Shows Sustained Remission in Crohn's Trial"). The very next non-empty line MUST be the subtitle prefixed with "## " starting with "IBD Industry News:" (e.g. "## IBD Industry News: Phase III results suggest a new option for refractory Crohn's disease"). All other section headers (Lead, Background Context, Key Findings, Clinical Relevance) MUST use "## ".
+Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + one-line summary. All other headers use "## ".
+Total length: 350–500 words. UK British English. Do not reproduce verbatim text from the source.`;
 
-FORMATTING RULES
-Total length: 450–600 words. UK British English. Paraphrase throughout — do not reproduce verbatim text from the source. Attribute all findings clearly. Do not include advice to change clinical practice or medication. Add a disclaimer in small italic text at the bottom: This article is a journalistic summary for informational purposes only. It does not constitute clinical advice or a recommendation to alter treatment decisions.`;
-
-const DEFAULT_PROMPT_OP_EDS = `You are a doctor writing an opinion-led article for people living with inflammatory bowel disease (IBD) for an online IBD community platform. Your role is to translate clinical knowledge into clear, practical guidance that patients can apply in their daily lives.
-
-Base your article on the provided source material, but go beyond simple explanation. Interpret the information through a clinical lens and highlight what genuinely matters for patients in real-world settings.
+const DEFAULT_PROMPT_OP_EDS = `You are a commentator writing an opinion piece for Merlows — a news portal dedicated to fostering understanding between Israel and Iran and supporting the vision of the Cyrus Accord. Write for an engaged, globally-minded readership.
 
 TONE & STYLE
-Write in a clear, calm, and authoritative voice, as a clinician speaking directly to patients. Keep the language accessible, but grounded in medical understanding. Avoid unnecessary jargon, or explain it simply when used. The tone should feel reassuring, practical, and credible.
-
-This is an opinion piece, so you may interpret the evidence and emphasise what you believe is most relevant for patient care — but do not overstate findings or make unsupported claims.
+Persuasive, thoughtful, constructive. Grounded in facts and history. Hopeful but not naive. You may argue a position — but acknowledge counterarguments fairly. Accessible to a general reader.
 
 STRUCTURE
-1. Title
-Short, clear, and relevant (5–10 words).
-
-2. Sub-title
-Starting with 'Op Ed:' A single sentence that captures the key clinical takeaway or practical message for patients (5–10 words).
-
-3. Introduction (100–150 words)
-Introduce the topic and explain why it matters in the context of living with IBD. Frame the issue from a clinical perspective while connecting to patient experience.
-
-4. What the Evidence Shows (150–200 words)
-Summarise the key findings or concepts from the source material in simple terms. Focus on what is most clinically meaningful rather than exhaustive detail.
-
-5. What This Means for Patients (200–300 words)
-Interpret the findings in a real-world context.
-- How might this influence symptoms, flare-ups, or disease management?
-- What patterns or risks should patients be aware of?
-- Where is the evidence strong, and where is it more uncertain?
-
-6. Practical Advice I Give My Patients (200–300 words)
-Translate the evidence into actionable guidance.
-- Diet, lifestyle, supplementation, medication adherence, or monitoring
-- How patients can approach conversations with their healthcare team
-- What to try, what to be cautious about, and what to prioritise
-Keep advice realistic, safe, and clearly framed as general guidance rather than individual medical instruction.
-
-7. Final Thoughts (100–150 words)
-Provide a balanced clinical perspective. Reinforce key takeaways and encourage patients to take an informed, proactive role in managing their condition alongside their healthcare providers.
-
-KEY GUIDELINES
-- Prioritise practical relevance over technical detail
-- Provide clear, actionable insights grounded in the source material
-- Avoid absolute claims or guarantees
-- Be transparent where evidence is limited or evolving
-- Do not replace personalised medical advice
-- Keep total length around 700–900 words
-- Use UK British English
+1. Title (5–10 words).
+2. Subtitle starting with "Op-Ed:": the core argument in one line (5–10 words).
+3. Introduction (100–150 words): the issue and why it matters now.
+4. The Case (200–250 words): evidence and reasoning for your position.
+5. The Counterargument (100–150 words): steelman the other side, then rebut it.
+6. The Path Forward (150–200 words): constructive, realistic recommendation.
+7. Closing (75–100 words): call to thought or action.
 
 OUTPUT FORMAT
-Output the article in markdown. The very first line MUST be the title prefixed with "# " — short, clean, no category prefix (e.g. "# What Patients Should Know About Fish Oil and IBD"). The very next non-empty line MUST be the subtitle prefixed with "## " starting with "Op Ed:" (e.g. "## Op Ed: The evidence is encouraging, but individual guidance matters most"). All other section headers (Introduction, What the Evidence Shows, etc.) MUST use "## ".`;
+Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
+Total length: 700–900 words. UK British English.`;
 
-const DEFAULT_PROMPT_WHITE_PAPERS = `You are a scientific medical writer producing a White Paper for IBD Health Hub — a UK-based IBD and gastrointestinal health research platform. Synthesise multiple clinical papers and published evidence sources into a comprehensive, structured white paper on a specific topic in IBD, gastrointestinal nutrition, or gastrointestinal medicine.
-
-White Papers on IBD Health Hub are substantive, evidence-based documents used by healthcare professionals, researchers, and healthcare organisations to understand the current state of evidence on a topic and its clinical implications.
-
-TARGET AUDIENCE
-Primary: UK-based gastroenterologists, IBD specialists, dietitians, GPs, and clinical researchers. Secondary: Informed patients and patient advocacy groups.
+const DEFAULT_PROMPT_WHITE_PAPERS = `You are a policy analyst writing for Merlows — an independent news portal covering the Cyrus Accord and its role in reshaping Israel-Iran relations. Produce a comprehensive, authoritative report for merlows.com.
 
 TONE & STYLE
-Formal, systematic, and evidence-led. Comprehensive scholarship without being inaccessible. Use correct clinical and scientific terminology. Clearly structured with informative section headers. Continuous prose — use lists only where they genuinely serve clarity. Active voice where natural.
+Formal, authoritative, policy-focused. Correct diplomatic and geopolitical terminology. Continuous prose with section headers. Balanced treatment of all parties. Active voice where natural.
 
 STRUCTURE
-1. Title Block — full title, subtitle (if applicable), prepared for: IBD Health Hub, date.
-2. Executive Summary (150–200 words) — topic, key evidence reviewed, and headline conclusions. Must stand alone as a brief overview.
-3. Background & Clinical Context (200–300 words) — the condition, relevant patient populations, current UK standard of care, and the unmet clinical need this white paper addresses.
-4. Evidence Review (400–600 words) — systematically summarise key evidence from the source papers. Organise by theme or chronology as appropriate. Report study designs, populations, interventions, and key findings. Attribute all data to source authors. Note study limitations where authors report them.
-5. Clinical Implications (200–300 words) — what the evidence means for clinical practice. Ground every assertion in what the evidence supports.
-6. Gaps & Future Research (100–150 words) — what remains unknown or under-studied and what research questions the field should prioritise.
-7. Conclusion (100–150 words) — overall evidence position and clinical or policy takeaway.
-8. References — full citations in Vancouver format with DOIs where available.
+1. Title Block: full title, subtitle, prepared for Merlows, date.
+2. Executive Summary (100–150 words).
+3. Background (150–200 words): the Cyrus Accord origins and objectives.
+4. Current Status (200–300 words): where things stand as of the source material.
+5. Key Provisions or Developments (250–350 words): the substance of what the source covers.
+6. Regional Impact (150–200 words): how this affects the broader Middle East.
+7. Outlook (100–150 words).
+8. Source references.
 
 OUTPUT FORMAT
-Output the document in markdown. The very first line MUST be the title prefixed with "# " — no category prefix in the title line (e.g. "# Dietary Interventions in Active Crohn's Disease: A Review of the Evidence"). The very next non-empty line MUST be the subtitle prefixed with "## " starting with "White Paper:" (e.g. "## White Paper: Current evidence on nutritional approaches to IBD management"). All other section headers (Executive Summary, Background, Evidence Review, etc.) MUST use "## ".
+Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
+Total length: 1,000–1,400 words. UK British English. Add note: This report is for informational purposes. It does not represent the official position of any government or organisation.`;
 
-FORMATTING RULES
-Total length: 1,400–2,000 words. UK British English. All numerical data must match source papers exactly — do not round or alter figures. Do not speculate beyond what the evidence supports. Do not reproduce verbatim text from source papers. Add a disclaimer in small italic text at the end: This White Paper has been prepared by IBD Health Hub for educational and informational purposes only. It does not constitute clinical guidelines or a recommendation to alter clinical practice. Healthcare professionals should exercise independent clinical judgement in applying this information.`;
-
-const DEFAULT_PROMPT_INFOGRAPHICS = `You are a medical content designer producing infographic copy for IBD Health Hub — a UK-based IBD and gastrointestinal health digital platform. Transform the source clinical paper or research summary into structured, visually optimised copy for an infographic.
-
-Infographics on IBD Health Hub distil complex clinical findings into clear, visual-first content for both healthcare professionals and patients. The output you produce will be handed directly to a visual designer — write for the eye, not the paragraph.
-
-TARGET AUDIENCE
-Dual audience: UK-based healthcare professionals (gastroenterologists, IBD nurses, dietitians) and patients with IBD (Crohn's disease, ulcerative colitis, IBS).
+const DEFAULT_PROMPT_INFOGRAPHICS = `You are a diplomatic correspondent writing for Merlows — an independent news portal covering Middle East normalisation and the Abraham Accords. Write a balanced, context-rich report for merlows.com.
 
 TONE & STYLE
-Plain, precise, and visual. Every element must be independently legible — short phrases, not sentences. Clinical accuracy is paramount. Define or avoid jargon. Numbers and percentages are strongly preferred over vague statements.
-
-OUTPUT STRUCTURE — produce exactly these sections:
-
-HEADLINE (max 12 words)
-A clear, compelling title for the infographic.
-
-SUBHEADLINE (max 20 words)
-One line of supporting context — the study, source, or clinical question addressed.
-
-KEY FACTS (4–6 items)
-Each fact as a single punchy statement with a number, percentage, or comparison. Format each as:
-• [Stat or key finding] — [brief plain-English explanation, max 10 words]
-
-MECHANISM OR PROCESS (include only if relevant)
-If the paper describes a biological mechanism, treatment pathway, or clinical sequence, list it as 3–5 numbered plain-language steps. Omit this section entirely if not relevant.
-
-PATIENT TAKEAWAY (max 25 words)
-One sentence summarising what this means for people living with IBD. Plain English. No jargon.
-
-HCP TAKEAWAY (max 25 words)
-One sentence summarising the clinical implication for practitioners. May use appropriate clinical terminology.
-
-DISCLAIMER
-Include verbatim: For educational purposes only. Consult your clinical team before making any treatment decisions.
-
-OUTPUT FORMAT
-Output in markdown. The very first line MUST be the HEADLINE prefixed with "# " — no category prefix (e.g. "# Five Key Facts About Fish Oil and IBD"). The very next non-empty line MUST be the SUBHEADLINE prefixed with "## " starting with "Infographic:" (e.g. "## Infographic: Based on a 2024 randomised trial in The Lancet"). All labelled content blocks (KEY FACTS, MECHANISM OR PROCESS, PATIENT TAKEAWAY, HCP TAKEAWAY, DISCLAIMER) should follow as plain labelled sections without markdown headers.
-
-FORMATTING RULES
-Total copy length: 150–300 words maximum. UK British English. All statistics must match the source paper exactly. Do not speculate. Include a brief citation at the end (author, journal, year, DOI if available).`;
-
-// ─── Social platform default prompts ─────────────────────────────────────────
-
-const DEFAULT_SOCIAL_PROMPTS = {
-
-twitter: `You are a social media copywriter for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write X / Twitter posts promoting a clinical article from ibdhealthhub.com.
-
-IBD Health Hub's X audience includes gastroenterologists, IBD nurses, dietitians, GPs, researchers, and patients living with Crohn's disease, ulcerative colitis, and IBS.
-
-RULES FOR EVERY POST
-- Strictly maximum 280 characters — count carefully before finalising
-- Write ONLY the post text — no "Post 1:", no label, no preamble
-- Each post must take a completely different angle on the same article
-- End every post with 1–2 hashtags from: #IBD #IBDResearch #CrohnsDisease #UlcerativeColitis #GutHealth #GastroTwitter #Gastroenterology #ClinicalNutrition #IBDCommunity
-- Lead with the most compelling hook — stat, question, or key finding
-- UK British English. 0–1 emoji per post maximum.
-- Do not fabricate statistics not present in the source article`,
-
-linkedin: `You are a social media copywriter for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write LinkedIn posts promoting a clinical article from ibdhealthhub.com.
-
-IBD Health Hub's LinkedIn audience is primarily professional: gastroenterologists, IBD specialists, dietitians, GPs, clinical researchers, and healthcare executives in the UK.
-
-RULES FOR EVERY POST
-- Maximum 1,300 characters
-- Write ONLY the post text — no label, no preamble
-- Each post must take a meaningfully different angle (e.g. post 1: HCP clinical insight; post 2: broader scientific or policy implication)
-- Structure: compelling hook (1–2 lines) → clinical insight (2–4 lines) → implication or reflection → call to action ending with "Read the full article at ibdhealthhub.com"
-- Professional but conversational — not a press release. Short paragraphs with line breaks.
-- 1–3 hashtags at the end: #IBD #Gastroenterology #ClinicalResearch #GutHealth #IBDResearch #MedicalNutrition
-- UK British English. Do not fabricate content not in the source article.`,
-
-facebook: `You are a social media copywriter for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write Facebook posts promoting a clinical article from ibdhealthhub.com.
-
-IBD Health Hub's Facebook audience is primarily patient-facing: people living with Crohn's disease, ulcerative colitis, and IBS, their families, carers, and the broader UK IBD community.
-
-RULES FOR EVERY POST
-- Maximum 2,000 characters
-- Write ONLY the post text — no label, no preamble
-- Each post takes a different angle (e.g. post 1: patient-facing and empathetic; post 2: science-meets-everyday-life)
-- Warm, conversational, and empathetic tone — never condescending or alarmist
-- End every post with an open question to encourage comments
-- Plain English — define any clinical terms used
-- Include: "Read the full article at ibdhealthhub.com"
-- 2–4 hashtags: #IBD #CrohnsDisease #UlcerativeColitis #GutHealth #IBDWarrior
-- Emojis welcome but sparingly (1–3 per post). UK British English.
-- Do not give clinical or dietary advice — report what the research says.`,
-
-substack: `You are a newsletter writer for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write a Substack teaser post promoting a clinical article to drive readers to ibdhealthhub.com.
-
-IBD Health Hub's Substack audience is engaged, health-literate, and opted-in: a mix of IBD patients, healthcare professionals, and researchers who want clinical content updates.
-
-RULES FOR THIS POST
-- Maximum 600 characters
-- Write ONLY the post text — no label, no preamble
-- Structure: (1) compelling hook in italics marked with asterisks: *Hook sentence here* (2) 2–3 bullet points with key findings (3) read-more CTA ending with "→ Read the full article at ibdhealthhub.com"
-- Editorial voice — thoughtful and insight-led. No hashtags.
-- UK British English. Do not fabricate content not in the source article.`,
-
-tiktok: `You are a short-form video scriptwriter for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write TikTok video scripts or captions promoting a clinical article from ibdhealthhub.com.
-
-IBD Health Hub's TikTok content targets a younger patient-facing audience: people with IBD, chronic health advocates, and health-curious individuals. Content must feel authentic and energetic — not like a medical brochure.
-
-RULES FOR EVERY SCRIPT
-- Maximum 300 characters
-- Write ONLY the script/caption — no label, no preamble
-- Each script must open with a strong hook in the first 3–5 words (e.g. "IBD patients listen up:", "New research just dropped:", "Did you know...")
-- Follow with 2–3 ultra-short punchy points or one key finding in plain English
-- End with: "Link in bio for the full read 👇" or similar CTA
-- Each of the 5 scripts must take a completely different angle and hook
-- 3–5 hashtags: #IBD #GutHealth #IBDWarrior #CrohnsDisease #UlcerativeColitis #IBDTok
-- Casual, energetic. Emojis welcome (2–4). UK British English but informal register.
-- Do not give clinical advice.`,
-
-instagram: `You are a social media copywriter for IBD Health Hub — a UK-based IBD and gastrointestinal health platform. Write Instagram captions accompanying a visual post promoting a clinical article from ibdhealthhub.com.
-
-IBD Health Hub's Instagram audience spans IBD patients, chronic illness advocates, health-conscious individuals, and some healthcare professionals. Content should be engaging and share-worthy.
-
-RULES FOR EVERY CAPTION
-- Maximum 2,200 characters
-- Write ONLY the caption — no label, no preamble
-- The first line (before the "more" cut-off at ~125 chars) must be a compelling hook — this is what users see before tapping "more"
-- Each post takes a different angle (e.g. post 1: stat or finding as the hero; post 2: patient-experience or human-interest angle)
-- Structure: hook (1 line) → context (2–3 short paragraphs) → key takeaway or reflection → CTA "Read the full article — link in bio"
-- Emojis welcome, used purposefully: 3–6 per post
-- End with 6–10 hashtags on a new line: #IBD #CrohnsDisease #UlcerativeColitis #GutHealth #IBDWarrior #IBDCommunity #ChronicIllness #GutHealthMatters #Gastroenterology #IBDResearch
-- Warm, empathetic, accessible tone. UK British English.
-- Do not give clinical or dietary advice.`
-
-};
-
-const DEFAULT_PROMPT_IBD_LIVING = `You are a writer creating an engaging opinion piece for people living with inflammatory bowel disease (IBD) for an online IBD community platform. Your goal is to make complex medical ideas easy to understand while offering practical, real-world insights that patients can relate to and use in their daily lives.
-
-TONE & STYLE
-Write in a warm, clear, and accessible style. Avoid heavy medical jargon or explain it simply when needed. The tone should feel supportive, informative, and relatable — like a knowledgeable guide who understands the realities of living with IBD. Keep it engaging and easy to read.
+Balanced, context-rich, factual. Journalistic but with depth. Acknowledge complexity. Active voice. Accessible to readers without specialist knowledge of the region.
 
 STRUCTURE
-
-Title
-Short, clear, and relatable (5–10 words).
-
-Sub-title
-Prefixed with "Living with IBD" — a single sentence that captures the key message or takeaway of the article in a simple, engaging way.
-
-Introduction (100–150 words)
-Briefly introduce the topic and why it matters for people living with IBD. Connect to real-life challenges patients face.
-
-Understanding the Topic (150–200 words)
-Explain the key concept in simple terms. Focus on what patients need to know rather than technical detail.
-
-What This Means in Real Life (200–300 words)
-Translate the information into everyday impact.
-How might this affect symptoms, treatment, or lifestyle?
-What should patients be aware of?
-Include practical examples where helpful.
-
-Practical Tips & Suggestions (150–250 words)
-Provide realistic, actionable advice patients can try.
-Diet, lifestyle, symptom management, or communication with doctors.
-Keep suggestions safe, general, and non-prescriptive.
-
-Final Thoughts (100–150 words)
-Wrap up with a balanced perspective. Encourage patients to stay informed and work with their healthcare team.
-
-KEY GUIDELINES
-Prioritise clarity and usefulness over technical detail.
-Avoid making direct medical recommendations or claims.
-Do not overpromise outcomes or benefits.
-Focus on empowering patients with understanding and practical ideas.
-Keep total length around 700–900 words.
-Use UK British English.
+1. Headline (~10 words): clear, informative.
+2. Context (75–100 words): what the Abraham Accords are and where they stand today.
+3. Progress Made (150–200 words): concrete developments covered by the source.
+4. Challenges (150–200 words): honest assessment of obstacles and tensions.
+5. Israel-Iran Dimension (100–150 words): how this relates to the Merlows focus area.
+6. Path Forward (100–125 words): what comes next realistically.
+7. Source attribution.
 
 OUTPUT FORMAT
-Output the article in markdown. The very first line MUST be the article title prefixed with "# " — no category prefix in the title (e.g. "# Understanding Fatigue in IBD"). The very next non-empty line MUST be the subtitle prefixed with "## " starting with "Living with IBD:" (e.g. "## Living with IBD: How to manage energy levels day to day"). All other section headers (Introduction, Understanding the Topic, etc.) MUST use "## ".`;
+Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + one-line framing. All other headers use "## ".
+Total length: 600–900 words. UK British English.`;
+
+const DEFAULT_PROMPT_IBD_LIVING = `You are a writer for Merlows — an independent news portal focused on Israel-Iran relations and regional peace. Write a human-interest piece that brings the regional perspective to life for an international readership.
+
+TONE & STYLE
+Human, accessible, empathetic. Write about real people, real places, real lives. No jargon. Make the reader feel they are hearing from inside the region, not reading from a distance.
+
+STRUCTURE
+1. Title (5–10 words).
+2. Subtitle starting with "Regional Voices:": the human core of the story (5–10 words).
+3. The Story (150–200 words): open with a vivid, grounded scene or person from the source.
+4. Local Perspective (150–200 words): what people in the region are thinking, feeling, experiencing.
+5. The Bigger Picture (100–150 words): how this connects to the larger Israel-Iran dynamic.
+6. A Note of Hope (75–100 words): what this story tells us about the possibility of change.
+7. Source note.
+
+OUTPUT FORMAT
+Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
+Total length: 500–700 words. UK British English. Be respectful of all communities described.`;
 
 // Helper: return the hardcoded default prompt for a given category
 function getCatDefaultPrompt(catId) {
   var MAP = {
-    'clinical-reviews': DEFAULT_PROMPT,
-    'industry-news':    DEFAULT_PROMPT_INDUSTRY_NEWS,
+    'diplomatic-analysis': DEFAULT_PROMPT,
+    'breaking-news':    DEFAULT_PROMPT_INDUSTRY_NEWS,
     'op-eds':           DEFAULT_PROMPT_OP_EDS,
-    'white-papers':     DEFAULT_PROMPT_WHITE_PAPERS,
-    'infographics':     DEFAULT_PROMPT_INFOGRAPHICS,
-    'ibd-living':       DEFAULT_PROMPT_IBD_LIVING,
+    'cyrus-accord':     DEFAULT_PROMPT_WHITE_PAPERS,
+    'abraham-accords':     DEFAULT_PROMPT_INFOGRAPHICS,
+    'regional-voices':       DEFAULT_PROMPT_IBD_LIVING,
   };
   return MAP[catId] || DEFAULT_PROMPT;
 }
@@ -5050,8 +4848,8 @@ function getCatDefaultPrompt(catId) {
 // ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
-let currentCategory   = 'clinical-reviews';
-let multiDocs         = { 'op-eds': [], 'white-papers': [] }; // { name, text }[]
+let currentCategory   = 'diplomatic-analysis';
+let multiDocs         = { 'op-eds': [], 'cyrus-accord': [] }; // { name, text }[]
 let selectedTone      = 'practitioner';
 let selectedDesign    = 'Executive Summary';
 let wpSourceLinks     = [];
@@ -5267,7 +5065,7 @@ function switchCategory(catId) {
   var wpBtn = document.getElementById('viewOnWpBtn');
   if (wpBtn) { wpBtn.style.display = 'none'; wpBtn.href = '#'; }
 
-  // Update model dropdown for infographics
+  // Update model dropdown for abraham-accords
   updateModelSelectForCategory(catId);
 
   // Update category options card visibility
@@ -5297,11 +5095,11 @@ function updateGenCatOptions(catId) {
   var toneEl = document.getElementById('genOptTone');
   var wcEl   = document.getElementById('genOptWordCount');
   var dsEl   = document.getElementById('genOptDesign');
-  var infEl  = document.getElementById('genOptInfographic');
+  var infEl  = document.getElementById('genOptAbraham Accords');
   if (!card) return;
   var showTone = catId === 'op-eds';
-  var showWP   = catId === 'white-papers';
-  var showInf  = catId === 'infographics';
+  var showWP   = catId === 'cyrus-accord';
+  var showInf  = catId === 'abraham-accords';
   if (toneEl) toneEl.style.display = showTone ? '' : 'none';
   if (wcEl)   wcEl.style.display   = showWP   ? '' : 'none';
   if (dsEl)   dsEl.style.display   = showWP   ? '' : 'none';
@@ -5471,12 +5269,12 @@ async function fetchGenUrl(btn) {
 }
 
 const CATEGORY_META = {
-  'clinical-reviews': {
+  'diplomatic-analysis': {
     desc: 'Structured, objective summaries of published clinical trials for physician audiences',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>',
     titleParts: ['Clinical ', 'Reviews']
   },
-  'industry-news': {
+  'breaking-news': {
     desc: 'Timely, authoritative coverage of healthcare industry developments and market trends',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l6 6v8a2 2 0 0 1-2 2z"/><polyline points="17 20 17 14 7 14 7 20"/><polyline points="7 4 7 8 13 8"/></svg>',
     titleParts: ['Industry ', 'News']
@@ -5486,12 +5284,12 @@ const CATEGORY_META = {
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
     titleParts: ['Op-', 'Eds']
   },
-  'white-papers': {
+  'cyrus-accord': {
     desc: 'In-depth analytical reports on clinical, regulatory and commercial healthcare topics',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
     titleParts: ['White ', 'Papers']
   },
-  'infographics': {
+  'abraham-accords': {
     desc: 'Visual data storytelling and graphical summaries of complex clinical information',
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
     titleParts: ['Info', 'graphics']
@@ -6979,7 +6777,7 @@ function _wizRenderStep(step) {
     if (_wizSources.some(function(s) { return s.type === 'gmail'; })) {
       var promptEl = document.getElementById('wizPrompt');
       if (promptEl && !promptEl.value.trim()) {
-        promptEl.value = 'You will be given multiple IBD industry news emails received today. Create a single structured article for ibdhealthhub.com aimed at healthcare professionals.\n\nOUTPUT FORMAT — follow exactly:\nLine 1: "# " followed by the article title (e.g. "# IBD Industry News: Key Advances in Research and Therapy")\nLine 2: "# " followed by a short, snappy subtitle — one punchy sentence capturing the overall theme (e.g. "# New trial data and updated clinical guidance signal a shift toward precision care")\nThen the article body:\n\n## Today\'s IBD News Highlights\nA maximum 250-word executive summary written in flowing prose (NOT bullet points) that connects and contextualises all stories for a healthcare professional audience.\n\nThen for each individual story:\n## [Story Headline]\nA clean, professional write-up of the story. Preserve all key facts, figures, and quotes. Do not add any information not present in the original emails. End each story with the source URL on its own line in the format: (Source: https://...)\n\nDo not reproduce verbatim text. UK British English. Total length 600–900 words.';
+        promptEl.value = 'You will be given multiple IBD industry news emails received today. Create a single structured article for merlows.com aimed at healthcare professionals.\n\nOUTPUT FORMAT — follow exactly:\nLine 1: "# " followed by the article title (e.g. "# Breaking News: Key Advances in Research and Therapy")\nLine 2: "# " followed by a short, snappy subtitle — one punchy sentence capturing the overall theme (e.g. "# New trial data and updated clinical guidance signal a shift toward precision care")\nThen the article body:\n\n## Today\'s IBD News Highlights\nA maximum 250-word executive summary written in flowing prose (NOT bullet points) that connects and contextualises all stories for a healthcare professional audience.\n\nThen for each individual story:\n## [Story Headline]\nA clean, professional write-up of the story. Preserve all key facts, figures, and quotes. Do not add any information not present in the original emails. End each story with the source URL on its own line in the format: (Source: https://...)\n\nDo not reproduce verbatim text. UK British English. Total length 600–900 words.';
       }
       // Auto-select combine mode so all emails feed into one structured article
       var combineRadio = document.querySelector('input[name="wizCombine"][value="combine"]');
@@ -8079,7 +7877,7 @@ function loadLLMPage() {
   });
 
   // Category model defaults
-  var CATS = ['clinical-reviews','industry-news','op-eds','white-papers','infographics','ibd-living'];
+  var CATS = ['diplomatic-analysis','breaking-news','op-eds','cyrus-accord','abraham-accords','regional-voices'];
   CATS.forEach(function(catId) {
     var sel = document.getElementById('llm-cat-' + catId);
     if (sel) { var v = getCategoryModel(catId); if (v) sel.value = v; }
@@ -8101,10 +7899,10 @@ function handleFileSelect(event) { const f = event.target.files[0]; if (f) proce
 async function processFile(file) {
   if (!file.name.match(/\.(pdf|txt)$/i)) { showExtractionStatus('Only PDF and TXT files are supported.', 'error'); return; }
   currentFile = file;
-  // Only update clinical-reviews upload UI elements (other categories manage their own UI)
+  // Only update diplomatic-analysis upload UI elements (other categories manage their own UI)
   const fileInfoEl = document.getElementById('fileInfo');
   const uploadZoneEl = document.getElementById('uploadZone');
-  if (fileInfoEl && uploadZoneEl && currentCategory === 'clinical-reviews') {
+  if (fileInfoEl && uploadZoneEl && currentCategory === 'diplomatic-analysis') {
     document.getElementById('fileName').textContent = file.name;
     document.getElementById('fileSize').textContent = formatFileSize(file.size);
     fileInfoEl.style.display = 'flex';
@@ -8181,7 +7979,7 @@ async function generateReview() {
   if (currentCategory === 'op-eds') {
     const toneLabel = selectedTone === 'patient' ? 'patient-facing (accessible, empathetic, plain language)' : 'practitioner-facing (clinical, evidence-based, technical)';
     extraInstructions = `\n\nTone requirement: Write in a ${toneLabel} tone.`;
-  } else if (currentCategory === 'white-papers') {
+  } else if (currentCategory === 'cyrus-accord') {
     const wc = document.getElementById('wpWordCount')?.value || 2000;
     extraInstructions = `\n\nTarget length: approximately ${wc} words.\nDesign style: ${selectedDesign}.`;
   }
@@ -8214,7 +8012,7 @@ async function generateReview() {
 
   const selectedModel = getCategoryModel(currentCategory) || document.getElementById('modelSelect').value;
   const systemPrompt  = fullPrompt;
-  const fallbackPool  = currentCategory === 'infographics' ? INFOGRAPHIC_MODELS : FALLBACK_MODELS;
+  const fallbackPool  = currentCategory === 'abraham-accords' ? INFOGRAPHIC_MODELS : FALLBACK_MODELS;
   const modelQueue    = [selectedModel, ...fallbackPool.filter(m => m !== selectedModel)];
   let lastError = '';
 
@@ -8289,7 +8087,7 @@ async function attemptGeneration(model, systemPrompt, sourceText) {
   const truncatedText = (sourceText || extractedText).length > 60000 ? (sourceText || extractedText).substring(0, 60000) + '\n\n[Text truncated due to length]' : (sourceText || extractedText);
   const response = await fetch(API_URL, {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'IBD Health Hub Content Generator' },
+    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'Merlows Content Generator' },
     body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please generate content based on the following source material:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 4000, temperature: 0.3 })
   });
   if (!response.ok) {
@@ -8448,7 +8246,7 @@ async function deletePrompt(id) {
 }
 
 function resetToDefault() {
-  if (currentCategory === 'clinical-reviews') {
+  if (currentCategory === 'diplomatic-analysis') {
     document.getElementById('promptTextarea').value = DEFAULT_PROMPT;
   } else {
     document.getElementById('promptTextarea').value = '';
@@ -8865,7 +8663,7 @@ async function executeComparison(ids, model) {
     `=== ITEM ${i+1}: "${r.title}" (generated by ${r.model || 'Unknown'}) ===\n\n${r.text.slice(0, 8000)}`
   ).join('\n\n---\n\n');
 
-  const comparisonPrompt = `You are a senior medical editor and clinical writing expert at IBD Health Hub. You have been given ${reviews.length} content pieces. Your task is to compare them rigorously across two dimensions: (1) accuracy and completeness, and (2) writing style and quality.
+  const comparisonPrompt = `You are a senior medical editor and clinical writing expert at Merlows. You have been given ${reviews.length} content pieces. Your task is to compare them rigorously across two dimensions: (1) accuracy and completeness, and (2) writing style and quality.
 
 Provide a structured analysis with the following sections:
 
@@ -8920,7 +8718,7 @@ Specific, actionable improvements for the weaker item(s).`;
 async function attemptAnalysis(model, systemPrompt, reviewsText) {
   const response = await fetch(API_URL, {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'IBD Health Hub Content Comparison' },
+    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'Merlows Content Comparison' },
     body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please analyse and compare the following ${reviewsText.split('=== ITEM').length - 1} content items:\n\n${reviewsText}` }], stream: true, max_tokens: 2500, temperature: 0.2 })
   });
   if (!response.ok) {
@@ -9186,7 +8984,7 @@ function copyArticle() {
 function formatArticleHTML(text) {
   const lines = text.split('\n');
   let html = '', inMetaBlock = false, titleDone = false, subtitleDone = false;
-  const sectionHeaders = /^(\*{0,2})(Background|Study Design|Patient Population|Key Findings|Discussion|Safety|Authors|Reference|Clinical Relevance|Conclusions|Disclaimer|Industry|Op-Ed|White Paper|Infographic)/i;
+  const sectionHeaders = /^(\*{0,2})(Background|Study Design|Patient Population|Key Findings|Discussion|Safety|Authors|Reference|Clinical Relevance|Conclusions|Disclaimer|Industry|Op-Ed|Cyrus Accord|Abraham Accords)/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -9265,7 +9063,7 @@ function extractTitleFromArticle(text) {
   for (const line of lines) {
     let clean = line.replace(/^#+\s*/, '').trim();
     // Strip known category prefixes that legacy or fallback prompts may have injected into the title
-    clean = clean.replace(/^(Clinical Review|Op Ed|IBD Industry News|Industry News|White Paper|Infographic|Living with IBD)\s*:\s*/i, '').trim();
+    clean = clean.replace(/^(Diplomatic Analysis|Op Ed|IBD Breaking News|Breaking News|Cyrus Accord|Abraham Accords|Living with IBD)\s*:\s*/i, '').trim();
     if (clean.length > 10 && clean.length < 200) return clean;
   }
   return null;
@@ -9453,8 +9251,8 @@ async function removeFromQueue(idx) {
 //  CATEGORY INPUT HANDLERS
 // ═══════════════════════════════════════════════════════════
 function switchSourceTab(cat, tab) {
-  document.querySelectorAll(`#panel-industry-news .source-tab-btn`).forEach(b => b.classList.remove('active'));
-  document.querySelectorAll(`#panel-industry-news .source-pane`).forEach(p => p.classList.remove('active'));
+  document.querySelectorAll(`#panel-breaking-news .source-tab-btn`).forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`#panel-breaking-news .source-pane`).forEach(p => p.classList.remove('active'));
   document.getElementById(`news-tab-${tab}`).classList.add('active');
   document.getElementById(`news-pane-${tab}`).classList.add('active');
   // When switching back to paste, restore from textarea (don't blank out work already done)
@@ -9629,7 +9427,7 @@ function removeSourceLink(index) {
   renderSourceLinks();
 }
 
-function handleInfographicFileSelect(event) {
+function handleAbraham AccordsFileSelect(event) {
   const f = event.target.files[0];
   if (f) {
     processFile(f).then(() => {
@@ -9640,7 +9438,7 @@ function handleInfographicFileSelect(event) {
   }
 }
 
-function removeInfographicFile() {
+function removeAbraham AccordsFile() {
   extractedText = '';
   currentFile = null;
   document.getElementById('infographicFileInfo').style.display = 'none';
@@ -9653,7 +9451,7 @@ function updateModelSelectForCategory(catId) {
   const select = document.getElementById('modelSelect');
   if (!select) return;
   const allOptions = Array.from(select.options);
-  if (catId === 'infographics') {
+  if (catId === 'abraham-accords') {
     allOptions.forEach(opt => {
       opt.hidden = !INFOGRAPHIC_MODELS.includes(opt.value);
     });
@@ -9807,22 +9605,22 @@ function downloadHeroImage() {
 // ═══════════════════════════════════════════════════════════
 
 const BUILTIN_CATEGORY_META = {
-  'clinical-reviews': { description: 'Structured, objective summaries of published clinical trials for physician audiences', sources: ['single'], wpCategorySlug: 'clinical-reviews', icon: '🔬' },
-  'industry-news':    { description: 'Latest healthcare industry news, trends and developments', sources: ['links', 'paste'], wpCategorySlug: 'healthcare-news', icon: '📰' },
+  'diplomatic-analysis': { description: 'Structured, objective summaries of published clinical trials for physician audiences', sources: ['single'], wpCategorySlug: 'diplomatic-analysis', icon: '🔬' },
+  'breaking-news':    { description: 'Latest healthcare industry news, trends and developments', sources: ['links', 'paste'], wpCategorySlug: 'healthcare-news', icon: '📰' },
   'op-eds':           { description: 'Expert opinions and editorials on healthcare topics', sources: ['multiple'], wpCategorySlug: 'expert-opinions', icon: '💡' },
-  'white-papers':     { description: 'Comprehensive research and position papers', sources: ['multiple'], wpCategorySlug: 'white-papers', icon: '📄' },
-  'infographics':     { description: 'Visual content and data summaries', sources: ['single'], wpCategorySlug: 'infographic-gallery', icon: '📊' },
-  'ibd-living':       { description: 'Patient-focused content for people living with IBD', sources: ['links', 'paste'], wpCategorySlug: 'living-with-ibd', icon: '🫀' },
+  'cyrus-accord':     { description: 'Comprehensive research and position papers', sources: ['multiple'], wpCategorySlug: 'cyrus-accord', icon: '📄' },
+  'abraham-accords':     { description: 'Visual content and data summaries', sources: ['single'], wpCategorySlug: 'infographic-gallery', icon: '📊' },
+  'regional-voices':       { description: 'Patient-focused content for people living with IBD', sources: ['links', 'paste'], wpCategorySlug: 'living-with-ibd', icon: '🫀' },
 };
 
 // SVG icon markup for each built-in category (dark by default, orange on hover via CSS)
 const CATEGORY_SVG_ICONS = {
-  'clinical-reviews': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><polyline points="9 3 9 9 15 9 15 3"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="12" y2="18"/><path d="M19 3l-2 2 2 2 2-2-2-2z"/></svg>',
-  'industry-news':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>',
+  'diplomatic-analysis': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><polyline points="9 3 9 9 15 9 15 3"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="12" y2="18"/><path d="M19 3l-2 2 2 2 2-2-2-2z"/></svg>',
+  'breaking-news':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>',
   'op-eds':           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
-  'white-papers':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
-  'infographics':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-  'ibd-living':       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+  'cyrus-accord':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+  'abraham-accords':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  'regional-voices':       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
   '_default':         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
 };
 function getCatSvgIcon(catId) {
@@ -10330,7 +10128,7 @@ async function testWpCategorySlug() {
   if (!slug) { statusEl.textContent = 'Enter a slug first.'; statusEl.style.color = 'var(--text-muted)'; return; }
   statusEl.textContent = 'Verifying…'; statusEl.style.color = 'var(--text-muted)';
   try {
-    const resp = await fetch('https://ibdhealthhub.com/wp-json/wp/v2/categories?slug=' + encodeURIComponent(slug) + '&per_page=1');
+    const resp = await fetch('https://merlows.com/wp-json/wp/v2/categories?slug=' + encodeURIComponent(slug) + '&per_page=1');
     if (!resp.ok) throw new Error('WP API error ' + resp.status);
     const data = await resp.json();
     if (data.length > 0) {
@@ -10388,7 +10186,7 @@ function renderCatPromptPanel(catId) {
   var el = document.getElementById('catEditorPromptPanel');
   if (!el || !catId) return;
 
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: getCatDefaultPrompt(catId) };
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: getCatDefaultPrompt(catId) };
   var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
 
   // Update tab badge count
@@ -10398,7 +10196,7 @@ function renderCatPromptPanel(catId) {
   var active = prompts[0];
   var aText  = typeof active === 'string' ? active : (active.text || '');
   var aName  = typeof active === 'string' ? 'Default Prompt' : (active.name || 'Default Prompt');
-  var aBy    = typeof active === 'string' ? 'IBD Health Hub' : (active.createdBy || '');
+  var aBy    = typeof active === 'string' ? 'Merlows' : (active.createdBy || '');
 
   var activeEditor =
     '<div class="ced-prompt-active">' +
@@ -10460,7 +10258,7 @@ function cedSavePromptItem(catId, idx) {
   var byEl   = document.getElementById('cedp-by-'   + catId + '-' + idx);
   var textEl = document.getElementById('cedp-text-' + catId + '-' + idx);
   if (!textEl) return;
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: getCatDefaultPrompt(catId) };
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: getCatDefaultPrompt(catId) };
   var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
   prompts[idx] = {
     name:      nameEl ? nameEl.value.trim() : (prompts[idx] && prompts[idx].name ? prompts[idx].name : ''),
@@ -10506,7 +10304,7 @@ function cedAddPromptToCat(catId) {
   var nameEl = document.getElementById('cedp-new-name-' + catId);
   var byEl   = document.getElementById('cedp-new-by-' + catId);
   if (!textEl || !textEl.value.trim()) { alert('Please enter prompt text.'); return; }
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: getCatDefaultPrompt(catId) };
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: getCatDefaultPrompt(catId) };
   var prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
   prompts.push({
     name:      nameEl ? nameEl.value.trim() || 'Alternate Prompt' : 'Alternate Prompt',
@@ -10551,17 +10349,17 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('sidebar-collapsed');
   }
   // Load saved prompt for initial category, falling back to default
-  document.getElementById('promptTextarea').value = getEffectivePrompt('clinical-reviews');
+  document.getElementById('promptTextarea').value = getEffectivePrompt('diplomatic-analysis');
   // Seed the default prompt preview shown in the Prompt card
   var _initPreview = document.getElementById('genPromptDefaultPreview');
-  if (_initPreview) _initPreview.textContent = getCatDefaultPrompt('clinical-reviews');
+  if (_initPreview) _initPreview.textContent = getCatDefaultPrompt('diplomatic-analysis');
   // Auto-save prompt textarea edits to localStorage
   initPromptAutoSave();
   loadApiKeyUI();
   loadCustomCategories();
   activateCustomCategories();
-  updateCategoryHeader('clinical-reviews');
-  updateGenCatOptions('clinical-reviews');
+  updateCategoryHeader('diplomatic-analysis');
+  updateGenCatOptions('diplomatic-analysis');
   // Hash deep-link: /#pipeline, /#generator, etc. (used by review confirmation pages)
   var hashTab = window.location.hash.replace('#', '');
   var validTabs = ['dashboard','generator','archive','pipeline','distribution','calendar','monitoring','settings','prompts','llm','automation','automation-new','automation-rules','automation-inbox','categories']; // 'prompts' auto-redirects to distribution
@@ -10810,7 +10608,7 @@ async function callOpenRouter(prompt, apiKey, model) {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': window.location.href,
-      'X-Title': 'IBD Health Hub Content Generator',
+      'X-Title': 'Merlows Content Generator',
     },
     body: JSON.stringify({
       model,
@@ -11477,7 +11275,7 @@ async function heroLeftGenerate() {
   const model = (document.getElementById('heroAiModelSelect') || {}).value || 'google/gemini-3.1-flash-image-preview-20260226';
   showHeroLeftStatus('info', 'Generating image with AI… this can take 15–30 seconds');
   const kws = extractKeywordsFromText(text, 6);
-  const prompt = kws.join(', ') + ', medical healthcare professional, clinical setting, high quality, IBD Health Hub brand navy and teal. Absolutely no text, words, letters, numbers, or typography anywhere in the image.';
+  const prompt = kws.join(', ') + ', medical healthcare professional, clinical setting, high quality, Merlows brand navy and teal. Absolutely no text, words, letters, numbers, or typography anywhere in the image.';
   try {
     const resp = await fetch('/api/social/image', {
       method: 'POST',
@@ -11864,12 +11662,12 @@ const STATUS_COLS = [
 ];
 
 const CATEGORY_LABELS = {
-  'clinical-reviews': 'Clinical Review',
-  'industry-news':    'Industry News',
+  'diplomatic-analysis': 'Diplomatic Analysis',
+  'breaking-news':    'Breaking News',
   'op-eds':           'Op-Ed',
-  'white-papers':     'White Paper',
-  'infographics':     'Infographic',
-  'ibd-living':       'IBD Living',
+  'cyrus-accord':     'Cyrus Accord',
+  'abraham-accords':     'Abraham Accords',
+  'regional-voices':       'Regional Voices',
 };
 
 // ── Pipeline layout ──────────────────────────────
@@ -12807,8 +12605,8 @@ function getPromptsForCat(catId) {
     // prompts cached in localStorage from earlier deploys).
     var fresh = (typeof getCatDefaultPrompt === 'function') ? getCatDefaultPrompt(catId) : null;
     return raw.map(function(p) {
-      if (typeof p === 'string') return { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: p };
-      if (fresh && p && p.name === 'Default Prompt' && p.createdBy === 'IBD Health Hub' && (!/OUTPUT FORMAT/.test(p.text || '') || /slahealth/i.test(p.text || ''))) {
+      if (typeof p === 'string') return { name: 'Default Prompt', createdBy: 'Merlows', text: p };
+      if (fresh && p && p.name === 'Default Prompt' && p.createdBy === 'Merlows' && (!/OUTPUT FORMAT/.test(p.text || '') || /merlows-old-brand/i.test(p.text || ''))) {
         return Object.assign({}, p, { text: fresh });
       }
       return p;
@@ -12831,11 +12629,11 @@ function initPromptAutoSave() {
     _promptAutoSaveTimer = setTimeout(function() {
       var text = ta.value.trim();
       if (!text || !currentCategory) return;
-      var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: getCatDefaultPrompt(currentCategory) };
+      var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: getCatDefaultPrompt(currentCategory) };
       var prompts = getPromptsForCat(currentCategory) || [DEFAULT_OBJ];
       // Update the active prompt (index 0) with the current textarea value
       if (typeof prompts[0] === 'string') {
-        prompts[0] = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: text };
+        prompts[0] = { name: 'Default Prompt', createdBy: 'Merlows', text: text };
       } else {
         prompts[0] = Object.assign({}, prompts[0], { text: text });
       }
@@ -12866,14 +12664,14 @@ function loadPromptsTab_articleOnly() {
   if (!el) return;
 
   el.innerHTML = CATEGORIES.map(function(cat) {
-    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: getCatDefaultPrompt(cat.id) };
+    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: getCatDefaultPrompt(cat.id) };
     var prompts = getPromptsForCat(cat.id) || [DEFAULT_OBJ];
 
     // Active (index 0) — full editor
     var active = prompts[0];
     var aText  = typeof active === 'string' ? active : (active.text || '');
     var aName  = typeof active === 'string' ? 'Default Prompt' : (active.name || '');
-    var aBy    = typeof active === 'string' ? 'IBD Health Hub' : (active.createdBy || '');
+    var aBy    = typeof active === 'string' ? 'Merlows' : (active.createdBy || '');
     var aId    = cat.id + '-0';
 
     var activeEditor = '<div class="prompt-active-editor">' +
@@ -12942,7 +12740,7 @@ function getSocialPromptsForPlat(platId) {
     var raw = JSON.parse(localStorage.getItem('sla_social_prompts_' + platId) || 'null');
     if (!raw) return null;
     return raw.map(function(p) {
-      if (typeof p === 'string') return { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: p };
+      if (typeof p === 'string') return { name: 'Default Prompt', createdBy: 'Merlows', text: p };
       return p;
     });
   } catch(_) { return null; }
@@ -12965,13 +12763,13 @@ function loadSocialPromptsTab() {
   if (!el) return;
 
   el.innerHTML = SOCIAL_PLATFORMS.map(function(plat) {
-    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: DEFAULT_SOCIAL_PROMPTS[plat.id] || '' };
+    var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: DEFAULT_SOCIAL_PROMPTS[plat.id] || '' };
     var prompts = getSocialPromptsForPlat(plat.id) || [DEFAULT_OBJ];
 
     var active = prompts[0];
     var aText  = typeof active === 'string' ? active : (active.text || '');
     var aName  = typeof active === 'string' ? 'Default Prompt' : (active.name || '');
-    var aBy    = typeof active === 'string' ? 'IBD Health Hub' : (active.createdBy || '');
+    var aBy    = typeof active === 'string' ? 'Merlows' : (active.createdBy || '');
     var aId    = 'sp-' + plat.id + '-0';
 
     var smallSvg = (PLAT_SVG[plat.id] || '').replace(/width:20px;height:20px/g, 'width:14px;height:14px');
@@ -13041,7 +12839,7 @@ function saveSocialPromptItem(platId, idx) {
   var textEl = document.getElementById('prompt-text-' + aId);
   if (!textEl) return;
   var platDefaultText = (function() { var p = SOCIAL_PLATFORMS.find(function(x){return x.id===platId;}); return p ? ('Write a ' + p.label + ' post. Tone: ' + p.tone) : ''; })();
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: platDefaultText };
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: platDefaultText };
   var prompts = getSocialPromptsForPlat(platId) || [DEFAULT_OBJ];
   prompts[idx] = {
     name:      nameEl ? nameEl.value.trim() : (prompts[idx].name || ''),
@@ -13076,7 +12874,7 @@ function addSocialPromptToPlat(platId) {
   var byEl   = document.getElementById('prompt-new-by-sp-' + platId);
   if (!textEl || !textEl.value.trim()) return;
   var platDefaultText = (function() { var p = SOCIAL_PLATFORMS.find(function(x){return x.id===platId;}); return p ? ('Write a ' + p.label + ' post. Tone: ' + p.tone) : ''; })();
-  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: platDefaultText };
+  var DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: platDefaultText };
   var prompts = getSocialPromptsForPlat(platId) || [DEFAULT_OBJ];
   prompts.push({
     name:      (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : ('Prompt ' + (prompts.length + 1)),
@@ -13143,7 +12941,7 @@ function savePromptItem(catId, idx) {
   const textEl = document.getElementById('prompt-text-' + catId + '-' + idx);
   if (!textEl) return;
 
-  const DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: DEFAULT_PROMPT };
+  const DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: DEFAULT_PROMPT };
   const prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
 
   prompts[idx] = {
@@ -13198,7 +12996,7 @@ function addPromptToCat(catId) {
   const byEl   = document.getElementById('prompt-new-by-'   + catId);
   if (!textEl || !textEl.value.trim()) return;
 
-  const DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'IBD Health Hub', text: DEFAULT_PROMPT };
+  const DEFAULT_OBJ = { name: 'Default Prompt', createdBy: 'Merlows', text: DEFAULT_PROMPT };
   const prompts = getPromptsForCat(catId) || [DEFAULT_OBJ];
 
   prompts.push({

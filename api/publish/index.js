@@ -2,12 +2,12 @@
 
 // Map app category IDs → WordPress category slugs
 const CATEGORY_SLUG_MAP = {
-  'industry-news':    'healthcare-news',
-  'clinical-reviews': 'clinical-reviews',
-  'op-eds':           'expert-opinions',
-  'white-papers':     'white-papers',
-  'infographics':     'infographic-gallery',
-  'ibd-living':       'living-with-ibd',
+  'breaking-news':       'breaking-news',
+  'diplomatic-analysis': 'diplomatic-analysis',
+  'op-eds':              'op-eds-commentary',
+  'cyrus-accord':        'cyrus-accord',
+  'abraham-accords':     'abraham-accords',
+  'regional-voices':     'regional-voices',
 };
 
 // Resolve a WP category slug to its numeric ID via the REST API.

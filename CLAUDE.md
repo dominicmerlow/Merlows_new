@@ -1,4 +1,4 @@
-# SLAHEALTH ClinicalReview Generator — Claude Context
+# MERLOWS Content Generator — Claude Context
 
 ## Architecture
 - **Single-file app**: entire UI lives in `index.html` (inline JS/CSS). No build step.
@@ -10,7 +10,7 @@
 - GitHub auto-deploy is **disabled** (`"github": {"enabled": false}` in vercel.json).
 - Always deploy manually: `vercel --prod --yes` from repo root.
 - Vercel Hobby plan: **12 serverless function limit** — do not add new files under `api/`.
-- Production URL: https://sla-health-content-generator.vercel.app
+- Production URL: https://merlows.vercel.app
 
 ## Vercel Routing (Critical)
 - All automation routes handled by `api/automation/[...slug].js` (single catch-all).
