@@ -5,16 +5,16 @@
         the_post();
         
         // Hero Settings
-        $title_color = get_theme_mod('ibdhh_hero_title_color', '#ffffff');
-        $title_size = get_theme_mod('ibdhh_hero_title_size', 52);
-        $mask_enabled = get_theme_mod('ibdhh_hero_mask_toggle', true);
-        $mask_opacity = get_theme_mod('ibdhh_hero_mask_opacity', 0.5); 
+        $title_color = get_theme_mod('mlws_hero_title_color', '#ffffff');
+        $title_size = get_theme_mod('mlws_hero_title_size', 52);
+        $mask_enabled = get_theme_mod('mlws_hero_mask_toggle', true);
+        $mask_opacity = get_theme_mod('mlws_hero_mask_opacity', 0.5); 
 
         $hero_bg = '';
         if ( has_post_thumbnail() ) {
             $hero_bg = get_the_post_thumbnail_url( get_the_ID(), 'full' );
         } else {
-            $hero_bg = get_theme_mod('ibdhh_homepage_hero_image') ?: get_template_directory_uri() . '/assets/img/news_hero.png';
+            $hero_bg = get_theme_mod('mlws_homepage_hero_image') ?: get_template_directory_uri() . '/assets/img/news_hero.png';
         }
         
         $overlay_css = '';

@@ -1,6 +1,6 @@
 <?php
 /**
- * IBD Health Hub Quiz Modal Template
+ * Merlows Quiz Modal Template
  */
 ?>
 <div id="ibd-quiz-modal" class="ibd-modal" style="display:none; position:fixed; inset:0; background:rgba(10, 25, 41, 0.95); z-index:10000; overflow-y:auto; padding:20px; align-items:flex-start; justify-content:center;">
@@ -8,7 +8,7 @@
         <span onclick="closeQuizModal()" style="position:absolute; top:20px; right:20px; font-size:32px; color:white; cursor:pointer; z-index:10001; background:rgba(0,0,0,0.3); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:0;">&times;</span>
         
         <div class="quiz-header" style="background: #0F172A; color: white; padding: 40px; text-align: center;">
-            <h2 id="modal-quiz-title" style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800; margin: 0 0 10px 0;">IBD Health Hub Discovery</h2>
+            <h2 id="modal-quiz-title" style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800; margin: 0 0 10px 0;">Merlows Discovery</h2>
             <p id="modal-quiz-subtitle" style="font-size: 16px; color: #cbd5e1; margin: 0;">Tell us a bit about yourself to personalize your experience.</p>
         </div>
         
@@ -52,7 +52,7 @@ let currentQuizStep = 1;
 
 // Parse existing results
 <?php 
-$meta = is_user_logged_in() ? get_user_meta(get_current_user_id(), '_ibdhh_healthcare_quiz_results', true) : array();
+$meta = is_user_logged_in() ? get_user_meta(get_current_user_id(), '_mlws_healthcare_quiz_results', true) : array();
 if (!is_array($meta)) $meta = array();
 ?>
 let savedData = <?php echo json_encode( empty($meta) ? (object)array() : $meta ); ?>;
@@ -327,9 +327,9 @@ function submitQuiz(quickSave = false) {
         url: '<?php echo admin_url('admin-ajax.php'); ?>',
         type: 'POST',
         data: {
-            action: 'ibdhh_save_quiz_results',
+            action: 'mlws_save_quiz_results',
             quiz_data: payload,
-            nonce: '<?php echo wp_create_nonce("ibdhh_quiz_nonce"); ?>'
+            nonce: '<?php echo wp_create_nonce("mlws_quiz_nonce"); ?>'
         },
         success: function(res) {
             if(quickSave) location.reload();

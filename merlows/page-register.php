@@ -11,11 +11,11 @@ if (is_user_logged_in()) {
 }
 
 // Handle registration form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ibdhh_register_submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mlws_register_submit'])) {
     $errors = array();
     
     // Verify nonce
-    if (!isset($_POST['ibdhh_register_nonce']) || !wp_verify_nonce($_POST['ibdhh_register_nonce'], 'ibdhh_register_action')) {
+    if (!isset($_POST['mlws_register_nonce']) || !wp_verify_nonce($_POST['mlws_register_nonce'], 'mlws_register_action')) {
         $errors[] = 'Security check failed. Please try again.';
     }
     
@@ -300,7 +300,7 @@ get_header();
         <div class="register-header">
             <div class="register-logo">S</div>
             <h1 class="register-title">Create Your Account</h1>
-            <p class="register-subtitle">Join the IBD Health Hub community today</p>
+            <p class="register-subtitle">Join the Merlows community today</p>
         </div>
 
         <?php if (!empty($errors)): ?>
@@ -314,7 +314,7 @@ get_header();
         <?php endif; ?>
 
         <form method="POST" action="">
-            <?php wp_nonce_field('ibdhh_register_action', 'ibdhh_register_nonce'); ?>
+            <?php wp_nonce_field('mlws_register_action', 'mlws_register_nonce'); ?>
             
             <div class="form-group">
                 <label class="form-label">I am a:</label>
@@ -367,7 +367,7 @@ get_header();
                 <input type="password" id="user_password_confirm" name="user_password_confirm" class="form-input" required minlength="8">
             </div>
 
-            <button type="submit" name="ibdhh_register_submit" class="submit-btn">Create Account</button>
+            <button type="submit" name="mlws_register_submit" class="submit-btn">Create Account</button>
         </form>
 
         <div class="login-link">

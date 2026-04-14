@@ -7,7 +7,7 @@
 $contact_sent  = false;
 $contact_error = '';
 
-if ( isset( $_POST['ibdhh_contact_submit'] ) && wp_verify_nonce( $_POST['ibdhh_contact_nonce'], 'ibdhh_contact_form' ) ) {
+if ( isset( $_POST['mlws_contact_submit'] ) && wp_verify_nonce( $_POST['mlws_contact_nonce'], 'mlws_contact_form' ) ) {
     $name    = sanitize_text_field( $_POST['contact_name'] ?? '' );
     $email   = sanitize_email( $_POST['contact_email'] ?? '' );
     $subject = sanitize_text_field( $_POST['contact_subject'] ?? '' );
@@ -19,7 +19,7 @@ if ( isset( $_POST['ibdhh_contact_submit'] ) && wp_verify_nonce( $_POST['ibdhh_c
         $contact_error = 'Please enter a valid email address.';
     } else {
         $to      = get_option( 'admin_email' );
-        $subject = $subject ? "Contact: $subject" : "New Contact Form Submission – IBD Health Hub";
+        $subject = $subject ? "Contact: $subject" : "New Contact Form Submission – Merlows";
         $body    = "Name: $name\nEmail: $email\n\n$message";
         $headers = array( "Reply-To: $name <$email>" );
 
@@ -37,7 +37,7 @@ get_header(); ?>
 
     <?php
     // ── Style helper (unique name to avoid collision with other templates) ──
-    function ibdhh_get_style_contact( $prefix, $default_bg = '' ) {
+    function mlws_get_style_contact( $prefix, $default_bg = '' ) {
         $bg       = get_theme_mod( $prefix . '_bg', $default_bg );
         $t_color  = get_theme_mod( $prefix . '_title_color' );
         $t_size   = get_theme_mod( $prefix . '_title_size' );
@@ -66,13 +66,13 @@ get_header(); ?>
 
     <!-- ══ HERO SECTION ══════════════════════════════════════════════════ -->
     <?php
-    $hero_img      = get_theme_mod( 'ibdhh_contact_hero_img',   get_template_directory_uri() . '/assets/img/hcp_hero.png' );
-    $hero_bg_color = get_theme_mod( 'ibdhh_contact_hero_bg_color' );
-    $hero_tag      = get_theme_mod( 'ibdhh_contact_hero_tag',   'Get in Touch' );
-    $hero_title    = get_theme_mod( 'ibdhh_contact_hero_title', 'We\'d Love to <span class="highlight">Hear From You</span>' );
-    $hero_desc     = get_theme_mod( 'ibdhh_contact_hero_desc',  'Whether you\'re a patient, healthcare professional, researcher, or media contact — our team is here to help. Reach out and we\'ll respond within one business day.' );
+    $hero_img      = get_theme_mod( 'mlws_contact_hero_img',   get_template_directory_uri() . '/assets/img/hcp_hero.png' );
+    $hero_bg_color = get_theme_mod( 'mlws_contact_hero_bg_color' );
+    $hero_tag      = get_theme_mod( 'mlws_contact_hero_tag',   'Get in Touch' );
+    $hero_title    = get_theme_mod( 'mlws_contact_hero_title', 'We\'d Love to <span class="highlight">Hear From You</span>' );
+    $hero_desc     = get_theme_mod( 'mlws_contact_hero_desc',  'Whether you\'re a patient, healthcare professional, researcher, or media contact — our team is here to help. Reach out and we\'ll respond within one business day.' );
 
-    $hero_styles   = ibdhh_get_style_contact( 'ibdhh_contact_hero' );
+    $hero_styles   = mlws_get_style_contact( 'mlws_contact_hero' );
     $hero_bg_style = "background: linear-gradient(rgba(10,25,41,0.78), rgba(10,25,41,0.93)), url('" . esc_url( $hero_img ) . "') no-repeat center center; background-size: cover;";
     if ( $hero_bg_color ) {
         $hero_bg_style = "background: {$hero_bg_color};";
@@ -97,17 +97,17 @@ get_header(); ?>
 
     <!-- ══ MAIN CONTENT: DETAILS + FORM ═════════════════════════════════ -->
     <?php
-    $intro_title  = get_theme_mod( 'ibdhh_contact_intro_title', 'How Can We Help?' );
-    $intro_text   = get_theme_mod( 'ibdhh_contact_intro_text',  'IBD Health Hub is committed to providing exceptional support to every member of our community. Use the form to send us a message, or reach us directly through any of the channels below.' );
-    $detail_email = get_theme_mod( 'ibdhh_contact_email',   'info@ibdhealthhub.com' );
-    $detail_phone = get_theme_mod( 'ibdhh_contact_phone',   '+44 (0)1628 526 005' );
-    $detail_addr  = get_theme_mod( 'ibdhh_contact_address', 'IBD Health Hub UK Ltd, 4 Renaissance Way, Wooburn Green, HP10 0DF, United Kingdom' );
-    $detail_hours = get_theme_mod( 'ibdhh_contact_hours',   'Monday – Friday, 9:00 am – 5:00 pm GMT' );
+    $intro_title  = get_theme_mod( 'mlws_contact_intro_title', 'How Can We Help?' );
+    $intro_text   = get_theme_mod( 'mlws_contact_intro_text',  'Merlows is committed to providing exceptional support to every member of our community. Use the form to send us a message, or reach us directly through any of the channels below.' );
+    $detail_email = get_theme_mod( 'mlws_contact_email',   'info@merlows.com' );
+    $detail_phone = get_theme_mod( 'mlws_contact_phone',   '+44 (0)1628 526 005' );
+    $detail_addr  = get_theme_mod( 'mlws_contact_address', 'Merlows UK Ltd, 4 Renaissance Way, Wooburn Green, HP10 0DF, United Kingdom' );
+    $detail_hours = get_theme_mod( 'mlws_contact_hours',   'Monday – Friday, 9:00 am – 5:00 pm GMT' );
 
-    $social_linkedin  = get_theme_mod( 'ibdhh_social_linkedin' );
-    $social_facebook  = get_theme_mod( 'ibdhh_social_facebook' );
-    $social_twitter   = get_theme_mod( 'ibdhh_social_twitter' );
-    $social_instagram = get_theme_mod( 'ibdhh_social_instagram' );
+    $social_linkedin  = get_theme_mod( 'mlws_social_linkedin' );
+    $social_facebook  = get_theme_mod( 'mlws_social_facebook' );
+    $social_twitter   = get_theme_mod( 'mlws_social_twitter' );
+    $social_instagram = get_theme_mod( 'mlws_social_instagram' );
     ?>
     <section class="section-padding" style="background: var(--accent-color, #f8fafc);">
         <div class="container">
@@ -249,7 +249,7 @@ get_header(); ?>
                     <?php endif; ?>
 
                     <form method="post" action="<?php echo esc_url( get_permalink() ); ?>#contact-form" id="contact-form" novalidate>
-                        <?php wp_nonce_field( 'ibdhh_contact_form', 'ibdhh_contact_nonce' ); ?>
+                        <?php wp_nonce_field( 'mlws_contact_form', 'mlws_contact_nonce' ); ?>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
@@ -305,7 +305,7 @@ get_header(); ?>
                                       onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';"><?php echo esc_textarea( $_POST['contact_message'] ?? '' ); ?></textarea>
                         </div>
 
-                        <button type="submit" name="ibdhh_contact_submit" value="1" class="btn btn-primary"
+                        <button type="submit" name="mlws_contact_submit" value="1" class="btn btn-primary"
                                 style="width: 100%; padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; letter-spacing: 0.3px;">
                             Send Message
                             <svg style="display:inline-block;vertical-align:middle;margin-left:8px;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">

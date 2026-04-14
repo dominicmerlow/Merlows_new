@@ -4,8 +4,8 @@
         
         <h3 class="card-title" style="margin-bottom:24px; font-family:'Outfit'; font-size:24px;">Update Clinical Information</h3>
         <form id="modal-clinical-profile-form">
-            <?php wp_nonce_field( 'ibdhh_dashboard_nonce', 'nonce' ); ?>
-            <input type="hidden" name="action" value="ibdhh_save_clinical_profile">
+            <?php wp_nonce_field( 'mlws_dashboard_nonce', 'nonce' ); ?>
+            <input type="hidden" name="action" value="mlws_save_clinical_profile">
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                 <div>
@@ -70,7 +70,7 @@
 function openClinicalInfoModal() {
     <?php 
     $user_id = get_current_user_id();
-    $data = get_user_meta($user_id, '_ibdhh_clinical_profile', true) ?: array();
+    $data = get_user_meta($user_id, '_mlws_clinical_profile', true) ?: array();
     ?>
     const data = <?php echo json_encode($data); ?>;
     if(data) {

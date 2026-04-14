@@ -8,10 +8,10 @@ get_header(); ?>
 
     <!-- HERO SECTION -->
     <?php
-    $hero_bg    = get_theme_mod( 'ibdhh_pat_hero_bg', get_template_directory_uri() . '/assets/img/patient_hero.png' );
-    $hero_tag   = get_theme_mod( 'ibdhh_pat_hero_tag',   'Patient Portal' );
-    $hero_title = get_theme_mod( 'ibdhh_pat_hero_title', 'Empowering Your <span class="highlight">Wellness Journey</span>' );
-    $hero_desc  = get_theme_mod( 'ibdhh_pat_hero_desc',  'More than just a news site—a truly useful platform providing the highest quality clinical information, innovative tools, and expert opinions to help you explore and manage your gastro healthcare concerns.' );
+    $hero_bg    = get_theme_mod( 'mlws_pat_hero_bg', get_template_directory_uri() . '/assets/img/patient_hero.png' );
+    $hero_tag   = get_theme_mod( 'mlws_pat_hero_tag',   'Patient Portal' );
+    $hero_title = get_theme_mod( 'mlws_pat_hero_title', 'Empowering Your <span class="highlight">Wellness Journey</span>' );
+    $hero_desc  = get_theme_mod( 'mlws_pat_hero_desc',  'More than just a news site—a truly useful platform providing the highest quality clinical information, innovative tools, and expert opinions to help you explore and manage your gastro healthcare concerns.' );
     ?>
     <section class="hero patient-hero" style="padding: 80px 0 120px; display: flex; align-items: center; background: linear-gradient(rgba(10,25,41,0.7), rgba(10,25,41,0.85)), url('<?php echo esc_url( $hero_bg ); ?>') no-repeat center center; background-size: cover;">
         <div class="container">
@@ -29,13 +29,13 @@ get_header(); ?>
 
     <!-- BENEFITS SECTION -->
     <?php
-    $ben_tag   = get_theme_mod( 'ibdhh_pat_ben_tag',   'Why Choose IBD Health Hub?' );
-    $ben_title = get_theme_mod( 'ibdhh_pat_ben_title',  'Not Just Another Community' );
-    $ben_desc  = get_theme_mod( 'ibdhh_pat_ben_desc',  'IBD Health Hub is a comprehensive suite of resources designed to aid your personal health journey. We bridge the gap between complex medical research and practical, daily wellness by providing clinical information in a format that is easy to understand.' );
+    $ben_tag   = get_theme_mod( 'mlws_pat_ben_tag',   'Why Choose Merlows?' );
+    $ben_title = get_theme_mod( 'mlws_pat_ben_title',  'Not Just Another Community' );
+    $ben_desc  = get_theme_mod( 'mlws_pat_ben_desc',  'Merlows is a comprehensive suite of resources designed to aid your personal health journey. We bridge the gap between complex medical research and practical, daily wellness by providing clinical information in a format that is easy to understand.' );
 
     $ben_defaults = array(
         1 => array( 'Clear Clinical Info',   'Access cutting-edge clinical information translated into a clear, easy-to-understand format tailored for patients, without the medical jargon.' ),
-        2 => array( 'Renowned Expertise',    'Engage with exclusive content, insights, and guidance produced directly by IBD Health Hub specialists and world-renowned gastro healthcare experts.' ),
+        2 => array( 'Renowned Expertise',    'Engage with exclusive content, insights, and guidance produced directly by Merlows specialists and world-renowned gastro healthcare experts.' ),
         3 => array( 'Actionable Solutions',  'Take control with highly interactive calculators, health trackers, and personalized AI to bring the clinic directly into your home life.' ),
     );
     $ben_colors = array( 1 => 'var(--primary-color)', 2 => '#9F2B68', 3 => '#C75D8E' );
@@ -54,8 +54,8 @@ get_header(); ?>
             </div>
             <div class="grid-3 benefit-grid margin-b-60">
                 <?php for ( $i = 1; $i <= 3; $i++ ) :
-                    $ben_t = get_theme_mod( "ibdhh_pat_ben{$i}_title", $ben_defaults[ $i ][0] );
-                    $ben_d = get_theme_mod( "ibdhh_pat_ben{$i}_desc",  $ben_defaults[ $i ][1] );
+                    $ben_t = get_theme_mod( "mlws_pat_ben{$i}_title", $ben_defaults[ $i ][0] );
+                    $ben_d = get_theme_mod( "mlws_pat_ben{$i}_desc",  $ben_defaults[ $i ][1] );
                 ?>
                 <div style="text-align: center; padding: 40px 24px; background: var(--accent-color); border-radius: var(--radius-lg);">
                     <div style="width: 64px; height: 64px; background: <?php echo $ben_colors[ $i ]; ?>; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
@@ -71,7 +71,7 @@ get_header(); ?>
 
     <!-- TOOLS SECTION -->
     <?php
-    $tool_title = get_theme_mod( 'ibdhh_pat_tool_title', 'Innovative Tools at Your Fingertips' );
+    $tool_title = get_theme_mod( 'mlws_pat_tool_title', 'Innovative Tools at Your Fingertips' );
     $tool_defaults = array(
         1 => array( 'Ask IBD-i Expert',      'Interact with our AI intelligence trained specifically in clinical gastro conditions for instant, reliable answers to your health questions.' ),
         2 => array( 'Bookmark & Clip',        'Easily save important articles, clip vital paragraphs, and create your own customized research notes directly in your portal.' ),
@@ -102,8 +102,8 @@ get_header(); ?>
             <h2 class="text-center" style="color: var(--secondary-color); margin-bottom: 40px;"><?php echo esc_html( $tool_title ); ?></h2>
             <div class="grid-3">
                 <?php for ( $i = 1; $i <= 6; $i++ ) :
-                    $t_title = get_theme_mod( "ibdhh_pat_tool{$i}_title", $tool_defaults[ $i ][0] );
-                    $t_desc  = get_theme_mod( "ibdhh_pat_tool{$i}_desc",  $tool_defaults[ $i ][1] );
+                    $t_title = get_theme_mod( "mlws_pat_tool{$i}_title", $tool_defaults[ $i ][0] );
+                    $t_desc  = get_theme_mod( "mlws_pat_tool{$i}_desc",  $tool_defaults[ $i ][1] );
                 ?>
                 <div style="display: flex; gap: 16px; padding: 28px; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
                     <div style="flex-shrink: 0; width: 48px; height: 48px; background: linear-gradient(135deg, <?php echo $tool_colors[ $i ]; ?>); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
@@ -121,8 +121,8 @@ get_header(); ?>
 
     <!-- CTA SECTION -->
     <?php
-    $cta_title = get_theme_mod( 'ibdhh_pat_cta_title', 'Begin Your Journey' );
-    $cta_desc  = get_theme_mod( 'ibdhh_pat_cta_desc',  "Join thousands of patients taking control of their gut health and longevity. It's completely free to start using our clinical resources today." );
+    $cta_title = get_theme_mod( 'mlws_pat_cta_title', 'Begin Your Journey' );
+    $cta_desc  = get_theme_mod( 'mlws_pat_cta_desc',  "Join thousands of patients taking control of their gut health and longevity. It's completely free to start using our clinical resources today." );
     ?>
     <section id="subscribe" class="section-padding" style="background: linear-gradient(135deg, var(--secondary-color), #112240);">
         <div class="container" style="text-align: center; color: white;">

@@ -16,7 +16,7 @@ while ( have_posts() ) :
     $audio_summary = get_post_meta( get_the_ID(), '_oped_audio_summary', true );
     $video_summary = get_post_meta( get_the_ID(), '_oped_video_summary', true );
     $quiz_embed = get_post_meta( get_the_ID(), '_oped_quiz_embed', true );
-    $attached_document = get_post_meta( get_the_ID(), '_ibdhh_attached_document', true );
+    $attached_document = get_post_meta( get_the_ID(), '_mlws_attached_document', true );
     $author_bio = get_post_meta( get_the_ID(), '_oped_author_bio', true );
     $read_time = get_post_meta( get_the_ID(), '_oped_read_time', true );
     
@@ -43,10 +43,10 @@ while ( have_posts() ) :
     <!-- Hero Section with Featured Image -->
     <?php
     // Hero Settings
-    $title_color = get_theme_mod('ibdhh_hero_title_color', '#ffffff');
-    $title_size = get_theme_mod('ibdhh_hero_title_size', 40);
-    $mask_enabled = get_theme_mod('ibdhh_hero_mask_toggle', true);
-    $mask_opacity = get_theme_mod('ibdhh_hero_mask_opacity', 0.5); 
+    $title_color = get_theme_mod('mlws_hero_title_color', '#ffffff');
+    $title_size = get_theme_mod('mlws_hero_title_size', 40);
+    $mask_enabled = get_theme_mod('mlws_hero_mask_toggle', true);
+    $mask_opacity = get_theme_mod('mlws_hero_mask_opacity', 0.5); 
 
     $hero_bg = '';
     if ( has_post_thumbnail() ) {
@@ -54,18 +54,12 @@ while ( have_posts() ) :
     } else {
         // Category-based default hero images
         $hero_map = array(
-            'healthcare-news'   => 'news_hero.png',
-            'clinical-reviews'  => 'research_hero.png',
-            'expert-opinions'   => 'opinion_hero.png',
-            'tools-resources'   => 'hcp_hero.png',
-            'education-courses' => 'education_hero.png',
-            'patient-education' => 'patient_hero.png',
-            'nutrition-science' => 'patient_hero.png',
-            'gastro-health'     => 'research_hero.png',
-            'ibd-management'    => 'hcp_hero.png',
-            'living-with-ibd'   => 'patient_hero.png',
-            'media-library'     => 'education_hero.png',
-            'infographic-gallery' => 'education_hero.png',
+            'breaking-news'       => 'news_hero.png',
+            'diplomatic-analysis' => 'research_hero.png',
+            'op-eds-commentary'   => 'opinion_hero.png',
+            'cyrus-accord'        => 'hcp_hero.png',
+            'abraham-accords'     => 'education_hero.png',
+            'regional-voices'     => 'patient_hero.png',
         );
         $hero_file = 'news_hero.png'; // default fallback
         $post_cats = get_the_category();
@@ -220,11 +214,11 @@ while ( have_posts() ) :
                     <!-- Redesigned Save Button -->
                     <?php 
                         $is_logged_in = is_user_logged_in();
-                        $is_saved = $is_logged_in ? ibdhh_is_bookmarked() : false;
+                        $is_saved = $is_logged_in ? mlws_is_bookmarked() : false;
                         $saved_bg = $is_saved ? '#9F2B68' : '#9F2B68'; // Green if saved, Orange if not
                     ?>
                     <div class="oped-sidebar-block" style="padding: 0; background: transparent; border: none; margin-bottom: 24px;">
-                        <button id="ibd-bookmark-sidebar-btn" style="width: 100%; padding: 16px; background: <?php echo $saved_bg; ?>; border: none; border-radius: 12px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" data-post-id="<?php the_ID(); ?>" data-nonce="<?php echo wp_create_nonce('ibdhh_dashboard_nonce'); ?>" data-logged-in="<?php echo $is_logged_in ? '1' : '0'; ?>">
+                        <button id="ibd-bookmark-sidebar-btn" style="width: 100%; padding: 16px; background: <?php echo $saved_bg; ?>; border: none; border-radius: 12px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" data-post-id="<?php the_ID(); ?>" data-nonce="<?php echo wp_create_nonce('mlws_dashboard_nonce'); ?>" data-logged-in="<?php echo $is_logged_in ? '1' : '0'; ?>">
                             <span class="icon" style="font-size: 20px;"><?php echo $is_saved ? '★' : '☆'; ?></span>
                             <span class="text" style="font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;"><?php echo $is_saved ? 'Article Saved' : 'Save This Article'; ?></span>
                         </button>
@@ -254,7 +248,7 @@ while ( have_posts() ) :
                             btn.css('opacity', '0.7');
                             
                             $.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-                                action: 'ibdhh_toggle_bookmark',
+                                action: 'mlws_toggle_bookmark',
                                 post_id: pid,
                                 nonce: nonce
                             }, function(res) {
@@ -565,7 +559,7 @@ while ( have_posts() ) :
                 <p>Get the latest evidence-based research on gut health, longevity, and clinical nutrition delivered to your inbox weekly.</p>
                 <div class="subscribe-form">
                     <input type="email" placeholder="Enter your email address...">
-                    <button class="btn btn-primary">Join the Hub</button>
+                    <button class="btn btn-primary">Join Merlows</button>
                 </div>
                 <div style="margin-top: 16px; font-size: 13px; color: #cbd5e1; opacity: 0.8;">
                     No spam. Just science. Unsubscribe any time.

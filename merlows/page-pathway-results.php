@@ -73,7 +73,7 @@ $query = new WP_Query($args);
                             <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
                                 <a href="<?php the_permalink(); ?>" style="font-size: 14px; font-weight: 700; color: #9F2B68; text-decoration: none;">Read Article →</a>
                                 <?php if (is_user_logged_in()) : 
-                                    $is_saved = ibdhh_is_bookmarked(get_the_ID());
+                                    $is_saved = mlws_is_bookmarked(get_the_ID());
                                 ?>
                                     <span style="font-size: 18px; cursor: pointer;" title="<?php echo $is_saved ? 'Saved' : 'Save Article'; ?>"><?php echo $is_saved ? '★' : '☆'; ?></span>
                                 <?php endif; ?>

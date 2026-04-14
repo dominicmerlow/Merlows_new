@@ -3,12 +3,12 @@
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="IBD Health Hub provides pharma-grade nutritional health resources, clinical reviews, and education for healthcare practitioners and patients.">
-    <title>IBD Health Hub. Clinical IBD Resources.</title>
+    <meta name="description" content="Merlows provides independent journalism and analysis covering Israel-Iran relations, the Cyrus Accord, and the Abraham Accords.">
+    <title>Merlows — Bridging Nations, Building Peace.</title>
     <link rel="profile" href="https://gmpg.org/xfn/11">
     <?php wp_head(); ?>
-    <?php // Favicon is output by ibdhh_output_favicon() in functions.php at priority 9999 ?>
-    <?php echo get_theme_mod( 'ibdhh_header_scripts' ); ?>
+    <?php // Favicon is output by mlws_output_favicon() in functions.php at priority 9999 ?>
+    <?php echo get_theme_mod( 'mlws_header_scripts' ); ?>
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
@@ -18,7 +18,7 @@
         <div class="container header-content">
             <div class="logo-area">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="IBD Health Hub" class="site-logo">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" class="site-logo">
                 </a>
             </div>
 
@@ -40,10 +40,10 @@
                 ?>
                 <?php if ( ! has_nav_menu( 'primary-menu' ) ) : ?>
                 <ul>
-                    <li><a href="#">HCP Resources</a></li>
-                    <li><a href="#">Patient Education</a></li>
-                    <li><a href="#">Gastro Health</a></li>
-                    <li><a href="#">Nutrition Science</a></li>
+                    <li><a href="#">Breaking News</a></li>
+                    <li><a href="#">Diplomatic Analysis</a></li>
+                    <li><a href="#">Cyrus Accord</a></li>
+                    <li><a href="#">Abraham Accords</a></li>
                 </ul>
                 <?php endif; ?>
             </nav>
@@ -60,7 +60,7 @@
                     );
 
                     foreach ( $socials as $key => $svg ) {
-                        $link = get_theme_mod( 'ibdhh_social_' . $key );
+                        $link = get_theme_mod( 'mlws_social_' . $key );
                         if ( $link ) {
                             echo '<a href="' . esc_url( $link ) . '" class="social-link" target="_blank" style="color: var(--secondary-color); opacity: 0.7; transition: opacity 0.3s;">' . $svg . '</a>';
                         }

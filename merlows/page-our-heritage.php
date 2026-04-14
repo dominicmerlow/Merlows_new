@@ -8,8 +8,8 @@ get_header(); ?>
 <main id="main-content">
     <?php
     // Helper function to get style string
-    if (!function_exists('ibdhh_get_section_style_heritage')) {
-        function ibdhh_get_section_style_heritage($prefix, $default_bg = '') {
+    if (!function_exists('mlws_get_section_style_heritage')) {
+        function mlws_get_section_style_heritage($prefix, $default_bg = '') {
             $bg = get_theme_mod($prefix . '_bg', $default_bg);
             $t_color = get_theme_mod($prefix . '_title_color');
             $t_size = get_theme_mod($prefix . '_title_size');
@@ -50,15 +50,15 @@ get_header(); ?>
     ?>
 
     <!-- HERO SECTION -->
-    <?php if (get_theme_mod('ibdhh_heritage_hero_show', true)) : 
-        $hero_img    = get_theme_mod('ibdhh_heritage_hero_img', get_template_directory_uri() . '/assets/img/hcp_hero.png');
-        $hero_bg_color = get_theme_mod('ibdhh_heritage_hero_bg_color');
-        $hero_tag   = get_theme_mod('ibdhh_heritage_hero_tag', 'Our Story');
-        $hero_title = get_theme_mod('ibdhh_heritage_hero_title', 'From Pharma to <span class="highlight">Healthcare</span>');
-        $hero_sub   = get_theme_mod('ibdhh_heritage_hero_sub', 'A Natural Evolution in Gastrointestinal Care');
-        $hero_desc  = get_theme_mod('ibdhh_heritage_hero_desc', 'IBD Health Hub bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.');
+    <?php if (get_theme_mod('mlws_heritage_hero_show', true)) : 
+        $hero_img    = get_theme_mod('mlws_heritage_hero_img', get_template_directory_uri() . '/assets/img/hcp_hero.png');
+        $hero_bg_color = get_theme_mod('mlws_heritage_hero_bg_color');
+        $hero_tag   = get_theme_mod('mlws_heritage_hero_tag', 'Our Story');
+        $hero_title = get_theme_mod('mlws_heritage_hero_title', 'From Pharma to <span class="highlight">Healthcare</span>');
+        $hero_sub   = get_theme_mod('mlws_heritage_hero_sub', 'A Natural Evolution in Gastrointestinal Care');
+        $hero_desc  = get_theme_mod('mlws_heritage_hero_desc', 'Merlows bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.');
         
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_hero');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_hero');
         // Custom background logic for hero because it has a gradient and image
         $hero_bg_style = "background: linear-gradient(rgba(10,25,41,0.78), rgba(10,25,41,0.93)), url('" . esc_url($hero_img) . "') no-repeat center center; background-size: cover;";
         if ($hero_bg_color) {
@@ -81,11 +81,11 @@ get_header(); ?>
     <?php endif; ?>
 
     <!-- ORIGIN SECTION -->
-    <?php if (get_theme_mod('ibdhh_heritage_origin_show', true)) : 
-        $origin_tag   = get_theme_mod('ibdhh_heritage_origin_tag', 'From Pharma to Healthcare');
-        $origin_title = get_theme_mod('ibdhh_heritage_origin_title', 'The IBD Health Hub Evolution');
-        $origin_sub   = get_theme_mod('ibdhh_heritage_origin_sub', 'A Natural Evolution in Gastrointestinal Care');
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_origin', '#fff');
+    <?php if (get_theme_mod('mlws_heritage_origin_show', true)) : 
+        $origin_tag   = get_theme_mod('mlws_heritage_origin_tag', 'From Pharma to Healthcare');
+        $origin_title = get_theme_mod('mlws_heritage_origin_title', 'The Merlows Evolution');
+        $origin_sub   = get_theme_mod('mlws_heritage_origin_sub', 'A Natural Evolution in Gastrointestinal Care');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_origin', '#fff');
     ?>
     <section id="our-story" class="section-padding" style="<?php echo $styles['section']; ?>">
         <div class="container">
@@ -99,13 +99,13 @@ get_header(); ?>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-bottom:60px;">
                 <?php 
                 $pillar_defaults = [
-                    1 => ["Heritage in Pharma", "IBD Health Hub has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards."],
+                    1 => ["Heritage in Pharma", "Merlows has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards."],
                     2 => ["Patient-Centric Innovation", "We found that medicines alone often fall short for chronic IBD. There is a clear need for evidence-based nutritional support."],
-                    3 => ["The Birth of IBD Health Hub", "IBD Health Hub bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE."]
+                    3 => ["The Birth of Merlows", "Merlows bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE."]
                 ];
                 for($i=1; $i<=3; $i++):
-                    $p_title = get_theme_mod("ibdhh_heritage_p{$i}_title", $pillar_defaults[$i][0]);
-                    $p_desc = get_theme_mod("ibdhh_heritage_p{$i}_desc", $pillar_defaults[$i][1]);
+                    $p_title = get_theme_mod("mlws_heritage_p{$i}_title", $pillar_defaults[$i][0]);
+                    $p_desc = get_theme_mod("mlws_heritage_p{$i}_desc", $pillar_defaults[$i][1]);
                 ?>
                 <div class="pillar" style="background:rgba(255,255,255,0.5); border:1px solid rgba(0,0,0,0.05); border-radius: 0;">
                     <h4 style="<?php echo $styles['title']; ?>"><?php echo esc_html($p_title); ?></h4>
@@ -123,8 +123,8 @@ get_header(); ?>
                     3 => ["100%", "Pharma-Grade Standards"]
                 ];
                 for($i=1; $i<=3; $i++):
-                    $s_num = get_theme_mod("ibdhh_heritage_stat{$i}_num", $stat_defaults[$i][0]);
-                    $s_lbl = get_theme_mod("ibdhh_heritage_stat{$i}_label", $stat_defaults[$i][1]);
+                    $s_num = get_theme_mod("mlws_heritage_stat{$i}_num", $stat_defaults[$i][0]);
+                    $s_lbl = get_theme_mod("mlws_heritage_stat{$i}_label", $stat_defaults[$i][1]);
                 ?>
                 <div>
                     <div style="font-size:48px;font-weight:900;color:var(--primary-color);font-family:'Outfit',sans-serif; <?php echo $styles['title']; ?>"><?php echo esc_html($s_num); ?></div>
@@ -137,11 +137,11 @@ get_header(); ?>
     <?php endif; ?>
 
     <!-- MISSION & VALUES -->
-    <?php if (get_theme_mod('ibdhh_heritage_mission_show', true)) : 
-        $mission_tag = get_theme_mod('ibdhh_heritage_mission_tag', 'Our Mission');
-        $mission_title = get_theme_mod('ibdhh_heritage_mission_title', 'Bridging Science & <span class="highlight">Patient Wellbeing</span>');
-        $mission_desc = get_theme_mod('ibdhh_heritage_mission_desc', 'At IBD Health Hub, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.');
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_mission', '#f8f9fa');
+    <?php if (get_theme_mod('mlws_heritage_mission_show', true)) : 
+        $mission_tag = get_theme_mod('mlws_heritage_mission_tag', 'Our Mission');
+        $mission_title = get_theme_mod('mlws_heritage_mission_title', 'Bridging Science & <span class="highlight">Patient Wellbeing</span>');
+        $mission_desc = get_theme_mod('mlws_heritage_mission_desc', 'At Merlows, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_mission', '#f8f9fa');
     ?>
     <section id="mission" class="section-padding" style="<?php echo $styles['section']; ?>">
         <div class="container">
@@ -156,11 +156,11 @@ get_header(); ?>
                     1 => ["Evidence-Based", "Every product and piece of content we produce meets the highest scientific and regulatory standards, rooted in peer-reviewed clinical research."],
                     2 => ["Patient-First", "We design every solution around the real-world challenges that patients face — not just clinical endpoints — because lived experience matters."],
                     3 => ["Pharma-Grade", "Our medical food products are developed with the same rigour applied to licensed medicines — providing a quality benchmark no ordinary supplement can match."],
-                    4 => ["Global Reach", "With a regulatory footprint spanning multiple continents, IBD Health Hub delivers consistent, trusted solutions wherever patients and clinicians need them."]
+                    4 => ["Global Reach", "With a regulatory footprint spanning multiple continents, Merlows delivers consistent, trusted solutions wherever patients and clinicians need them."]
                 ];
                 for($i=1; $i<=4; $i++):
-                    $v_title = get_theme_mod("ibdhh_heritage_val{$i}_title", $val_defaults[$i][0]);
-                    $v_desc = get_theme_mod("ibdhh_heritage_val{$i}_desc", $val_defaults[$i][1]);
+                    $v_title = get_theme_mod("mlws_heritage_val{$i}_title", $val_defaults[$i][0]);
+                    $v_desc = get_theme_mod("mlws_heritage_val{$i}_desc", $val_defaults[$i][1]);
                 ?>
                 <div style="background:white;padding:32px;border-radius:0;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
                     <h4 style="color:var(--secondary-color);font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:12px; <?php echo $styles['title']; ?>"><?php echo esc_html($v_title); ?></h4>
@@ -173,13 +173,13 @@ get_header(); ?>
     <?php endif; ?>
 
     <!-- EPAVANCE SPOTLIGHT -->
-    <?php if (get_theme_mod('ibdhh_heritage_product_show', true)) : 
-        $prod_tag = get_theme_mod('ibdhh_heritage_prod_tag', 'Our Flagship Product');
-        $prod_title = get_theme_mod('ibdhh_heritage_prod_title', 'Introducing EPAVANCE');
-        $prod_desc = get_theme_mod('ibdhh_heritage_prod_desc', 'EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.');
-        $prod_btn = get_theme_mod('ibdhh_heritage_prod_btn', 'Learn More About EPAVANCE');
-        $prod_url = get_theme_mod('ibdhh_heritage_prod_url', '#');
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_product', '#fff');
+    <?php if (get_theme_mod('mlws_heritage_product_show', true)) : 
+        $prod_tag = get_theme_mod('mlws_heritage_prod_tag', 'Our Flagship Product');
+        $prod_title = get_theme_mod('mlws_heritage_prod_title', 'Introducing EPAVANCE');
+        $prod_desc = get_theme_mod('mlws_heritage_prod_desc', 'EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.');
+        $prod_btn = get_theme_mod('mlws_heritage_prod_btn', 'Learn More About EPAVANCE');
+        $prod_url = get_theme_mod('mlws_heritage_prod_url', '#');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_product', '#fff');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?>">
         <div class="container">
@@ -199,8 +199,8 @@ get_header(); ?>
                         4 => ["Regulatory Status", "Classified as a Medical Food (FSMP), enabling it to occupy a unique, trusted position between medication and nutrition."]
                     ];
                     for($i=1; $i<=4; $i++):
-                        $f_title = get_theme_mod("ibdhh_heritage_feat{$i}_title", $feat_defaults[$i][0]);
-                        $f_desc = get_theme_mod("ibdhh_heritage_feat{$i}_desc", $feat_defaults[$i][1]);
+                        $f_title = get_theme_mod("mlws_heritage_feat{$i}_title", $feat_defaults[$i][0]);
+                        $f_desc = get_theme_mod("mlws_heritage_feat{$i}_desc", $feat_defaults[$i][1]);
                     ?>
                     <div style="background:#f8f9fa;padding:24px;border-radius:0;">
                         <h4 style="font-size:16px;color:var(--secondary-color);font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:8px; <?php echo $styles['title']; ?>"><?php echo esc_html($f_title); ?></h4>
@@ -214,11 +214,11 @@ get_header(); ?>
     <?php endif; ?>
 
     <!-- PLATFORM SECTION -->
-    <?php if (get_theme_mod('ibdhh_heritage_platform_show', true)) : 
-        $plat_tag = get_theme_mod('ibdhh_heritage_plat_tag', 'The Digital Layer');
-        $plat_title = get_theme_mod('ibdhh_heritage_plat_title', 'The IBD Health Hub Platform');
-        $plat_desc = get_theme_mod('ibdhh_heritage_plat_desc', 'Beyond our medical food products, IBD Health Hub is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.');
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_platform', '#142846');
+    <?php if (get_theme_mod('mlws_heritage_platform_show', true)) : 
+        $plat_tag = get_theme_mod('mlws_heritage_plat_tag', 'The Digital Layer');
+        $plat_title = get_theme_mod('mlws_heritage_plat_title', 'The Merlows Platform');
+        $plat_desc = get_theme_mod('mlws_heritage_plat_desc', 'Beyond our medical food products, Merlows is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_platform', '#142846');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?> color:white;">
         <div class="container">
@@ -233,13 +233,13 @@ get_header(); ?>
                     1 => ["Clinical Content Hub", "Peer-reviewed research, expert opinions, and patient education curated by gastroenterologists and dietitians."],
                     2 => ["IBD-i AI Assistant", "A specialised AI trained on clinical gastroenterology to answer your health questions with precision and safety."],
                     3 => ["Patient Dashboard", "A secure personal portal to track health records, manage your IBD tools, and connect with your care pathway."],
-                    4 => ["HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with IBD Health Hub experts."],
+                    4 => ["HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with Merlows experts."],
                     5 => ["Health Calculators", "Evidence-based clinical calculators for malnutrition screening, BMI, and disease activity scoring."],
                     6 => ["Education Courses", "Multi-chapter learning pathways developed by gastro specialists for both patients and clinicians."]
                 ];
                 for($i=1; $i<=6; $i++):
-                    $pl_title = get_theme_mod("ibdhh_heritage_plat{$i}_title", $plat_defaults[$i][0]);
-                    $pl_desc = get_theme_mod("ibdhh_heritage_plat{$i}_desc", $plat_defaults[$i][1]);
+                    $pl_title = get_theme_mod("mlws_heritage_plat{$i}_title", $plat_defaults[$i][0]);
+                    $pl_desc = get_theme_mod("mlws_heritage_plat{$i}_desc", $plat_defaults[$i][1]);
                 ?>
                 <div style="background:rgba(255,255,255,0.05);padding:24px;border-radius:0;border:1px solid rgba(255,255,255,0.1);">
                     <h4 style="color:white;font-family:'Outfit',sans-serif;font-weight:600;margin-bottom:10px;font-size:18px; <?php echo $styles['title']; ?>"><?php echo esc_html($pl_title); ?></h4>
@@ -253,7 +253,7 @@ get_header(); ?>
 
     <!-- PROMO BLOCKS -->
     <?php for ($p=1; $p<=2; $p++) : 
-        $prefix = "ibdhh_heritage_promo$p";
+        $prefix = "mlws_heritage_promo$p";
         if (get_theme_mod($prefix . '_show', true)) :
             $img = get_theme_mod($prefix . '_img');
             $title = get_theme_mod($prefix . '_title', 'Promo title');
@@ -262,7 +262,7 @@ get_header(); ?>
             $btn_lbl = get_theme_mod($prefix . '_btn_lbl', 'Learn More');
             $btn_url = get_theme_mod($prefix . '_btn_url', '#');
             $layout = get_theme_mod($prefix . '_layout', 'img-left');
-            $styles = ibdhh_get_section_style_heritage($prefix, '#fff');
+            $styles = mlws_get_section_style_heritage($prefix, '#fff');
             $flex_dir = ($layout == 'img-right') ? 'flex-direction:row-reverse;' : '';
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?>">
@@ -289,14 +289,14 @@ get_header(); ?>
     <?php endif; endfor; ?>
 
     <!-- CTA STRIP -->
-    <?php if (get_theme_mod('ibdhh_heritage_cta_show', true)) : 
-        $cta_title = get_theme_mod('ibdhh_heritage_cta_title', 'Join the IBD Health Hub Community');
-        $cta_desc = get_theme_mod('ibdhh_heritage_cta_desc', "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at IBD Health Hub.");
-        $cta_btn1_lbl = get_theme_mod('ibdhh_heritage_cta_btn1_label', "I'm a Patient");
-        $cta_btn1_url = get_theme_mod('ibdhh_heritage_cta_btn1_url', '/patients/');
-        $cta_btn2_lbl = get_theme_mod('ibdhh_heritage_cta_btn2_label', "I'm a Healthcare Professional");
-        $cta_btn2_url = get_theme_mod('ibdhh_heritage_cta_btn2_url', '/healthcare-professionals/');
-        $styles = ibdhh_get_section_style_heritage('ibdhh_heritage_cta', '#EB5A33');
+    <?php if (get_theme_mod('mlws_heritage_cta_show', true)) : 
+        $cta_title = get_theme_mod('mlws_heritage_cta_title', 'Join the Merlows Community');
+        $cta_desc = get_theme_mod('mlws_heritage_cta_desc', "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at Merlows.");
+        $cta_btn1_lbl = get_theme_mod('mlws_heritage_cta_btn1_label', "About Merlows");
+        $cta_btn1_url = get_theme_mod('mlws_heritage_cta_btn1_url', '/patients/');
+        $cta_btn2_lbl = get_theme_mod('mlws_heritage_cta_btn2_label', "I'm a Healthcare Professional");
+        $cta_btn2_url = get_theme_mod('mlws_heritage_cta_btn2_url', '/healthcare-professionals/');
+        $styles = mlws_get_section_style_heritage('mlws_heritage_cta', '#EB5A33');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?> color:white; text-align:center;">
         <div class="container" style="max-width:800px;">

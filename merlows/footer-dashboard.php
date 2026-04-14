@@ -5,20 +5,20 @@
                 <div style="display: flex; align-items: center; gap: 24px;">
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="display:block;">
                         <?php
-                        $f_logo = get_theme_mod('ibdhh_footer_logo');
+                        $f_logo = get_theme_mod('mlws_footer_logo');
                         if($f_logo): ?>
-                            <img src="<?php echo esc_url($f_logo); ?>" alt="IBD Health Hub" style="height: 30px; opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
+                            <img src="<?php echo esc_url($f_logo); ?>" alt="Merlows" style="height: 30px; opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
                         <?php else: ?>
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="IBD Health Hub" style="height: 30px; opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 30px; opacity: 0.6; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">
                         <?php endif; ?>
                     </a>
-                    <div class="copyright" style="color: #64748b; font-size: 13px;"><?php echo esc_html(get_theme_mod('ibdhh_footer_copyright', '© ' . date('Y') . ' IBD Health Hub. All rights reserved.')); ?></div>
+                    <div class="copyright" style="color: #64748b; font-size: 13px;"><?php echo esc_html(get_theme_mod('mlws_footer_copyright', '© ' . date('Y') . ' Merlows. All rights reserved.')); ?></div>
                 </div>
                 
                 <div class="footer-links" style="font-size: 13px;">
-                    <a href="https://ibdhealthhub.com/privacy-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
-                    <a href="https://ibdhealthhub.com/terms-of-use/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Terms of Use</a>
-                    <a href="https://ibdhealthhub.com/cookie-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Cookie Policy</a>
+                    <a href="https://merlows.com/privacy-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                    <a href="https://merlows.com/terms-of-use/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Terms of Use</a>
+                    <a href="https://merlows.com/cookie-policy/" style="color: #64748b; text-decoration: none; margin-left: 16px;" onmouseover="this.style.color='#9F2B68'" onmouseout="this.style.color='#64748b'">Cookie Policy</a>
                 </div>
             </div>
         </div>

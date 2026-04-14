@@ -8,10 +8,10 @@ get_header(); ?>
 
     <!-- HERO SECTION -->
     <?php
-    $hero_bg    = get_theme_mod( 'ibdhh_hcp_hero_bg', get_template_directory_uri() . '/assets/img/hcp_hero.png' );
-    $hero_tag   = get_theme_mod( 'ibdhh_hcp_hero_tag', 'Professional Portal' );
-    $hero_title = get_theme_mod( 'ibdhh_hcp_hero_title', 'Advancing <span class="highlight">Clinical Practice</span> Through Nutrition' );
-    $hero_desc  = get_theme_mod( 'ibdhh_hcp_hero_desc', 'Evidence-based resources, clinical protocols, and CME opportunities designed for gastroenterologists, dietitians, GPs, and allied health professionals.' );
+    $hero_bg    = get_theme_mod( 'mlws_hcp_hero_bg', get_template_directory_uri() . '/assets/img/hcp_hero.png' );
+    $hero_tag   = get_theme_mod( 'mlws_hcp_hero_tag', 'Professional Portal' );
+    $hero_title = get_theme_mod( 'mlws_hcp_hero_title', 'Advancing <span class="highlight">Clinical Practice</span> Through Nutrition' );
+    $hero_desc  = get_theme_mod( 'mlws_hcp_hero_desc', 'Evidence-based resources, clinical protocols, and CME opportunities designed for gastroenterologists, dietitians, GPs, and allied health professionals.' );
     ?>
     <section class="hero hcp-hero" style="padding: 80px 0 120px; display: flex; align-items: center; background: linear-gradient(rgba(10,25,41,0.75), rgba(10,25,41,0.9)), url('<?php echo esc_url( $hero_bg ); ?>') no-repeat center center; background-size: cover;">
         <div class="container">
@@ -29,9 +29,9 @@ get_header(); ?>
 
     <!-- RESOURCES SECTION -->
     <?php
-    $res_tag   = get_theme_mod( 'ibdhh_hcp_res_tag',   'Join the Effort' );
-    $res_title = get_theme_mod( 'ibdhh_hcp_res_title',  "What You'll Access" );
-    $res_desc  = get_theme_mod( 'ibdhh_hcp_res_desc',  'We invite passionate healthcare practitioners to join us in advancing clinical nutrition. Share your expertise and help shape the future of specialized healthcare content.' );
+    $res_tag   = get_theme_mod( 'mlws_hcp_res_tag',   'Join the Effort' );
+    $res_title = get_theme_mod( 'mlws_hcp_res_title',  "What You'll Access" );
+    $res_desc  = get_theme_mod( 'mlws_hcp_res_desc',  'We invite passionate healthcare practitioners to join us in advancing clinical nutrition. Share your expertise and help shape the future of specialized healthcare content.' );
 
     $res_defaults = array(
         1 => array( 'Clinical Protocols',  'Step-by-step treatment algorithms for common and complex GI conditions, including FSMP integration.' ),
@@ -61,8 +61,8 @@ get_header(); ?>
             </div>
             <div class="grid-2 resource-grid">
                 <?php for ( $i = 1; $i <= 4; $i++ ) :
-                    $card_title = get_theme_mod( "ibdhh_hcp_res{$i}_title", $res_defaults[ $i ][0] );
-                    $card_desc  = get_theme_mod( "ibdhh_hcp_res{$i}_desc",  $res_defaults[ $i ][1] );
+                    $card_title = get_theme_mod( "mlws_hcp_res{$i}_title", $res_defaults[ $i ][0] );
+                    $card_desc  = get_theme_mod( "mlws_hcp_res{$i}_desc",  $res_defaults[ $i ][1] );
                 ?>
                 <div style="display: flex; gap: 20px; padding: 32px; background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
                     <div style="flex-shrink: 0; width: 56px; height: 56px; background: linear-gradient(135deg, <?php echo $res_colors[ $i ]; ?>); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
@@ -80,7 +80,7 @@ get_header(); ?>
 
     <!-- COLLABORATE SECTION -->
     <?php
-    $collab_title = get_theme_mod( 'ibdhh_hcp_collab_title', 'Collaborate with IBD Health Hub' );
+    $collab_title = get_theme_mod( 'mlws_hcp_collab_title', 'Collaborate with Merlows' );
     $collab_defaults = array(
         1 => array( 'Submit Articles',  'Publish your clinical insights and case studies to our global network of peers.' ),
         2 => array( 'Co-Author Content','Partner with our medical writing team to develop robust, evidence-based clinical guides.' ),
@@ -99,8 +99,8 @@ get_header(); ?>
             <h2 class="text-center" style="color: var(--secondary-color); margin-bottom: 40px;"><?php echo esc_html( $collab_title ); ?></h2>
             <div class="grid-4 service-grid">
                 <?php for ( $i = 1; $i <= 4; $i++ ) :
-                    $col_title = get_theme_mod( "ibdhh_hcp_col{$i}_title", $collab_defaults[ $i ][0] );
-                    $col_desc  = get_theme_mod( "ibdhh_hcp_col{$i}_desc",  $collab_defaults[ $i ][1] );
+                    $col_title = get_theme_mod( "mlws_hcp_col{$i}_title", $collab_defaults[ $i ][0] );
+                    $col_desc  = get_theme_mod( "mlws_hcp_col{$i}_desc",  $collab_defaults[ $i ][1] );
                 ?>
                 <div style="padding: 32px 24px; background: var(--accent-color); border-radius: var(--radius-lg); text-align: center; border-top: 4px solid <?php echo $collab_colors[ $i ]; ?>;">
                     <h4 style="font-size: 17px; color: var(--secondary-color); margin-bottom: 12px;"><?php echo esc_html( $col_title ); ?></h4>
@@ -113,8 +113,8 @@ get_header(); ?>
 
     <!-- REGISTER CTA -->
     <?php
-    $cta_title = get_theme_mod( 'ibdhh_hcp_cta_title', 'Join the Professional Network' );
-    $cta_desc  = get_theme_mod( 'ibdhh_hcp_cta_desc',  'Free registration gives you full access to protocols, research, and CME opportunities.' );
+    $cta_title = get_theme_mod( 'mlws_hcp_cta_title', 'Join the Professional Network' );
+    $cta_desc  = get_theme_mod( 'mlws_hcp_cta_desc',  'Free registration gives you full access to protocols, research, and CME opportunities.' );
     ?>
     <section id="register" class="section-padding" style="background: linear-gradient(135deg, var(--secondary-color), #112240);">
         <div class="container" style="text-align: center; color: white;">

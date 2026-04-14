@@ -13,7 +13,7 @@ $is_logged_in = is_user_logged_in();
 // 2. Handle PDF Print Request
 if ( isset($_GET['print_note']) && is_user_logged_in() ) {
     $note_id = sanitize_text_field($_GET['print_note']);
-    $my_notes = get_user_meta(get_current_user_id(), '_ibdhh_user_notes', true) ?: array();
+    $my_notes = get_user_meta(get_current_user_id(), '_mlws_user_notes', true) ?: array();
     $target_note = null;
     foreach($my_notes as $n) { if(isset($n['id']) && $n['id'] === $note_id) { $target_note = $n; break; } }
     
@@ -39,7 +39,7 @@ if ( isset($_GET['print_note']) && is_user_logged_in() ) {
         <body onload="window.print()">
             <div class="header">
                 <div class="logo-area">
-                    <div class="logo">IBD Health Hub Hub</div>
+                    <div class="logo">Merlows Hub</div>
                     <div class="badge">IBD RESEARCH CENTRE NOTE</div>
                 </div>
                 <div class="meta">
@@ -89,9 +89,9 @@ get_header();
 <?php else : 
     // DATA PREP
     $first_name = get_user_meta( $current_user->ID, 'first_name', true ) ?: $current_user->display_name;
-    $job_title = get_user_meta( $current_user->ID, '_ibdhh_job_title', true ) ?: 'Add Job Title';
-    $org = get_user_meta( $current_user->ID, '_ibdhh_organization', true ) ?: 'Add Organization';
-    $bookmarks = get_user_meta( $current_user->ID, '_ibdhh_reading_list', true ) ?: array();
+    $job_title = get_user_meta( $current_user->ID, '_mlws_job_title', true ) ?: 'Add Job Title';
+    $org = get_user_meta( $current_user->ID, '_mlws_organization', true ) ?: 'Add Organization';
+    $bookmarks = get_user_meta( $current_user->ID, '_mlws_reading_list', true ) ?: array();
     $profile_img = get_avatar_url( $current_user->ID, array('size' => 128) );
     
     // Role Logic
@@ -213,7 +213,7 @@ get_header();
     <aside class="dash-sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="dash-logo" style="display: flex; align-items: center; gap: 0; text-decoration: none;">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="IBD Health Hub" style="height: 40px; width: auto; object-fit: contain; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 40px; width: auto; object-fit: contain; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
             </a>
             <button class="mobile-toggle" style="margin-left: auto; color: <?php echo $is_practitioner ? 'white' : '#0F172A'; ?>;" onclick="toggleSidebar()">✕</button>
         </div>
@@ -299,7 +299,7 @@ get_header();
                             case 'clinical-profile': echo 'View your health discovery results and update your clinical profile details.'; break;
                             case 'records': echo 'Access and manage your uploaded health records and posters.'; break;
                             case 'notes': echo 'Your private clinical and personal notes.'; break;
-                            case 'ai-chats': echo 'History of your consultations with IBD Health Hub AI.'; break;
+                            case 'ai-chats': echo 'History of your consultations with Merlows AI.'; break;
                             default: echo 'Manage your personalized hub content.';
                         }
                         ?>
@@ -340,7 +340,7 @@ get_header();
                             </div>
                             <div class="dash-list">
                                 <?php 
-                                $my_notes = get_user_meta($current_user->ID, '_ibdhh_user_notes', true) ?: array();
+                                $my_notes = get_user_meta($current_user->ID, '_mlws_user_notes', true) ?: array();
                                 if(empty($my_notes)): ?>
                                     <div class="msg-empty-state">No notes found.</div>
                                 <?php else: 
@@ -389,7 +389,7 @@ get_header();
                                 <a href="?tab=searches" class="card-link">All Searches</a>
                             </div>
                             <?php
-                            $searches = get_user_meta($current_user->ID, '_ibdhh_saved_searches', true) ?: array();
+                            $searches = get_user_meta($current_user->ID, '_mlws_saved_searches', true) ?: array();
                             if(empty($searches)): ?>
                                 <div class="msg-empty-state">No saved searches.</div>
                             <?php else: ?>
@@ -416,7 +416,7 @@ get_header();
                                 <a href="?tab=ai-chats" class="card-link">All Chats</a>
                             </div>
                             <?php
-                            $ai_chats = get_user_meta($current_user->ID, '_ibdhh_saved_chats', true);
+                            $ai_chats = get_user_meta($current_user->ID, '_mlws_saved_chats', true);
                             if (!is_array($ai_chats)) $ai_chats = array();
                             if(empty($ai_chats)): ?>
                                 <div class="msg-empty-state">No AI chats yet.</div>
@@ -445,20 +445,20 @@ get_header();
                 case 'profile': 
                     // Prepare data
                     $socials = array(
-                        'website' => get_user_meta($current_user->ID, '_ibdhh_website', true),
-                        'twitter' => get_user_meta($current_user->ID, '_ibdhh_twitter', true), // X
-                        'linkedin' => get_user_meta($current_user->ID, '_ibdhh_linkedin', true),
-                        'instagram' => get_user_meta($current_user->ID, '_ibdhh_instagram', true),
-                        'facebook' => get_user_meta($current_user->ID, '_ibdhh_facebook', true),
+                        'website' => get_user_meta($current_user->ID, '_mlws_website', true),
+                        'twitter' => get_user_meta($current_user->ID, '_mlws_twitter', true), // X
+                        'linkedin' => get_user_meta($current_user->ID, '_mlws_linkedin', true),
+                        'instagram' => get_user_meta($current_user->ID, '_mlws_instagram', true),
+                        'facebook' => get_user_meta($current_user->ID, '_mlws_facebook', true),
                     );
-                    $profile_docs = get_user_meta($current_user->ID, '_ibdhh_profile_docs', true) ?: array();
-                    $profile_links = get_user_meta($current_user->ID, '_ibdhh_profile_links', true) ?: array();
+                    $profile_docs = get_user_meta($current_user->ID, '_mlws_profile_docs', true) ?: array();
+                    $profile_links = get_user_meta($current_user->ID, '_mlws_profile_links', true) ?: array();
                     // Pad links to 5
                     while(count($profile_links) < 5) $profile_links[] = '';
                     ?>
                     <div class="dash-card" style="max-width: 900px;">
                         <form id="profile-form-main">
-                            <?php wp_nonce_field( 'ibdhh_dashboard_nonce', 'profile_nonce' ); ?>
+                            <?php wp_nonce_field( 'mlws_dashboard_nonce', 'profile_nonce' ); ?>
                             <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
                                 <!-- Left Col: Avatar & Media -->
                                 <div>
@@ -508,11 +508,11 @@ get_header();
                                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
                                         <div>
                                             <label style="display:block; margin-bottom:8px; font-size:13px; font-weight:600;">Job Title</label>
-                                            <input type="text" name="ibdhh_job_title" value="<?php echo esc_attr($job_title); ?>" style="width:100%; padding:10px; border:1px solid #E2E8F0; border-radius:0;">
+                                            <input type="text" name="mlws_job_title" value="<?php echo esc_attr($job_title); ?>" style="width:100%; padding:10px; border:1px solid #E2E8F0; border-radius:0;">
                                         </div>
                                         <div>
                                             <label style="display:block; margin-bottom:8px; font-size:13px; font-weight:600;">Organization</label>
-                                            <input type="text" name="ibdhh_organization" value="<?php echo esc_attr($org); ?>" style="width:100%; padding:10px; border:1px solid #E2E8F0; border-radius:0;">
+                                            <input type="text" name="mlws_organization" value="<?php echo esc_attr($org); ?>" style="width:100%; padding:10px; border:1px solid #E2E8F0; border-radius:0;">
                                         </div>
                                     </div>
 
@@ -524,11 +524,11 @@ get_header();
                                     <!-- Social Links -->
                                     <h3 style="margin:30px 0 20px 0; font-size:16px; color:#0F172A; border-top:1px solid #E2E8F0; padding-top:20px;">Social Profiles</h3>
                                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                                        <div><input type="url" name="ibdhh_website" placeholder="Website URL" value="<?php echo esc_attr($socials['website']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
-                                        <div><input type="url" name="ibdhh_twitter" placeholder="X (Twitter) URL" value="<?php echo esc_attr($socials['twitter']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
-                                        <div><input type="url" name="ibdhh_linkedin" placeholder="LinkedIn URL" value="<?php echo esc_attr($socials['linkedin']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
-                                        <div><input type="url" name="ibdhh_instagram" placeholder="Instagram URL" value="<?php echo esc_attr($socials['instagram']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
-                                        <div><input type="url" name="ibdhh_facebook" placeholder="Facebook URL" value="<?php echo esc_attr($socials['facebook']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
+                                        <div><input type="url" name="mlws_website" placeholder="Website URL" value="<?php echo esc_attr($socials['website']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
+                                        <div><input type="url" name="mlws_twitter" placeholder="X (Twitter) URL" value="<?php echo esc_attr($socials['twitter']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
+                                        <div><input type="url" name="mlws_linkedin" placeholder="LinkedIn URL" value="<?php echo esc_attr($socials['linkedin']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
+                                        <div><input type="url" name="mlws_instagram" placeholder="Instagram URL" value="<?php echo esc_attr($socials['instagram']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
+                                        <div><input type="url" name="mlws_facebook" placeholder="Facebook URL" value="<?php echo esc_attr($socials['facebook']); ?>" style="width:100%; padding:8px; border:1px solid #E2E8F0; border-radius:0; font-size:13px;"></div>
                                     </div>
 
                                     <!-- External Links -->
@@ -551,9 +551,9 @@ get_header();
                     function uploadProfileDoc(input) {
                         if (input.files[0]) {
                             var fd = new FormData();
-                            fd.append('action', 'ibdhh_upload_profile_doc');
+                            fd.append('action', 'mlws_upload_profile_doc');
                             fd.append('doc', input.files[0]);
-                            fd.append('nonce', '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>');
+                            fd.append('nonce', '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>');
                             jQuery.ajax({
                                 url: '<?php echo admin_url('admin-ajax.php'); ?>', type: 'POST', data: fd, processData: false, contentType: false,
                                 success: function(res) { if(res.success) location.reload(); else alert(res.data); }
@@ -563,15 +563,15 @@ get_header();
                     function deleteProfileDoc(id) {
                         if(!confirm('Delete this document?')) return;
                         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-                            action: 'ibdhh_delete_profile_doc', id: id, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+                            action: 'mlws_delete_profile_doc', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
                         }, function(res) { if(res.success) location.reload(); else alert(res.data); });
                     }
                     </script>
                 <?php break;
 
                 case 'clinical-profile':
-                    $quiz_results = get_user_meta($current_user->ID, '_ibdhh_healthcare_quiz_results', true) ?: array();
-                    $clinical_profile = get_user_meta($current_user->ID, '_ibdhh_clinical_profile', true) ?: array();
+                    $quiz_results = get_user_meta($current_user->ID, '_mlws_healthcare_quiz_results', true) ?: array();
+                    $clinical_profile = get_user_meta($current_user->ID, '_mlws_clinical_profile', true) ?: array();
                     
                     // Defaults for form
                     $defaults = array(
@@ -666,8 +666,8 @@ get_header();
                             <div style="margin-top:30px; border-top:1px solid #E2E8F0; padding-top:20px;">
                                 <label style="display:block; font-size:13px; font-weight:700; color:#0F172A; margin-bottom:12px;">Additional Discovery Details</label>
                                 <form id="dashboard-additional-details-form">
-                                    <?php wp_nonce_field( 'ibdhh_dashboard_nonce', 'nonce' ); ?>
-                                    <input type="hidden" name="action" value="ibdhh_save_clinical_profile">
+                                    <?php wp_nonce_field( 'mlws_dashboard_nonce', 'nonce' ); ?>
+                                    <input type="hidden" name="action" value="mlws_save_clinical_profile">
                                     <input type="hidden" name="weight" value="<?php echo esc_attr($profile['weight']); ?>">
                                     <input type="hidden" name="height" value="<?php echo esc_attr($profile['height']); ?>">
                                     <input type="hidden" name="medication" value="<?php echo esc_attr($profile['medication']); ?>">
@@ -707,7 +707,7 @@ get_header();
                             <input type="file" id="poster-uploader" style="display:none;" accept=".pdf" onchange="uploadPoster(this)">
                         </div>
                         <?php 
-                        $posters = get_user_meta($current_user->ID, '_ibdhh_posters', true) ?: array();
+                        $posters = get_user_meta($current_user->ID, '_mlws_posters', true) ?: array();
                         if(empty($posters)): ?>
                             <div style="text-align:center; padding:48px; background:#F8FAFC; border:2px dashed #E2E8F0; border-radius:0;">
                                 <p style="color:#64748B; margin-bottom:16px;">No records found. Upload your health posters or medical records.</p>
@@ -764,7 +764,7 @@ get_header();
                                 <div class="bt-tool-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v8l4 9H5l4-9V3z"/><path d="M9 3h6"/></svg></div>
                                 <div>
                                     <div class="bt-tool-name">IBD Blood Test Analyser</div>
-                                    <div class="bt-tool-sub">IBD Health Hub · Precision Diagnostics</div>
+                                    <div class="bt-tool-sub">Merlows · Precision Diagnostics</div>
                                 </div>
                             </div>
                             <div class="bt-tool-bar-right">
@@ -901,7 +901,7 @@ get_header();
                                     <div class="popup-tool-icon" id="calc-popup-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 5-2.55 5-7.5C21 9.94 17.31 6 13 6c-.55 0-1 .45-1 1v1c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55-.45-1-1-1C4.69 6 1 9.94 1 14.5 1 19.45 3 22 6 22c1.25 0 2.5-1.06 4-1.06h2z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></div>
                                     <div>
                                         <div class="popup-tool-title" id="calc-popup-title">Calculator</div>
-                                        <div class="popup-tool-sub">IBD Health Hub · Precision Diagnostics</div>
+                                        <div class="popup-tool-sub">Merlows · Precision Diagnostics</div>
                                     </div>
                                 </div>
                                 <div class="popup-tool-right">
@@ -945,7 +945,7 @@ get_header();
                     </div>
 
                     <script>
-                    var calcNonce = '<?php echo wp_create_nonce('ibdhh_dashboard_nonce'); ?>';
+                    var calcNonce = '<?php echo wp_create_nonce('mlws_dashboard_nonce'); ?>';
                     var ajaxUrl   = '<?php echo admin_url('admin-ajax.php'); ?>';
                     var tplDir     = '<?php echo get_template_directory_uri(); ?>';
 
@@ -975,7 +975,7 @@ get_header();
                         if (!e.data || e.data.type !== 'IBD_SAVE_MALNUTRITION_RESULT') return;
                         var r = e.data;
                         jQuery.post(ajaxUrl, {
-                            action: 'ibdhh_save_calc_result',
+                            action: 'mlws_save_calc_result',
                             nonce:  calcNonce,
                             tool:   'malnutrition',
                             result_id:   r.id,
@@ -998,7 +998,7 @@ get_header();
                         body.innerHTML = '<div style="text-align:center;padding:24px;color:#64748b;">Loading…</div>';
                         document.getElementById('results-modal-overlay').classList.add('active');
                         document.body.style.overflow = 'hidden';
-                        jQuery.post(ajaxUrl, { action: 'ibdhh_get_calc_results', nonce: calcNonce, tool: type }, function(res) {
+                        jQuery.post(ajaxUrl, { action: 'mlws_get_calc_results', nonce: calcNonce, tool: type }, function(res) {
                             if (!res.success || !res.data || res.data.length === 0) {
                                 body.innerHTML = '<div class="results-empty"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>No saved results yet.<br>Run the calculator and tap &ldquo;Save Results&rdquo; to record your score.</div>';
                                 return;
@@ -1077,7 +1077,7 @@ get_header();
                 case 'searches': ?>
                     <div class="dash-card">
                         <?php 
-                        $searches = get_user_meta($current_user->ID, '_ibdhh_saved_searches', true) ?: array();
+                        $searches = get_user_meta($current_user->ID, '_mlws_saved_searches', true) ?: array();
                         if(empty($searches)): ?>
                              <div style="text-align:center; padding:48px; background:#F8FAFC; border:1px dashed #E2E8F0; border-radius:0;">
                                 <p style="color:#64748B;">You haven't saved any searches yet.</p>
@@ -1106,7 +1106,7 @@ get_header();
                 case 'notes': ?>
                     <div class="dash-card">
                          <?php 
-                         $my_notes = get_user_meta($current_user->ID, '_ibdhh_user_notes', true) ?: array();
+                         $my_notes = get_user_meta($current_user->ID, '_mlws_user_notes', true) ?: array();
                          if(empty($my_notes)): ?>
                              <div style="text-align:center; padding:48px; background:#F8FAFC; border:1px dashed #E2E8F0; border-radius:0;">
                                 <p style="color:#64748B; margin-bottom:16px;">You don't have any notes yet.</p>
@@ -1137,7 +1137,7 @@ get_header();
                 case 'ai-chats': ?>
                     <div class="dash-card">
                          <?php 
-                         $ai_chats = get_user_meta($current_user->ID, '_ibdhh_saved_chats', true);
+                         $ai_chats = get_user_meta($current_user->ID, '_mlws_saved_chats', true);
                          if (!is_array($ai_chats)) $ai_chats = array();
                          if(empty($ai_chats)): ?>
                              <div style="text-align:center; padding:48px; background:#F8FAFC; border:1px dashed #E2E8F0; border-radius:0;">
@@ -1177,10 +1177,10 @@ get_header();
                                     if (newTitle === null || newTitle.trim() === '' || newTitle.trim() === currentTitle) return;
                                     
                                     jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-                                        action: 'ibdhh_rename_chat',
+                                        action: 'mlws_rename_chat',
                                         id: id,
                                         title: newTitle.trim(),
-                                        nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+                                        nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
                                     }, function(res) {
                                         if(res.success) {
                                             location.reload();
@@ -1226,7 +1226,7 @@ get_header();
     // Role Switching
     function switchRole(role) {
         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_switch_role', role: role, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_switch_role', role: role, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) {
             if(res.success) location.reload(); else alert('Error: ' + res.data);
         });
@@ -1237,9 +1237,9 @@ get_header();
     function uploadPoster(input) {
         if (input.files[0]) {
             var fd = new FormData();
-            fd.append('action', 'ibdhh_upload_poster');
+            fd.append('action', 'mlws_upload_poster');
             fd.append('poster', input.files[0]);
-            fd.append('nonce', '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>');
+            fd.append('nonce', '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>');
             jQuery.ajax({
                 url: '<?php echo admin_url('admin-ajax.php'); ?>', type: 'POST', data: fd, processData: false, contentType: false,
                 success: function(res) { if(res.success) location.reload(); else alert(res.data); }
@@ -1249,7 +1249,7 @@ get_header();
     function deletePoster(id) {
          if(!confirm('Delete this file?')) return;
          jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_delete_poster', id: id, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_delete_poster', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) { if(res.success) location.reload(); else alert(res.data); });
     }
 
@@ -1257,18 +1257,18 @@ get_header();
     function deleteBookmark(pid) {
         if(!confirm('Remove bookmark?')) return;
         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_toggle_bookmark', post_id: pid, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_toggle_bookmark', post_id: pid, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) { if(res.success) location.reload(); });
     }
 
     // Notes
     function deleteNote(id) {
         if(!confirm('Delete this note permanently?')) return;
-        // Re-using ibdhh_save_note with empty content or similar? 
+        // Re-using mlws_save_note with empty content or similar? 
         // Better to add a proper delete action in functions.php if not exists.
-        // For now, let's assume ibdhh_delete_note exists or use ibdhh_save_note with a flag.
+        // For now, let's assume mlws_delete_note exists or use mlws_save_note with a flag.
         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_delete_note', id: id, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_delete_note', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) { if(res.success) location.reload(); else alert(res.data); });
     }
 
@@ -1276,7 +1276,7 @@ get_header();
     function deleteSearch(id) {
         if(!confirm('Delete this saved search?')) return;
         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_delete_search', id: id, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_delete_search', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) { if(res.success) location.reload(); else alert(res.data); });
     }
 
@@ -1285,9 +1285,9 @@ get_header();
     function uploadAvatar(input) {
         if (input.files[0]) {
             var fd = new FormData();
-            fd.append('action', 'ibdhh_upload_avatar');
+            fd.append('action', 'mlws_upload_avatar');
             fd.append('avatar', input.files[0]);
-            fd.append('nonce', '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>');
+            fd.append('nonce', '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>');
             jQuery.ajax({
                 url: '<?php echo admin_url('admin-ajax.php'); ?>', type: 'POST', data: fd, processData: false, contentType: false,
                 success: function(res) { if(res.success) location.reload(); else alert(res.data); }
@@ -1298,7 +1298,7 @@ get_header();
     // Profile Form
     jQuery(document).on('submit', '#profile-form-main', function(e) {
         e.preventDefault();
-        var data = jQuery(this).serialize() + '&action=ibdhh_save_profile&nonce=<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>';
+        var data = jQuery(this).serialize() + '&action=mlws_save_profile&nonce=<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>';
         var btn = jQuery(this).find('button[type="submit"]');
         btn.text('Saving...').prop('disabled', true);
         
@@ -1434,7 +1434,7 @@ get_header();
     function deleteChat(id) {
         if(!confirm('Delete this chat history permanently?')) return;
         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'ibdhh_delete_chat', id: id, nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+            action: 'mlws_delete_chat', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
         }, function(res) { if(res.success) location.reload(); else alert(res.data); });
     }
 </script>

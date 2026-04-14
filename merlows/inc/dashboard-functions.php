@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handle Profile Save AJAX
  */
-function ibdhh_dashboard_save_profile() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_save_profile() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -26,14 +26,14 @@ function ibdhh_dashboard_save_profile() {
         'last_name'         => 'sanitize_text_field',
         'user_email'        => 'sanitize_email',
         'description'       => 'sanitize_textarea_field', // Bios
-        'ibdhh_job_title'     => 'sanitize_text_field',
-        'ibdhh_organization'  => 'sanitize_text_field',
-        'ibdhh_phone'         => 'sanitize_text_field',
-        'ibdhh_website'       => 'esc_url_raw',
-        'ibdhh_linkedin'      => 'esc_url_raw',
-        'ibdhh_twitter'       => 'esc_url_raw',
-        'ibdhh_instagram'     => 'esc_url_raw',
-        'ibdhh_facebook'      => 'esc_url_raw',
+        'mlws_job_title'     => 'sanitize_text_field',
+        'mlws_organization'  => 'sanitize_text_field',
+        'mlws_phone'         => 'sanitize_text_field',
+        'mlws_website'       => 'esc_url_raw',
+        'mlws_linkedin'      => 'esc_url_raw',
+        'mlws_twitter'       => 'esc_url_raw',
+        'mlws_instagram'     => 'esc_url_raw',
+        'mlws_facebook'      => 'esc_url_raw',
     );
 
     $userdata = array( 'ID' => $user_id );
@@ -41,7 +41,7 @@ function ibdhh_dashboard_save_profile() {
     // Handle Profile Links (up to 5)
     if ( isset( $_POST['profile_links'] ) && is_array( $_POST['profile_links'] ) ) {
         $links = array_map( 'esc_url_raw', array_slice( $_POST['profile_links'], 0, 5 ) );
-        update_user_meta( $user_id, '_ibdhh_profile_links', $links );
+        update_user_meta( $user_id, '_mlws_profile_links', $links );
     }
 
     foreach ( $fields as $key => $sanitizer ) {
@@ -60,8 +60,8 @@ function ibdhh_dashboard_save_profile() {
     }
 
     // Handle Image Upload (if URL provided from media uploader)
-    if ( isset( $_POST['ibdhh_profile_image_url'] ) ) {
-        update_user_meta( $user_id, '_ibdhh_profile_image_url', esc_url_raw( $_POST['ibdhh_profile_image_url'] ) );
+    if ( isset( $_POST['mlws_profile_image_url'] ) ) {
+        update_user_meta( $user_id, '_mlws_profile_image_url', esc_url_raw( $_POST['mlws_profile_image_url'] ) );
     }
 
     // Update Core User Data
@@ -73,18 +73,18 @@ function ibdhh_dashboard_save_profile() {
 
     wp_send_json_success( 'Profile updated successfully' );
 }
-add_action( 'wp_ajax_ibdhh_save_profile', 'ibdhh_dashboard_save_profile' );
+add_action( 'wp_ajax_mlws_save_profile', 'mlws_dashboard_save_profile' );
 
 /**
  * Handle Profile Document Upload
  */
-function ibdhh_dashboard_upload_profile_doc() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_upload_profile_doc() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
     if ( ! is_user_logged_in() ) wp_send_json_error( 'Not logged in' );
     if ( ! isset( $_FILES['doc'] ) ) wp_send_json_error( 'No file' );
 
     $user_id = get_current_user_id();
-    $docs = get_user_meta( $user_id, '_ibdhh_profile_docs', true ) ?: array();
+    $docs = get_user_meta( $user_id, '_mlws_profile_docs', true ) ?: array();
     if ( count($docs) >= 5 ) wp_send_json_error( 'Limit reached (5 documents max)' );
 
     require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -100,21 +100,21 @@ function ibdhh_dashboard_upload_profile_doc() {
         'name' => $_FILES['doc']['name'],
         'date' => current_time('mysql')
     );
-    update_user_meta( $user_id, '_ibdhh_profile_docs', $docs );
+    update_user_meta( $user_id, '_mlws_profile_docs', $docs );
     wp_send_json_success( 'Document uploaded' );
 }
-add_action( 'wp_ajax_ibdhh_upload_profile_doc', 'ibdhh_dashboard_upload_profile_doc' );
+add_action( 'wp_ajax_mlws_upload_profile_doc', 'mlws_dashboard_upload_profile_doc' );
 
 /**
  * Handle Profile Document Delete
  */
-function ibdhh_dashboard_delete_profile_doc() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_delete_profile_doc() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
     if ( ! is_user_logged_in() ) wp_send_json_error( 'Not logged in' );
     
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $user_id = get_current_user_id();
-    $docs = get_user_meta( $user_id, '_ibdhh_profile_docs', true ) ?: array();
+    $docs = get_user_meta( $user_id, '_mlws_profile_docs', true ) ?: array();
     
     $new_docs = array();
     foreach($docs as $d) {
@@ -122,17 +122,17 @@ function ibdhh_dashboard_delete_profile_doc() {
         else wp_delete_attachment($id, true);
     }
     
-    update_user_meta( $user_id, '_ibdhh_profile_docs', $new_docs );
+    update_user_meta( $user_id, '_mlws_profile_docs', $new_docs );
     wp_send_json_success( 'Document deleted' );
 }
-add_action( 'wp_ajax_ibdhh_delete_profile_doc', 'ibdhh_dashboard_delete_profile_doc' );
+add_action( 'wp_ajax_mlws_delete_profile_doc', 'mlws_dashboard_delete_profile_doc' );
 
 /**
  * Handle Article Bookmark AJAX
  */
-function ibdhh_dashboard_toggle_bookmark() {
+function mlws_dashboard_toggle_bookmark() {
     // Check security
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Session expired. Please log in again.' );
@@ -144,7 +144,7 @@ function ibdhh_dashboard_toggle_bookmark() {
     }
 
     $user_id = get_current_user_id();
-    $bookmarks = get_user_meta( $user_id, '_ibdhh_reading_list', true );
+    $bookmarks = get_user_meta( $user_id, '_mlws_reading_list', true );
     
     if ( ! is_array( $bookmarks ) ) {
         $bookmarks = array();
@@ -161,7 +161,7 @@ function ibdhh_dashboard_toggle_bookmark() {
     }
 
     // Success if we can update meta. WordPress handles permissions for current user meta automatically.
-    update_user_meta( $user_id, '_ibdhh_reading_list', (array) array_values($bookmarks) );
+    update_user_meta( $user_id, '_mlws_reading_list', (array) array_values($bookmarks) );
 
     wp_send_json_success( array( 
         'action' => $action, 
@@ -169,14 +169,14 @@ function ibdhh_dashboard_toggle_bookmark() {
         'user'   => $user_id 
     ) );
 }
-add_action( 'wp_ajax_ibdhh_toggle_bookmark', 'ibdhh_dashboard_toggle_bookmark' );
-add_action( 'wp_ajax_nopriv_ibdhh_toggle_bookmark', 'ibdhh_dashboard_toggle_bookmark' );
+add_action( 'wp_ajax_mlws_toggle_bookmark', 'mlws_dashboard_toggle_bookmark' );
+add_action( 'wp_ajax_nopriv_mlws_toggle_bookmark', 'mlws_dashboard_toggle_bookmark' );
 
 /**
  * Handle Newsletter Preferences Save
  */
-function ibdhh_dashboard_save_newsletters() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_save_newsletters() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -190,18 +190,18 @@ function ibdhh_dashboard_save_newsletters() {
     // Sanitize array
     $prefs = array_map( 'sanitize_text_field', $prefs );
 
-    update_user_meta( $user_id, '_ibdhh_newsletter_prefs', $prefs );
-    update_user_meta( $user_id, '_ibdhh_newsletter_frequency', $freq );
+    update_user_meta( $user_id, '_mlws_newsletter_prefs', $prefs );
+    update_user_meta( $user_id, '_mlws_newsletter_frequency', $freq );
 
     wp_send_json_success( 'Preferences saved' );
 }
-add_action( 'wp_ajax_ibdhh_save_newsletters', 'ibdhh_dashboard_save_newsletters' );
+add_action( 'wp_ajax_mlws_save_newsletters', 'mlws_dashboard_save_newsletters' );
 
 /**
  * Handle Role Switch AJAX
  */
-function ibdhh_dashboard_switch_role() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_switch_role() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -215,8 +215,8 @@ function ibdhh_dashboard_switch_role() {
     // Map 'patient' UI role to 'subscriber' WP role
     $wp_role = ( $role === 'practitioner' ) ? 'practitioner' : 'subscriber';
     
-    update_user_meta( $user_id, '_ibdhh_dashboard_role', $role );
-    update_user_meta( $user_id, '_ibdhh_user_type', $role );
+    update_user_meta( $user_id, '_mlws_dashboard_role', $role );
+    update_user_meta( $user_id, '_mlws_user_type', $role );
 
     // Correctly add/remove the practitioner role
     if ( $role === 'practitioner' ) {
@@ -237,13 +237,13 @@ function ibdhh_dashboard_switch_role() {
 
     wp_send_json_success( 'Role switched to ' . $role );
 }
-add_action( 'wp_ajax_ibdhh_switch_role', 'ibdhh_dashboard_switch_role' );
+add_action( 'wp_ajax_mlws_switch_role', 'mlws_dashboard_switch_role' );
 
 /**
  * Handle Avatar Upload AJAX
  */
-function ibdhh_dashboard_upload_avatar() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_upload_avatar() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -265,17 +265,17 @@ function ibdhh_dashboard_upload_avatar() {
 
     $url = wp_get_attachment_url( $att_id );
     $user_id = get_current_user_id();
-    update_user_meta( $user_id, '_ibdhh_profile_image_url', $url );
+    update_user_meta( $user_id, '_mlws_profile_image_url', $url );
 
     wp_send_json_success( array( 'url' => $url ) );
 }
-add_action( 'wp_ajax_ibdhh_upload_avatar', 'ibdhh_dashboard_upload_avatar' );
+add_action( 'wp_ajax_mlws_upload_avatar', 'mlws_dashboard_upload_avatar' );
 
 /**
  * Handle Poster Upload AJAX
  */
-function ibdhh_dashboard_upload_poster() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_upload_poster() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -304,7 +304,7 @@ function ibdhh_dashboard_upload_poster() {
 
     $url = wp_get_attachment_url( $attachment_id );
     $user_id = get_current_user_id();
-    $posters = get_user_meta( $user_id, '_ibdhh_posters', true ) ?: array();
+    $posters = get_user_meta( $user_id, '_mlws_posters', true ) ?: array();
     
     $posters[] = array(
         'id'   => $attachment_id,
@@ -312,17 +312,17 @@ function ibdhh_dashboard_upload_poster() {
         'date' => current_time('mysql'),
         'name' => $_FILES['poster']['name']
     );
-    update_user_meta( $user_id, '_ibdhh_posters', $posters );
+    update_user_meta( $user_id, '_mlws_posters', $posters );
 
     wp_send_json_success( 'Poster uploaded' );
 }
-add_action( 'wp_ajax_ibdhh_upload_poster', 'ibdhh_dashboard_upload_poster' );
+add_action( 'wp_ajax_mlws_upload_poster', 'mlws_dashboard_upload_poster' );
 
 /**
  * Handle Poster Deletion AJAX
  */
-function ibdhh_dashboard_delete_poster() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_delete_poster() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -334,7 +334,7 @@ function ibdhh_dashboard_delete_poster() {
     }
 
     $user_id = get_current_user_id();
-    $posters = get_user_meta( $user_id, '_ibdhh_posters', true ) ?: array();
+    $posters = get_user_meta( $user_id, '_mlws_posters', true ) ?: array();
     
     $found = false;
     foreach ( $posters as $key => $poster ) {
@@ -348,23 +348,23 @@ function ibdhh_dashboard_delete_poster() {
     }
 
     if ( $found ) {
-        update_user_meta( $user_id, '_ibdhh_posters', array_values($posters) );
+        update_user_meta( $user_id, '_mlws_posters', array_values($posters) );
         wp_send_json_success( 'Poster deleted' );
     } else {
         wp_send_json_error( 'Poster not found' );
     }
 }
-add_action( 'wp_ajax_ibdhh_delete_poster', 'ibdhh_dashboard_delete_poster' );
+add_action( 'wp_ajax_mlws_delete_poster', 'mlws_dashboard_delete_poster' );
 
 /**
  * Helper: Is Post Bookmarked?
  */
-function ibdhh_is_bookmarked( $post_id = 0 ) {
+function mlws_is_bookmarked( $post_id = 0 ) {
     if ( ! is_user_logged_in() ) return false;
     if ( ! $post_id ) $post_id = get_the_ID();
 
     $user_id = get_current_user_id();
-    $bookmarks = get_user_meta( $user_id, '_ibdhh_reading_list', true );
+    $bookmarks = get_user_meta( $user_id, '_mlws_reading_list', true );
     
     return ( is_array( $bookmarks ) && in_array( $post_id, $bookmarks ) );
 }
@@ -372,7 +372,7 @@ function ibdhh_is_bookmarked( $post_id = 0 ) {
 /**
  * Handle Author Profile AJAX
  */
-function ibdhh_get_author_profile() {
+function mlws_get_author_profile() {
     $author_id = isset( $_POST['author_id'] ) ? intval( $_POST['author_id'] ) : 0;
     
     if ( ! $author_id ) {
@@ -394,15 +394,15 @@ function ibdhh_get_author_profile() {
     }
 
     // Get Additional Meta
-    $job_title = get_user_meta( $author_id, '_ibdhh_job_title', true );
-    $organization = get_user_meta( $author_id, '_ibdhh_organization', true );
-    $website = get_user_meta( $author_id, '_ibdhh_website', true );
+    $job_title = get_user_meta( $author_id, '_mlws_job_title', true );
+    $organization = get_user_meta( $author_id, '_mlws_organization', true );
+    $website = get_user_meta( $author_id, '_mlws_website', true );
     
     // Socials
-    $linkedin = get_user_meta( $author_id, '_ibdhh_linkedin', true );
-    $twitter = get_user_meta( $author_id, '_ibdhh_twitter', true );
-    $instagram = get_user_meta( $author_id, '_ibdhh_instagram', true );
-    $facebook = get_user_meta( $author_id, '_ibdhh_facebook', true );
+    $linkedin = get_user_meta( $author_id, '_mlws_linkedin', true );
+    $twitter = get_user_meta( $author_id, '_mlws_twitter', true );
+    $instagram = get_user_meta( $author_id, '_mlws_instagram', true );
+    $facebook = get_user_meta( $author_id, '_mlws_facebook', true );
 
     // Get Latest Posts
     $posts_args = array(
@@ -441,14 +441,14 @@ function ibdhh_get_author_profile() {
         'posts'        => $posts
     ) );
 }
-add_action( 'wp_ajax_ibdhh_get_author_profile', 'ibdhh_get_author_profile' );
-add_action( 'wp_ajax_nopriv_ibdhh_get_author_profile', 'ibdhh_get_author_profile' );
+add_action( 'wp_ajax_mlws_get_author_profile', 'mlws_get_author_profile' );
+add_action( 'wp_ajax_nopriv_mlws_get_author_profile', 'mlws_get_author_profile' );
 
 /**
  * Handle Search Saving AJAX
  */
-function ibdhh_dashboard_save_search() {
-    check_ajax_referer( 'ibdhh_save_search_nonce', 'nonce' );
+function mlws_dashboard_save_search() {
+    check_ajax_referer( 'mlws_save_search_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -458,7 +458,7 @@ function ibdhh_dashboard_save_search() {
     $params = isset( $_POST['query_params'] ) ? sanitize_text_field( $_POST['query_params'] ) : '';
     $user_id = get_current_user_id();
 
-    $searches = get_user_meta( $user_id, '_ibdhh_saved_searches', true ) ?: array();
+    $searches = get_user_meta( $user_id, '_mlws_saved_searches', true ) ?: array();
     
     $searches[] = array(
         'id'     => uniqid(),
@@ -468,17 +468,17 @@ function ibdhh_dashboard_save_search() {
         'date'   => current_time( 'mysql' )
     );
 
-    update_user_meta( $user_id, '_ibdhh_saved_searches', $searches );
+    update_user_meta( $user_id, '_mlws_saved_searches', $searches );
 
     wp_send_json_success( 'Search saved' );
 }
-add_action( 'wp_ajax_ibdhh_save_search', 'ibdhh_dashboard_save_search' );
+add_action( 'wp_ajax_mlws_save_search', 'mlws_dashboard_save_search' );
 
 /**
  * Handle Search Deletion AJAX
  */
-function ibdhh_dashboard_delete_search() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_delete_search() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -486,7 +486,7 @@ function ibdhh_dashboard_delete_search() {
 
     $search_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
     $user_id = get_current_user_id();
-    $searches = get_user_meta( $user_id, '_ibdhh_saved_searches', true ) ?: array();
+    $searches = get_user_meta( $user_id, '_mlws_saved_searches', true ) ?: array();
     
     $new_searches = array();
     foreach ( $searches as $s ) {
@@ -495,16 +495,16 @@ function ibdhh_dashboard_delete_search() {
         }
     }
 
-    update_user_meta( $user_id, '_ibdhh_saved_searches', $new_searches );
+    update_user_meta( $user_id, '_mlws_saved_searches', $new_searches );
     wp_send_json_success( 'Search deleted' );
 }
-add_action( 'wp_ajax_ibdhh_delete_search', 'ibdhh_dashboard_delete_search' );
+add_action( 'wp_ajax_mlws_delete_search', 'mlws_dashboard_delete_search' );
 
 /**
  * Handle Note Saving AJAX
  */
-function ibdhh_save_note() {
-    check_ajax_referer( 'ibdhh_save_note_nonce', 'nonce' );
+function mlws_save_note() {
+    check_ajax_referer( 'mlws_save_note_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -515,7 +515,7 @@ function ibdhh_save_note() {
     $title = isset( $_POST['title'] ) ? sanitize_text_field( $_POST['title'] ) : 'Untitled Note';
     $content = isset( $_POST['content'] ) ? wp_kses_post( $_POST['content'] ) : '';
 
-    $notes = get_user_meta( $user_id, '_ibdhh_user_notes', true ) ?: array();
+    $notes = get_user_meta( $user_id, '_mlws_user_notes', true ) ?: array();
     
     // If ID exists, update. Else create new.
     $new_id = $id;
@@ -538,16 +538,16 @@ function ibdhh_save_note() {
         }
     }
 
-    update_user_meta( $user_id, '_ibdhh_user_notes', $notes );
+    update_user_meta( $user_id, '_mlws_user_notes', $notes );
     wp_send_json_success( array( 'id' => $new_id ) );
 }
-add_action( 'wp_ajax_ibdhh_save_note', 'ibdhh_save_note' );
+add_action( 'wp_ajax_mlws_save_note', 'mlws_save_note' );
 
 /**
  * Handle Note Deletion AJAX
  */
-function ibdhh_delete_note() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_delete_note() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -555,7 +555,7 @@ function ibdhh_delete_note() {
 
     $id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
     $user_id = get_current_user_id();
-    $notes = get_user_meta( $user_id, '_ibdhh_user_notes', true ) ?: array();
+    $notes = get_user_meta( $user_id, '_mlws_user_notes', true ) ?: array();
     
     $new_notes = array();
     foreach ( $notes as $n ) {
@@ -564,17 +564,17 @@ function ibdhh_delete_note() {
         }
     }
 
-    update_user_meta( $user_id, '_ibdhh_user_notes', $new_notes );
+    update_user_meta( $user_id, '_mlws_user_notes', $new_notes );
     wp_send_json_success( 'Note deleted' );
 }
-add_action( 'wp_ajax_ibdhh_delete_note', 'ibdhh_delete_note' );
+add_action( 'wp_ajax_mlws_delete_note', 'mlws_delete_note' );
 
 
 /**
  * Handle Game Score Saving AJAX
  */
-function ibdhh_save_game_score() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_save_game_score() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
 
     if ( ! is_user_logged_in() ) {
         wp_send_json_error( 'Not logged in' );
@@ -584,13 +584,13 @@ function ibdhh_save_game_score() {
     $user_id = get_current_user_id();
 
     // Update Personal High Score
-    $current_high = get_user_meta( $user_id, '_ibdhh_high_score', true ) ?: 0;
+    $current_high = get_user_meta( $user_id, '_mlws_high_score', true ) ?: 0;
     if ( $score > $current_high ) {
-        update_user_meta( $user_id, '_ibdhh_high_score', $score );
+        update_user_meta( $user_id, '_mlws_high_score', $score );
     }
 
     // Update Global Leaderboard (stored in an option array for simplicity)
-    $leaderboard = get_option( 'ibdhh_game_leaderboard', array() );
+    $leaderboard = get_option( 'mlws_game_leaderboard', array() );
     
     // Add new score
     $leaderboard[] = array(
@@ -606,11 +606,11 @@ function ibdhh_save_game_score() {
 
     // Keep top 50
     $leaderboard = array_slice( $leaderboard, 0, 50 );
-    update_option( 'ibdhh_game_leaderboard', $leaderboard );
+    update_option( 'mlws_game_leaderboard', $leaderboard );
 
     wp_send_json_success( 'Score saved' );
 }
-add_action( 'wp_ajax_ibdhh_save_game_score', 'ibdhh_save_game_score' );
+add_action( 'wp_ajax_mlws_save_game_score', 'mlws_save_game_score' );
 
 
 /**
@@ -620,7 +620,7 @@ add_action( 'rest_api_init', function () {
     // Existing save chat endpoint
     register_rest_route( 'ibd-health/v1', '/save-chat', array(
         'methods' => 'POST',
-        'callback' => 'ibdhh_rest_save_chat',
+        'callback' => 'mlws_rest_save_chat',
         'permission_callback' => function () {
             return is_user_logged_in();
         }
@@ -629,7 +629,7 @@ add_action( 'rest_api_init', function () {
     // New AI Chat Endpoint
     register_rest_route( 'ibd-health/v1', '/ai-chat', array(
         'methods' => 'POST',
-        'callback' => 'ibdhh_rest_ai_chat',
+        'callback' => 'mlws_rest_ai_chat',
         'permission_callback' => '__return_true' // Allow guest access
     ) );
 } );
@@ -637,7 +637,7 @@ add_action( 'rest_api_init', function () {
 /**
  * Handle AI Chat REST Request
  */
-function ibdhh_rest_ai_chat( $request ) {
+function mlws_rest_ai_chat( $request ) {
     $params = $request->get_json_params();
     $messages = isset($params['messages']) ? $params['messages'] : array();
     
@@ -645,7 +645,7 @@ function ibdhh_rest_ai_chat( $request ) {
         return new WP_Error( 'no_messages', 'No messages provided', array( 'status' => 400 ) );
     }
 
-    // Grounding: Search for relevant content on ibdhealthhub.com
+    // Grounding: Search for relevant content on merlows.com
     $last_user_message = '';
     foreach (array_reverse($messages) as $m) {
         if ($m['role'] === 'user') {
@@ -681,11 +681,11 @@ function ibdhh_rest_ai_chat( $request ) {
     $api_key = $key_part_1 . $key_part_2;
     $url = 'https://openrouter.ai/api/v1/chat/completions';
     
-    $system_instruction = 'You are IBD-i, an expert IBD (Inflammatory Bowel Disease) clinical assistant for the IBD Health Hub Clinical Research Centre platform. Your intelligence and responses MUST be strictly restricted to IBD-related content, clinical reviews, gastrointestinal health, and clinical nutrition guidelines provided within the IBD Health Hub (ibdhealthhub.com). 
+    $system_instruction = 'You are IBD-i, an expert IBD (Inflammatory Bowel Disease) clinical assistant for the Merlows Clinical Research Centre platform. Your intelligence and responses MUST be strictly restricted to IBD-related content, clinical reviews, gastrointestinal health, and clinical nutrition guidelines provided within the Merlows (merlows.com). 
 
 DIRECTIONS:
 1. Prioritize the "CRITICAL KNOWLEDGE BASE CONTEXT" provided below.
-2. If the user asks a question that cannot be answered using the provided context or general knowledge typical of ibdhealthhub.com content, politely inform them that you are restricted to IBD Health Hub data.
+2. If the user asks a question that cannot be answered using the provided context or general knowledge typical of merlows.com content, politely inform them that you are restricted to Merlows data.
 3. Maintain a professional, clinical, yet accessible tone.
 4. Do not provide personal medical advice.
 
@@ -719,7 +719,7 @@ DIRECTIONS:
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $api_key,
             'HTTP-Referer' => home_url(),
-            'X-Title' => 'IBD Health Hub'
+            'X-Title' => 'Merlows'
         ),
         'timeout' => 60
     ) );
@@ -746,7 +746,7 @@ DIRECTIONS:
 /**
  * Handle Save Chat REST Request
  */
-function ibdhh_rest_save_chat( $request ) {
+function mlws_rest_save_chat( $request ) {
     $user_id = get_current_user_id();
     $params = $request->get_json_params();
 
@@ -757,7 +757,7 @@ function ibdhh_rest_save_chat( $request ) {
     $title = ! empty( $params['title'] ) ? sanitize_text_field( $params['title'] ) : 'AI Chat - ' . current_time( 'mysql' );
     $transcript = $params['transcript']; 
 
-    $saved_chats = get_user_meta( $user_id, '_ibdhh_saved_chats', true ) ?: array();
+    $saved_chats = get_user_meta( $user_id, '_mlws_saved_chats', true ) ?: array();
     
     $new_chat = array(
         'id'         => uniqid( 'chat_' ),
@@ -767,7 +767,7 @@ function ibdhh_rest_save_chat( $request ) {
     );
 
     $saved_chats[] = $new_chat;
-    update_user_meta( $user_id, '_ibdhh_saved_chats', $saved_chats );
+    update_user_meta( $user_id, '_mlws_saved_chats', $saved_chats );
 
     return array( 'success' => true, 'id' => $new_chat['id'] );
 }
@@ -775,13 +775,13 @@ function ibdhh_rest_save_chat( $request ) {
 /**
  * Handle Delete Chat AJAX
  */
-function ibdhh_dashboard_delete_chat() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_delete_chat() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
     if ( ! is_user_logged_in() ) wp_send_json_error( 'Not logged in' );
 
     $chat_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
     $user_id = get_current_user_id();
-    $saved_chats = get_user_meta( $user_id, '_ibdhh_saved_chats', true ) ?: array();
+    $saved_chats = get_user_meta( $user_id, '_mlws_saved_chats', true ) ?: array();
 
     $new_chats = array();
     foreach ( $saved_chats as $chat ) {
@@ -790,16 +790,16 @@ function ibdhh_dashboard_delete_chat() {
         }
     }
 
-    update_user_meta( $user_id, '_ibdhh_saved_chats', $new_chats );
+    update_user_meta( $user_id, '_mlws_saved_chats', $new_chats );
     wp_send_json_success( 'Chat deleted' );
 }
-add_action( 'wp_ajax_ibdhh_delete_chat', 'ibdhh_dashboard_delete_chat' );
+add_action( 'wp_ajax_mlws_delete_chat', 'mlws_dashboard_delete_chat' );
 
 /**
  * Handle Rename Chat AJAX
  */
-function ibdhh_dashboard_rename_chat() {
-    check_ajax_referer( 'ibdhh_dashboard_nonce', 'nonce' );
+function mlws_dashboard_rename_chat() {
+    check_ajax_referer( 'mlws_dashboard_nonce', 'nonce' );
     if ( ! is_user_logged_in() ) wp_send_json_error( 'Not logged in' );
 
     $chat_id = isset( $_POST['id'] ) ? sanitize_text_field( $_POST['id'] ) : '';
@@ -810,7 +810,7 @@ function ibdhh_dashboard_rename_chat() {
     }
 
     $user_id = get_current_user_id();
-    $saved_chats = get_user_meta( $user_id, '_ibdhh_saved_chats', true ) ?: array();
+    $saved_chats = get_user_meta( $user_id, '_mlws_saved_chats', true ) ?: array();
 
     $updated = false;
     foreach ( $saved_chats as &$chat ) {
@@ -823,10 +823,10 @@ function ibdhh_dashboard_rename_chat() {
     }
 
     if ( $updated ) {
-        update_user_meta( $user_id, '_ibdhh_saved_chats', $saved_chats );
+        update_user_meta( $user_id, '_mlws_saved_chats', $saved_chats );
         wp_send_json_success( 'Chat renamed' );
     } else {
         wp_send_json_error( 'Chat not found' );
     }
 }
-add_action( 'wp_ajax_ibdhh_rename_chat', 'ibdhh_dashboard_rename_chat' );
+add_action( 'wp_ajax_mlws_rename_chat', 'mlws_dashboard_rename_chat' );

@@ -3,7 +3,7 @@
  * Inner Page Category Navigation (Mini Cards)
  */
 
-if ( ! get_theme_mod( 'ibdhh_show_inner_nav', true ) ) {
+if ( ! get_theme_mod( 'mlws_show_inner_nav', true ) ) {
     return;
 }
 
@@ -14,8 +14,8 @@ if ( $uncat ) {
     $exclude_ids[] = $uncat->term_id;
 }
 
-$total_items = get_theme_mod( 'ibdhh_inner_nav_total_items', 8 );
-$col_count = get_theme_mod( 'ibdhh_inner_nav_cards_per_row', 8 );
+$total_items = get_theme_mod( 'mlws_inner_nav_total_items', 8 );
+$col_count = get_theme_mod( 'mlws_inner_nav_cards_per_row', 8 );
 
 $cats = get_categories( array(
     'orderby' => 'count',
@@ -35,7 +35,7 @@ $cats = get_categories( array(
             
             <?php foreach ( $cats as $cat ) : 
                 $is_active = ( is_category() && get_queried_object_id() === $cat->term_id );
-                $icon = get_theme_mod("ibdhh_cat_card_icon_{$cat->term_id}", '');
+                $icon = get_theme_mod("mlws_cat_card_icon_{$cat->term_id}", '');
                 
                 $card_style = "display: flex; align-items: center; justify-content: center; gap: 6px; background: #F8FAFC; border: 1px solid #e2e8f0; border-radius: 0; padding: 12px; text-decoration: none; transition: all 0.2s; white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,0.05); width: 100%; overflow: hidden;";
                 $text_style = "font-size: 12px; font-weight: 600; color: #334155; margin: 0; line-height: 1.2; overflow: hidden; text-overflow: ellipsis;";
@@ -50,7 +50,7 @@ $cats = get_categories( array(
             ?>
                 <a href="<?php echo get_category_link( $cat->term_id ); ?>" class="cat-mini-card <?php echo $is_active ? 'active' : ''; ?>" style="<?php echo $card_style; ?>" title="<?php echo esc_attr( $cat->name ); ?>">
                     <?php 
-                    $cat_icon = $icon ?: ibdhh_get_category_icon_url($cat->name);
+                    $cat_icon = $icon ?: mlws_get_category_icon_url($cat->name);
                     ?>
                         <div style="<?php echo $icon_container_style; ?>">
                             <?php if ($cat_icon): ?>

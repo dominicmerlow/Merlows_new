@@ -14,7 +14,7 @@ $title = '';
 $content = '';
 
 if ( $note_id ) {
-    $saved_notes = get_user_meta( $user_id, '_ibdhh_user_notes', true ) ?: array();
+    $saved_notes = get_user_meta( $user_id, '_mlws_user_notes', true ) ?: array();
     foreach($saved_notes as $n) {
         if ( $n['id'] === $note_id ) {
             $title = $n['title'];
@@ -29,7 +29,7 @@ if ( $note_id ) {
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Notes - IBD Health Hub Hub</title>
+    <title>My Notes - Merlows Hub</title>
     <?php wp_head(); ?>
     <style>
         body { margin: 0; background: #f8fafc; font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; }
@@ -105,11 +105,11 @@ function saveNote() {
     btn.disabled = true;
 
     var data = {
-        action: 'ibdhh_save_note',
+        action: 'mlws_save_note',
         id: noteId,
         title: title,
         content: content,
-        nonce: '<?php echo wp_create_nonce("ibdhh_save_note_nonce"); ?>'
+        nonce: '<?php echo wp_create_nonce("mlws_save_note_nonce"); ?>'
     };
 
     jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', data, function(res) {
@@ -143,7 +143,7 @@ function downloadPDF() {
             <div style="border-bottom: 2px solid #9F2B68; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
                    <div style="font-size: 24px; font-weight: 800; color: #0F172A; text-transform: uppercase; letter-spacing: 1px;">IBD Research Centre Note</div>
-                   <div style="font-size: 12px; color: #64748b; margin-top: 4px;">IBD Health Hub • IBD Research Centre</div>
+                   <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Merlows • IBD Research Centre</div>
                 </div>
                 <div style="text-align: right; font-size: 11px; color: #94a3b8;">
                     <div>User: <?php echo esc_js(wp_get_current_user()->display_name); ?></div>
@@ -158,7 +158,7 @@ function downloadPDF() {
             </div>
             
             <div style="margin-top: 60px; font-size: 10px; color: #cbd5e1; border-top: 1px solid #e2e8f0; padding-top: 12px; text-align: center;">
-                Generated from IBD Health Hub Hub Dashboard. Private & Confidential.
+                Generated from Merlows Hub Dashboard. Private & Confidential.
             </div>
         </div>
     `;

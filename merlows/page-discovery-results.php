@@ -468,10 +468,10 @@ function saveCurrentSearch() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
-                action: 'ibdhh_save_search',
+                action: 'mlws_save_search',
                 search_name: name,
                 query_params: window.location.search.substring(1),
-                nonce: '<?php echo wp_create_nonce("ibdhh_save_search_nonce"); ?>'
+                nonce: '<?php echo wp_create_nonce("mlws_save_search_nonce"); ?>'
             })
         })
         .then(res => res.json())
@@ -494,9 +494,9 @@ function toggleBookmark(btn, postId) {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: new URLSearchParams({
-                action: 'ibdhh_toggle_bookmark',
+                action: 'mlws_toggle_bookmark',
                 post_id: postId,
-                nonce: '<?php echo wp_create_nonce("ibdhh_dashboard_nonce"); ?>'
+                nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
             })
         })
         .then(res => res.json())
@@ -517,7 +517,7 @@ function toggleBookmark(btn, postId) {
 // Check existing bookmarks on page load
 <?php if (is_user_logged_in()): ?>
 document.addEventListener('DOMContentLoaded', function() {
-    const bookmarks = <?php echo json_encode(get_user_meta(get_current_user_id(), '_ibdhh_reading_list', true) ?: array()); ?>;
+    const bookmarks = <?php echo json_encode(get_user_meta(get_current_user_id(), '_mlws_reading_list', true) ?: array()); ?>;
     document.querySelectorAll('.bookmark-btn').forEach(btn => {
         const postId = parseInt(btn.dataset.postId);
         if (bookmarks.includes(postId)) {

@@ -7,9 +7,9 @@
 get_header();
 
 // Get customizer settings
-$hero_title = get_theme_mod('ibdhh_askai_hero_title', 'Ask IBDi');
-$hero_subtitle = get_theme_mod('ibdhh_askai_hero_subtitle', 'Direct access to our IBD Research Centre. Ask anything about IBD, clinical nutrition, and gastrointestinal health.');
-$hero_badge = get_theme_mod('ibdhh_askai_hero_badge', 'Clinical Assistant v1.0');
+$hero_title = get_theme_mod('mlws_askai_hero_title', 'Ask IBDi');
+$hero_subtitle = get_theme_mod('mlws_askai_hero_subtitle', 'Direct access to our IBD Research Centre. Ask anything about IBD, clinical nutrition, and gastrointestinal health.');
+$hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 ?>
 
 <style>

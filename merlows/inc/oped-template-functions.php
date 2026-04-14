@@ -10,7 +10,7 @@
  * - Quiz/Flashcards
  * - Attached Document (PDF, PPT, Doc, XLS)
  * 
- * @package IBDHealthHub
+ * @package Merlows
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Enqueue Single template styles
  */
-function ibdhh_enqueue_single_template_styles() {
+function mlws_enqueue_single_template_styles() {
     if ( is_singular() ) {
         wp_enqueue_style( 
             'ibd-oped-template', 
@@ -30,41 +30,41 @@ function ibdhh_enqueue_single_template_styles() {
         );
     }
 }
-add_action( 'wp_enqueue_scripts', 'ibdhh_enqueue_single_template_styles' );
+add_action( 'wp_enqueue_scripts', 'mlws_enqueue_single_template_styles' );
 
 /**
  * Register Digital Assets Meta Boxes
  */
-function ibdhh_register_digital_assets_meta_boxes() {
+function mlws_register_digital_assets_meta_boxes() {
     $post_types = array( 'post', 'news', 'research', 'oped', 'review', 'whitepaper', 'podcast', 'webinar', 'course', 'infographic' );
     
     foreach ( $post_types as $post_type ) {
         add_meta_box(
-            'ibdhh_digital_assets',
+            'mlws_digital_assets',
             'Digital Assets',
-            'ibdhh_digital_assets_meta_box_callback',
+            'mlws_digital_assets_meta_box_callback',
             $post_type,
             'normal',
             'high'
         );
         
         add_meta_box(
-            'ibdhh_article_settings',
+            'mlws_article_settings',
             'Article Settings',
-            'ibdhh_article_settings_meta_box_callback',
+            'mlws_article_settings_meta_box_callback',
             $post_type,
             'side',
             'high'
         );
     }
 }
-add_action( 'add_meta_boxes', 'ibdhh_register_digital_assets_meta_boxes' );
+add_action( 'add_meta_boxes', 'mlws_register_digital_assets_meta_boxes' );
 
 /**
  * Digital Assets Meta Box Callback
  */
-function ibdhh_digital_assets_meta_box_callback( $post ) {
-    wp_nonce_field( 'ibdhh_digital_assets_meta_box', 'ibdhh_digital_assets_meta_box_nonce' );
+function mlws_digital_assets_meta_box_callback( $post ) {
+    wp_nonce_field( 'mlws_digital_assets_meta_box', 'mlws_digital_assets_meta_box_nonce' );
     
     // Get existing values
     $small_infographic = get_post_meta( $post->ID, '_oped_small_infographic', true );
@@ -72,7 +72,7 @@ function ibdhh_digital_assets_meta_box_callback( $post ) {
     $audio_summary = get_post_meta( $post->ID, '_oped_audio_summary', true );
     $video_summary = get_post_meta( $post->ID, '_oped_video_summary', true );
     $quiz_embed = get_post_meta( $post->ID, '_oped_quiz_embed', true );
-    $attached_document = get_post_meta( $post->ID, '_ibdhh_attached_document', true );
+    $attached_document = get_post_meta( $post->ID, '_mlws_attached_document', true );
     
     // Enqueue media uploader
     wp_enqueue_media();
@@ -253,14 +253,14 @@ function ibdhh_digital_assets_meta_box_callback( $post ) {
         <div class="oped-meta-section">
             <h4><span class="dashicons dashicons-media-document"></span> Attached Document</h4>
             <p>Upload a document (PDF, Doc, PPT, Excel) for download</p>
-            <input type="hidden" name="ibdhh_attached_document" id="ibdhh_attached_document" value="<?php echo esc_attr( $attached_document ); ?>">
-            <button type="button" class="oped-upload-btn" data-target="ibdhh_attached_document" data-type="application">
+            <input type="hidden" name="mlws_attached_document" id="mlws_attached_document" value="<?php echo esc_attr( $attached_document ); ?>">
+            <button type="button" class="oped-upload-btn" data-target="mlws_attached_document" data-type="application">
                 <?php echo $attached_document ? 'Change Document' : 'Upload Document'; ?>
             </button>
             <?php if ( $attached_document ) : ?>
-                <span class="oped-remove-media" data-target="ibdhh_attached_document">&times; Remove</span>
+                <span class="oped-remove-media" data-target="mlws_attached_document">&times; Remove</span>
             <?php endif; ?>
-            <div class="oped-media-preview" id="ibdhh_attached_document_preview">
+            <div class="oped-media-preview" id="mlws_attached_document_preview">
                 <?php 
                 if ( $attached_document ) {
                     $doc_url = wp_get_attachment_url( $attached_document );
@@ -397,7 +397,7 @@ function ibdhh_digital_assets_meta_box_callback( $post ) {
 /**
  * Article Settings Meta Box Callback
  */
-function ibdhh_article_settings_meta_box_callback( $post ) {
+function mlws_article_settings_meta_box_callback( $post ) {
     $read_time = get_post_meta( $post->ID, '_oped_read_time', true );
     $author_bio = get_post_meta( $post->ID, '_oped_author_bio', true );
     ?>
@@ -447,13 +447,13 @@ function ibdhh_article_settings_meta_box_callback( $post ) {
 /**
  * Save Digital Assets Meta Box Data
  */
-function ibdhh_save_digital_assets_meta_boxes( $post_id ) {
+function mlws_save_digital_assets_meta_boxes( $post_id ) {
     // Verify nonce
-    if ( ! isset( $_POST['ibdhh_digital_assets_meta_box_nonce'] ) ) {
+    if ( ! isset( $_POST['mlws_digital_assets_meta_box_nonce'] ) ) {
         return;
     }
     
-    if ( ! wp_verify_nonce( $_POST['ibdhh_digital_assets_meta_box_nonce'], 'ibdhh_digital_assets_meta_box' ) ) {
+    if ( ! wp_verify_nonce( $_POST['mlws_digital_assets_meta_box_nonce'], 'mlws_digital_assets_meta_box' ) ) {
         return;
     }
     
@@ -477,7 +477,7 @@ function ibdhh_save_digital_assets_meta_boxes( $post_id ) {
         'oped_quiz_data' => '_oped_quiz_data',
         'oped_read_time' => '_oped_read_time',
         'oped_author_bio' => '_oped_author_bio',
-        'ibdhh_attached_document' => '_ibdhh_attached_document',
+        'mlws_attached_document' => '_mlws_attached_document',
     );
     
     foreach ( $fields as $field_name => $meta_key ) {
@@ -485,7 +485,7 @@ function ibdhh_save_digital_assets_meta_boxes( $post_id ) {
             $value = $_POST[ $field_name ];
             
             // Sanitize based on field type
-            if ( in_array( $field_name, array( 'oped_small_infographic', 'oped_large_infographic', 'oped_audio_summary', 'oped_read_time', 'ibdhh_attached_document' ) ) ) {
+            if ( in_array( $field_name, array( 'oped_small_infographic', 'oped_large_infographic', 'oped_audio_summary', 'oped_read_time', 'mlws_attached_document' ) ) ) {
                 $value = absint( $value );
             } elseif ( $field_name === 'oped_video_summary' || $field_name === 'oped_quiz_embed' ) {
                 // Allow iframes and embeds
@@ -521,12 +521,12 @@ function ibdhh_save_digital_assets_meta_boxes( $post_id ) {
         }
     }
 }
-add_action( 'save_post', 'ibdhh_save_digital_assets_meta_boxes' );
+add_action( 'save_post', 'mlws_save_digital_assets_meta_boxes' );
 
 /**
  * Add Meta Box Instructions
  */
-function ibdhh_single_meta_box_instructions() {
+function mlws_single_meta_box_instructions() {
     global $post_type;
     
     $cpts = array( 'news', 'research', 'oped', 'review', 'whitepaper', 'podcast', 'webinar', 'course', 'infographic', 'post' );
@@ -575,23 +575,23 @@ function ibdhh_single_meta_box_instructions() {
     </div>
     <?php
 }
-add_action( 'edit_form_top', 'ibdhh_single_meta_box_instructions' );
+add_action( 'edit_form_top', 'mlws_single_meta_box_instructions' );
 
 /**
  * Customize Featured Image Meta Box Title for Op-Ed / Expert Opinions
  */
-function ibdhh_custom_featured_image_title( $content, $post_id, $thumbnail_id ) {
+function mlws_custom_featured_image_title( $content, $post_id, $thumbnail_id ) {
     $post = get_post( $post_id );
     // Show on all our types for consistency
     return $content . '<p style="margin-top: 10px; font-size: 12px; color: #6b7280;">This image will appear as the full-width hero image at the top of your article.</p>';
 }
-add_filter( 'admin_post_thumbnail_html', 'ibdhh_custom_featured_image_title', 10, 3 );
+add_filter( 'admin_post_thumbnail_html', 'mlws_custom_featured_image_title', 10, 3 );
 
 /**
  * Add custom image size for hero
  */
-function ibdhh_add_custom_image_sizes() {
+function mlws_add_custom_image_sizes() {
     add_image_size( 'ibd-hero', 1920, 800, true );
     add_image_size( 'ibd-infographic-small', 340, 9999, false );
 }
-add_action( 'after_setup_theme', 'ibdhh_add_custom_image_sizes' );
+add_action( 'after_setup_theme', 'mlws_add_custom_image_sizes' );

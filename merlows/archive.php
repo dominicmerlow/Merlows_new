@@ -65,8 +65,8 @@
     // Override with individual category settings if available
     if ( is_category() ) {
         $cat_id = get_queried_object_id();
-        $specific_hero = get_theme_mod( "ibdhh_cat_hero_{$cat_id}" );
-        $specific_tagline = get_theme_mod( "ibdhh_cat_tagline_{$cat_id}" );
+        $specific_hero = get_theme_mod( "mlws_cat_hero_{$cat_id}" );
+        $specific_tagline = get_theme_mod( "mlws_cat_tagline_{$cat_id}" );
         
         if ( $specific_hero ) {
             $hero_bg = $specific_hero;
@@ -77,8 +77,8 @@
     }
     
     // Override default hero if a global category hero is set in Customizer and no specific hero was found
-    if ( ! ( is_category() && get_theme_mod( "ibdhh_cat_hero_" . get_queried_object_id() ) ) ) {
-        $custom_category_hero = get_theme_mod('ibdhh_category_hero_image');
+    if ( ! ( is_category() && get_theme_mod( "mlws_cat_hero_" . get_queried_object_id() ) ) ) {
+        $custom_category_hero = get_theme_mod('mlws_category_hero_image');
         if ($custom_category_hero) {
             $hero_bg = $custom_category_hero;
         }
@@ -86,10 +86,10 @@
 
 
     // Hero Settings
-    $title_color = get_theme_mod('ibdhh_hero_title_color', '#ffffff');
-    $title_size = get_theme_mod('ibdhh_hero_title_size', 40);
-    $mask_enabled = get_theme_mod('ibdhh_hero_mask_toggle', true);
-    $mask_opacity = get_theme_mod('ibdhh_hero_mask_opacity', 0.5); 
+    $title_color = get_theme_mod('mlws_hero_title_color', '#ffffff');
+    $title_size = get_theme_mod('mlws_hero_title_size', 40);
+    $mask_enabled = get_theme_mod('mlws_hero_mask_toggle', true);
+    $mask_opacity = get_theme_mod('mlws_hero_mask_opacity', 0.5); 
 
     $overlay_css = '';
     if ( $mask_enabled ) {
@@ -114,7 +114,7 @@
                 $display_title = '';
                 $quiried_object = get_queried_object();
                 if ( $quiried_object instanceof WP_Term ) {
-                    $override = get_theme_mod("ibdhh_cat_hero_title_override_{$quiried_object->term_id}");
+                    $override = get_theme_mod("mlws_cat_hero_title_override_{$quiried_object->term_id}");
                     if ( $override ) {
                         $display_title = $override;
                     } else {
@@ -155,12 +155,12 @@
                         $card_cats = get_the_category();
                         if ( ! empty( $card_cats ) ) {
                             $card_hero_map = array(
-                                'healthcare-news'   => 'news_hero.png',
-                                'clinical-reviews'  => 'research_hero.png',
-                                'expert-opinions'   => 'opinion_hero.png',
-                                'tools-resources'   => 'hcp_hero.png',
-                                'education-courses' => 'education_hero.png',
-                                'patient-education' => 'patient_hero.png',
+                                'breaking-news'       => 'news_hero.png',
+                                'diplomatic-analysis' => 'research_hero.png',
+                                'op-eds-commentary'   => 'opinion_hero.png',
+                                'cyrus-accord'        => 'hcp_hero.png',
+                                'abraham-accords'     => 'education_hero.png',
+                                'regional-voices'     => 'patient_hero.png',
                             );
                             foreach ( $card_cats as $cc ) {
                                 if ( isset( $card_hero_map[ $cc->slug ] ) ) {

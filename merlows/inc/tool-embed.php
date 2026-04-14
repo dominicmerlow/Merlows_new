@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array $atts Shortcode attributes
  * @return string iframe HTML
  */
-function ibdhh_tool_embed_shortcode( $atts ) {
+function mlws_tool_embed_shortcode( $atts ) {
     // Separate standard attributes from potential query params
     $standard_atts = array(
         'tool'   => '',
@@ -73,12 +73,12 @@ function ibdhh_tool_embed_shortcode( $atts ) {
         esc_attr( ucwords( str_replace( '-', ' ', $tool ) ) )
     );
 }
-add_shortcode( 'tool_embed', 'ibdhh_tool_embed_shortcode' );
+add_shortcode( 'tool_embed', 'mlws_tool_embed_shortcode' );
 
 /**
  * Add custom CSS for tool embeds
  */
-function ibdhh_tool_embed_styles() {
+function mlws_tool_embed_styles() {
     echo '
     <style>
         .tool-embed-container {
@@ -101,4 +101,4 @@ function ibdhh_tool_embed_styles() {
     </style>
     ';
 }
-add_action( 'wp_head', 'ibdhh_tool_embed_styles' );
+add_action( 'wp_head', 'mlws_tool_embed_styles' );

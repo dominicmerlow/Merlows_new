@@ -2,10 +2,10 @@
     <footer class="main-footer">
         <div class="container">
             <?php 
-            $nl_action = get_theme_mod('ibdhh_newsletter_action');
+            $nl_action = get_theme_mod('mlws_newsletter_action');
             if ($nl_action): 
-                $nl_head = get_theme_mod('ibdhh_newsletter_heading', 'Join the Hub');
-                $nl_desc = get_theme_mod('ibdhh_newsletter_desc', 'Get the latest clinical reviews and tools.');
+                $nl_head = get_theme_mod('mlws_newsletter_heading', 'Join Merlows');
+                $nl_desc = get_theme_mod('mlws_newsletter_desc', 'Get diplomatic analysis and breaking news delivered.');
             ?>
             <div class="newsletter-bar" style="background: #0F172A; border-radius: 0; padding: 40px; margin-bottom: 60px; color: white; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
                 <div style="flex: 1; min-width: 300px;">
@@ -24,21 +24,21 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <?php 
-                    $f_logo = get_theme_mod('ibdhh_footer_logo');
-                    $f_text = get_theme_mod('ibdhh_footer_brand_text', 'Your IBD Research Centre. Curated clinical research, latest news, health trackers and downloadable resources for both patients and practitioners.');
+                    $f_logo = get_theme_mod('mlws_footer_logo');
+                    $f_text = get_theme_mod('mlws_footer_brand_text', 'Your Middle East News Source. Curated independent journalism covering the Cyrus Accord, Abraham Accords, and Middle East diplomacy.');
                     ?>
                     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="display:block; margin-bottom: 24px;">
                         <?php if($f_logo): ?>
-                            <img src="<?php echo esc_url($f_logo); ?>" alt="IBD Health Hub" style="height: 40px; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
+                            <img src="<?php echo esc_url($f_logo); ?>" alt="Merlows" style="height: 40px; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
                         <?php else: ?>
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="IBD Health Hub" style="height: 60px; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 60px; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
                         <?php endif; ?>
                     </a>
                     <p><?php echo esc_html($f_text); ?></p>
                 </div>
                 
                 <div class="footer-col">
-                    <h4><?php echo esc_html(get_theme_mod('ibdhh_footer_heading_col1', 'Topics')); ?></h4>
+                    <h4><?php echo esc_html(get_theme_mod('mlws_footer_heading_col1', 'Topics')); ?></h4>
                     <?php
                     wp_nav_menu( array(
                         'theme_location' => 'footer-menu-1',
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="footer-col">
-                    <h4><?php echo esc_html(get_theme_mod('ibdhh_footer_heading_col2', 'For Professionals')); ?></h4>
+                    <h4><?php echo esc_html(get_theme_mod('mlws_footer_heading_col2', 'For Journalists')); ?></h4>
                     <?php
                     wp_nav_menu( array(
                         'theme_location' => 'footer-menu-2',
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="footer-col">
-                    <h4><?php echo esc_html(get_theme_mod('ibdhh_footer_heading_col3', 'For Patients')); ?></h4>
+                    <h4><?php echo esc_html(get_theme_mod('mlws_footer_heading_col3', 'For Readers')); ?></h4>
                     <?php
                     wp_nav_menu( array(
                         'theme_location' => 'footer-menu-3',
@@ -72,11 +72,11 @@
             </div>
 
             <div class="footer-bottom">
-                <div class="copyright"><?php echo esc_html(get_theme_mod('ibdhh_footer_copyright', '© ' . date('Y') . ' IBD Health Hub. All rights reserved.')); ?></div>
+                <div class="copyright"><?php echo esc_html(get_theme_mod('mlws_footer_copyright', '© ' . date('Y') . ' Merlows. All rights reserved.')); ?></div>
                 <div class="footer-links">
-                    <a href="https://ibdhealthhub.com/privacy-policy/">Privacy Policy</a>
-                    <a href="https://ibdhealthhub.com/terms-of-use/">Terms of Use</a>
-                    <a href="https://ibdhealthhub.com/cookie-policy/">Cookie Policy</a>
+                    <a href="https://merlows.com/privacy-policy/">Privacy Policy</a>
+                    <a href="https://merlows.com/terms-of-use/">Terms of Use</a>
+                    <a href="https://merlows.com/cookie-policy/">Cookie Policy</a>
                 </div>
                 <div class="social-links">
                     <!-- Icons would go here -->
@@ -101,7 +101,7 @@
             <div style="width: 64px; height: 64px; background: #F5F0FA; border-radius: 0; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
                 <span style="font-size: 32px;">🔖</span>
             </div>
-            <h2 style="font-size: 24px; color: #0f172a; margin-bottom: 12px; font-family: var(--font-heading);">Join the IBD Health Hub</h2>
+            <h2 style="font-size: 24px; color: #0f172a; margin-bottom: 12px; font-family: var(--font-heading);">Join Merlows</h2>
             <p style="font-size: 16px; color: #64748b; margin-bottom: 32px; line-height: 1.6;">Save your favorite articles, track your reading progress, and access exclusive professional resources by joining our community.</p>
             
             <div style="margin-bottom: 24px;">
@@ -306,6 +306,6 @@
     </script>
 
 <?php wp_footer(); ?>
-<?php echo get_theme_mod( 'ibdhh_footer_scripts' ); ?>
+<?php echo get_theme_mod( 'mlws_footer_scripts' ); ?>
 </body>
 </html>

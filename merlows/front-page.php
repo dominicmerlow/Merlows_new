@@ -549,15 +549,15 @@ body {
 </style>
 
     <?php
-    $section_order = get_theme_mod('ibdhh_homepage_section_order', 'hero,latest,pathway,stats,promo,cats,tools,discovery,quiz_cta,kb,testimonials');
+    $section_order = get_theme_mod('mlws_homepage_section_order', 'hero,latest,pathway,stats,promo,cats,tools,discovery,quiz_cta,kb,testimonials');
     $sections = explode(',', $section_order);
 
     foreach ($sections as $section_id) {
         $section_id = trim($section_id);
 
         // Check visibility toggle — skip section if toggled off in Customizer
-        // Promo has its own ibdhh_promo_show toggle, so we skip it here
-        if ( $section_id !== 'promo' && ! get_theme_mod( "ibdhh_show_section_{$section_id}", true ) ) {
+        // Promo has its own mlws_promo_show toggle, so we skip it here
+        if ( $section_id !== 'promo' && ! get_theme_mod( "mlws_show_section_{$section_id}", true ) ) {
             continue;
         }
 
@@ -566,25 +566,25 @@ body {
                 ?>
     <!-- Hero Section: Modern Split Layout -->
     <?php
-    $hero_bg = get_theme_mod('ibdhh_homepage_hero_image');
+    $hero_bg = get_theme_mod('mlws_homepage_hero_image');
     if (!$hero_bg) {
         $hero_bg = get_template_directory_uri() . '/assets/img/news_hero.png';
     }
 
-    $hero_tag = get_theme_mod('ibdhh_hero_tag_label', 'HEALTHCARE KNOWLEDGE HUB');
-    $hero_title = get_theme_mod('ibdhh_hero_custom_title', 'Your Partner in <span class="highlight">Lifelong Wellness</span>');
-    $hero_subtitle = get_theme_mod('ibdhh_hero_custom_subtitle', 'Trusted, science-backed information to help you understand your health, manage your IBD condition, and live your best life through clinical nutrition.');
+    $hero_tag = get_theme_mod('mlws_hero_tag_label', 'NEWS & DIPLOMACY');
+    $hero_title = get_theme_mod('mlws_hero_custom_title', 'Bridging Nations, <span class="highlight">Building Peace</span>');
+    $hero_subtitle = get_theme_mod('mlws_hero_custom_subtitle', 'Independent journalism covering Israel-Iran relations, the Cyrus Accord, and the path toward a new era of Middle East diplomacy.');
 
-    $btn1_text = get_theme_mod('ibdhh_hero_button_1_text', "I'm a Practitioner");
-    $btn1_link = get_theme_mod('ibdhh_hero_button_1_link', '/healthcare-professionals/');
-    $btn2_text = get_theme_mod('ibdhh_hero_button_2_text', "I'm a Patient");
-    $btn2_link = get_theme_mod('ibdhh_hero_button_2_link', '/patients/');
+    $btn1_text = get_theme_mod('mlws_hero_button_1_text', "Latest News");
+    $btn1_link = get_theme_mod('mlws_hero_button_1_link', '/healthcare-professionals/');
+    $btn2_text = get_theme_mod('mlws_hero_button_2_text', "About Merlows");
+    $btn2_link = get_theme_mod('mlws_hero_button_2_link', '/patients/');
 
-    $mask_enabled = get_theme_mod('ibdhh_hero_mask_toggle', true);
-    $mask_opacity = get_theme_mod('ibdhh_hero_mask_opacity', 0.5);
-    $hero_title_size = get_theme_mod('ibdhh_hero_title_size', 52);
-    $hero_title_color = get_theme_mod('ibdhh_hero_title_color', '#0F172A');
-    $hero_subtitle_color = get_theme_mod('ibdhh_hero_subtitle_color', '#64748B');
+    $mask_enabled = get_theme_mod('mlws_hero_mask_toggle', true);
+    $mask_opacity = get_theme_mod('mlws_hero_mask_opacity', 0.5);
+    $hero_title_size = get_theme_mod('mlws_hero_title_size', 52);
+    $hero_title_color = get_theme_mod('mlws_hero_title_color', '#0F172A');
+    $hero_subtitle_color = get_theme_mod('mlws_hero_subtitle_color', '#64748B');
     ?>
     <section class="hero-split">
         <div class="container" style="display: flex; align-items: center; flex-wrap: wrap;">
@@ -631,9 +631,9 @@ body {
             </div>
 
             <div class="hero-split-right">
-                <!-- Animated IBDHealthHub Logo in circular mask -->
+                <!-- Animated Merlows Logo in circular mask -->
                 <div style="width: 420px; height: 420px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(159, 43, 104, 0.15), 0 0 0 6px rgba(159, 43, 104, 0.08); margin: 0 auto;">
-                    <img src="<?php echo content_url(); ?>/uploads/2026/04/IBD_logo_anime.gif" alt="IBD Health Hub" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="<?php echo content_url(); ?>/uploads/2026/04/IBD_logo_anime.gif" alt="Merlows" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <!-- Original animated SVG removed - hidden, pending full cleanup -->
                 <svg viewBox="0 0 500 520" style="display:none;" xmlns="http://www.w3.org/2000/svg">
@@ -809,16 +809,16 @@ body {
 
             case 'latest':
                 // Fetch latest published posts
-                $latest_title      = get_theme_mod('ibdhh_pathway_latest_title', 'LATEST CONTENT');
-                $latest_count      = get_theme_mod('ibdhh_pathway_latest_count', 6);
-                $latest_cat        = (int) get_theme_mod('ibdhh_pathway_latest_category', 0);
-                $show_date         = get_theme_mod('ibdhh_pathway_latest_show_date', true);
-                $latest_tag_label  = get_theme_mod('ibdhh_latest_tag_label', 'LATEST FROM THE HUB');
-                $latest_align      = get_theme_mod('ibdhh_latest_text_align', 'left');
-                $latest_layout     = get_theme_mod('ibdhh_latest_layout', 'carousel');
-                $latest_show_excerpt  = get_theme_mod('ibdhh_latest_show_excerpt', true);
-                $latest_show_cat      = get_theme_mod('ibdhh_latest_show_category', true);
-                $latest_section_bg    = get_theme_mod('ibdhh_latest_section_bg', '#F8FAFC');
+                $latest_title      = get_theme_mod('mlws_pathway_latest_title', 'LATEST CONTENT');
+                $latest_count      = get_theme_mod('mlws_pathway_latest_count', 6);
+                $latest_cat        = (int) get_theme_mod('mlws_pathway_latest_category', 0);
+                $show_date         = get_theme_mod('mlws_pathway_latest_show_date', true);
+                $latest_tag_label  = get_theme_mod('mlws_latest_tag_label', 'LATEST FROM THE HUB');
+                $latest_align      = get_theme_mod('mlws_latest_text_align', 'left');
+                $latest_layout     = get_theme_mod('mlws_latest_layout', 'carousel');
+                $latest_show_excerpt  = get_theme_mod('mlws_latest_show_excerpt', true);
+                $latest_show_cat      = get_theme_mod('mlws_latest_show_category', true);
+                $latest_section_bg    = get_theme_mod('mlws_latest_section_bg', '#F8FAFC');
 
                 $cpt_post_types = array(
                     'post', 'news', 'research', 'oped', 'review',
@@ -838,16 +838,16 @@ body {
                 $latest_posts = get_posts($query_args);
 
                 // Reusable: get thumbnail with category fallback
-                if (!function_exists('ibdhh_get_latest_thumb')) {
-                    function ibdhh_get_latest_thumb($post_id) {
+                if (!function_exists('mlws_get_latest_thumb')) {
+                    function mlws_get_latest_thumb($post_id) {
                         $thumb = get_the_post_thumbnail_url($post_id, 'medium');
                         if ($thumb) return $thumb;
                         $hero_map = array(
-                            'healthcare-news' => 'news_hero.png', 'clinical-reviews' => 'research_hero.png',
-                            'expert-opinions' => 'opinion_hero.png', 'tools-resources' => 'hcp_hero.png',
-                            'education-courses' => 'education_hero.png', 'patient-education' => 'patient_hero.png',
+                            'breaking-news' => 'news_hero.png', 'diplomatic-analysis' => 'research_hero.png',
+                            'op-eds-commentary' => 'opinion_hero.png', 'cyrus-accord' => 'hcp_hero.png',
+                            'abraham-accords' => 'education_hero.png', 'regional-voices' => 'patient_hero.png',
                         );
-                        $url_map = array('living-with-ibd' => content_url() . '/uploads/2026/04/ibdliving_hero.png');
+                        $url_map = array('regional-voices' => content_url() . '/uploads/2026/04/ibdliving_hero.png');
                         $p_cats = get_the_category($post_id);
                         if (!empty($p_cats)) {
                             foreach ($p_cats as $pc) {
@@ -884,7 +884,7 @@ body {
                         <?php foreach ($latest_posts as $p) : ?>
                         <a href="<?php echo get_permalink($p->ID); ?>" class="latest-card">
                             <div class="latest-card-img">
-                                <img src="<?php echo esc_url(ibdhh_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
+                                <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             </div>
                             <div class="latest-card-body">
                                 <?php if ($latest_show_cat) : ?>
@@ -915,7 +915,7 @@ body {
                     <!-- Featured post -->
                     <a href="<?php echo get_permalink($first->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; grid-row: 1 / span 2;">
                         <div style="position: relative; height: 300px; overflow: hidden;">
-                            <img src="<?php echo esc_url(ibdhh_get_latest_thumb($first->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
+                            <img src="<?php echo esc_url(mlws_get_latest_thumb($first->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             <?php if ($show_date) : ?>
                             <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;"><?php echo get_the_date('', $first->ID); ?></div>
                             <?php endif; ?>
@@ -935,7 +935,7 @@ body {
                         <?php foreach ($latest_posts as $p) : ?>
                         <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 16px; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; flex: 1;">
                             <div style="width: 140px; min-height: 100px; flex-shrink: 0; overflow: hidden;">
-                                <img src="<?php echo esc_url(ibdhh_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
+                                <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             </div>
                             <div style="padding: 16px 16px 16px 0; display: flex; flex-direction: column; justify-content: center;">
                                 <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
@@ -957,7 +957,7 @@ body {
                     <?php foreach ($latest_posts as $p) : ?>
                     <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;">
                         <div style="position: relative; height: 180px; overflow: hidden;">
-                            <img src="<?php echo esc_url(ibdhh_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
+                            <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             <?php if ($show_date) : ?>
                             <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;"><?php echo get_the_date('', $p->ID); ?></div>
                             <?php endif; ?>
@@ -981,7 +981,7 @@ body {
                     <?php foreach ($latest_posts as $p) : ?>
                     <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 20px; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; padding: 0;">
                         <div style="width: 200px; min-height: 130px; flex-shrink: 0; overflow: hidden;">
-                            <img src="<?php echo esc_url(ibdhh_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
+                            <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                         </div>
                         <div style="padding: 20px 20px 20px 0; display: flex; flex-direction: column; justify-content: center; flex: 1;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
@@ -1011,32 +1011,32 @@ body {
                 break;
 
             case 'pathway':
-                $tile_radius = get_theme_mod('ibdhh_pathway_tile_radius', 16);
-                $image_radius = get_theme_mod('ibdhh_pathway_tile_image_radius', 8);
+                $tile_radius = get_theme_mod('mlws_pathway_tile_radius', 16);
+                $image_radius = get_theme_mod('mlws_pathway_tile_image_radius', 8);
 
                 // Pathway Customizer values
-                $pathway_hover_color    = get_theme_mod('ibdhh_pathway_card_hover_color', '#9F2B68');
-                $pathway_icon_bg        = get_theme_mod('ibdhh_pathway_icon_bg_color', '#0F172A');
-                $pathway_icon_hover_bg  = get_theme_mod('ibdhh_pathway_icon_hover_bg_color', 'rgba(255,255,255,0.2)');
-                $pathway_who_label      = get_theme_mod('ibdhh_pathway_who_label', 'Who Am I?');
+                $pathway_hover_color    = get_theme_mod('mlws_pathway_card_hover_color', '#9F2B68');
+                $pathway_icon_bg        = get_theme_mod('mlws_pathway_icon_bg_color', '#0F172A');
+                $pathway_icon_hover_bg  = get_theme_mod('mlws_pathway_icon_hover_bg_color', 'rgba(255,255,255,0.2)');
+                $pathway_who_label      = get_theme_mod('mlws_pathway_who_label', 'Who Am I?');
 
                 // Practitioner tile
-                $prac_title = get_theme_mod('ibdhh_practitioner_tile_title', 'For Practitioners');
-                $prac_desc = get_theme_mod('ibdhh_practitioner_tile_desc', 'Access clinical reviews, evidence-based guidelines, and professional tools tailored for modern healthcare practitioners.');
-                $prac_extra = get_theme_mod('ibdhh_practitioner_tile_extra', 'Bridging science and clinical outcomes');
-                $prac_img = get_theme_mod('ibdhh_practitioner_tile_image');
-                $prac_link = get_theme_mod('ibdhh_practitioner_tile_link', '/healthcare-professionals/');
-                $prac_tile_radius = get_theme_mod('ibdhh_practitioner_tile_radius', 16);
-                $prac_img_radius = get_theme_mod('ibdhh_practitioner_image_radius', 8);
+                $prac_title = get_theme_mod('mlws_practitioner_tile_title', 'For Practitioners');
+                $prac_desc = get_theme_mod('mlws_practitioner_tile_desc', 'Access clinical reviews, evidence-based guidelines, and professional tools tailored for modern healthcare practitioners.');
+                $prac_extra = get_theme_mod('mlws_practitioner_tile_extra', 'Bridging science and clinical outcomes');
+                $prac_img = get_theme_mod('mlws_practitioner_tile_image');
+                $prac_link = get_theme_mod('mlws_practitioner_tile_link', '/healthcare-professionals/');
+                $prac_tile_radius = get_theme_mod('mlws_practitioner_tile_radius', 16);
+                $prac_img_radius = get_theme_mod('mlws_practitioner_image_radius', 8);
 
                 // Patient tile
-                $pat_title = get_theme_mod('ibdhh_patient_tile_title', 'For Patients');
-                $pat_desc = get_theme_mod('ibdhh_patient_tile_desc', 'Learn about chronic conditions, health optimization, and healthy living through our expert-led patient curriculum.');
-                $pat_extra = get_theme_mod('ibdhh_patient_tile_extra', 'Empowering your health journey daily');
-                $pat_img = get_theme_mod('ibdhh_patient_tile_image');
-                $pat_link = get_theme_mod('ibdhh_patient_tile_link', '/patients/');
-                $pat_tile_radius = get_theme_mod('ibdhh_patient_tile_radius', 16);
-                $pat_img_radius = get_theme_mod('ibdhh_patient_image_radius', 8);
+                $pat_title = get_theme_mod('mlws_patient_tile_title', 'For Patients');
+                $pat_desc = get_theme_mod('mlws_patient_tile_desc', 'Learn about chronic conditions, health optimization, and healthy living through our expert-led patient curriculum.');
+                $pat_extra = get_theme_mod('mlws_patient_tile_extra', 'Empowering your health journey daily');
+                $pat_img = get_theme_mod('mlws_patient_tile_image');
+                $pat_link = get_theme_mod('mlws_patient_tile_link', '/patients/');
+                $pat_tile_radius = get_theme_mod('mlws_patient_tile_radius', 16);
+                $pat_img_radius = get_theme_mod('mlws_patient_image_radius', 8);
                 ?>
     <!-- Journey Pillars + Latest Content Section -->
     <section style="padding: 75px 0 55px; background: #F8FAFC;">
@@ -1086,14 +1086,14 @@ body {
                 break;
 
             case 'stats':
-                $stat1_num   = get_theme_mod('ibdhh_stat_1_number', '12,000');
-                $stat1_label = get_theme_mod('ibdhh_stat_1_label', 'Resources');
-                $stat2_num   = get_theme_mod('ibdhh_stat_2_number', '500');
-                $stat2_label = get_theme_mod('ibdhh_stat_2_label', 'Clinical Reviews');
-                $stat3_num   = get_theme_mod('ibdhh_stat_3_number', '50');
-                $stat3_label = get_theme_mod('ibdhh_stat_3_label', 'Expert Contributors');
-                $stat4_num   = get_theme_mod('ibdhh_stat_4_number', '15');
-                $stat4_label = get_theme_mod('ibdhh_stat_4_label', 'Health Tools');
+                $stat1_num   = get_theme_mod('mlws_stat_1_number', '12,000');
+                $stat1_label = get_theme_mod('mlws_stat_1_label', 'Resources');
+                $stat2_num   = get_theme_mod('mlws_stat_2_number', '500');
+                $stat2_label = get_theme_mod('mlws_stat_2_label', 'Clinical Reviews');
+                $stat3_num   = get_theme_mod('mlws_stat_3_number', '50');
+                $stat3_label = get_theme_mod('mlws_stat_3_label', 'Expert Contributors');
+                $stat4_num   = get_theme_mod('mlws_stat_4_number', '15');
+                $stat4_label = get_theme_mod('mlws_stat_4_label', 'Health Tools');
                 ?>
     <!-- Social Proof Stats Bar -->
     <section style="padding: 55px 0; background: #0F172A; position: relative; overflow: hidden;">
@@ -1152,16 +1152,16 @@ body {
                 break;
 
             case 'promo':
-                if (get_theme_mod('ibdhh_promo_show', false)) :
-                    $promo_h = get_theme_mod('ibdhh_promo_heading', 'Experience the Hub');
-                    $promo_t = get_theme_mod('ibdhh_promo_text', '');
-                    $promo_img = get_theme_mod('ibdhh_promo_image');
-                    $promo_bg = get_theme_mod('ibdhh_promo_bg_color', '#F8FAFC');
-                    $promo_txt_c = get_theme_mod('ibdhh_promo_text_color', '#0F172A');
-                    $promo_btn_t = get_theme_mod('ibdhh_promo_button_text', 'Get Started Now');
-                    $promo_btn_l = get_theme_mod('ibdhh_promo_button_link', wp_registration_url());
-                    $promo_w = get_theme_mod('ibdhh_promo_width', 'container');
-                    $promo_l = get_theme_mod('ibdhh_promo_layout', 'right');
+                if (get_theme_mod('mlws_promo_show', false)) :
+                    $promo_h = get_theme_mod('mlws_promo_heading', 'Experience the Hub');
+                    $promo_t = get_theme_mod('mlws_promo_text', '');
+                    $promo_img = get_theme_mod('mlws_promo_image');
+                    $promo_bg = get_theme_mod('mlws_promo_bg_color', '#F8FAFC');
+                    $promo_txt_c = get_theme_mod('mlws_promo_text_color', '#0F172A');
+                    $promo_btn_t = get_theme_mod('mlws_promo_button_text', 'Get Started Now');
+                    $promo_btn_l = get_theme_mod('mlws_promo_button_link', wp_registration_url());
+                    $promo_w = get_theme_mod('mlws_promo_width', 'container');
+                    $promo_l = get_theme_mod('mlws_promo_layout', 'right');
                     ?>
     <section class="promo-block-section" style="background-color: <?php echo esc_attr($promo_bg); ?>; color: <?php echo esc_attr($promo_txt_c); ?>;">
         <div class="<?php echo $promo_w === 'container' ? 'container' : 'container-fluid'; ?>">
@@ -1185,17 +1185,17 @@ body {
 
             case 'cats':
                 // Layout settings
-                $cards_per_row = get_theme_mod('ibdhh_homepage_cards_per_row', 6);
-                $justification = get_theme_mod('ibdhh_homepage_card_alignment', 'center');
+                $cards_per_row = get_theme_mod('mlws_homepage_cards_per_row', 6);
+                $justification = get_theme_mod('mlws_homepage_card_alignment', 'center');
                 $all_cats = get_categories(array('hide_empty' => false));
                 $cards = array();
 
                 foreach ($all_cats as $cat) {
-                    if (get_theme_mod("ibdhh_cat_card_show_{$cat->term_id}", true)) {
+                    if (get_theme_mod("mlws_cat_card_show_{$cat->term_id}", true)) {
                         $cards[] = array(
                             'cat' => $cat,
-                            'priority' => get_theme_mod("ibdhh_cat_card_priority_{$cat->term_id}", 10),
-                            'icon' => get_theme_mod("ibdhh_cat_card_icon_{$cat->term_id}", ''),
+                            'priority' => get_theme_mod("mlws_cat_card_priority_{$cat->term_id}", 10),
+                            'icon' => get_theme_mod("mlws_cat_card_icon_{$cat->term_id}", ''),
                         );
                     }
                 }
@@ -1221,7 +1221,7 @@ body {
                 ?>
                 <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" class="ibd-category-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #1E293B; border-radius: var(--radius-lg); padding: 24px 12px; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; width: 100%; max-width: 160px;">
                     <?php
-                    $cat_icon = $item['icon'] ?: ibdhh_get_category_icon_url($cat->name);
+                    $cat_icon = $item['icon'] ?: mlws_get_category_icon_url($cat->name);
                     ?>
                         <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: var(--radius-md);">
                             <?php if ($cat_icon): ?>
@@ -1241,9 +1241,9 @@ body {
                 break;
 
             case 'tools':
-                $tool1_link = get_theme_mod('ibdhh_tool_1_link', '/tools/blood-test-tracker/');
-                $tool2_link = get_theme_mod('ibdhh_tool_2_link', '/tools/malnutrition-calculator/');
-                $tool3_link = get_theme_mod('ibdhh_tool_3_link', '/ask-ai/');
+                $tool1_link = get_theme_mod('mlws_tool_1_link', '/tools/blood-test-tracker/');
+                $tool2_link = get_theme_mod('mlws_tool_2_link', '/tools/malnutrition-calculator/');
+                $tool3_link = get_theme_mod('mlws_tool_3_link', '/ask-ai/');
                 ?>
     <!-- Featured Tools Section -->
     <section style="padding: 75px 0; background: #E6E6FA;">
@@ -1288,60 +1288,60 @@ body {
                 break;
 
             case 'discovery':
-                $disc_title = get_theme_mod('ibdhh_discovery_title_text', 'CONTENT DISCOVERY SUITE');
-                $disc_sub = get_theme_mod('ibdhh_discovery_subtitle_text', 'Use the controls below to customise and filter IBD research, clinical news, and resources relevant to you.');
-                $disc_size = get_theme_mod('ibdhh_discovery_title_size', 32);
-                $disc_color = get_theme_mod('ibdhh_discovery_title_color', '#0F172A');
-                $disc_align = get_theme_mod('ibdhh_discovery_title_align', 'left');
-                $disc_sub_color = get_theme_mod('ibdhh_discovery_subtitle_color', '#64748B');
+                $disc_title = get_theme_mod('mlws_discovery_title_text', 'CONTENT DISCOVERY SUITE');
+                $disc_sub = get_theme_mod('mlws_discovery_subtitle_text', 'Use the controls below to customise and filter IBD research, clinical news, and resources relevant to you.');
+                $disc_size = get_theme_mod('mlws_discovery_title_size', 32);
+                $disc_color = get_theme_mod('mlws_discovery_title_color', '#0F172A');
+                $disc_align = get_theme_mod('mlws_discovery_title_align', 'left');
+                $disc_sub_color = get_theme_mod('mlws_discovery_subtitle_color', '#64748B');
                 ?>
     <?php
     // Panel container
-    $border_color = get_theme_mod('ibdhh_discovery_border_color', '#9F2B68');
-    $section_bg   = get_theme_mod('ibdhh_discovery_section_bg', 'linear-gradient(160deg, #0F172A 0%, #0F2440 55%, #0F172A 100%)');
-    $panel_bg     = get_theme_mod('ibdhh_discovery_panel_bg', 'rgba(255,255,255,0.04)');
+    $border_color = get_theme_mod('mlws_discovery_border_color', '#9F2B68');
+    $section_bg   = get_theme_mod('mlws_discovery_section_bg', 'linear-gradient(160deg, #0F172A 0%, #0F2440 55%, #0F172A 100%)');
+    $panel_bg     = get_theme_mod('mlws_discovery_panel_bg', 'rgba(255,255,255,0.04)');
 
     // Panel header
-    $disc_filters_title_size = (int) get_theme_mod('ibdhh_discovery_filters_title_size', 12);
-    $disc_header_title_color = get_theme_mod('ibdhh_disc_header_title_color', '#9F2B68');
-    $disc_status_dot         = get_theme_mod('ibdhh_disc_status_dot_color', '#22c55e');
+    $disc_filters_title_size = (int) get_theme_mod('mlws_discovery_filters_title_size', 12);
+    $disc_header_title_color = get_theme_mod('mlws_disc_header_title_color', '#9F2B68');
+    $disc_status_dot         = get_theme_mod('mlws_disc_status_dot_color', '#22c55e');
 
     // Filter labels
-    $disc_field_title_size  = (int) get_theme_mod('ibdhh_discovery_field_title_size', 10);
-    $disc_field_title_color = get_theme_mod('ibdhh_discovery_field_title_color', 'rgba(255,255,255,0.4)');
-    $disc_item_label_size   = (int) get_theme_mod('ibdhh_discovery_item_label_size', 13);
+    $disc_field_title_size  = (int) get_theme_mod('mlws_discovery_field_title_size', 10);
+    $disc_field_title_color = get_theme_mod('mlws_discovery_field_title_color', 'rgba(255,255,255,0.4)');
+    $disc_item_label_size   = (int) get_theme_mod('mlws_discovery_item_label_size', 13);
 
     // Chips
-    $c_chip_bg       = get_theme_mod('ibdhh_disc_chip_bg', 'rgba(255,255,255,0.06)');
-    $c_chip_border   = get_theme_mod('ibdhh_disc_chip_border', 'rgba(255,255,255,0.12)');
-    $c_chip_text     = get_theme_mod('ibdhh_disc_chip_text', 'rgba(255,255,255,0.75)');
-    $c_chip_h_bg     = get_theme_mod('ibdhh_disc_chip_hover_bg', 'rgba(159,43,104,0.12)');
-    $c_chip_h_border = get_theme_mod('ibdhh_disc_chip_hover_border', '#C75D8E');
-    $c_chip_h_text   = get_theme_mod('ibdhh_disc_chip_hover_text', '#ffffff');
-    $c_chip_s_bg     = get_theme_mod('ibdhh_disc_chip_selected_bg', 'rgba(159,43,104,0.25)');
-    $c_chip_s_border = get_theme_mod('ibdhh_disc_chip_selected_border', '#9F2B68');
-    $c_chip_s_text   = get_theme_mod('ibdhh_disc_chip_selected_text', '#E6E6FA');
+    $c_chip_bg       = get_theme_mod('mlws_disc_chip_bg', 'rgba(255,255,255,0.06)');
+    $c_chip_border   = get_theme_mod('mlws_disc_chip_border', 'rgba(255,255,255,0.12)');
+    $c_chip_text     = get_theme_mod('mlws_disc_chip_text', 'rgba(255,255,255,0.75)');
+    $c_chip_h_bg     = get_theme_mod('mlws_disc_chip_hover_bg', 'rgba(159,43,104,0.12)');
+    $c_chip_h_border = get_theme_mod('mlws_disc_chip_hover_border', '#C75D8E');
+    $c_chip_h_text   = get_theme_mod('mlws_disc_chip_hover_text', '#ffffff');
+    $c_chip_s_bg     = get_theme_mod('mlws_disc_chip_selected_bg', 'rgba(159,43,104,0.25)');
+    $c_chip_s_border = get_theme_mod('mlws_disc_chip_selected_border', '#9F2B68');
+    $c_chip_s_text   = get_theme_mod('mlws_disc_chip_selected_text', '#E6E6FA');
 
     // Toggles
-    $c_toggle_bg        = get_theme_mod('ibdhh_disc_toggle_bg', 'rgba(255,255,255,0.1)');
-    $c_toggle_active_bg = get_theme_mod('ibdhh_disc_toggle_active_bg', '#9F2B68');
+    $c_toggle_bg        = get_theme_mod('mlws_disc_toggle_bg', 'rgba(255,255,255,0.1)');
+    $c_toggle_active_bg = get_theme_mod('mlws_disc_toggle_active_bg', '#9F2B68');
 
     // GO button
-    $c_go_bg      = get_theme_mod('ibdhh_disc_go_btn_bg', '#9F2B68');
-    $c_go_bg_end  = get_theme_mod('ibdhh_disc_go_btn_bg_end', '#7A1F50');
-    $c_go_hover   = get_theme_mod('ibdhh_disc_go_btn_hover_bg', '#B8447A');
+    $c_go_bg      = get_theme_mod('mlws_disc_go_btn_bg', '#9F2B68');
+    $c_go_bg_end  = get_theme_mod('mlws_disc_go_btn_bg_end', '#7A1F50');
+    $c_go_hover   = get_theme_mod('mlws_disc_go_btn_hover_bg', '#B8447A');
 
     // Secondary buttons
-    $c_sec_border   = get_theme_mod('ibdhh_disc_secondary_btn_border', 'rgba(255,255,255,0.3)');
-    $c_sec_text     = get_theme_mod('ibdhh_disc_secondary_btn_text', 'rgba(255,255,255,0.8)');
-    $c_sec_hover_bg = get_theme_mod('ibdhh_disc_secondary_btn_hover_bg', 'rgba(159,43,104,0.2)');
+    $c_sec_border   = get_theme_mod('mlws_disc_secondary_btn_border', 'rgba(255,255,255,0.3)');
+    $c_sec_text     = get_theme_mod('mlws_disc_secondary_btn_text', 'rgba(255,255,255,0.8)');
+    $c_sec_hover_bg = get_theme_mod('mlws_disc_secondary_btn_hover_bg', 'rgba(159,43,104,0.2)');
 
     // Input
-    $c_input_bg          = get_theme_mod('ibdhh_disc_input_bg', 'rgba(255,255,255,0.08)');
-    $c_input_border      = get_theme_mod('ibdhh_disc_input_border', 'rgba(255,255,255,0.25)');
-    $c_input_text        = get_theme_mod('ibdhh_disc_input_text', '#ffffff');
-    $c_input_placeholder = get_theme_mod('ibdhh_disc_input_placeholder', 'rgba(255,255,255,0.4)');
-    $c_input_focus       = get_theme_mod('ibdhh_disc_input_focus_border', '#9F2B68');
+    $c_input_bg          = get_theme_mod('mlws_disc_input_bg', 'rgba(255,255,255,0.08)');
+    $c_input_border      = get_theme_mod('mlws_disc_input_border', 'rgba(255,255,255,0.25)');
+    $c_input_text        = get_theme_mod('mlws_disc_input_text', '#ffffff');
+    $c_input_placeholder = get_theme_mod('mlws_disc_input_placeholder', 'rgba(255,255,255,0.4)');
+    $c_input_focus       = get_theme_mod('mlws_disc_input_focus_border', '#9F2B68');
     ?>
     <section id="discovery-suite" class="discovery-suite-section" style="padding: 75px 0; background: <?php echo esc_attr($section_bg); ?>; position: relative; overflow: hidden;">
         <!-- Background shimmer effects -->
@@ -1389,11 +1389,11 @@ body {
                                         if (is_wp_error($all_tags)) $all_tags = array();
                                         $reading_tags = array();
                                         foreach($all_tags as $tag) {
-                                            if((stripos($tag->name, 'reading-') === 0 || stripos($tag->slug, 'reading-') === 0) && get_theme_mod("ibdhh_discovery_reading_show_{$tag->term_id}")) {
+                                            if((stripos($tag->name, 'reading-') === 0 || stripos($tag->slug, 'reading-') === 0) && get_theme_mod("mlws_discovery_reading_show_{$tag->term_id}")) {
                                                 $reading_tags[] = array(
                                                     'tag' => $tag,
-                                                    'order' => get_theme_mod("ibdhh_discovery_reading_order_{$tag->term_id}", 10),
-                                                    'text' => get_theme_mod("ibdhh_discovery_reading_text_{$tag->term_id}", str_replace('reading-', '', $tag->name))
+                                                    'order' => get_theme_mod("mlws_discovery_reading_order_{$tag->term_id}", 10),
+                                                    'text' => get_theme_mod("mlws_discovery_reading_text_{$tag->term_id}", str_replace('reading-', '', $tag->name))
                                                 );
                                             }
                                         }
@@ -1417,11 +1417,11 @@ body {
                                         <?php
                                         $path_tags = array();
                                         foreach($all_tags as $tag) {
-                                            if((stripos($tag->name, 'path-') === 0 || stripos($tag->slug, 'path-') === 0) && get_theme_mod("ibdhh_discovery_path_show_{$tag->term_id}")) {
+                                            if((stripos($tag->name, 'path-') === 0 || stripos($tag->slug, 'path-') === 0) && get_theme_mod("mlws_discovery_path_show_{$tag->term_id}")) {
                                                 $path_tags[] = array(
                                                     'tag' => $tag,
-                                                    'order' => get_theme_mod("ibdhh_discovery_path_order_{$tag->term_id}", 10),
-                                                    'text' => get_theme_mod("ibdhh_discovery_path_text_{$tag->term_id}", str_replace('path-', '', $tag->name))
+                                                    'order' => get_theme_mod("mlws_discovery_path_order_{$tag->term_id}", 10),
+                                                    'text' => get_theme_mod("mlws_discovery_path_text_{$tag->term_id}", str_replace('path-', '', $tag->name))
                                                 );
                                             }
                                         }
@@ -1444,11 +1444,11 @@ body {
                                         $type_cats = array();
                                         $all_categories = get_categories(array('hide_empty' => false));
                                         foreach($all_categories as $cat) {
-                                            if(get_theme_mod("ibdhh_discovery_type_show_{$cat->term_id}")) {
+                                            if(get_theme_mod("mlws_discovery_type_show_{$cat->term_id}")) {
                                                 $type_cats[] = array(
                                                     'cat' => $cat,
-                                                    'order' => get_theme_mod("ibdhh_discovery_type_order_{$cat->term_id}", 10),
-                                                    'text' => get_theme_mod("ibdhh_discovery_type_text_{$cat->term_id}", $cat->name)
+                                                    'order' => get_theme_mod("mlws_discovery_type_order_{$cat->term_id}", 10),
+                                                    'text' => get_theme_mod("mlws_discovery_type_text_{$cat->term_id}", $cat->name)
                                                 );
                                             }
                                         }
@@ -1684,14 +1684,14 @@ body {
                 break;
 
             case 'kb':
-                $kb_title = get_theme_mod('ibdhh_kb_mini_hero_title', 'IBD RESEARCH CENTRE');
-                $kb_subtitle = get_theme_mod('ibdhh_kb_mini_hero_subtitle', 'Catch Up on the Latest Articles and More...');
-                $kb_padding = get_theme_mod('ibdhh_kb_mini_hero_padding', '60px 0 80px');
-                $kb_height = get_theme_mod('ibdhh_kb_mini_hero_height', '');
-                $kb_font_color = get_theme_mod('ibdhh_kb_mini_hero_font_color', '#ffffff');
-                $kb_opacity = (int) get_theme_mod('ibdhh_kb_mini_hero_opacity', 80) / 100;
+                $kb_title = get_theme_mod('mlws_kb_mini_hero_title', 'IBD RESEARCH CENTRE');
+                $kb_subtitle = get_theme_mod('mlws_kb_mini_hero_subtitle', 'Catch Up on the Latest Articles and More...');
+                $kb_padding = get_theme_mod('mlws_kb_mini_hero_padding', '60px 0 80px');
+                $kb_height = get_theme_mod('mlws_kb_mini_hero_height', '');
+                $kb_font_color = get_theme_mod('mlws_kb_mini_hero_font_color', '#ffffff');
+                $kb_opacity = (int) get_theme_mod('mlws_kb_mini_hero_opacity', 80) / 100;
                 $kb_opacity_2 = min(1, $kb_opacity + 0.1);
-                $kb_mini_bg = get_theme_mod('ibdhh_kb_mini_hero_bg');
+                $kb_mini_bg = get_theme_mod('mlws_kb_mini_hero_bg');
                 if(!$kb_mini_bg) $kb_mini_bg = get_template_directory_uri() . '/assets/img/patient_hero.png';
 
                 $hero_style = "position: relative; padding: " . esc_attr($kb_padding) . "; background: linear-gradient(rgba(10, 25, 41, " . $kb_opacity . "), rgba(10, 25, 41, " . $kb_opacity_2 . ")), url('" . esc_url($kb_mini_bg) . "') center center / cover; text-align: center; color: " . esc_attr($kb_font_color) . "; border-radius: 0;";
@@ -1711,13 +1711,13 @@ body {
         $kb_cats = get_categories(array('hide_empty' => false));
         $kb_sections = array();
         foreach ($kb_cats as $cat) {
-            if (get_theme_mod("ibdhh_kb_show_{$cat->term_id}", true)) {
+            if (get_theme_mod("mlws_kb_show_{$cat->term_id}", true)) {
                 $kb_sections[] = array(
                     'cat' => $cat,
-                    'priority' => get_theme_mod("ibdhh_kb_priority_{$cat->term_id}", 10),
-                    'count' => get_theme_mod("ibdhh_kb_count_{$cat->term_id}", 4),
-                    'layout' => get_theme_mod("ibdhh_kb_layout_{$cat->term_id}", 'grid-4'),
-                    'view_all' => get_theme_mod("ibdhh_kb_view_all_{$cat->term_id}", 'View All'),
+                    'priority' => get_theme_mod("mlws_kb_priority_{$cat->term_id}", 10),
+                    'count' => get_theme_mod("mlws_kb_count_{$cat->term_id}", 4),
+                    'layout' => get_theme_mod("mlws_kb_layout_{$cat->term_id}", 'grid-4'),
+                    'view_all' => get_theme_mod("mlws_kb_view_all_{$cat->term_id}", 'View All'),
                 );
             }
         }
@@ -1726,7 +1726,7 @@ body {
         foreach ($kb_sections as $sec):
             $cat = $sec['cat'];
             $layout = $sec['layout'];
-            if ($cat->name === 'Expert Opinions' || $cat->slug === 'expert-opinions') { $layout = 'bento'; }
+            if ($cat->name === 'Op-Eds & Commentary' || $cat->slug === 'op-eds-commentary') { $layout = 'bento'; }
             $post_count = ($layout === 'bento' || $layout === 'asymmetric' || $layout === 'posters') ? 3 : intval($sec['count']);
 
             $posts_array = get_posts(array(
@@ -1744,16 +1744,16 @@ body {
 
             // Category-based default hero image map
             $cat_hero_map = array(
-                'healthcare-news'   => 'news_hero.png',
-                'clinical-reviews'  => 'research_hero.png',
-                'expert-opinions'   => 'opinion_hero.png',
-                'tools-resources'   => 'hcp_hero.png',
-                'education-courses' => 'education_hero.png',
-                'patient-education' => 'patient_hero.png',
+                'breaking-news'       => 'news_hero.png',
+                'diplomatic-analysis' => 'research_hero.png',
+                'op-eds-commentary'   => 'opinion_hero.png',
+                'cyrus-accord'        => 'hcp_hero.png',
+                'abraham-accords'     => 'education_hero.png',
+                'regional-voices'     => 'patient_hero.png',
             );
             // Categories with full URL overrides (e.g. uploaded images)
             $cat_hero_url_map = array(
-                'living-with-ibd' => content_url() . '/uploads/2026/04/ibdliving_hero.png',
+                'regional-voices' => content_url() . '/uploads/2026/04/ibdliving_hero.png',
             );
             $cat_default_hero = get_template_directory_uri() . '/assets/img/news_hero.png';
             if (isset($cat_hero_url_map[$cat->slug])) {
@@ -1826,7 +1826,7 @@ body {
             case 'testimonials':
                 ?>
     <section style="background: #F8FAFC;">
-                <?php echo ibdhh_testimonials_shortcode(array()); ?>
+                <?php echo mlws_testimonials_shortcode(array()); ?>
     </section>
                 <?php
                 break;

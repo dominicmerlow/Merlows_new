@@ -5,9 +5,9 @@
  */
 get_header();
 
-$site_name = 'IBD Health Hub';
-$site_url  = 'ibdhealthhub.com';
-$email     = 'hello@ibdhealthhub.com';
+$site_name = 'Merlows';
+$site_url  = 'merlows.com';
+$email     = 'hello@merlows.com';
 $updated   = '1 April 2026';
 ?>
 
