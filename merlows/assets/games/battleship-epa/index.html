@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Battleship EPA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #FF5A00;
+            --accent-gradient: linear-gradient(135deg, #FF5A00 0%, #ff8a00 100%);
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --epavance: #0F172A;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: var(--bg-light);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            user-select: none;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #F0F9FF;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        #top-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-white);
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            pointer-events: auto;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-value.danger {
+            color: var(--danger);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            pointer-events: auto;
+            text-align: center;
+        }
+
+        .menu-box {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid #e2e8f0;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 0 0 10px;
+            color: var(--epavance);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .btn-start {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(255, 90, 0, 0.2);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            background: #e04f00;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="ui-layer">
+            <div id="top-bar" style="display:none;">
+                <div class="stat-box">
+                    <div class="stat-label">Player</div>
+                    <div class="stat-value" id="player-name-display" style="font-size:14px;">Guest</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Missed</div>
+                    <div class="stat-value danger" id="missed">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN MENU -->
+        <div id="menu-overlay" class="overlay">
+            <div class="menu-box">
+                <h1>Battleship EPA</h1>
+                <p>Launch Omega-3 molecules to neutralize inflammation. Don't let inflammatory cytokines pass!</p>
+                <button class="btn-start" onclick="startGame()">Start Game</button>
+            </div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="game-over-overlay" class="overlay" style="display:none;">
+            <div class="menu-box">
+                <h1 style="color:var(--danger)">Game Over</h1>
+                <p>Final Score</p>
+                <div style="font-size:48px; font-weight:900; color:var(--epavance); margin-bottom:20px;"
+                    id="final-score">0</div>
+                <button class="btn-start" onclick="location.reload()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game Logic Simple Version
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let gameLoop;
+        let score = 0;
+        let misses = 0;
+        let isRunning = false;
+        let enemies = [];
+        let bullets = [];
+        let particles = [];
+
+        // Player Name from URL
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get('user') || 'Guest';
+        document.getElementById('player-name-display').innerText = username;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function startGame() {
+            document.getElementById('menu-overlay').style.display = 'none';
+            document.getElementById('top-bar').style.display = 'flex';
+            score = 0;
+            misses = 0;
+            enemies = [];
+            bullets = [];
+            isRunning = true;
+            loop();
+            spawnEnemy();
+        }
+
+        function gameOver() {
+            isRunning = false;
+            document.getElementById('game-over-overlay').style.display = 'flex';
+            document.getElementById('final-score').innerText = score;
+
+            // Send Score to Parent
+            window.parent.postMessage({
+                type: 'GAME_SCORE',
+                score: score
+            }, '*');
+        }
+
+        // Input
+        canvas.addEventListener('click', (e) => {
+            if (!isRunning) return;
+            bullets.push({
+                x: width / 2, y: height - 50,
+                vx: (e.clientX - width / 2) * 0.05,
+                vy: (e.clientY - (height - 50)) * 0.05,
+                life: 100
+            });
+        });
+
+        function spawnEnemy() {
+            if (!isRunning) return;
+            enemies.push({
+                x: Math.random() * (width - 60) + 30,
+                y: -30,
+                speed: 1 + Math.random() * 2 + (score / 500),
+                size: 20
+            });
+            setTimeout(spawnEnemy, 1000 - Math.min(800, score));
+        }
+
+        function loop() {
+            if (!isRunning) return;
+            ctx.fillStyle = '#F0F9FF';
+            ctx.fillRect(0, 0, width, height);
+
+            // Update Bullets
+            ctx.fillStyle = '#FF5A00';
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                let b = bullets[i];
+                b.x += b.vx;
+                b.y += b.vy;
+                ctx.beginPath(); ctx.arc(b.x, b.y, 6, 0, Math.PI * 2); ctx.fill();
+
+                if (b.y < 0 || b.x < 0 || b.x > width) bullets.splice(i, 1);
+            }
+
+            // Update Enemies
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let e = enemies[i];
+                e.y += e.speed;
+
+                // Draw Spyky
+                ctx.fillStyle = '#ef4444';
+                ctx.beginPath(); ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2); ctx.fill();
+
+                // Hit Test
+                for (let j = bullets.length - 1; j >= 0; j--) {
+                    let b = bullets[j];
+                    let dx = b.x - e.x;
+                    let dy = b.y - e.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < e.size + 6) {
+                        score += 50;
+                        document.getElementById('score').innerText = score;
+                        enemies.splice(i, 1);
+                        bullets.splice(j, 1);
+                        break;
+                    }
+                }
+
+                if (e.y > height) {
+                    enemies.splice(i, 1);
+                    misses++;
+                    document.getElementById('missed').innerText = misses;
+                    if (misses >= 5) gameOver();
+                }
+            }
+
+            // Player Ship
+            ctx.fillStyle = '#0F172A';
+            ctx.beginPath();
+            ctx.moveTo(width / 2, height - 40);
+            ctx.lineTo(width / 2 - 20, height);
+            ctx.lineTo(width / 2 + 20, height);
+            ctx.fill();
+
+            requestAnimationFrame(loop);
+        }
+
+    </script>
+</body>
+
+</html>

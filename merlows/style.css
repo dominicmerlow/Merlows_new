@@ -1,0 +1,18 @@
+/*
+Theme Name: IBDHealthHub
+Theme URI: https://ibdhealthhub.com
+Author: Antigravity
+Author URI: https://google.deepmind.com
+Description: A knowledge hub for patients and practitioners, championed by IBD Health Hub.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: ibd-health-hub
+Tags: health, medical, education, portal
+*/
+
+/* 
+ * This file is required for WordPress theme recognition.
+ * Actual styles are loaded from assets/css/wrapper.css or similar to keep organization clean,
+ * but for this simple theme we might just paste the prototype CSS here later or enqueue it.
+ */
