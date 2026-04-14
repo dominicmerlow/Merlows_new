@@ -2,11 +2,12 @@
 
 // Map app category IDs → WordPress category slugs
 const CATEGORY_SLUG_MAP = {
-  'industry-news':    'content-healthcare-news',
-  'clinical-reviews': 'content-clinical-reviews',
-  'op-eds':           'content-expert-opinions',
-  'white-papers':     'content-white-papers',
-  'infographics':     'content-infographic',
+  'industry-news':    'healthcare-news',
+  'clinical-reviews': 'clinical-reviews',
+  'op-eds':           'expert-opinions',
+  'white-papers':     'white-papers',
+  'infographics':     'infographic-gallery',
+  'ibd-living':       'living-with-ibd',
 };
 
 // Resolve a WP category slug to its numeric ID via the REST API.
@@ -113,6 +114,16 @@ function markdownToWpHtml(text) {
     let p = trimmed.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     // Inline italic: *text* → <em>text</em> (but not inside tags)
     p = p.replace(/(?<!\w)\*([^*]+?)\*(?!\w)/g, '<em>$1</em>');
+    // (Source: URL) → (Source link)  — must run before bare-URL pass
+    p = p.replace(
+      /\(Source:\s*(https?:\/\/[^\s)]+)\)/gi,
+      '(<a href="$1" target="_blank" rel="noopener noreferrer">Source</a>)'
+    );
+    // Any remaining bare URLs not already inside href="..." → clickable link
+    p = p.replace(
+      /(?<!['"=])(https?:\/\/[^\s<>"')]+)/g,
+      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
 
     html.push(`<p>${p}</p>`);
   }
@@ -177,10 +188,11 @@ async function publishToWordPress(item) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { contentId } = req.body;
-  if (!contentId) return res.status(400).json({ error: 'contentId required' });
+  const { contentId, id } = req.body;
+  const cid = contentId || id;
+  if (!cid) return res.status(400).json({ error: 'contentId required' });
 
-  const item = await kv.get(`content:${contentId}`);
+  const item = await kv.get(`content:${cid}`);
   if (!item) return res.status(404).json({ error: 'Not found' });
   if (!['approved', 'scheduled'].includes(item.status)) {
     return res.status(400).json({ error: 'Content must be approved or scheduled to publish' });
@@ -201,6 +213,6 @@ export default async function handler(req, res) {
     wpPostUrl: wpPost.link,
     updatedAt: new Date().toISOString(),
   };
-  await kv.set(`content:${contentId}`, updated);
+  await kv.set(`content:${cid}`, updated);
   return res.json({ wpPostId: wpPost.id, wpPostUrl: wpPost.link });
 }
