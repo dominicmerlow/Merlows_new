@@ -31,7 +31,7 @@
                         <?php if($f_logo): ?>
                             <img src="<?php echo esc_url($f_logo); ?>" alt="Merlows" style="height: 40px;">
                         <?php else: ?>
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg" alt="Merlows" style="height: 60px;">
+                            <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 60px;">
                         <?php endif; ?>
                     </a>
                     <p><?php echo esc_html($f_text); ?></p>

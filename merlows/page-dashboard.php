@@ -213,7 +213,7 @@ get_header();
     <aside class="dash-sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="/" class="dash-logo" style="display: flex; align-items: center; gap: 0; text-decoration: none;">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 40px; width: auto; object-fit: contain; filter: hue-rotate(156deg) saturate(1.3) brightness(0.85);">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="height: 40px; width: auto; object-fit: contain;">
             </a>
             <button class="mobile-toggle" style="margin-left: auto; color: <?php echo $is_practitioner ? 'white' : '#0F172A'; ?>;" onclick="toggleSidebar()">✕</button>
         </div>
