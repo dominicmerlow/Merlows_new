@@ -52,26 +52,18 @@ while ( have_posts() ) :
     if ( has_post_thumbnail() ) {
         $hero_bg = get_the_post_thumbnail_url( get_the_ID(), 'full' );
     } else {
-        // Category-based default hero images
-        $hero_map = array(
-            'breaking-news'       => 'news_hero.png',
-            'diplomatic-analysis' => 'research_hero.png',
-            'op-eds-commentary'   => 'opinion_hero.png',
-            'cyrus-accord'        => 'hcp_hero.png',
-            'abraham-accords'     => 'education_hero.png',
-            'regional-voices'     => 'patient_hero.png',
-        );
-        $hero_file = 'news_hero.png'; // default fallback
+        // Category-based default hero: look up the uploaded image from the media library.
+        $hero_bg = merlows_get_category_hero_url( 'breaking-news' ); // default fallback
         $post_cats = get_the_category();
         if ( ! empty( $post_cats ) ) {
             foreach ( $post_cats as $cat ) {
-                if ( isset( $hero_map[ $cat->slug ] ) ) {
-                    $hero_file = $hero_map[ $cat->slug ];
+                $cat_hero = merlows_get_category_hero_url( $cat->slug );
+                if ( $cat_hero ) {
+                    $hero_bg = $cat_hero;
                     break;
                 }
             }
         }
-        $hero_bg = get_template_directory_uri() . '/assets/img/' . $hero_file;
     }
     
     $overlay_css = '';
