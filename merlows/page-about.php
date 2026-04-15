@@ -49,12 +49,12 @@ get_header(); ?>
 
     <!-- HERO SECTION -->
     <?php if (get_theme_mod('mlws_about_hero_show', true)) : 
-        $hero_img    = get_theme_mod('mlws_about_hero_img', get_template_directory_uri() . '/assets/img/hcp_hero.png');
+        $hero_img    = get_theme_mod('mlws_about_hero_img', get_template_directory_uri() . '/assets/img/news_hero.png');
         $hero_bg_color = get_theme_mod('mlws_about_hero_bg_color');
-        $hero_tag   = get_theme_mod('mlws_about_hero_tag', 'Our Story');
-        $hero_title = get_theme_mod('mlws_about_hero_title', 'From Pharma to <span class="highlight">Healthcare</span>');
-        $hero_sub   = get_theme_mod('mlws_about_hero_sub', 'A Natural Evolution in Gastrointestinal Care');
-        $hero_desc  = get_theme_mod('mlws_about_hero_desc', 'Merlows bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.');
+        $hero_tag   = get_theme_mod('mlws_about_hero_tag', 'About Merlows');
+        $hero_title = get_theme_mod('mlws_about_hero_title', 'The People Behind the <span class="highlight">Diplomacy</span>');
+        $hero_sub   = get_theme_mod('mlws_about_hero_sub', 'Independent Journalism for a More Peaceful Middle East');
+        $hero_desc  = get_theme_mod('mlws_about_hero_desc', 'Merlows is an independent news and diplomacy platform dedicated to covering the Abraham Accords, the Cyrus Accord, and the evolving landscape of Israel-Iran relations with depth, accuracy, and a commitment to peace.');
         
         $styles = mlws_get_style_string('mlws_about_hero');
         // Custom background logic for hero because it has a gradient and image
@@ -80,9 +80,9 @@ get_header(); ?>
 
     <!-- ORIGIN SECTION -->
     <?php if (get_theme_mod('mlws_about_origin_show', true)) : 
-        $origin_tag   = get_theme_mod('mlws_about_origin_tag', 'From Pharma to Healthcare');
-        $origin_title = get_theme_mod('mlws_about_origin_title', 'The Merlows Evolution');
-        $origin_sub   = get_theme_mod('mlws_about_origin_sub', 'A Natural Evolution in Gastrointestinal Care');
+        $origin_tag   = get_theme_mod('mlws_about_origin_tag', 'Our Founding Story');
+        $origin_title = get_theme_mod('mlws_about_origin_title', 'Born From a Belief in Dialogue');
+        $origin_sub   = get_theme_mod('mlws_about_origin_sub', 'Merlows was built on one conviction: that lasting peace in the Middle East requires better information.');
         $styles = mlws_get_style_string('mlws_about_origin', '#fff');
     ?>
     <section id="our-story" class="section-padding" style="<?php echo $styles['section']; ?>">
@@ -97,9 +97,9 @@ get_header(); ?>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-bottom:60px;">
                 <?php 
                 $pillar_defaults = [
-                    1 => ["Heritage in Pharma", "Merlows has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards."],
-                    2 => ["Patient-Centric Innovation", "We found that medicines alone often fall short for chronic IBD. There is a clear need for evidence-based nutritional support."],
-                    3 => ["The Birth of Merlows", "Merlows bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE."]
+                    1 => ["The Founding Vision", "Merlows was founded by journalists and diplomacy scholars who saw a gap: the world's most consequential peace process lacked a dedicated, credible media home."],
+                    2 => ["The Cyrus Accord Initiative", "We became the primary platform championing the Cyrus Accord — a diplomatic framework proposing a new path toward Israel-Iran normalisation."],
+                    3 => ["Building the Platform", "Today Merlows combines breaking news, expert analysis, an AI research assistant, and a community of engaged readers shaping the diplomatic conversation."]
                 ];
                 for($i=1; $i<=3; $i++):
                     $p_title = get_theme_mod("mlws_about_p{$i}_title", $pillar_defaults[$i][0]);
@@ -116,9 +116,9 @@ get_header(); ?>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;text-align:center;padding-top:40px;border-top:1px solid rgba(0,0,0,0.1);">
                 <?php 
                 $stat_defaults = [
-                    1 => ["25+", "Years of Experience"],
-                    2 => ["Global", "Regulatory Reach"],
-                    3 => ["100%", "Pharma-Grade Standards"]
+                    1 => ["100+", "Countries Reached"],
+                    2 => ["300+", "Exclusive Analyses"],
+                    3 => ["50+", "Expert Contributors"]
                 ];
                 for($i=1; $i<=3; $i++):
                     $s_num = get_theme_mod("mlws_about_stat{$i}_num", $stat_defaults[$i][0]);
@@ -136,9 +136,9 @@ get_header(); ?>
 
     <!-- MISSION & VALUES -->
     <?php if (get_theme_mod('mlws_about_mission_show', true)) : 
-        $mission_tag = get_theme_mod('mlws_about_mission_tag', 'Our Mission');
-        $mission_title = get_theme_mod('mlws_about_mission_title', 'Bridging Science & <span class="highlight">Patient Wellbeing</span>');
-        $mission_desc = get_theme_mod('mlws_about_mission_desc', 'At Merlows, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.');
+        $mission_tag = get_theme_mod('mlws_about_mission_tag', 'What We Stand For');
+        $mission_title = get_theme_mod('mlws_about_mission_title', 'Journalism That <span class="highlight">Builds Peace</span>');
+        $mission_desc = get_theme_mod('mlws_about_mission_desc', 'At Merlows, we believe that well-informed citizens and policymakers are the foundation of any durable peace. Every article, analysis, and conversation we publish is guided by that conviction.');
         $styles = mlws_get_style_string('mlws_about_mission', '#f8f9fa');
     ?>
     <section id="mission" class="section-padding" style="<?php echo $styles['section']; ?>">
@@ -151,10 +151,10 @@ get_header(); ?>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:32px;">
                 <?php 
                 $val_defaults = [
-                    1 => ["Evidence-Based", "Every product and piece of content we produce meets the highest scientific and regulatory standards, rooted in peer-reviewed clinical research."],
-                    2 => ["Patient-First", "We design every solution around the real-world challenges that patients face — not just clinical endpoints — because lived experience matters."],
-                    3 => ["Pharma-Grade", "Our medical food products are developed with the same rigour applied to licensed medicines — providing a quality benchmark no ordinary supplement can match."],
-                    4 => ["Global Reach", "With a regulatory footprint spanning multiple continents, Merlows delivers consistent, trusted solutions wherever patients and clinicians need them."]
+                    1 => ["Editorial Independence", "Merlows is editorially independent. Our reporting is guided by facts and expert analysis alone — not by the interests of governments, donors, or advertisers."],
+                    2 => ["Pro-Diplomacy", "We are unambiguously pro-dialogue. We believe every credible effort to build peace between peoples deserves to be heard, documented, and supported."],
+                    3 => ["Accuracy First", "We hold ourselves to the highest journalistic standards. Every claim is verified, every expert is vetted, and every correction is published openly."],
+                    4 => ["Global Perspective", "The Middle East is not a monolith. We amplify voices from across Israel, Iran, the Arab world, and the international community to give our readers the full picture."]
                 ];
                 for($i=1; $i<=4; $i++):
                     $v_title = get_theme_mod("mlws_about_val{$i}_title", $val_defaults[$i][0]);
@@ -170,13 +170,13 @@ get_header(); ?>
     </section>
     <?php endif; ?>
 
-    <!-- EPAVANCE SPOTLIGHT -->
-    <?php if (get_theme_mod('mlws_about_product_show', true)) : 
-        $prod_tag = get_theme_mod('mlws_about_prod_tag', 'Our Flagship Product');
-        $prod_title = get_theme_mod('mlws_about_prod_title', 'Introducing EPAVANCE');
-        $prod_desc = get_theme_mod('mlws_about_prod_desc', 'EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.');
-        $prod_btn = get_theme_mod('mlws_about_prod_btn', 'Learn More About EPAVANCE');
-        $prod_url = get_theme_mod('mlws_about_prod_url', '#');
+    <!-- CYRUS ACCORD SPOTLIGHT -->
+    <?php if (get_theme_mod('mlws_about_product_show', true)) :
+        $prod_tag = get_theme_mod('mlws_about_prod_tag', 'Our Flagship Initiative');
+        $prod_title = get_theme_mod('mlws_about_prod_title', 'The Cyrus Accord');
+        $prod_desc = get_theme_mod('mlws_about_prod_desc', 'The Cyrus Accord is Merlows\' own diplomatic initiative — a proposed framework for Israel-Iran normalisation inspired by the legacy of Cyrus the Great, whose Cylinder established one of history\'s first declarations of religious tolerance and human rights. It represents our belief that journalism can be a catalyst for real peace.');
+        $prod_btn = get_theme_mod('mlws_about_prod_btn', 'Learn About the Cyrus Accord');
+        $prod_url = get_theme_mod('mlws_about_prod_url', '/cyrus-accord/');
         $styles = mlws_get_style_string('mlws_about_product', '#fff');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?>">
@@ -191,10 +191,10 @@ get_header(); ?>
                 <div style="flex:1;min-width:300px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
                     <?php 
                     $feat_defaults = [
-                        1 => ["Pharma-Grade Manufacturing", "Produced under strict pharmaceutical cGMP standards — the highest tier of quality assurance in the industry."],
-                        2 => ["Clinically Researched", "Supported by clinical evidence demonstrating meaningful benefit for IBD patients managing their nutritional needs."],
-                        3 => ["High-Dose EPA Omega-3", "A precisely calibrated dose of EPA matched to the needs of IBD-associated gut inflammation."],
-                        4 => ["Regulatory Status", "Classified as a Medical Food (FSMP), enabling it to occupy a unique, trusted position between medication and nutrition."]
+                        1 => ["Historical Foundation", "Inspired by Cyrus the Great's Cylinder — widely regarded as one of the earliest declarations of human rights and religious freedom in recorded history."],
+                        2 => ["Diplomatic Framework", "A proposed path to Israel-Iran normalisation built on shared heritage, economic cooperation, and mutual security guarantees."],
+                        3 => ["Broad Coalition", "Supported by voices across civil society, academia, and the diaspora communities of both nations who believe a different future is possible."],
+                        4 => ["Media-Driven Peace", "Merlows uses its platform to build public support, document progress, and create the conditions for political will to emerge."]
                     ];
                     for($i=1; $i<=4; $i++):
                         $f_title = get_theme_mod("mlws_about_feat{$i}_title", $feat_defaults[$i][0]);
@@ -213,9 +213,9 @@ get_header(); ?>
 
     <!-- PLATFORM SECTION -->
     <?php if (get_theme_mod('mlws_about_platform_show', true)) : 
-        $plat_tag = get_theme_mod('mlws_about_plat_tag', 'The Digital Layer');
+        $plat_tag = get_theme_mod('mlws_about_plat_tag', 'What We Offer');
         $plat_title = get_theme_mod('mlws_about_plat_title', 'The Merlows Platform');
-        $plat_desc = get_theme_mod('mlws_about_plat_desc', 'Beyond our medical food products, Merlows is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.');
+        $plat_desc = get_theme_mod('mlws_about_plat_desc', 'Merlows combines world-class diplomatic journalism with AI-powered research tools and a vibrant community — all in one platform built for people who take the Middle East seriously.');
         $styles = mlws_get_style_string('mlws_about_platform', '#142846');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?> color:white;">
@@ -228,12 +228,12 @@ get_header(); ?>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
                 <?php 
                 $plat_defaults = [
-                    1 => ["Clinical Content Hub", "Peer-reviewed research, expert opinions, and patient education curated by gastroenterologists and dietitians."],
-                    2 => ["IBD-i AI Assistant", "A specialised AI trained on clinical gastroenterology to answer your health questions with precision and safety."],
-                    3 => ["Patient Dashboard", "A secure personal portal to track health records, manage your IBD tools, and connect with your care pathway."],
-                    4 => ["HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with Merlows experts."],
-                    5 => ["Health Calculators", "Evidence-based clinical calculators for malnutrition screening, BMI, and disease activity scoring."],
-                    6 => ["Education Courses", "Multi-chapter learning pathways developed by gastro specialists for both patients and clinicians."]
+                    1 => ["Breaking News", "Fast, accurate, and context-rich reporting on diplomatic developments as they happen — no filler, no sensationalism."],
+                    2 => ["Diplomatic Analysis", "Expert-led deep dives into the Abraham Accords, Cyrus Accord, and Israel-Iran relations written by former diplomats and regional scholars."],
+                    3 => ["AI Research Assistant", "Ask our AI any question about Middle East diplomacy and receive instant, sourced analysis drawing on our entire editorial archive."],
+                    4 => ["Op-Eds & Commentary", "A curated forum for diverse regional voices — from Israeli and Iranian thinkers to Arab diplomats and international observers."],
+                    5 => ["Community Hub", "Connect with other engaged readers, share analysis, and join the conversation shaping diplomatic thinking in real time."],
+                    6 => ["Archive & Research", "A fully searchable archive of every key diplomatic event, agreement, and analysis — an essential resource for journalists and researchers."]
                 ];
                 for($i=1; $i<=6; $i++):
                     $pl_title = get_theme_mod("mlws_about_plat{$i}_title", $plat_defaults[$i][0]);
@@ -288,12 +288,12 @@ get_header(); ?>
 
     <!-- CTA STRIP -->
     <?php if (get_theme_mod('mlws_about_cta_show', true)) : 
-        $cta_title = get_theme_mod('mlws_about_cta_title', 'Join the Merlows Community');
-        $cta_desc = get_theme_mod('mlws_about_cta_desc', "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at Merlows.");
-        $cta_btn1_lbl = get_theme_mod('mlws_about_cta_btn1_label', "About Merlows");
-        $cta_btn1_url = get_theme_mod('mlws_about_cta_btn1_url', '/patients/');
-        $cta_btn2_lbl = get_theme_mod('mlws_about_cta_btn2_label', "I'm a Healthcare Professional");
-        $cta_btn2_url = get_theme_mod('mlws_about_cta_btn2_url', '/healthcare-professionals/');
+        $cta_title = get_theme_mod('mlws_about_cta_title', 'Join the Diplomacy Conversation');
+        $cta_desc = get_theme_mod('mlws_about_cta_desc', "Whether you're a policymaker, journalist, academic, or engaged citizen — Merlows is your home for the most important diplomatic story of our time.");
+        $cta_btn1_lbl = get_theme_mod('mlws_about_cta_btn1_label', "Read Our Analysis");
+        $cta_btn1_url = get_theme_mod('mlws_about_cta_btn1_url', '/diplomatic-analysis/');
+        $cta_btn2_lbl = get_theme_mod('mlws_about_cta_btn2_label', "Our Mission");
+        $cta_btn2_url = get_theme_mod('mlws_about_cta_btn2_url', '/mission/');
         $styles = mlws_get_style_string('mlws_about_cta', '#EB5A33');
     ?>
     <section class="section-padding" style="<?php echo $styles['section']; ?> color:white; text-align:center;">
