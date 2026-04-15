@@ -3160,7 +3160,7 @@ function merlows_get_category_hero_url( $category_slug ) {
         'diplomatic-analysis' => array( 'advisory_hero',        'diplomatic_hero',       'diplomatic-analysis-hero', 'diplomatic_analysis_hero' ),
         'op-eds-commentary'   => array( 'opinion_hero',         'op-eds-hero',           'commentary_hero',         'op_eds_hero'               ),
         'cyrus-accord'        => array( 'cyrus_accord_hero',    'cyrus-accord-hero',     'accord_hero',             'boardroom_hero'             ),
-        'abraham-accords'     => array( 'abraham_accords_hero', 'abraham-accords-hero',  'accords_hero',            'boardroom_hero'             ),
+        'abraham-accords'     => array( 'hero_abraham_accords', 'abraham_accords_hero', 'abraham-accords-hero',  'accords_hero',            'boardroom_hero'             ),
         'regional-voices'     => array( 'regional_hero',        'regional-voices-hero',  'regional_voices_hero',    'voices_hero'                ),
     );
 
