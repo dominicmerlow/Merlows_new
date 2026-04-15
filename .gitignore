@@ -9,3 +9,4 @@ node_modules/
 .env.verify
 .env.*
 !.env.example
+.claude/settings.local.json
