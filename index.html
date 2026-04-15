@@ -4241,7 +4241,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
     <div class="page-header">
       <div class="page-header-left">
         <h1 class="page-header-title">Bibliography</h1>
-        <p class="page-header-subtitle">Curate research papers from PubMed and Semantic Scholar, then generate content automatically.</p>
+        <p class="page-header-subtitle">Curate policy reports and research papers from international databases, then generate content automatically.</p>
       </div>
       <div class="page-header-actions">
         <div style="display:flex;gap:20px;align-items:center;margin-right:12px;">
@@ -4297,7 +4297,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       <div id="bibPanel1">
         <div style="margin-bottom:16px;">
           <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Bibliography Name *</label>
-          <input id="bibName" type="text" maxlength="80" placeholder="e.g. IBD Treatment Guidelines 2026" style="width:100%;box-sizing:border-box;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
+          <input id="bibName" type="text" maxlength="80" placeholder="e.g. Abraham Accords Policy Analysis 2026" style="width:100%;box-sizing:border-box;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
         </div>
         <div style="margin-bottom:16px;">
           <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Description</label>
@@ -4305,23 +4305,23 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         </div>
         <div style="display:flex;gap:16px;">
           <div style="flex:1;">
-            <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Indication</label>
+            <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Topic</label>
             <select id="bibIndication" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
-              <option value="IBD">IBD (General)</option>
-              <option value="Crohn's Disease">Crohn's Disease</option>
-              <option value="Ulcerative Colitis">Ulcerative Colitis</option>
-              <option value="Microscopic Colitis">Microscopic Colitis</option>
-              <option value="Paediatric IBD">Paediatric IBD</option>
+              <option value="Middle East Diplomacy">Middle East Diplomacy</option>
+              <option value="Abraham Accords">Abraham Accords</option>
+              <option value="Cyrus Accord">Cyrus Accord</option>
+              <option value="Israeli-Iranian Relations">Israeli-Iranian Relations</option>
+              <option value="Regional Security">Regional Security</option>
               <option value="Other">Other</option>
             </select>
           </div>
           <div style="flex:1;">
             <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Bibliography Type</label>
             <select id="bibType" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
-              <option value="clinical">Clinical</option>
-              <option value="guidelines">Guidelines</option>
-              <option value="health-economics">Health Economics</option>
-              <option value="prevalence">Prevalence</option>
+              <option value="policy-analysis">Policy Analysis</option>
+              <option value="government-reports">Government Reports</option>
+              <option value="academic-research">Academic Research</option>
+              <option value="think-tank">Think Tank</option>
             </select>
           </div>
         </div>
@@ -4336,10 +4336,12 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <span></span>
           </div>
           <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:10px;align-items:center;">
-            <input id="bibSearchQuery" type="text" placeholder="e.g. IBD biologic therapy 2025" style="padding:8px 12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.82rem;" onkeydown="if(event.key==='Enter')bibRunSearch()">
+            <input id="bibSearchQuery" type="text" placeholder="e.g. Abraham Accords normalization 2025" style="padding:8px 12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.82rem;" onkeydown="if(event.key==='Enter')bibRunSearch()">
             <select id="bibSearchSource" style="padding:8px 10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.78rem;min-width:140px;">
-              <option value="pubmed">PubMed</option>
               <option value="semantic_scholar">Semantic Scholar</option>
+              <option value="reliefweb">ReliefWeb (UN)</option>
+              <option value="congress">Congress.gov (CRS)</option>
+              <option value="worldbank">World Bank</option>
             </select>
             <button class="btn btn-orange" onclick="bibRunSearch()" id="bibSearchBtn" style="white-space:nowrap;">Search</button>
           </div>
@@ -4348,30 +4350,27 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;">Filter by Country</label>
           </div>
           <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center;">
-            <input id="bibSearchKeywords" type="text" placeholder="e.g. remission, mucosal healing, biologic" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.78rem;" onkeydown="if(event.key==='Enter')bibRunSearch()">
+            <input id="bibSearchKeywords" type="text" placeholder="e.g. normalization, diplomacy, bilateral trade" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.78rem;" onkeydown="if(event.key==='Enter')bibRunSearch()">
             <select id="bibSearchCountry" style="padding:6px 10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:0.78rem;min-width:160px;">
               <option value="">Any country</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United States">United States</option>
-              <option value="Australia">Australia</option>
-              <option value="Canada">Canada</option>
-              <option value="Netherlands">Netherlands</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-              <option value="Italy">Italy</option>
-              <option value="Spain">Spain</option>
-              <option value="Sweden">Sweden</option>
-              <option value="Denmark">Denmark</option>
-              <option value="Norway">Norway</option>
-              <option value="Belgium">Belgium</option>
-              <option value="Switzerland">Switzerland</option>
               <option value="Israel">Israel</option>
-              <option value="Japan">Japan</option>
+              <option value="Iran">Iran</option>
+              <option value="United Arab Emirates">UAE</option>
+              <option value="Saudi Arabia">Saudi Arabia</option>
+              <option value="Bahrain">Bahrain</option>
+              <option value="Morocco">Morocco</option>
+              <option value="Sudan">Sudan</option>
+              <option value="Egypt">Egypt</option>
+              <option value="Jordan">Jordan</option>
+              <option value="Turkey">Turkey</option>
+              <option value="Qatar">Qatar</option>
+              <option value="United States">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Russia">Russia</option>
               <option value="China">China</option>
-              <option value="India">India</option>
             </select>
           </div>
-          <div style="font-size:0.68rem;color:var(--text-muted);">PubMed: biomedical focus (36M+ articles) &middot; Semantic Scholar: broader academic coverage (214M+ papers) &middot; Country filters by author affiliation</div>
+          <div style="font-size:0.68rem;color:var(--text-muted);">Semantic Scholar: academic papers (214M+) &middot; ReliefWeb: UN policy &amp; humanitarian reports &middot; Congress.gov: CRS policy analysis &middot; World Bank: development reports</div>
           <div id="bibSearchResults" style="margin-top:10px;max-height:320px;overflow-y:auto;"></div>
         </div>
         <div style="margin-bottom:16px;padding:14px;background:var(--bg);border:1px solid var(--border);">
@@ -7342,8 +7341,8 @@ function openBibWizard(editId) {
   _bibSearchResults = [];
   document.getElementById('bibName').value = '';
   document.getElementById('bibDesc').value = '';
-  document.getElementById('bibIndication').value = 'IBD';
-  document.getElementById('bibType').value = 'clinical';
+  document.getElementById('bibIndication').value = 'Middle East Diplomacy';
+  document.getElementById('bibType').value = 'policy-analysis';
   var _kw = document.getElementById('bibSearchKeywords'); if (_kw) _kw.value = '';
   var _ct = document.getElementById('bibSearchCountry');  if (_ct) _ct.value = '';
   var _sr = document.getElementById('bibSearchResults');  if (_sr) _sr.innerHTML = '';
@@ -7355,8 +7354,8 @@ function openBibWizard(editId) {
       if (!bib) return;
       document.getElementById('bibName').value = bib.name || '';
       document.getElementById('bibDesc').value = bib.description || '';
-      document.getElementById('bibIndication').value = bib.indication || 'IBD';
-      document.getElementById('bibType').value = bib.bibliographyType || 'clinical';
+      document.getElementById('bibIndication').value = bib.indication || 'Middle East Diplomacy';
+      document.getElementById('bibType').value = bib.bibliographyType || 'policy-analysis';
       _bibPapers = (bib.papers || []).map(function(p) {
         return { id: p.id, title: p.title, authors: p.authors, journal: p.journal, year: p.year, doi: p.doi, url: p.url, abstract: p.abstract, source: p.source, existing: true };
       });
@@ -7425,11 +7424,8 @@ async function bibRunSearch() {
     }
   }
   if (country) {
-    // PubMed: [AD] = Affiliation/Address field — most reliable country filter
-    // Semantic Scholar: no native filter, append to query for text-based matching
-    fullQuery += source === 'pubmed'
-      ? ' AND "' + country + '"[AD]'
-      : ' ' + country;
+    // Append country to query for text-based matching across all sources
+    fullQuery += ' ' + country;
   }
 
   var btn = document.getElementById('bibSearchBtn');
@@ -7454,7 +7450,7 @@ function _bibRenderSearchResults() {
   return _bibSearchResults.map(function(r, idx) {
     var already = _bibPapers.some(function(p) { return (p.doi && p.doi === r.doi) || p.title === r.title; });
     var cites = r.citationCount ? '<span style="font-size:0.65rem;color:var(--text-muted);">' + r.citationCount + ' cit.</span>' : '';
-    var srcBadge = r.source === 'semantic_scholar' ? 'S2' : 'PM';
+    var srcBadge = { semantic_scholar: 'S2', reliefweb: 'RW', congress: 'CRS', worldbank: 'WB' }[r.source] || r.source;
     return '<div style="padding:8px 10px;border:1px solid var(--border);margin-bottom:4px;background:var(--card);display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">'
       + '<div style="flex:1;min-width:0;">'
       + '<div style="font-size:0.78rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(r.title) + '</div>'
@@ -7474,7 +7470,7 @@ function bibAddFromSearch(idx) {
   var r = _bibSearchResults[idx];
   if (!r) return;
   if (_bibPapers.some(function(p) { return (p.doi && p.doi === r.doi) || p.title === r.title; })) return;
-  _bibPapers.push({ title: r.title, authors: r.authors || [], journal: r.journal || '', year: r.year, doi: r.doi || '', url: r.url || '', abstract: r.abstract || '', source: r.source || 'pubmed' });
+  _bibPapers.push({ title: r.title, authors: r.authors || [], journal: r.journal || '', year: r.year, doi: r.doi || '', url: r.url || '', abstract: r.abstract || '', source: r.source || 'manual' });
   _bibRenderPapersList();
   var resultsDiv = document.getElementById('bibSearchResults');
   if (resultsDiv && _bibSearchResults.length) resultsDiv.innerHTML = _bibRenderSearchResults();
@@ -7531,7 +7527,7 @@ function _bibRenderReview() {
       + '<div style="display:flex;gap:24px;flex-wrap:wrap;font-size:0.82rem;">'
       + '<div><span style="color:var(--text-muted);">Name:</span> <strong>' + escHtml(document.getElementById('bibName').value) + '</strong></div>'
       + '<div><span style="color:var(--text-muted);">Type:</span> <strong>' + escHtml(document.getElementById('bibType').value) + '</strong></div>'
-      + '<div><span style="color:var(--text-muted);">Indication:</span> <strong>' + escHtml(document.getElementById('bibIndication').value) + '</strong></div>'
+      + '<div><span style="color:var(--text-muted);">Topic:</span> <strong>' + escHtml(document.getElementById('bibIndication').value) + '</strong></div>'
       + '<div><span style="color:var(--text-muted);">Papers:</span> <strong>' + _bibPapers.length + '</strong></div>'
       + '</div></div>';
   }
