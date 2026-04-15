@@ -5,3 +5,7 @@ node_modules/
 .env*.local
 .worktrees/
 .env.production
+.env.prod
+.env.verify
+.env.*
+!.env.example
