@@ -3132,5 +3132,67 @@ function mlws_save_quiz_results() {
 add_action( 'wp_ajax_mlws_save_quiz_results', 'mlws_save_quiz_results' );
 
 
+/**
+ * Get the default hero image URL for a given category slug.
+ *
+ * Searches the WordPress media library for an image uploaded with a matching
+ * filename slug. Tries several naming conventions in order, then falls back
+ * to the theme assets directory. This powers the automatic category hero on
+ * single posts and archive pages when no featured image is set.
+ *
+ * Expected media library filenames (any common image extension):
+ *   breaking-news       → news_hero            (newsroom image)
+ *   diplomatic-analysis → advisory_hero        (advisory meeting image)
+ *   op-eds-commentary   → opinion_hero         (research/desk image)
+ *   cyrus-accord        → cyrus_accord_hero    (boardroom image)
+ *   abraham-accords     → abraham_accords_hero (boardroom image)
+ *   regional-voices     → regional_hero        (boardroom image)
+ *
+ * @param string $category_slug  The category slug (e.g. 'breaking-news').
+ * @return string                Absolute URL to the hero image.
+ */
+function merlows_get_category_hero_url( $category_slug ) {
+    // Map each category slug to an ordered list of attachment slugs to try.
+    // WordPress derives the attachment slug from the uploaded filename
+    // (lowercase, extension stripped, spaces → hyphens).
+    $hero_map = array(
+        'breaking-news'       => array( 'news_hero',            'breaking-news-hero',    'newsroom_hero',          'breaking_news_hero'        ),
+        'diplomatic-analysis' => array( 'advisory_hero',        'diplomatic_hero',       'diplomatic-analysis-hero', 'diplomatic_analysis_hero' ),
+        'op-eds-commentary'   => array( 'opinion_hero',         'op-eds-hero',           'commentary_hero',         'op_eds_hero'               ),
+        'cyrus-accord'        => array( 'cyrus_accord_hero',    'cyrus-accord-hero',     'accord_hero',             'boardroom_hero'             ),
+        'abraham-accords'     => array( 'hero_abraham_accords', 'abraham_accords_hero', 'abraham-accords-hero',  'accords_hero',            'boardroom_hero'             ),
+        'regional-voices'     => array( 'regional_hero',        'regional-voices-hero',  'regional_voices_hero',    'voices_hero'                ),
+    );
+
+    // Legacy/fallback filenames for theme assets directory.
+    $legacy_map = array(
+        'breaking-news'       => 'news_hero.png',
+        'diplomatic-analysis' => 'research_hero.png',
+        'op-eds-commentary'   => 'opinion_hero.png',
+        'cyrus-accord'        => 'hcp_hero.png',
+        'abraham-accords'     => 'education_hero.png',
+        'regional-voices'     => 'patient_hero.png',
+    );
+
+    $slugs_to_try = isset( $hero_map[ $category_slug ] )
+        ? $hero_map[ $category_slug ]
+        : array( str_replace( '-', '_', $category_slug ) . '_hero', $category_slug . '-hero' );
+
+    // Search the media library for the first matching attachment slug.
+    foreach ( $slugs_to_try as $slug ) {
+        $attachment = get_page_by_path( $slug, OBJECT, 'attachment' );
+        if ( $attachment ) {
+            $url = wp_get_attachment_url( $attachment->ID );
+            if ( $url ) {
+                return $url;
+            }
+        }
+    }
+
+    // Fall back to theme assets directory.
+    $legacy_file = isset( $legacy_map[ $category_slug ] ) ? $legacy_map[ $category_slug ] : 'news_hero.png';
+    return get_template_directory_uri() . '/assets/img/' . $legacy_file;
+}
+
 // End of File
 

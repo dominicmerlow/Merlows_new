@@ -4,15 +4,16 @@
     <!-- Hero Section -->
     <!-- Hero Section -->
     <?php
-    $hero_bg = get_template_directory_uri() . '/assets/img/news_hero.png'; // Default
+    // Default hero: look up from the WordPress media library via the helper function.
+    $hero_bg = merlows_get_category_hero_url( 'breaking-news' );
     if ( is_post_type_archive() ) {
         $pt = get_query_var( 'post_type' );
         if ( in_array( $pt, ['research', 'whitepaper'] ) ) {
-            $hero_bg = get_template_directory_uri() . '/assets/img/research_hero.png';
+            $hero_bg = merlows_get_category_hero_url( 'diplomatic-analysis' );
         } elseif ( in_array( $pt, ['webinar', 'course', 'infographic'] ) ) {
-            $hero_bg = get_template_directory_uri() . '/assets/img/education_hero.png';
+            $hero_bg = merlows_get_category_hero_url( 'abraham-accords' );
         } elseif ( in_array( $pt, ['oped', 'review'] ) ) {
-            $hero_bg = get_template_directory_uri() . '/assets/img/opinion_hero.png';
+            $hero_bg = merlows_get_category_hero_url( 'op-eds-commentary' );
         }
     }
     // Handle category archives with enhanced descriptions and taglines
@@ -20,45 +21,40 @@
     $category_description = '';
     if ( is_category() ) {
        $cat = get_queried_object();
-       $cat_name = $cat->name;
-       
-       // Set hero background based on category
-       if ( stripos($cat_name, 'research') !== false || stripos($cat_name, 'Clinical') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/research_hero.png';
-           $category_tagline = 'Evidence-Based Excellence';
-           $category_description = 'Dive deep into peer-reviewed clinical research, systematic reviews, and evidence-based analysis that shapes modern healthcare practice.';
-       } elseif ( stripos($cat_name, 'education') !== false || stripos($cat_name, 'Course') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/education_hero.png';
-           $category_tagline = 'Elevate Your Expertise';
-           $category_description = 'Advance your professional development with CME-accredited courses, interactive webinars, and cutting-edge educational content designed for healthcare professionals.';
-       } elseif ( stripos($cat_name, 'News') !== false || stripos($cat_name, 'Healthcare') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/news_hero.png';
-           $category_tagline = 'Stay Ahead of the Curve';
-           $category_description = 'Breaking news, industry updates, and the latest developments in healthcare, nutrition science, and longevity medicine.';
-       } elseif ( stripos($cat_name, 'Opinion') !== false || stripos($cat_name, 'Expert') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/opinion_hero.png';
-           $category_tagline = 'Insights That Inspire';
-           $category_description = 'Thought-provoking perspectives from leading experts, thought leaders, and innovators shaping the future of healthcare and nutritional medicine.';
-       } elseif ( stripos($cat_name, 'Media') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/news_hero.png';
-           $category_tagline = 'Learn Through Listening';
-           $category_description = 'Engaging podcasts, informative webinars, and compelling video content that brings complex medical concepts to life.';
-       } elseif ( stripos($cat_name, 'Infographic') !== false || stripos($cat_name, 'Gallery') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/education_hero.png';
-           $category_tagline = 'Visualize Knowledge';
-           $category_description = 'Complex information made simple through beautifully designed infographics, visual guides, and educational graphics.';
-       } elseif ( stripos($cat_name, 'Tool') !== false || stripos($cat_name, 'Resource') !== false ) {
-           $hero_bg = get_template_directory_uri() . '/assets/img/education_hero.png';
-           $category_tagline = 'Empower Your Practice';
-           $category_description = 'Practical tools, calculators, and downloadable resources designed to enhance clinical decision-making and patient care.';
-       } elseif ( stripos($cat_name, 'Living') !== false || stripos($cat_name, 'IBD') !== false ) {
-           $hero_bg = content_url() . '/uploads/2026/04/ibdliving_hero.png';
-           $category_tagline = 'Living Well with IBD';
-           $category_description = 'Practical guidance, personal stories, and supportive resources for navigating daily life with Inflammatory Bowel Disease.';
-       } else {
-           $hero_bg = get_template_directory_uri() . '/assets/img/news_hero.png';
-           $category_tagline = 'Explore Our Knowledge Hub';
-           $category_description = $cat->description ? $cat->description : 'Discover curated content from leading experts in healthcare and nutritional medicine.';
+
+       // Use the category slug directly for a precise media-library lookup.
+       $hero_bg = merlows_get_category_hero_url( $cat->slug );
+
+       // Set tagline/description per category slug.
+       switch ( $cat->slug ) {
+           case 'breaking-news':
+               $category_tagline    = 'Stay Ahead of the Curve';
+               $category_description = 'Breaking developments, urgent dispatches, and the latest geopolitical news as it happens.';
+               break;
+           case 'diplomatic-analysis':
+               $category_tagline    = 'Deeper Understanding';
+               $category_description = 'In-depth diplomatic analysis and expert insight on international relations, treaties, and global affairs.';
+               break;
+           case 'op-eds-commentary':
+               $category_tagline    = 'Insights That Inspire';
+               $category_description = 'Thought-provoking perspectives and commentary from leading voices shaping the conversation on regional and global affairs.';
+               break;
+           case 'cyrus-accord':
+               $category_tagline    = 'Cyrus Accord Updates';
+               $category_description = 'The latest developments, negotiations, and analysis surrounding the Cyrus Accord and its regional implications.';
+               break;
+           case 'abraham-accords':
+               $category_tagline    = 'Abraham Accords Coverage';
+               $category_description = 'Comprehensive coverage of the Abraham Accords — progress, partnerships, and the path to regional peace.';
+               break;
+           case 'regional-voices':
+               $category_tagline    = 'Voices from the Region';
+               $category_description = 'First-hand perspectives and on-the-ground reporting from across the Middle East and beyond.';
+               break;
+           default:
+               $category_tagline    = 'Explore Our Coverage';
+               $category_description = $cat->description ? $cat->description : 'Curated reporting and analysis from Merlows.';
+               break;
        }
     }
     
@@ -151,22 +147,13 @@
                     <?php
                     $card_thumb = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
                     if ( ! $card_thumb ) {
-                        $card_thumb = get_template_directory_uri() . '/assets/img/news_hero.png';
-                        $card_cats = get_the_category();
+                        // No featured image — use the category default from the media library.
+                        $card_thumb = merlows_get_category_hero_url( 'breaking-news' );
+                        $card_cats  = get_the_category();
                         if ( ! empty( $card_cats ) ) {
-                            $card_hero_map = array(
-                                'breaking-news'       => 'news_hero.png',
-                                'diplomatic-analysis' => 'research_hero.png',
-                                'op-eds-commentary'   => 'opinion_hero.png',
-                                'cyrus-accord'        => 'hcp_hero.png',
-                                'abraham-accords'     => 'education_hero.png',
-                                'regional-voices'     => 'patient_hero.png',
-                            );
                             foreach ( $card_cats as $cc ) {
-                                if ( isset( $card_hero_map[ $cc->slug ] ) ) {
-                                    $card_thumb = get_template_directory_uri() . '/assets/img/' . $card_hero_map[ $cc->slug ];
-                                    break;
-                                }
+                                $card_thumb = merlows_get_category_hero_url( $cc->slug );
+                                break;
                             }
                         }
                     }
