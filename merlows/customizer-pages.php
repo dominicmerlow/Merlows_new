@@ -787,5 +787,203 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_setting( "mlws_contact_hours",       array( "default" => "Monday – Friday, 9:00 am – 5:00 pm GMT", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_contact_hours",       array( "label" => "Office Hours",               "section" => "mlws_contact_info", "type" => "text" ) );
 
+
+    // =========================================================================
+    // ---- MISSION PAGE PANEL -------------------------------------------------
+    // =========================================================================
+    $wp_customize->add_panel( 'mlws_mission_panel', array(
+        'title'    => __( 'Our Mission Page', 'merlows' ),
+        'priority' => 47,
+    ) );
+
+    // ── Hero ──────────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_hero', array( 'title' => 'Hero Section', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_show', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_hero_show', array( 'label' => 'Show Hero Section', 'section' => 'mlws_mission_hero', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_tag',   array( 'default' => 'Our Mission', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_hero_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_mission_hero', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_title', array( 'default' => 'Championing Peace Through <span class="highlight">Informed Diplomacy</span>', 'sanitize_callback' => 'wp_kses_post' ) );
+    $wp_customize->add_control( 'mlws_mission_hero_title', array( 'label' => 'Headline', 'section' => 'mlws_mission_hero', 'type' => 'textarea' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_desc',  array( 'default' => 'Merlows exists to make the complex world of Middle East diplomacy accessible, understandable, and actionable — for citizens, policymakers, and peace-builders alike.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_hero_desc',  array( 'label' => 'Description', 'section' => 'mlws_mission_hero', 'type' => 'textarea' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_img',   array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'mlws_mission_hero_img', array( 'label' => 'Background Image', 'section' => 'mlws_mission_hero' ) ) );
+
+    $wp_customize->add_setting( 'mlws_mission_hero_bg_color', array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_hero_bg_color', array( 'label' => 'Override Background Colour (overrides image)', 'section' => 'mlws_mission_hero', 'type' => 'text' ) );
+
+    // ── Vision ────────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_vision', array( 'title' => 'Vision Section', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_vision_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_vision_show',  array( 'label' => 'Show Vision Section', 'section' => 'mlws_mission_vision', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_vision_tag',   array( 'default' => 'Our Vision', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_vision_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_mission_vision', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_vision_title', array( 'default' => 'A More Peaceful Middle East', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_vision_title', array( 'label' => 'Heading', 'section' => 'mlws_mission_vision', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_vision_desc',  array( 'default' => 'We believe that lasting peace is built on understanding. By covering the Abraham Accords, the Cyrus Accord, and the evolving landscape of Israel-Iran relations with depth and accuracy, Merlows helps audiences move beyond headlines to grasp the full human and geopolitical story.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_vision_desc',  array( 'label' => 'Description', 'section' => 'mlws_mission_vision', 'type' => 'textarea' ) );
+
+    $stat_vision_defaults = array(
+        1 => array( '100+', 'Countries Reached' ),
+        2 => array( '5+',   'Years of Coverage' ),
+        3 => array( '300+', 'Exclusive Analyses' ),
+        4 => array( '50+',  'Expert Contributors' ),
+    );
+    for ( $i = 1; $i <= 4; $i++ ) {
+        $wp_customize->add_setting( "mlws_mission_stat{$i}_num",   array( 'default' => $stat_vision_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_mission_stat{$i}_num",   array( 'label' => "Stat $i Number",  'section' => 'mlws_mission_vision', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_mission_stat{$i}_label", array( 'default' => $stat_vision_defaults[$i][1], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_mission_stat{$i}_label", array( 'label' => "Stat $i Label",   'section' => 'mlws_mission_vision', 'type' => 'text' ) );
+    }
+
+    // ── Pillars ───────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_pillars', array( 'title' => 'Core Pillars Section', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_pillars_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_pillars_show',  array( 'label' => 'Show Pillars Section', 'section' => 'mlws_mission_pillars', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_pillars_tag',   array( 'default' => 'What Drives Us', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_pillars_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_mission_pillars', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_pillars_title', array( 'default' => 'Four Pillars of Our Mission', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_pillars_title', array( 'label' => 'Heading', 'section' => 'mlws_mission_pillars', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_pillars_desc',  array( 'default' => 'Every story we tell, every analysis we publish, and every conversation we host is guided by these core commitments.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_pillars_desc',  array( 'label' => 'Description', 'section' => 'mlws_mission_pillars', 'type' => 'textarea' ) );
+
+    $pillar_defaults = array(
+        1 => array( 'Inform',    'We report on the Abraham Accords, Cyrus Accord, and Israel-Iran relations with rigour and nuance — cutting through noise to deliver analysis that actually matters.',       '#1B4F8A' ),
+        2 => array( 'Connect',   'We bridge policymakers, academics, journalists, and citizens — creating a shared platform where diverse voices shape the diplomatic conversation.',                         '#C0392B' ),
+        3 => array( 'Advocate',  'We believe dialogue is the foundation of peace. Merlows is unambiguously pro-diplomacy, supporting every credible effort to build sustainable regional stability.',        '#D4A017' ),
+        4 => array( 'Document',  'History is made in real time. We build a permanent, searchable record of diplomatic milestones so that future generations can understand how today\'s peace was built.',   '#1B4F8A' ),
+    );
+    for ( $i = 1; $i <= 4; $i++ ) {
+        $wp_customize->add_setting( "mlws_mission_p{$i}_title", array( 'default' => $pillar_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_mission_p{$i}_title", array( 'label' => "Pillar $i Title",       'section' => 'mlws_mission_pillars', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_mission_p{$i}_desc",  array( 'default' => $pillar_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_mission_p{$i}_desc",  array( 'label' => "Pillar $i Description", 'section' => 'mlws_mission_pillars', 'type' => 'textarea' ) );
+        $wp_customize->add_setting( "mlws_mission_p{$i}_color", array( 'default' => $pillar_defaults[$i][2], 'sanitize_callback' => 'sanitize_hex_color' ) );
+        $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, "mlws_mission_p{$i}_color", array( 'label' => "Pillar $i Accent Colour", 'section' => 'mlws_mission_pillars' ) ) );
+    }
+
+    // ── Focus Areas ───────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_focus', array( 'title' => 'Focus Areas Section', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_focus_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_focus_show',  array( 'label' => 'Show Focus Areas Section', 'section' => 'mlws_mission_focus', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_focus_tag',   array( 'default' => 'Our Focus', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_focus_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_mission_focus', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_focus_title', array( 'default' => 'The Stories We Cover', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_focus_title', array( 'label' => 'Heading', 'section' => 'mlws_mission_focus', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_focus_desc',  array( 'default' => 'Merlows provides expert-led coverage across the key diplomatic frameworks and relationships shaping the modern Middle East.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_focus_desc',  array( 'label' => 'Description', 'section' => 'mlws_mission_focus', 'type' => 'textarea' ) );
+
+    $focus_defaults = array(
+        1 => array( 'Abraham Accords',      'In-depth reporting on the normalisation agreements between Israel and Arab states, and the expanding circle of peace they represent.' ),
+        2 => array( 'Cyrus Accord',          'Dedicated coverage of Merlows\' own diplomatic initiative — fostering a new framework for Israel-Iran dialogue and mutual recognition.' ),
+        3 => array( 'Israel-Iran Relations', 'Analytical journalism covering the security, political, and cultural dimensions of one of the world\'s most consequential bilateral relationships.' ),
+        4 => array( 'Regional Voices',       'Op-eds and commentary from regional thinkers, diplomats, and civil society leaders on the ground — perspectives rarely heard in Western media.' ),
+        5 => array( 'Diplomatic Analysis',   'Expert breakdowns of treaties, negotiations, and backchannel efforts — explaining what\'s happening, why it matters, and what comes next.' ),
+        6 => array( 'Breaking News',         'Fast, accurate, and context-rich reporting on developments as they unfold — with no sensationalism, no filler.' ),
+    );
+    for ( $i = 1; $i <= 6; $i++ ) {
+        $wp_customize->add_setting( "mlws_mission_f{$i}_title", array( 'default' => $focus_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_mission_f{$i}_title", array( 'label' => "Focus Area $i Title",       'section' => 'mlws_mission_focus', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_mission_f{$i}_desc",  array( 'default' => $focus_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_mission_f{$i}_desc",  array( 'label' => "Focus Area $i Description", 'section' => 'mlws_mission_focus', 'type' => 'textarea' ) );
+    }
+
+    // ── Roadmap ───────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_roadmap', array( 'title' => 'Roadmap / Timeline Section', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_roadmap_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_roadmap_show',  array( 'label' => 'Show Roadmap Section', 'section' => 'mlws_mission_roadmap', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_roadmap_tag',   array( 'default' => 'Where We Are Heading', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_roadmap_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_mission_roadmap', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_roadmap_title', array( 'default' => 'Building Peace, One Story at a Time', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_roadmap_title', array( 'label' => 'Heading', 'section' => 'mlws_mission_roadmap', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_roadmap_desc',  array( 'default' => 'Our roadmap reflects a long-term commitment to expanding diplomatic journalism and creating new spaces for constructive dialogue.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_roadmap_desc',  array( 'label' => 'Description', 'section' => 'mlws_mission_roadmap', 'type' => 'textarea' ) );
+
+    $milestone_defaults = array(
+        1 => array( 'Founding',            'Merlows launches as an independent news portal dedicated exclusively to Middle East diplomatic coverage and peace-building journalism.' ),
+        2 => array( 'Cyrus Accord Launch', 'Merlows unveils the Cyrus Accord initiative — a new diplomatic framework proposing a path toward Israel-Iran normalisation.' ),
+        3 => array( 'Expert Network',      'A curated network of regional analysts, former diplomats, and on-the-ground correspondents joins the Merlows contributor platform.' ),
+        4 => array( 'AI-Powered Research', 'Launch of the Merlows AI assistant — giving readers instant access to deep-dive analysis and historical context on any diplomatic topic.' ),
+        5 => array( 'Global Expansion',    'Merlows expands coverage and partnerships to include voices from across the Arab world, Iran, Israel, Europe, and North America.' ),
+    );
+    for ( $i = 1; $i <= 5; $i++ ) {
+        $wp_customize->add_setting( "mlws_mission_m{$i}_title", array( 'default' => $milestone_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_mission_m{$i}_title", array( 'label' => "Milestone $i Title",       'section' => 'mlws_mission_roadmap', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_mission_m{$i}_desc",  array( 'default' => $milestone_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_mission_m{$i}_desc",  array( 'label' => "Milestone $i Description", 'section' => 'mlws_mission_roadmap', 'type' => 'textarea' ) );
+    }
+
+    // ── Promo Blocks ──────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_promos', array( 'title' => 'Promo Blocks (×2)', 'panel' => 'mlws_mission_panel' ) );
+
+    for ( $p = 1; $p <= 2; $p++ ) {
+        $prefix = "mlws_mission_promo$p";
+        $wp_customize->add_setting( "{$prefix}_show",    array( 'default' => false, 'sanitize_callback' => 'wp_validate_boolean' ) );
+        $wp_customize->add_control( "{$prefix}_show",    array( 'label' => "Show Promo Block $p", 'section' => 'mlws_mission_promos', 'type' => 'checkbox' ) );
+        $wp_customize->add_setting( "{$prefix}_title",   array( 'default' => 'Promo title', 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "{$prefix}_title",   array( 'label' => "Block $p Title",       'section' => 'mlws_mission_promos', 'type' => 'text' ) );
+        $wp_customize->add_setting( "{$prefix}_sub",     array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "{$prefix}_sub",     array( 'label' => "Block $p Tag / Subtitle", 'section' => 'mlws_mission_promos', 'type' => 'text' ) );
+        $wp_customize->add_setting( "{$prefix}_desc",    array( 'default' => 'Promo description text goes here.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "{$prefix}_desc",    array( 'label' => "Block $p Description", 'section' => 'mlws_mission_promos', 'type' => 'textarea' ) );
+        $wp_customize->add_setting( "{$prefix}_btn_lbl", array( 'default' => 'Learn More', 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "{$prefix}_btn_lbl", array( 'label' => "Block $p Button Label", 'section' => 'mlws_mission_promos', 'type' => 'text' ) );
+        $wp_customize->add_setting( "{$prefix}_btn_url", array( 'default' => '#', 'sanitize_callback' => 'esc_url_raw' ) );
+        $wp_customize->add_control( "{$prefix}_btn_url", array( 'label' => "Block $p Button URL",   'section' => 'mlws_mission_promos', 'type' => 'url' ) );
+        $wp_customize->add_setting( "{$prefix}_layout",  array( 'default' => 'img-left', 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "{$prefix}_layout",  array( 'label' => "Block $p Image Side", 'section' => 'mlws_mission_promos', 'type' => 'select',
+            'choices' => array( 'img-left' => 'Image Left', 'img-right' => 'Image Right' ) ) );
+        $wp_customize->add_setting( "{$prefix}_img",     array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+        $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "{$prefix}_img", array( 'label' => "Block $p Image", 'section' => 'mlws_mission_promos' ) ) );
+    }
+
+    // ── CTA Strip ─────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_mission_cta', array( 'title' => 'CTA Strip', 'panel' => 'mlws_mission_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_show',        array( 'default' => true,  'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_show',        array( 'label' => 'Show CTA Strip', 'section' => 'mlws_mission_cta', 'type' => 'checkbox' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_title',       array( 'default' => 'Join the Diplomacy Conversation', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_title',       array( 'label' => 'Heading', 'section' => 'mlws_mission_cta', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_desc',        array( 'default' => "Whether you're a policymaker, journalist, academic, or engaged citizen — Merlows is your home for the most important diplomatic story of our time.", 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_desc',        array( 'label' => 'Description', 'section' => 'mlws_mission_cta', 'type' => 'textarea' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_btn1_label',  array( 'default' => 'Read Our Analysis', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_btn1_label',  array( 'label' => 'Button 1 Label', 'section' => 'mlws_mission_cta', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_btn1_url',    array( 'default' => '/diplomatic-analysis/', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_btn1_url',    array( 'label' => 'Button 1 URL', 'section' => 'mlws_mission_cta', 'type' => 'url' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_btn2_label',  array( 'default' => 'About Merlows', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_btn2_label',  array( 'label' => 'Button 2 Label', 'section' => 'mlws_mission_cta', 'type' => 'text' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_btn2_url',    array( 'default' => '/about/', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( 'mlws_mission_cta_btn2_url',    array( 'label' => 'Button 2 URL', 'section' => 'mlws_mission_cta', 'type' => 'url' ) );
+
+    $wp_customize->add_setting( 'mlws_mission_cta_bg',          array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_mission_cta_bg', array( 'label' => 'Background Colour', 'section' => 'mlws_mission_cta' ) ) );
+
 }
 add_action( 'customize_register', 'mlws_pages_customize_register', 20 );
