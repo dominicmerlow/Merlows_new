@@ -1,0 +1,18 @@
+/*
+Theme Name: Merlows
+Theme URI: https://merlows.com
+Author: Antigravity
+Author URI: https://google.deepmind.com
+Description: A news portal for Israel-Iran relations, the Cyrus Accord, and the Abraham Accords, championed by Merlows.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: merlows
+Tags: news, diplomacy, Middle East, Israel, Iran, portal
+*/
+
+/* 
+ * This file is required for WordPress theme recognition.
+ * Actual styles are loaded from assets/css/wrapper.css or similar to keep organization clean,
+ * but for this simple theme we might just paste the prototype CSS here later or enqueue it.
+ */

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 90" width="340" height="90">
+  <rect x="0" y="8" width="5" height="74" fill="#D4AF37"/>
+  <text x="16" y="66" font-family="Georgia, 'Times New Roman', serif" font-size="62" font-weight="700" fill="#1B4F8A" letter-spacing="-2">M</text>
+  <text x="70" y="46" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="700" fill="#1B4F8A" letter-spacing="4">MERLOWS</text>
+  <line x1="70" y1="54" x2="330" y2="54" stroke="#D4AF37" stroke-width="1.5"/>
+  <text x="70" y="70" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="400" fill="#8B1A1A" letter-spacing="2.5">BRIDGING NATIONS, BUILDING PEACE</text>
+</svg>
