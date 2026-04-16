@@ -587,9 +587,9 @@ body {
     $hero_subtitle = get_theme_mod('mlws_hero_custom_subtitle', 'Independent journalism covering Israel-Iran relations, the Cyrus Accord, and the path toward a new era of Middle East diplomacy.');
 
     $btn1_text = get_theme_mod('mlws_hero_button_1_text', "Latest News");
-    $btn1_link = get_theme_mod('mlws_hero_button_1_link', '/healthcare-professionals/');
+    $btn1_link = get_theme_mod('mlws_hero_button_1_link', '/breaking-news/');
     $btn2_text = get_theme_mod('mlws_hero_button_2_text', "About Merlows");
-    $btn2_link = get_theme_mod('mlws_hero_button_2_link', '/patients/');
+    $btn2_link = get_theme_mod('mlws_hero_button_2_link', '/about-us-2/');
 
     $mask_enabled = get_theme_mod('mlws_hero_mask_toggle', true);
     $mask_opacity = get_theme_mod('mlws_hero_mask_opacity', 0.5);
@@ -648,7 +648,7 @@ body {
             <div class="hero-split-right">
                 <!-- hidden -->
                 <div style="width: 420px; height: 420px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(27, 79, 138, 0.15), 0 0 0 6px rgba(27, 79, 138, 0.08); margin: 0 auto;">
-                    <img src="<?php echo content_url(); ?>/uploads/2026/04/IBD_logo_anime.gif" alt="Merlows" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Merlows" style="width: 70%; height: 70%; object-fit: contain; margin: 15%;">
                 </div>
                 <!-- Original animated SVG removed - hidden, pending full cleanup -->
                 <svg viewBox="0 0 500 520" style="display:none;" xmlns="http://www.w3.org/2000/svg">
@@ -878,11 +878,9 @@ body {
                             'op-eds-commentary' => 'opinion_hero.png', 'cyrus-accord' => 'hcp_hero.png',
                             'abraham-accords' => 'education_hero.png', 'regional-voices' => 'patient_hero.png',
                         );
-                        $url_map = array('regional-voices' => content_url() . '/uploads/2026/04/ibdliving_hero.png');
                         $p_cats = get_the_category($post_id);
                         if (!empty($p_cats)) {
                             foreach ($p_cats as $pc) {
-                                if (isset($url_map[$pc->slug])) return $url_map[$pc->slug];
                                 if (isset($hero_map[$pc->slug])) return get_template_directory_uri() . '/assets/img/' . $hero_map[$pc->slug];
                             }
                         }
@@ -1250,7 +1248,7 @@ body {
                 <?php foreach ($cards as $item):
                     $cat = $item['cat'];
                 ?>
-                <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" class="ibd-category-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #1E293B; border-radius: 0; padding: 24px 12px; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; width: 100%; max-width: 160px;">
+                <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" class="mlws-category-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #1E293B; border-radius: 0; padding: 24px 12px; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; width: 100%; max-width: 160px;">
                     <?php
                     $cat_icon = $item['icon'] ?: mlws_get_category_icon_url($cat->name);
                     ?>
@@ -1512,11 +1510,11 @@ body {
                             </form>
                         </div>
 
-                        <!-- Ask IBDi panel removed -->
+                        <!-- Ask AI panel removed -->
                     </div>
                 </div>
 
-                <!-- Ask IBDi tab removed -->
+                <!-- Ask AI tab removed -->
             </div>
         </div>
 
@@ -1782,14 +1780,8 @@ body {
                 'abraham-accords'     => 'education_hero.png',
                 'regional-voices'     => 'patient_hero.png',
             );
-            // Categories with full URL overrides (e.g. uploaded images)
-            $cat_hero_url_map = array(
-                'regional-voices' => content_url() . '/uploads/2026/04/ibdliving_hero.png',
-            );
             $cat_default_hero = get_template_directory_uri() . '/assets/img/news_hero.png';
-            if (isset($cat_hero_url_map[$cat->slug])) {
-                $cat_default_hero = $cat_hero_url_map[$cat->slug];
-            } elseif (isset($cat_hero_map[$cat->slug])) {
+            if (isset($cat_hero_map[$cat->slug])) {
                 $cat_default_hero = get_template_directory_uri() . '/assets/img/' . $cat_hero_map[$cat->slug];
             }
         ?>

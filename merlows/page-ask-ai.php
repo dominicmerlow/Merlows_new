@@ -1,94 +1,123 @@
 <?php
 /**
  * Template Name: Ask AI Page
- * Child of Tools Hub — IBDi Clinical AI Assistant
  * Accessible at: /ask-ai/
  */
 get_header();
 
 // Get customizer settings
-$hero_title = get_theme_mod('mlws_askai_hero_title', 'Ask IBDi');
-$hero_subtitle = get_theme_mod('mlws_askai_hero_subtitle', 'Direct access to our IBD Research Centre. Ask anything about IBD, clinical nutrition, and gastrointestinal health.');
-$hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
+$hero_title    = get_theme_mod('mlws_askai_hero_title',    'Ask Merlows AI');
+$hero_subtitle = get_theme_mod('mlws_askai_hero_subtitle', 'Your research companion for Middle East diplomacy. Explore the Cyrus Accord, Abraham Accords, and regional analysis through our AI assistant.');
+$hero_badge    = get_theme_mod('mlws_askai_hero_badge',    'Research Assistant v1.0');
 ?>
 
 <style>
-/* ── Tool Hero (shared with sibling tool pages) ── */
-.tool-hero {
-    background: linear-gradient(135deg, #0F172A 0%, #8B1A1A 100%);
-    padding: 80px 0 60px;
+/* ── Ask AI Masthead ───────────────────────────────────────────── */
+.askai-masthead {
+    background: var(--primary-color);
+    padding: 80px 0 64px;
     color: white;
     position: relative;
     overflow: hidden;
 }
-.tool-hero::before {
+.askai-masthead::before {
     content: '';
     position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(27,79,138,0.2) 0%, transparent 70%);
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.04) 0px,
+        rgba(255,255,255,0.04) 1px,
+        transparent 1px,
+        transparent 80px
+    );
     pointer-events: none;
 }
-.tool-hero h1 {
-    font-family: 'Outfit', sans-serif;
-    font-size: 44px;
-    font-weight: 800;
-    margin: 0 0 16px;
-    letter-spacing: -0.5px;
+.askai-masthead::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
 }
-.tool-hero p {
-    font-size: 18px;
-    color: rgba(255,255,255,0.8);
-    max-width: 640px;
-    line-height: 1.6;
-    margin: 0 0 24px;
+.askai-masthead__inner {
+    position: relative;
+    z-index: 2;
 }
-.tool-badge {
-    display: inline-flex;
+.askai-masthead__eyebrow {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(124,58,237,0.2);
-    border: 1px solid rgba(124,58,237,0.4);
-    border-radius: var(--radius-sm);
-    padding: 6px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #C4B5FD;
+    gap: 12px;
     margin-bottom: 20px;
 }
-.tool-features {
+.askai-masthead__eyebrow-line {
+    height: 2px;
+    width: 40px;
+    background: var(--accent-color);
+    flex-shrink: 0;
+}
+.askai-masthead__eyebrow-text {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--accent-color);
+    font-family: var(--font-main);
+}
+.askai-masthead h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 0 0 20px;
+    color: white;
+}
+.askai-masthead h1 em {
+    font-style: italic;
+    color: var(--accent-color);
+}
+.askai-masthead__rule {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+    margin-bottom: 20px;
+}
+.askai-masthead p {
+    font-family: var(--font-main);
+    font-size: 18px;
+    color: rgba(255,255,255,0.78);
+    max-width: 620px;
+    line-height: 1.65;
+    margin: 0 0 28px;
+}
+.askai-features {
     display: flex;
     gap: 32px;
-    margin-top: 32px;
     flex-wrap: wrap;
 }
-.tool-feature {
+.askai-feature {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: var(--font-main);
     font-size: 14px;
     color: rgba(255,255,255,0.7);
 }
 
-/* ── Chat Section ── */
-.tool-embed-section {
+/* ── Chat Shell ────────────────────────────────────────────────── */
+.askai-section {
     padding: 60px 0 80px;
-    background: #F8FAFC;
+    background: #F8FAFD;
 }
 .chat-main {
     background: white;
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 24px rgba(27,79,138,0.07);
     overflow: hidden;
 }
 .agent-profile {
     padding: 20px 28px;
-    background: #F8FAFC;
+    background: #F8FAFD;
     border-bottom: 1px solid #E2E8F0;
     display: flex;
     align-items: center;
@@ -102,20 +131,21 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 .agent-avatar {
     width: 44px;
     height: 44px;
-    background: #7C3AED;
-    border-radius: var(--radius-md);
+    background: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 .agent-info h2 {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-heading);
     font-size: 15px;
     font-weight: 700;
     color: #0F172A;
     margin: 0;
 }
 .agent-status {
+    font-family: var(--font-main);
     font-size: 12px;
     color: #22C55E;
     font-weight: 600;
@@ -138,7 +168,7 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
     color: #475569;
     border: 1px solid #E2E8F0;
     padding: 8px 16px;
-    border-radius: var(--radius-sm);
+    font-family: var(--font-main);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -148,14 +178,14 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
     transition: all 0.2s;
 }
 .save-chat-btn:hover {
-    border-color: #7C3AED;
-    color: #7C3AED;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .chat-messages {
     padding: 28px;
     min-height: 450px;
-    max-height: 550px;
+    max-height: 560px;
     overflow-y: auto;
 }
 .msg {
@@ -167,7 +197,6 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 .msg .msg-avatar {
     width: 32px;
     height: 32px;
-    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -176,13 +205,13 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 .msg .msg-bubble {
     max-width: 80%;
     padding: 14px 18px;
-    border-radius: var(--radius-md);
+    font-family: var(--font-main);
     font-size: 15px;
     line-height: 1.65;
     white-space: pre-wrap;
 }
-.msg.bot .msg-avatar { background: #7C3AED; }
-.msg.bot .msg-bubble { background: #F8FAFC; border: 1px solid #E2E8F0; color: #1E293B; }
+.msg.bot .msg-avatar { background: var(--primary-color); }
+.msg.bot .msg-bubble { background: #F8FAFD; border: 1px solid #E2E8F0; color: #1E293B; }
 .msg.user .msg-avatar { background: #0F172A; }
 .msg.user .msg-bubble { background: #0F172A; color: white; }
 
@@ -197,24 +226,28 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
     flex: 1;
     padding: 14px 18px;
     border: 2px solid #E2E8F0;
-    border-radius: var(--radius-md);
+    font-family: var(--font-main);
     font-size: 15px;
     outline: none;
     transition: border-color 0.2s;
+    color: #0F172A;
 }
-.chat-input:focus { border-color: #7C3AED; }
+.chat-input:focus { border-color: var(--primary-color); }
+.chat-input::placeholder { color: #94A3B8; }
 .chat-send {
     padding: 14px 28px;
-    background: #7C3AED;
+    background: var(--primary-color);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
     transition: background 0.2s;
+    white-space: nowrap;
 }
-.chat-send:hover { background: #6D28D9; }
+.chat-send:hover { background: var(--primary-hover); }
+.chat-send:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .typing-indicator { display: flex; gap: 4px; padding: 5px 0; }
 .typing-dot { width: 6px; height: 6px; background: #94A3B8; border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; }
@@ -222,108 +255,129 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
 .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 @keyframes typing { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-/* Tool Disclaimer (shared) */
-.tool-disclaimer {
-    max-width: 800px;
-    margin: 40px auto 0;
-    padding: 24px;
+/* ── Disclaimer ────────────────────────────────────────────────── */
+.askai-disclaimer {
+    max-width: 900px;
+    margin: 32px auto 0;
+    padding: 20px 24px;
     background: white;
     border: 1px solid #E2E8F0;
-    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-color);
+    font-family: var(--font-main);
     font-size: 13px;
     color: #64748B;
     line-height: 1.6;
 }
-.tool-disclaimer strong { color: #1E293B; }
+.askai-disclaimer strong { color: #1E293B; }
 
-/* Sibling Tools */
-.sibling-tools {
+/* ── Sibling Tools ─────────────────────────────────────────────── */
+.askai-tools {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    max-width: 800px;
-    margin: 40px auto 0;
+    max-width: 900px;
+    margin: 32px auto 0;
 }
-.sibling-tool-card {
+.askai-tool-card {
     display: flex;
     align-items: center;
     gap: 16px;
     padding: 20px;
     background: white;
     border: 1px solid #E2E8F0;
-    border-radius: var(--radius-md);
     text-decoration: none;
     color: inherit;
     transition: all 0.2s;
 }
-.sibling-tool-card:hover {
-    border-color: #1B4F8A;
-    background: #F5E6A3;
+.askai-tool-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(27,79,138,0.03);
     transform: translateX(4px);
 }
-.sibling-tool-icon {
+.askai-tool-icon {
     width: 44px;
     height: 44px;
-    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
-.sibling-tool-card h4 { font-size: 15px; font-weight: 700; color: #0F172A; margin: 0 0 4px; }
-.sibling-tool-card p { font-size: 13px; color: #64748B; margin: 0; line-height: 1.4; }
+.askai-tool-card h4 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 4px;
+}
+.askai-tool-card p {
+    font-family: var(--font-main);
+    font-size: 13px;
+    color: #64748B;
+    margin: 0;
+    line-height: 1.4;
+}
 
 @media (max-width: 768px) {
-    .tool-hero h1 { font-size: 28px; }
-    .tool-hero { padding: 50px 0 40px; }
-    .tool-features { flex-direction: column; gap: 16px; }
-    .sibling-tools { grid-template-columns: 1fr; }
-    .chat-messages { padding: 16px; }
-    .chat-input-bar { padding: 12px 16px; }
+    .askai-masthead { padding: 50px 0 40px; }
+    .askai-features { flex-direction: column; gap: 16px; }
+    .askai-tools { grid-template-columns: 1fr; }
+    .chat-messages { padding: 16px; min-height: 320px; }
+    .chat-input-bar { padding: 12px 16px; flex-direction: column; }
+    .chat-send { width: 100%; }
 }
 </style>
 
-<!-- Hero (matches Tools Hub child pages) -->
-<section class="tool-hero">
+<!-- Masthead -->
+<section class="askai-masthead">
     <div class="container">
-        <div class="tool-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>
-            AI-Powered Clinical Tool
-        </div>
-        <h1><?php echo esc_html($hero_title); ?></h1>
-        <p><?php echo esc_html($hero_subtitle); ?></p>
-        <div class="tool-features">
-            <div class="tool-feature">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
-                Evidence-based responses
+        <div class="askai-masthead__inner">
+            <div class="askai-masthead__eyebrow">
+                <span class="askai-masthead__eyebrow-line"></span>
+                <span class="askai-masthead__eyebrow-text">Merlows AI Research Assistant</span>
+                <span class="askai-masthead__eyebrow-line"></span>
             </div>
-            <div class="tool-feature">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                Peer-reviewed research
-            </div>
-            <div class="tool-feature">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M17 21v-8H7v8M7 3v5h8M5 3h11l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
-                Save to dashboard
+            <h1><?php echo esc_html( $hero_title ); ?></h1>
+            <div class="askai-masthead__rule"></div>
+            <p><?php echo esc_html( $hero_subtitle ); ?></p>
+            <div class="askai-features">
+                <div class="askai-feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?php echo esc_attr( '#D4AF37' ); ?>" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+                    Grounded in Merlows editorial sources
+                </div>
+                <div class="askai-feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?php echo esc_attr( '#D4AF37' ); ?>" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    Diplomatic & regional context
+                </div>
+                <div class="askai-feature">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="<?php echo esc_attr( '#D4AF37' ); ?>" stroke-width="2"><path d="M17 21v-8H7v8M7 3v5h8M5 3h11l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+                    Save conversations to dashboard
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Chat Interface -->
-<section class="tool-embed-section">
+<section class="askai-section">
     <div class="container" style="max-width: 900px;">
+
         <main class="chat-main">
             <div class="agent-profile">
                 <div class="profile-left">
                     <div class="agent-avatar">
-                        <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: white; stroke-width: 2;"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/><circle cx="9" cy="10" r="1" fill="white" stroke="none"/><circle cx="15" cy="10" r="1" fill="white" stroke="none"/></svg>
+                        <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:white;stroke-width:2;">
+                            <circle cx="12" cy="8" r="3"/><path d="M17 21H7a2 2 0 01-2-2v-1a5 5 0 0110 0v1a2 2 0 01-2 2z"/><path d="M12 11v3"/><circle cx="12" cy="15" r="0.5" fill="white" stroke="none"/>
+                        </svg>
                     </div>
                     <div class="agent-info">
-                        <h2>IBDi Clinical Intelligence</h2>
-                        <div class="agent-status"><span class="status-dot"></span> <?php echo esc_html($hero_badge); ?></div>
+                        <h2>Merlows AI</h2>
+                        <div class="agent-status">
+                            <span class="status-dot"></span>
+                            <?php echo esc_html( $hero_badge ); ?>
+                        </div>
                     </div>
                 </div>
-                <?php if (is_user_logged_in()): ?>
+                <?php if ( is_user_logged_in() ) : ?>
                 <button type="button" class="save-chat-btn" id="save-chat-trigger">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-8H7v8M7 3v5h8M5 3h11l5 5v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
                     Save Chat
@@ -334,55 +388,56 @@ $hero_badge = get_theme_mod('mlws_askai_hero_badge', 'Clinical Assistant v1.0');
             <div class="chat-messages" id="ibdi-chat-messages">
                 <div class="msg bot">
                     <div class="msg-avatar">
-                        <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2;"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2;"><circle cx="12" cy="8" r="3"/><path d="M17 21H7a2 2 0 01-2-2v-1a5 5 0 0110 0v1a2 2 0 01-2 2z"/></svg>
                     </div>
-                    <div class="msg-bubble">Welcome to IBDi. I can help you explore our IBD content library and answer questions about inflammatory bowel disease, clinical nutrition, and gastrointestinal health. What would you like to know?</div>
+                    <div class="msg-bubble">Welcome to Merlows AI. I can help you explore our diplomatic content library — ask me about the Cyrus Accord, Abraham Accords, Israel-Iran relations, or any regional analysis. What would you like to explore?</div>
                 </div>
             </div>
 
             <div class="chat-input-bar">
-                <input type="text" id="ibdi-chat-input" class="chat-input" placeholder="Ask IBDi a question...">
+                <input type="text" id="ibdi-chat-input" class="chat-input" placeholder="Ask about the Cyrus Accord, Abraham Accords, or regional diplomacy…">
                 <button class="chat-send" id="ibdi-chat-send">Send</button>
             </div>
         </main>
 
         <!-- Disclaimer -->
-        <div class="tool-disclaimer">
-            <strong>Medical Disclaimer:</strong> This AI tool is designed for IBD research synthesis and clinical nutrition analysis. It is not a substitute for professional medical advice, diagnosis, or treatment. Always verify information with peer-reviewed literature and consult with qualified health professionals.
+        <div class="askai-disclaimer">
+            <strong>Editorial note:</strong> Merlows AI synthesises content from our editorial library to support research and exploration. It may not reflect the most recent developments. For breaking news, consult the <a href="/breaking-news/" style="color: var(--primary-color); font-weight: 600;">latest dispatches</a>. Always verify critical information with primary sources.
         </div>
 
         <!-- Sibling Tools -->
-        <div class="sibling-tools">
-            <a href="/tools/blood-test-tracker/" class="sibling-tool-card">
-                <div class="sibling-tool-icon" style="background: #FEF2F2;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div class="askai-tools">
+            <a href="/dashboard/" class="askai-tool-card">
+                <div class="askai-tool-icon" style="background: rgba(27,79,138,0.08);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 </div>
                 <div>
-                    <h4>Blood Test Tracker</h4>
-                    <p>Track inflammatory markers and nutritional levels over time.</p>
+                    <h4>My Dashboard</h4>
+                    <p>Access your saved chats, reading history, and personalised Merlows content.</p>
                 </div>
             </a>
-            <a href="/tools/malnutrition-calculator/" class="sibling-tool-card">
-                <div class="sibling-tool-icon" style="background: #F5E6A3;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            <a href="/how-to-use/" class="askai-tool-card">
+                <div class="askai-tool-icon" style="background: rgba(212,175,55,0.12);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 </div>
                 <div>
-                    <h4>Malnutrition Calculator</h4>
-                    <p>Screen for nutritional risk using validated criteria.</p>
+                    <h4>How to Use Merlows</h4>
+                    <p>A guide to navigating dispatches, the archive, and contributing articles.</p>
                 </div>
             </a>
         </div>
+
     </div>
 </section>
 
-<!-- Chat JS (preserved from original) -->
+<!-- Chat JS — fetch endpoints preserved verbatim -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var chatInput = document.getElementById('ibdi-chat-input');
-    var chatSend = document.getElementById('ibdi-chat-send');
+    var chatInput    = document.getElementById('ibdi-chat-input');
+    var chatSend     = document.getElementById('ibdi-chat-send');
     var chatMessages = document.getElementById('ibdi-chat-messages');
-    var saveBtn = document.getElementById('save-chat-trigger');
-    var messages = [];
+    var saveBtn      = document.getElementById('save-chat-trigger');
+    var messages     = [];
 
     function appendMessage(role, text) {
         var mdText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -391,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var avatarHtml = role === 'user'
             ? '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>'
-            : '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>';
+            : '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2"><circle cx="12" cy="8" r="3"/><path d="M17 21H7a2 2 0 01-2-2v-1a5 5 0 0110 0v1a2 2 0 01-2 2z"/></svg>';
 
         msgDiv.innerHTML = '<div class="msg-avatar">' + avatarHtml + '</div><div class="msg-bubble">' + mdText + '</div>';
         chatMessages.appendChild(msgDiv);
@@ -408,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var typingDiv = document.createElement('div');
         typingDiv.className = 'msg bot';
         typingDiv.id = 'ibdi-typing';
-        typingDiv.innerHTML = '<div class="msg-avatar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2"><rect x="3" y="4" width="18" height="12" rx="2"/></svg></div><div class="msg-bubble" style="background:transparent;border:none;padding:14px 18px;"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+        typingDiv.innerHTML = '<div class="msg-avatar"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:white;stroke-width:2"><circle cx="12" cy="8" r="3"/><path d="M17 21H7a2 2 0 01-2-2v-1a5 5 0 0110 0v1a2 2 0 01-2 2z"/></svg></div><div class="msg-bubble" style="background:transparent;border:none;padding:14px 18px;"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
         chatMessages.appendChild(typingDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -446,9 +501,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (messages.length === 0) { alert("No conversation to save yet."); return; }
 
             var dateStr = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-            var chatName = prompt("Name this conversation:", "IBDi Chat - " + dateStr);
+            var chatName = prompt("Name this conversation:", "Merlows AI Chat - " + dateStr);
             if (chatName === null) return;
-            if (chatName.trim() === '') chatName = "IBDi Chat - " + dateStr;
+            if (chatName.trim() === '') chatName = "Merlows AI Chat - " + dateStr;
 
             saveBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Saving...';
 
