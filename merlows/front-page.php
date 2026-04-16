@@ -8,19 +8,11 @@ get_header();
 ?>
 
 <style>
-/* --- MODERN CLINICAL HUB STYLES --- */
+/* --- MERLOWS HOMEPAGE STYLES --- */
 :root {
-    --primary-color: #1B4F8A;
-    --primary-hover: #153D6E;
-    --secondary-color: #0F172A;
-    --accent-bg: #F5E6A3;
-    --text-main: #1E293B;
-    --text-light: #64748B;
+    --secondary-color: #0F172A; /* Dark navy for news homepage headlines */
+    --accent-bg: rgba(212,175,55,0.12); /* Gold tint for tags/labels */
     --border-color: #E2E8F0;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
 }
 
 body {
@@ -49,10 +41,10 @@ body {
     font-size: 24px;
     font-weight: 700;
     color: var(--secondary-color);
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-heading);
 }
 
-.color-bar { width: 6px; height: 24px; border-radius: var(--radius-sm); }
+.color-bar { width: 6px; height: 24px; border-radius: 0; }
 
 /* BENTO GRID (News Style) */
 .bento-grid-news {
@@ -65,7 +57,7 @@ body {
 .bento-cell-featured {
     grid-row: 1 / -1;
     position: relative;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     overflow: hidden;
     background: #0F172A;
     color: white;
@@ -104,14 +96,14 @@ body {
     font-size: 11px;
     text-transform: uppercase;
     font-weight: 700;
-    border-radius: var(--radius-sm);
+    border-radius: 0;
     display: inline-block;
     margin-bottom: 12px;
 }
 
 .bento-cell-side {
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -137,7 +129,7 @@ body {
 
 .review-card-wide {
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid var(--border-color);
     display: flex;
@@ -155,7 +147,7 @@ body {
 
 .review-card-standard {
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid var(--border-color);
     display: flex;
@@ -179,7 +171,7 @@ body {
 
 .opinion-card {
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     padding: 32px;
     text-align: center;
     border: 1px solid var(--border-color);
@@ -217,23 +209,43 @@ body {
 .text-body { margin: 0 0 16px 0; font-size: 14px; color: var(--text-light); line-height: 1.5; }
 .meta-text { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 
-/* --- HERO SPLIT LAYOUT --- */
+/* --- CINEMATIC VIDEO HERO --- */
 .hero-split {
+    position: relative;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    min-height: 600px;
-    background: linear-gradient(135deg, #ffffff 0%, #F8FAFC 50%, #F5E6A3 100%);
-    padding: 80px 0;
+    overflow: hidden;
+    background: #0a0f1a;
+}
+.hero-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+.hero-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 15, 26, 0.80) 0%,
+        rgba(10, 15, 26, 0.55) 50%,
+        rgba(10, 15, 26, 0.30) 100%
+    );
+    z-index: 1;
 }
 .hero-split-left {
-    flex: 0 0 55%;
+    position: relative;
+    z-index: 2;
+    flex: 0 0 65%;
     padding-right: 60px;
 }
 .hero-split-right {
-    flex: 0 0 45%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: none;
 }
 .hero-search-bar {
     display: flex;
@@ -246,7 +258,7 @@ body {
     padding: 16px 20px;
     border: 2px solid var(--border-color);
     border-right: none;
-    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    border-radius: 0 0 0 0;
     font-size: 16px;
     outline: none;
     background: white;
@@ -260,7 +272,7 @@ body {
     background: var(--primary-color);
     color: white;
     border: 2px solid var(--primary-color);
-    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    border-radius: 0 0 0 0;
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
@@ -300,7 +312,7 @@ body {
 }
 .pillar-card {
     background: white;
-    border-radius: var(--radius-xl);
+    border-radius: 0;
     padding: 40px 32px;
     text-align: center;
     border: 1px solid var(--border-color);
@@ -352,7 +364,7 @@ body {
 .latest-card {
     flex: 0 0 280px;
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid var(--border-color);
     transition: all 0.3s;
@@ -421,7 +433,7 @@ body {
     text-align: center;
 }
 .stat-item .stat-number {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-heading);
     font-size: 48px;
     font-weight: 800;
     color: var(--primary-color);
@@ -442,7 +454,7 @@ body {
 }
 .tool-card {
     background: white;
-    border-radius: var(--radius-xl);
+    border-radius: 0;
     padding: 36px 28px;
     text-align: center;
     border: 1px solid var(--border-color);
@@ -460,7 +472,7 @@ body {
     width: 60px;
     height: 60px;
     background: var(--accent-bg);
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -482,7 +494,7 @@ body {
     padding: 10px 24px;
     background: var(--primary-color);
     color: white;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     font-weight: 700;
     font-size: 14px;
     text-decoration: none;
@@ -513,21 +525,20 @@ body {
     display: flex;
     align-items: center;
     gap: 60px;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
 }
 .promo-container.layout-left { flex-direction: row-reverse; }
 .promo-container.layout-top { flex-direction: column; text-align: center; }
 .promo-content { flex: 1; }
-.promo-image-box { flex: 1; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.promo-image-box { flex: 1; border-radius: 0; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 .promo-image-box img { width: 100%; height: auto; display: block; }
 
 /* RESPONSIVE */
 @media (max-width: 992px) {
-    .hero-split { flex-direction: column; text-align: center; padding: 60px 0; overflow: hidden; }
+    .hero-split { flex-direction: column; text-align: center; min-height: 100svh; padding: 0; }
     .hero-split-left { flex: none; padding-right: 0; width: 100%; }
-    .hero-split-right { flex: none; width: 100%; margin-top: 24px; }
-    .hero-split-right svg { max-width: 300px; }
-    .hero-split-right > div { max-width: 280px !important; max-height: 280px !important; margin: 0 auto; }
+    .hero-split-right { display: none; }
+    .hero-split-left { padding: 0 20px; }
     .hero-search-bar { max-width: 100%; margin-left: auto; margin-right: auto; }
     .trust-badges { justify-content: center; flex-wrap: wrap; }
     .hero-actions { justify-content: center; }
@@ -587,51 +598,55 @@ body {
     $hero_subtitle_color = get_theme_mod('mlws_hero_subtitle_color', '#64748B');
     ?>
     <section class="hero-split">
-        <div class="container" style="display: flex; align-items: center; flex-wrap: wrap;">
+        <!-- Cinematic video background -->
+        <video class="hero-video-bg" autoplay muted loop playsinline preload="auto">
+            <source src="<?php echo get_template_directory_uri(); ?>/assets/img/merlows_lions_cinematic_intro.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
+
+        <div class="container" style="display: flex; align-items: center; flex-wrap: wrap; padding: 160px 0 120px;">
             <div class="hero-split-left">
-                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 20px; border: 1px solid rgba(27,79,138,0.15);"><?php echo esc_html($hero_tag); ?></span>
-                <h1 style="font-size: <?php echo esc_attr($hero_title_size); ?>px; color: <?php echo esc_attr($hero_title_color); ?>; line-height: 1.08; margin: 0 0 20px; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: -1px;">
+                <span style="display: inline-block; background: rgba(245,230,163,0.18); color: #F5E6A3; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; padding: 6px 16px; border-radius: 0; margin-bottom: 24px; border: 1px solid rgba(245,230,163,0.35); backdrop-filter: blur(4px);"><?php echo esc_html($hero_tag); ?></span>
+                <h1 style="font-size: <?php echo esc_attr($hero_title_size); ?>px; color: #ffffff; line-height: 1.06; margin: 0 0 24px; font-weight: 800; font-family: var(--font-heading); letter-spacing: -1.5px; text-shadow: 0 2px 40px rgba(0,0,0,0.4);">
                     <?php
                     $title_display = wp_kses_post($hero_title);
                     if (strpos($title_display, 'class="highlight"') !== false) {
-                        $title_display = str_replace('class="highlight"', 'class="highlight" style="color: var(--primary-color);"', $title_display);
+                        $title_display = str_replace('class="highlight"', 'class="highlight" style="color: #F5E6A3;"', $title_display);
                     }
                     echo $title_display;
                     ?>
                 </h1>
-                <p style="font-size: 18px; line-height: 1.7; color: <?php echo esc_attr($hero_subtitle_color); ?>; margin: 0 0 0; max-width: 540px;">
+                <p style="font-size: 19px; line-height: 1.75; color: rgba(255,255,255,0.80); margin: 0; max-width: 580px; text-shadow: 0 1px 12px rgba(0,0,0,0.4);">
                     <?php echo esc_html($hero_subtitle); ?>
                 </p>
 
-                <?php // Search bar removed ?>
-
-                <div class="hero-actions" style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px; margin-bottom: 28px;">
+                <div class="hero-actions" style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; margin-bottom: 36px;">
                     <?php
                     $btn1_onclick = (strpos($btn1_link, 'quiz') !== false) ? 'onclick="event.preventDefault(); openQuizModal();"' : '';
                     $btn2_onclick = (strpos($btn2_link, 'quiz') !== false) ? 'onclick="event.preventDefault(); openQuizModal();"' : '';
                     ?>
-                    <a href="<?php echo esc_url($btn1_link); ?>" <?php echo $btn1_onclick; ?> class="btn btn-primary" style="background: var(--primary-color); color: white; padding: 14px 28px; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.2s;"><?php echo esc_html($btn1_text); ?></a>
-                    <a href="<?php echo esc_url($btn2_link); ?>" <?php echo $btn2_onclick; ?> class="btn btn-outline" style="border: 2px solid var(--secondary-color); color: var(--secondary-color); padding: 14px 28px; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: all 0.2s;"><?php echo esc_html($btn2_text); ?></a>
+                    <a href="<?php echo esc_url($btn1_link); ?>" <?php echo $btn1_onclick; ?> class="btn btn-primary" style="background: var(--primary-color); color: white; padding: 16px 36px; border-radius: 0; font-weight: 700; font-size: 16px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 24px rgba(27,79,138,0.5);"><?php echo esc_html($btn1_text); ?></a>
+                    <a href="<?php echo esc_url($btn2_link); ?>" <?php echo $btn2_onclick; ?> class="btn btn-outline" style="border: 2px solid rgba(255,255,255,0.65); color: #ffffff; padding: 16px 36px; border-radius: 0; font-weight: 700; font-size: 16px; text-decoration: none; transition: all 0.2s; backdrop-filter: blur(4px); background: rgba(255,255,255,0.08);"><?php echo esc_html($btn2_text); ?></a>
                 </div>
 
-                <div class="trust-badges">
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <div class="trust-badges" style="--trust-color: rgba(255,255,255,0.65);">
+                    <div class="trust-badge" style="color: rgba(255,255,255,0.65);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #F5E6A3;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                         Independent Journalism
                     </div>
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+                    <div class="trust-badge" style="color: rgba(255,255,255,0.65);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #F5E6A3;"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
                         Solutions-Focused
                     </div>
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    <div class="trust-badge" style="color: rgba(255,255,255,0.65);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #F5E6A3;"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                         Diplomatically Informed
                     </div>
                 </div>
             </div>
 
             <div class="hero-split-right">
-                <!-- Animated Merlows Logo in circular mask -->
+                <!-- hidden -->
                 <div style="width: 420px; height: 420px; max-width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 20px 60px rgba(27, 79, 138, 0.15), 0 0 0 6px rgba(27, 79, 138, 0.08); margin: 0 auto;">
                     <img src="<?php echo content_url(); ?>/uploads/2026/04/IBD_logo_anime.gif" alt="Merlows" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
@@ -803,7 +818,23 @@ body {
                 </svg>
             </div>
         </div>
+
+        <!-- Scroll indicator -->
+        <a href="#main-content" style="position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; animation: heroScrollBounce 2.4s ease-in-out infinite;">
+            SCROLL
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+
+        <!-- Bottom fade to white -->
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08)); z-index: 2; pointer-events: none;"></div>
     </section>
+    <div id="main-content"></div>
+    <style>
+    @keyframes heroScrollBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.55; }
+        50%       { transform: translateX(-50%) translateY(6px); opacity: 0.9; }
+    }
+    </style>
                 <?php
                 break;
 
@@ -813,7 +844,7 @@ body {
                 $latest_count      = get_theme_mod('mlws_pathway_latest_count', 6);
                 $latest_cat        = (int) get_theme_mod('mlws_pathway_latest_category', 0);
                 $show_date         = get_theme_mod('mlws_pathway_latest_show_date', true);
-                $latest_tag_label  = get_theme_mod('mlws_latest_tag_label', 'LATEST FROM THE HUB');
+                $latest_tag_label  = get_theme_mod('mlws_latest_tag_label', 'LATEST DISPATCHES');
                 $latest_align      = get_theme_mod('mlws_latest_text_align', 'left');
                 $latest_layout     = get_theme_mod('mlws_latest_layout', 'carousel');
                 $latest_show_excerpt  = get_theme_mod('mlws_latest_show_excerpt', true);
@@ -867,8 +898,8 @@ body {
         <div class="container">
             <div style="display: flex; align-items: center; <?php echo $justify_header; ?> margin-bottom: 32px; <?php echo $align_style; ?>">
                 <div style="<?php echo $align_style; ?>">
-                    <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid rgba(27,79,138,0.15);"><?php echo esc_html($latest_tag_label); ?></span>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--secondary-color); margin: 0;"><?php echo esc_html($latest_title); ?></h3>
+                    <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: 0; margin-bottom: 12px; border: 1px solid rgba(27,79,138,0.15);"><?php echo esc_html($latest_tag_label); ?></span>
+                    <h3 style="font-family: var(--font-heading); font-size: 28px; font-weight: 800; color: var(--secondary-color); margin: 0;"><?php echo esc_html($latest_title); ?></h3>
                 </div>
             </div>
 
@@ -888,7 +919,7 @@ body {
                             </div>
                             <div class="latest-card-body">
                                 <?php if ($latest_show_cat) : ?>
-                                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: var(--radius-sm); margin-bottom: 10px; letter-spacing: 0.5px;">
+                                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 0; margin-bottom: 10px; letter-spacing: 0.5px;">
                                     <?php $cats = get_the_category($p->ID); echo !empty($cats) ? esc_html($cats[0]->name) : 'Latest'; ?>
                                 </span>
                                 <?php endif; ?>
@@ -913,7 +944,7 @@ body {
                 <?php $first = array_shift($latest_posts); ?>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <!-- Featured post -->
-                    <a href="<?php echo get_permalink($first->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; grid-row: 1 / span 2;">
+                    <a href="<?php echo get_permalink($first->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; grid-row: 1 / span 2;">
                         <div style="position: relative; height: 300px; overflow: hidden;">
                             <img src="<?php echo esc_url(mlws_get_latest_thumb($first->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             <?php if ($show_date) : ?>
@@ -922,7 +953,7 @@ body {
                         </div>
                         <div style="padding: 24px;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($first->ID); if (!empty($cats)) : ?>
-                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: var(--radius-sm); margin-bottom: 12px; letter-spacing: 0.5px;"><?php echo esc_html($cats[0]->name); ?></span>
+                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 0; margin-bottom: 12px; letter-spacing: 0.5px;"><?php echo esc_html($cats[0]->name); ?></span>
                             <?php endif; endif; ?>
                             <h4 style="font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 10px; line-height: 1.3;"><?php echo get_the_title($first->ID); ?></h4>
                             <?php if ($latest_show_excerpt) : ?>
@@ -933,13 +964,13 @@ body {
                     <!-- Side grid -->
                     <div style="display: flex; flex-direction: column; gap: 24px;">
                         <?php foreach ($latest_posts as $p) : ?>
-                        <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 16px; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; flex: 1;">
+                        <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 16px; background: white; border-radius: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; flex: 1;">
                             <div style="width: 140px; min-height: 100px; flex-shrink: 0; overflow: hidden;">
                                 <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             </div>
                             <div style="padding: 16px 16px 16px 0; display: flex; flex-direction: column; justify-content: center;">
                                 <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
-                                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm); margin-bottom: 6px; letter-spacing: 0.5px; width: fit-content;"><?php echo esc_html($cats[0]->name); ?></span>
+                                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 0; margin-bottom: 6px; letter-spacing: 0.5px; width: fit-content;"><?php echo esc_html($cats[0]->name); ?></span>
                                 <?php endif; endif; ?>
                                 <h4 style="font-size: 14px; font-weight: 700; color: var(--secondary-color); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><?php echo get_the_title($p->ID); ?></h4>
                                 <?php if ($show_date) : ?>
@@ -955,7 +986,7 @@ body {
                 <!-- Grid Layout: equal cards -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
                     <?php foreach ($latest_posts as $p) : ?>
-                    <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;">
+                    <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: block; background: white; border-radius: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;">
                         <div style="position: relative; height: 180px; overflow: hidden;">
                             <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                             <?php if ($show_date) : ?>
@@ -964,7 +995,7 @@ body {
                         </div>
                         <div style="padding: 20px;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
-                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: var(--radius-sm); margin-bottom: 10px; letter-spacing: 0.5px;"><?php echo esc_html($cats[0]->name); ?></span>
+                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 0; margin-bottom: 10px; letter-spacing: 0.5px;"><?php echo esc_html($cats[0]->name); ?></span>
                             <?php endif; endif; ?>
                             <h4 style="font-size: 15px; font-weight: 700; color: var(--secondary-color); margin: 0 0 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><?php echo get_the_title($p->ID); ?></h4>
                             <?php if ($latest_show_excerpt) : ?>
@@ -979,13 +1010,13 @@ body {
                 <!-- List Layout: horizontal rows -->
                 <div style="display: flex; flex-direction: column; gap: 16px;">
                     <?php foreach ($latest_posts as $p) : ?>
-                    <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 20px; background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; padding: 0;">
+                    <a href="<?php echo get_permalink($p->ID); ?>" style="text-decoration: none; display: flex; gap: 20px; background: white; border-radius: 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: transform 0.2s; padding: 0;">
                         <div style="width: 200px; min-height: 130px; flex-shrink: 0; overflow: hidden;">
                             <img src="<?php echo esc_url(mlws_get_latest_thumb($p->ID)); ?>" alt="" style="width:100%;height:100%;object-fit:cover;">
                         </div>
                         <div style="padding: 20px 20px 20px 0; display: flex; flex-direction: column; justify-content: center; flex: 1;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
-                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: var(--radius-sm); margin-bottom: 8px; letter-spacing: 0.5px; width: fit-content;"><?php echo esc_html($cats[0]->name); ?></span>
+                            <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 0; margin-bottom: 8px; letter-spacing: 0.5px; width: fit-content;"><?php echo esc_html($cats[0]->name); ?></span>
                             <?php endif; endif; ?>
                             <h4 style="font-size: 16px; font-weight: 700; color: var(--secondary-color); margin: 0 0 6px; line-height: 1.4;"><?php echo get_the_title($p->ID); ?></h4>
                             <?php if ($latest_show_excerpt) : ?>
@@ -1001,7 +1032,7 @@ body {
                 <?php endif; ?>
 
             <?php else : ?>
-                <div style="background: white; border-radius: var(--radius-lg); padding: 40px; text-align: center; border: 1px solid var(--border-color);">
+                <div style="background: white; border-radius: 0; padding: 40px; text-align: center; border: 1px solid var(--border-color);">
                     <p style="color: var(--text-light); margin: 0;">No posts found.</p>
                 </div>
             <?php endif; ?>
@@ -1018,23 +1049,23 @@ body {
                 $pathway_hover_color    = get_theme_mod('mlws_pathway_card_hover_color', '#1B4F8A');
                 $pathway_icon_bg        = get_theme_mod('mlws_pathway_icon_bg_color', '#0F172A');
                 $pathway_icon_hover_bg  = get_theme_mod('mlws_pathway_icon_hover_bg_color', 'rgba(255,255,255,0.2)');
-                $pathway_who_label      = get_theme_mod('mlws_pathway_who_label', 'Who Am I?');
+                $pathway_who_label      = get_theme_mod('mlws_pathway_who_label', 'Explore Merlows');
 
-                // Practitioner tile
-                $prac_title = get_theme_mod('mlws_practitioner_tile_title', 'For Practitioners');
-                $prac_desc = get_theme_mod('mlws_practitioner_tile_desc', 'Access clinical reviews, evidence-based guidelines, and professional tools tailored for modern healthcare practitioners.');
-                $prac_extra = get_theme_mod('mlws_practitioner_tile_extra', 'Bridging science and clinical outcomes');
+                // Pillar 1 tile (Readers)
+                $prac_title = get_theme_mod('mlws_practitioner_tile_title', 'For Readers');
+                $prac_desc = get_theme_mod('mlws_practitioner_tile_desc', 'Browse breaking dispatches, diplomatic analysis, and regional voices covering Israel-Iran relations and the Abraham Accords.');
+                $prac_extra = get_theme_mod('mlws_practitioner_tile_extra', 'Explore the archive');
                 $prac_img = get_theme_mod('mlws_practitioner_tile_image');
-                $prac_link = get_theme_mod('mlws_practitioner_tile_link', '/healthcare-professionals/');
-                $prac_tile_radius = get_theme_mod('mlws_practitioner_tile_radius', 16);
-                $prac_img_radius = get_theme_mod('mlws_practitioner_image_radius', 8);
+                $prac_link = get_theme_mod('mlws_practitioner_tile_link', '/');
+                $prac_tile_radius = 0;
+                $prac_img_radius = 0;
 
-                // Patient tile
-                $pat_title = get_theme_mod('mlws_patient_tile_title', 'For Patients');
-                $pat_desc = get_theme_mod('mlws_patient_tile_desc', 'Learn about chronic conditions, health optimization, and healthy living through our expert-led patient curriculum.');
-                $pat_extra = get_theme_mod('mlws_patient_tile_extra', 'Empowering your health journey daily');
+                // Pillar 2 tile (Contributors)
+                $pat_title = get_theme_mod('mlws_patient_tile_title', 'For Contributors');
+                $pat_desc = get_theme_mod('mlws_patient_tile_desc', 'Submit analysis, op-eds, and regional voices. Our editorial team reviews all submissions for fit, tone, and factual accuracy.');
+                $pat_extra = get_theme_mod('mlws_patient_tile_extra', 'Submit an article');
                 $pat_img = get_theme_mod('mlws_patient_tile_image');
-                $pat_link = get_theme_mod('mlws_patient_tile_link', '/patients/');
+                $pat_link = get_theme_mod('mlws_patient_tile_link', '/contact-us/');
                 $pat_tile_radius = get_theme_mod('mlws_patient_tile_radius', 16);
                 $pat_img_radius = get_theme_mod('mlws_patient_image_radius', 8);
                 ?>
@@ -1043,9 +1074,9 @@ body {
         <div class="container">
             <!-- Section Header -->
             <div style="text-align: center; margin-bottom: 60px;">
-                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">YOUR JOURNEY</span>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">Choose Your Health Pathway</h2>
-                <p style="color: var(--text-light); font-size: 17px; max-width: 580px; margin: 0 auto; line-height: 1.6;">Navigate evidence-based health information tailored to your role and needs.</p>
+                <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: 0; margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">MERLOWS FOR</span>
+                <h2 style="font-family: var(--font-heading); font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">How Will You Engage?</h2>
+                <p style="color: var(--text-light); font-size: 17px; max-width: 580px; margin: 0 auto; line-height: 1.6;">Merlows serves readers, contributors, and researchers following Middle East diplomacy.</p>
             </div>
 
             <!-- 3-Column Journey Pillars -->
@@ -1055,7 +1086,7 @@ body {
                     <div class="pillar-icon" style="background: linear-gradient(135deg, #1B4F8A, #B8447A);">
                         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($prac_title); ?></h3>
+                    <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($prac_title); ?></h3>
                     <p style="color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0 0 16px;"><?php echo esc_html($prac_desc); ?></p>
                     <span style="color: var(--primary-color); font-weight: 700; font-size: 14px;"><?php echo esc_html($prac_extra); ?> &rarr;</span>
                 </a>
@@ -1065,19 +1096,19 @@ body {
                     <div class="pillar-icon" style="background: linear-gradient(135deg, #153D6E, #1B4F8A);">
                         <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($pat_title); ?></h3>
+                    <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;"><?php echo esc_html($pat_title); ?></h3>
                     <p style="color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0 0 16px;"><?php echo esc_html($pat_desc); ?></p>
                     <span style="color: var(--primary-color); font-weight: 700; font-size: 14px;"><?php echo esc_html($pat_extra); ?> &rarr;</span>
                 </a>
 
-                <!-- Pillar 3: Thrive (Community/Support) -->
-                <a href="<?php echo esc_url(home_url('/community/')); ?>" class="pillar-card">
-                    <div class="pillar-icon" style="background: linear-gradient(135deg, #B8447A, #C75D8E);">
-                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                <!-- Pillar 3: Researchers / Policy Professionals -->
+                <a href="<?php echo esc_url(home_url('/about-us-2/')); ?>" class="pillar-card">
+                    <div class="pillar-icon" style="background: linear-gradient(135deg, #8B1A1A, #a82020);">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Community &amp; Support</h3>
-                    <p style="color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Connect with others on similar journeys, share experiences, and access emotional wellness resources.</p>
-                    <span style="color: var(--primary-color); font-weight: 700; font-size: 14px;">Join the Community &rarr;</span>
+                    <h3 style="font-family: var(--font-heading); font-size: 22px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Our Mission</h3>
+                    <p style="color: var(--text-light); font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Learn why Merlows exists — independent diplomatic journalism focused on constructive, peace-oriented coverage of the Middle East.</p>
+                    <span style="color: var(--primary-color); font-weight: 700; font-size: 14px;">Read About Us &rarr;</span>
                 </a>
             </div>
         </div>
@@ -1086,14 +1117,14 @@ body {
                 break;
 
             case 'stats':
-                $stat1_num   = get_theme_mod('mlws_stat_1_number', '12,000');
-                $stat1_label = get_theme_mod('mlws_stat_1_label', 'Resources');
-                $stat2_num   = get_theme_mod('mlws_stat_2_number', '500');
-                $stat2_label = get_theme_mod('mlws_stat_2_label', 'Clinical Reviews');
-                $stat3_num   = get_theme_mod('mlws_stat_3_number', '50');
-                $stat3_label = get_theme_mod('mlws_stat_3_label', 'Expert Contributors');
-                $stat4_num   = get_theme_mod('mlws_stat_4_number', '15');
-                $stat4_label = get_theme_mod('mlws_stat_4_label', 'Health Tools');
+                $stat1_num   = get_theme_mod('mlws_stat_1_number', '6');
+                $stat1_label = get_theme_mod('mlws_stat_1_label', 'Coverage Zones');
+                $stat2_num   = get_theme_mod('mlws_stat_2_number', '100');
+                $stat2_label = get_theme_mod('mlws_stat_2_label', 'Independent Editorial');
+                $stat3_num   = get_theme_mod('mlws_stat_3_number', '2024');
+                $stat3_label = get_theme_mod('mlws_stat_3_label', 'Year Founded');
+                $stat4_num   = get_theme_mod('mlws_stat_4_number', '24');
+                $stat4_label = get_theme_mod('mlws_stat_4_label', 'Hour Response');
                 ?>
     <!-- Social Proof Stats Bar -->
     <section style="padding: 55px 0; background: #0F172A; position: relative; overflow: hidden;">
@@ -1167,9 +1198,9 @@ body {
         <div class="<?php echo $promo_w === 'container' ? 'container' : 'container-fluid'; ?>">
             <div class="promo-container layout-<?php echo esc_attr($promo_l); ?>">
                 <div class="promo-content">
-                    <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; margin-bottom: 24px; color: inherit;"><?php echo esc_html($promo_h); ?></h2>
+                    <h2 style="font-family: var(--font-heading); font-size: 38px; font-weight: 800; margin-bottom: 24px; color: inherit;"><?php echo esc_html($promo_h); ?></h2>
                     <div style="font-size: 18px; line-height: 1.6; opacity: 0.9; margin-bottom: 32px;"><?php echo wpautop(esc_html($promo_t)); ?></div>
-                    <a href="<?php echo esc_url($promo_btn_l); ?>" class="btn btn-primary" style="background: var(--primary-color); color: white; padding: 14px 40px; font-weight: 800; border-radius: var(--radius-md); text-decoration: none;"><?php echo esc_html($promo_btn_t); ?></a>
+                    <a href="<?php echo esc_url($promo_btn_l); ?>" class="btn btn-primary" style="background: var(--primary-color); color: white; padding: 14px 40px; font-weight: 800; border-radius: 0; text-decoration: none;"><?php echo esc_html($promo_btn_t); ?></a>
                 </div>
                 <?php if ($promo_img) : ?>
                 <div class="promo-image-box">
@@ -1213,17 +1244,17 @@ body {
         <div class="container">
             <div style="text-align: center; margin-bottom: 48px;">
                 <span style="display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary-color); margin-bottom: 8px;">BROWSE BY TOPIC</span>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800; color: var(--secondary-color); margin: 0;">Explore Health Categories</h2>
+                <h2 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--secondary-color); margin: 0;">Explore Coverage Areas</h2>
             </div>
             <div style="display: grid; grid-template-columns: <?php echo $grid_cols; ?>; gap: 16px; justify-items: <?php echo $justify; ?>;">
                 <?php foreach ($cards as $item):
                     $cat = $item['cat'];
                 ?>
-                <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" class="ibd-category-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #1E293B; border-radius: var(--radius-lg); padding: 24px 12px; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; width: 100%; max-width: 160px;">
+                <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>" class="ibd-category-card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; background: #1E293B; border-radius: 0; padding: 24px 12px; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #334155; width: 100%; max-width: 160px;">
                     <?php
                     $cat_icon = $item['icon'] ?: mlws_get_category_icon_url($cat->name);
                     ?>
-                        <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: var(--radius-md);">
+                        <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 0;">
                             <?php if ($cat_icon): ?>
                                 <img src="<?php echo esc_url($cat_icon); ?>" alt="" class="orange-icon" style="width: 24px; height: 24px; object-fit: contain; filter: brightness(0) invert(1);">
                             <?php else: ?>
@@ -1241,45 +1272,45 @@ body {
                 break;
 
             case 'tools':
-                $tool1_link = get_theme_mod('mlws_tool_1_link', '/tools/blood-test-tracker/');
-                $tool2_link = get_theme_mod('mlws_tool_2_link', '/tools/malnutrition-calculator/');
-                $tool3_link = get_theme_mod('mlws_tool_3_link', '/ask-ai/');
+                $tool1_link = get_theme_mod('mlws_tool_1_link', '/ask-ai/');
+                $tool2_link = get_theme_mod('mlws_tool_2_link', '/dashboard/');
+                $tool3_link = get_theme_mod('mlws_tool_3_link', '/how-to-use/');
                 ?>
     <!-- Featured Tools Section -->
     <section style="padding: 75px 0; background: #F5E6A3;">
         <div class="container">
             <div style="text-align: center; margin-bottom: 60px;">
-                <span style="display: inline-block; background: white; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">INTERACTIVE</span>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">Interactive Health Tools</h2>
-                <p style="color: var(--text-light); font-size: 17px; max-width: 520px; margin: 0 auto; line-height: 1.6;">Clinical-grade calculators and trackers to support your health management.</p>
+                <span style="display: inline-block; background: white; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: 0; margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">READER TOOLS</span>
+                <h2 style="font-family: var(--font-heading); font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">Tools for Merlows Readers</h2>
+                <p style="color: var(--text-light); font-size: 17px; max-width: 520px; margin: 0 auto; line-height: 1.6;">Research, track, and engage with Merlows coverage using our reader tools.</p>
             </div>
             <div class="tools-grid">
-                <!-- Tool 1: Blood Test Tracker -->
+                <!-- Tool 1: AI Research Assistant -->
                 <div class="tool-card">
                     <div class="tool-icon">
-                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Blood Test Tracker</h3>
-                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">Track and visualise your blood test results over time to spot trends and stay informed.</p>
-                    <a href="<?php echo esc_url($tool1_link); ?>" class="tool-cta">Try It <span>&rarr;</span></a>
+                    <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Ask the AI</h3>
+                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">Ask our AI research assistant about the Cyrus Accord, Abraham Accords, key actors, and diplomatic history.</p>
+                    <a href="<?php echo esc_url($tool1_link); ?>" class="tool-cta">Open AI &rarr;</a>
                 </div>
-                <!-- Tool 2: Malnutrition Calculator -->
+                <!-- Tool 2: My Dashboard -->
                 <div class="tool-card">
                     <div class="tool-icon">
-                        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Malnutrition Calculator</h3>
-                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">Assess nutritional risk using validated screening tools and get personalised guidance.</p>
-                    <a href="<?php echo esc_url($tool2_link); ?>" class="tool-cta">Try It <span>&rarr;</span></a>
+                    <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">My Dashboard</h3>
+                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">Save articles, track reading history, and manage your Merlows profile — all in one personal command centre.</p>
+                    <a href="<?php echo esc_url($tool2_link); ?>" class="tool-cta">Open Dashboard &rarr;</a>
                 </div>
-                <!-- Tool 3: IBDi AI Assistant -->
+                <!-- Tool 3: How to Use -->
                 <div class="tool-card">
                     <div class="tool-icon">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="9" cy="10" r="1.5" fill="var(--primary-color)" stroke="none"/><circle cx="15" cy="10" r="1.5" fill="var(--primary-color)" stroke="none"/></svg>
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     </div>
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">IBDi AI Assistant</h3>
-                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">Ask our AI-powered clinical intelligence assistant about IBD research, treatments and more.</p>
-                    <a href="<?php echo esc_url($tool3_link); ?>" class="tool-cta">Try It <span>&rarr;</span></a>
+                    <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px;">Reader's Guide</h3>
+                    <p style="color: var(--text-light); font-size: 14px; line-height: 1.6; margin: 0 0 24px;">New to Merlows? Our reader's guide walks you through the portal, coverage areas, and how to get the most from your reading.</p>
+                    <a href="<?php echo esc_url($tool3_link); ?>" class="tool-cta">Read the Guide &rarr;</a>
                 </div>
             </div>
         </div>
@@ -1288,8 +1319,8 @@ body {
                 break;
 
             case 'discovery':
-                $disc_title = get_theme_mod('mlws_discovery_title_text', 'CONTENT DISCOVERY SUITE');
-                $disc_sub = get_theme_mod('mlws_discovery_subtitle_text', 'Use the controls below to customise and filter IBD research, clinical news, and resources relevant to you.');
+                $disc_title = get_theme_mod('mlws_discovery_title_text', 'CONTENT DISCOVERY');
+                $disc_sub = get_theme_mod('mlws_discovery_subtitle_text', 'Use the controls below to filter breaking dispatches, diplomatic analysis, and commentary by topic and region.');
                 $disc_size = get_theme_mod('mlws_discovery_title_size', 32);
                 $disc_color = get_theme_mod('mlws_discovery_title_color', '#0F172A');
                 $disc_align = get_theme_mod('mlws_discovery_title_align', 'left');
@@ -1351,11 +1382,11 @@ body {
         <div class="container" style="max-width: 1120px; margin: 0 auto; position: relative; z-index: 1;">
 
             <header style="margin-bottom: 36px; text-align: <?php echo esc_attr($disc_align); ?>;">
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: <?php echo esc_attr($disc_size); ?>px; font-weight: 900; margin: 0 0 10px; color: <?php echo esc_attr($disc_color); ?>; letter-spacing: -0.5px; line-height: 1.15;"><?php echo esc_html($disc_title); ?></h2>
+                <h2 style="font-family: var(--font-heading); font-size: <?php echo esc_attr($disc_size); ?>px; font-weight: 900; margin: 0 0 10px; color: <?php echo esc_attr($disc_color); ?>; letter-spacing: -0.5px; line-height: 1.15;"><?php echo esc_html($disc_title); ?></h2>
                 <p style="color: <?php echo esc_attr($disc_sub_color); ?>; font-size: 15px; margin: 0; max-width: 680px; line-height: 1.6; <?php echo $disc_align === 'center' ? 'margin: 0 auto;' : ''; ?>"><?php echo esc_html($disc_sub); ?></p>
             </header>
 
-            <div class="discovery-panel" style="background: <?php echo esc_attr($panel_bg); ?>; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); overflow: hidden; backdrop-filter: blur(20px);">
+            <div class="discovery-panel" style="background: <?php echo esc_attr($panel_bg); ?>; border-radius: 0; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); overflow: hidden; backdrop-filter: blur(20px);">
 
                 <!-- EXPLORE CONTENT TAB -->
                 <div class="tab-content active" id="tab-explore">
@@ -1367,7 +1398,7 @@ body {
                             <!-- PANEL HEADER -->
                             <div class="panel-header-bar" style="display: flex; align-items: center; justify-content: space-between; padding: 0 0 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 28px; height: 28px; background: linear-gradient(135deg, <?php echo esc_attr($border_color); ?>, <?php echo esc_attr($c_go_bg_end); ?>); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <div style="width: 28px; height: 28px; background: linear-gradient(135deg, <?php echo esc_attr($border_color); ?>, <?php echo esc_attr($c_go_bg_end); ?>); border-radius: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
                                     </div>
                                     <div>
@@ -1412,7 +1443,7 @@ body {
 
                                 <!-- HEALTHCARE PATHWAY -->
                                 <div class="filter-group">
-                                    <div class="filter-label">Healthcare Pathway</div>
+                                    <div class="filter-label">Coverage Zone</div>
                                     <div class="chip-grid">
                                         <?php
                                         $path_tags = array();
@@ -1503,7 +1534,7 @@ body {
         /* --- Filter Groups --- */
         .filter-group { margin-bottom: 0; }
         .filter-label {
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--font-heading);
             font-size: <?php echo $disc_field_title_size; ?>px;
             font-weight: 800;
             color: <?php echo esc_attr($disc_field_title_color); ?>;
@@ -1548,7 +1579,7 @@ body {
             padding: 7px 14px;
             background: <?php echo esc_attr($c_chip_bg); ?>;
             border: 1px solid <?php echo esc_attr($c_chip_border); ?>;
-            border-radius: var(--radius-sm);
+            border-radius: 0;
             font-size: <?php echo $disc_item_label_size; ?>px;
             font-weight: 600;
             color: <?php echo esc_attr($c_chip_text); ?>;
@@ -1578,7 +1609,7 @@ body {
             flex: 1;
             padding: 10px 14px;
             border: 1px solid <?php echo esc_attr($c_input_border); ?>;
-            border-radius: var(--radius-md);
+            border-radius: 0;
             font-size: 13px;
             outline: none;
             background: <?php echo esc_attr($c_input_bg); ?>;
@@ -1595,8 +1626,8 @@ body {
             background: linear-gradient(135deg, <?php echo esc_attr($c_go_bg); ?> 0%, <?php echo esc_attr($c_go_bg_end); ?> 100%);
             color: white;
             border: 2px solid transparent;
-            border-radius: var(--radius-md);
-            font-family: 'Outfit', sans-serif;
+            border-radius: 0;
+            font-family: var(--font-heading);
             font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
@@ -1613,7 +1644,7 @@ body {
         .btn-text {
             background: rgba(255,255,255,0.04);
             border: 1.5px solid <?php echo esc_attr($c_sec_border); ?>;
-            border-radius: var(--radius-md);
+            border-radius: 0;
             padding: 9px 16px;
             font-size: 11px;
             font-weight: 700;
@@ -1672,20 +1703,20 @@ body {
                     <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
             </div>
-            <h2 style="font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 800; margin: 0 0 16px; line-height: 1.1; letter-spacing: -0.5px;">Discover Your Health Pathway</h2>
-            <p style="font-size: 18px; color: rgba(255,255,255,0.8); line-height: 1.6; margin: 0 0 36px; max-width: 540px; margin-left: auto; margin-right: auto;">Take our quick assessment to get personalised content recommendations based on your role and health interests.</p>
-            <button onclick="openQuizModal()" style="display: inline-flex; align-items: center; gap: 8px; padding: 18px 40px; background: white; color: var(--primary-color); border: none; border-radius: var(--radius-lg); font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 30px rgba(0,0,0,0.2);">
-                Start the Quiz
+            <h2 style="font-family: var(--font-heading); font-size: 42px; font-weight: 800; margin: 0 0 16px; line-height: 1.1; letter-spacing: -0.5px;">Stay Ahead of the Story.</h2>
+            <p style="font-size: 18px; color: rgba(255,255,255,0.8); line-height: 1.6; margin: 0 0 36px; max-width: 540px; margin-left: auto; margin-right: auto;">Get the Merlows Digest — daily editorial highlights, overnight developments, and one analyst's take on what matters.</p>
+            <a href="<?php echo esc_url(home_url('/contact-us/')); ?>" style="display: inline-flex; align-items: center; gap: 8px; padding: 18px 40px; background: white; color: var(--primary-color); border: none; border-radius: 0; font-family: var(--font-heading); font-size: 17px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 30px rgba(0,0,0,0.2); text-decoration: none;">
+                Subscribe to the Digest
                 <svg viewBox="0 0 24 24" style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+            </a>
         </div>
     </section>
                 <?php
                 break;
 
             case 'kb':
-                $kb_title = get_theme_mod('mlws_kb_mini_hero_title', 'IBD RESEARCH CENTRE');
-                $kb_subtitle = get_theme_mod('mlws_kb_mini_hero_subtitle', 'Catch Up on the Latest Articles and More...');
+                $kb_title = get_theme_mod('mlws_kb_mini_hero_title', 'THE MERLOWS ARCHIVE');
+                $kb_subtitle = get_theme_mod('mlws_kb_mini_hero_subtitle', 'Explore our full library of dispatches, diplomatic analysis, and commentary.');
                 $kb_padding = get_theme_mod('mlws_kb_mini_hero_padding', '60px 0 80px');
                 $kb_height = get_theme_mod('mlws_kb_mini_hero_height', '');
                 $kb_font_color = get_theme_mod('mlws_kb_mini_hero_font_color', '#ffffff');
@@ -1702,7 +1733,7 @@ body {
     <section class="kb-section-wrapper" style="background: white; border-top: 2px solid var(--primary-color);">
         <section class="kb-mini-hero" style="<?php echo $hero_style; ?>">
             <div class="container" style="width: 100%;">
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; margin: 0 0 12px 0; color: inherit;"><?php echo esc_html($kb_title); ?></h2>
+                <h2 style="font-family: var(--font-heading); font-size: 38px; font-weight: 800; margin: 0 0 12px 0; color: inherit;"><?php echo esc_html($kb_title); ?></h2>
                 <p style="font-size: 18px; opacity: 0.8; max-width: 600px; margin: 0 auto; color: inherit;"><?php echo esc_html($kb_subtitle); ?></p>
             </div>
         </section>
@@ -1797,7 +1828,7 @@ body {
                 <?php else: ?>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
                         <?php foreach ($posts_array as $p): ?>
-                        <article style="background: white; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border-color); transition: all 0.3s; height: 100%; display: flex; flex-direction: column;">
+                        <article style="background: white; border-radius: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border-color); transition: all 0.3s; height: 100%; display: flex; flex-direction: column;">
                             <div style="position: relative; overflow: hidden; height: 180px; background: #f1f5f9;">
                                 <img src="<?php echo has_post_thumbnail($p->ID) ? get_the_post_thumbnail_url($p->ID, 'medium') : esc_url($cat_default_hero); ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
@@ -1845,28 +1876,28 @@ body {
     <section class="premium-subscribe-section" style="background: #0f172a; padding: 100px 0; color: white;">
         <div class="container" style="display: flex; align-items: center; justify-content: space-between; gap: 60px; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 300px;">
-                <span style="color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; margin-bottom: 16px; display: block;">Join the Inner Circle</span>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 800; line-height: 1.1; margin-bottom: 24px;">Access <span style="color: var(--primary-color);">IBD Clinical Resources</span></h2>
+                <span style="color: var(--accent-color, #D4AF37); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; margin-bottom: 16px; display: block;">Stay Informed</span>
+                <h2 style="font-family: var(--font-heading); font-size: 42px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: white;">Join the <span style="color: var(--accent-color, #D4AF37);">Merlows Community</span></h2>
                 <p style="font-size: 18px; color: #94a3b8; line-height: 1.6; margin-bottom: 32px; max-width: 500px;">
-                    Gain access to premium articles, monthly masterclasses, and a personalized health dashboard. Join 50,000+ members on the path to better living.
+                    Create a free account to save articles, track your reading, and receive the daily Merlows Digest — curated diplomatic intelligence delivered every morning.
                 </p>
                 <div style="display: flex; gap: 24px; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #cbd5e1;">
-                        <span style="background: rgba(255,255,255,0.1); width: 24px; height: 24px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">&#10003;</span> Expert Reviews
+                        <span style="background: rgba(255,255,255,0.1); width: 24px; height: 24px; border-radius: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-color, #D4AF37);">&#10003;</span> Breaking Dispatches
                     </div>
                     <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; color: #cbd5e1;">
-                        <span style="background: rgba(255,255,255,0.1); width: 24px; height: 24px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">&#10003;</span> Weekly Digests
+                        <span style="background: rgba(255,255,255,0.1); width: 24px; height: 24px; border-radius: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-color, #D4AF37);">&#10003;</span> Diplomatic Analysis
                     </div>
                 </div>
             </div>
-            <div style="flex-shrink: 0; background: rgba(255,255,255,0.05); padding: 40px; border-radius: var(--radius-xl); border: 1px solid rgba(255,255,255,0.1); max-width: 400px; width: 100%;">
-                <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Start Your Journey</h3>
-                <p style="color: #94a3b8; font-size: 14px; margin-bottom: 24px;"></p>
+            <div style="flex-shrink: 0; background: rgba(255,255,255,0.05); padding: 40px; border-radius: 0; border: 1px solid rgba(255,255,255,0.1); max-width: 400px; width: 100%;">
+                <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px; color: white;">Create Free Account</h3>
+                <p style="color: #94a3b8; font-size: 14px; margin-bottom: 24px;">No paywall. No subscription required. Just great journalism.</p>
 
                 <form action="<?php echo wp_registration_url(); ?>" method="get" style="display: flex; flex-direction: column; gap: 16px;">
-                    <input type="email" name="user_email" placeholder="Enter your email address" required style="width: 100%; padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; font-size: 16px;">
-                    <button type="submit" style="width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; background: var(--primary-color); color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: background 0.2s;">Get Started Now &rarr;</button>
-                    <p style="text-align: center; font-size: 12px; color: #64748b; margin: 0;"></p>
+                    <input type="email" name="user_email" placeholder="Enter your email address" required style="width: 100%; padding: 16px; border-radius: 0; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; font-size: 16px; font-family: var(--font-main);">
+                    <button type="submit" style="width: 100%; padding: 16px; border-radius: 0; border: none; background: var(--primary-color); color: white; font-weight: 700; font-size: 16px; cursor: pointer; transition: background 0.2s; font-family: var(--font-heading);">Join Merlows &rarr;</button>
+                    <p style="text-align: center; font-size: 12px; color: #64748b; margin: 0;">Free forever. Unsubscribe at any time.</p>
                 </form>
             </div>
         </div>

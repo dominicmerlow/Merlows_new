@@ -33,297 +33,1124 @@ if ( isset( $_POST['mlws_contact_submit'] ) && wp_verify_nonce( $_POST['mlws_con
 
 get_header(); ?>
 
-<main id="main-content">
+<main id="main-content" class="cnt-page">
 
-    <?php
-    // ── Style helper (unique name to avoid collision with other templates) ──
-    function mlws_get_style_contact( $prefix, $default_bg = '' ) {
-        $bg       = get_theme_mod( $prefix . '_bg', $default_bg );
-        $t_color  = get_theme_mod( $prefix . '_title_color' );
-        $t_size   = get_theme_mod( $prefix . '_title_size' );
-        $tx_color = get_theme_mod( $prefix . '_text_color' );
-        $tx_size  = get_theme_mod( $prefix . '_text_size' );
-        $tag_bg   = get_theme_mod( $prefix . '_tag_bg' );
-        $tag_col  = get_theme_mod( $prefix . '_tag_color' );
+    <!-- ══════════════════════════════════════════════════════════════════
+         MASTHEAD
+    ══════════════════════════════════════════════════════════════════ -->
+    <section class="cnt-masthead">
+        <div class="cnt-masthead__grid">
 
-        $section = $bg ? "background:$bg;" : '';
-
-        $title = '';
-        if ( $t_color ) $title .= "color:$t_color !important;";
-        if ( $t_size )  $title .= 'font-size:' . ( is_numeric( $t_size ) ? $t_size . 'px' : $t_size ) . ' !important;';
-
-        $text = '';
-        if ( $tx_color ) $text .= "color:$tx_color !important;";
-        if ( $tx_size )  $text .= 'font-size:' . ( is_numeric( $tx_size ) ? $tx_size . 'px' : $tx_size ) . ' !important;';
-
-        $tag = '';
-        if ( $tag_bg  ) $tag .= "background:$tag_bg !important;";
-        if ( $tag_col ) $tag .= "color:$tag_col !important;";
-
-        return compact( 'section', 'title', 'text', 'tag' );
-    }
-    ?>
-
-    <!-- ══ HERO SECTION ══════════════════════════════════════════════════ -->
-    <?php
-    $hero_img      = get_theme_mod( 'mlws_contact_hero_img',   get_template_directory_uri() . '/assets/img/hcp_hero.png' );
-    $hero_bg_color = get_theme_mod( 'mlws_contact_hero_bg_color' );
-    $hero_tag      = get_theme_mod( 'mlws_contact_hero_tag',   'Get in Touch' );
-    $hero_title    = get_theme_mod( 'mlws_contact_hero_title', 'We\'d Love to <span class="highlight">Hear From You</span>' );
-    $hero_desc     = get_theme_mod( 'mlws_contact_hero_desc',  'Whether you\'re a patient, healthcare professional, researcher, or media contact — our team is here to help. Reach out and we\'ll respond within one business day.' );
-
-    $hero_styles   = mlws_get_style_contact( 'mlws_contact_hero' );
-    $hero_bg_style = "background: linear-gradient(rgba(10,25,41,0.78), rgba(10,25,41,0.93)), url('" . esc_url( $hero_img ) . "') no-repeat center center; background-size: cover;";
-    if ( $hero_bg_color ) {
-        $hero_bg_style = "background: {$hero_bg_color};";
-    }
-    ?>
-    <section class="ibd-contact-hero" style="padding: 95px 0 140px; display: flex; align-items: flex-start; <?php echo $hero_bg_style; ?> position: relative; overflow: hidden;">
-        <div class="container" style="position: relative; z-index: 1;">
-            <div style="max-width: 800px;">
-                <span class="tag-label" style="<?php echo $hero_styles['tag']; ?>"><?php echo esc_html( $hero_tag ); ?></span>
-                <h1 style="font-weight: 900; margin: 16px 0 20px; font-family: 'Outfit', sans-serif; line-height: 1.1;
-                    <?php echo strpos( $hero_styles['title'], 'font-size' ) === false ? 'font-size: clamp(36px,5vw,60px);' : ''; ?>
-                    <?php echo strpos( $hero_styles['title'], 'color' ) === false    ? 'color: white;' : ''; ?>
-                    <?php echo $hero_styles['title']; ?>">
-                    <?php echo wp_kses_post( $hero_title ); ?>
-                </h1>
-                <p style="max-width:600px;line-height:1.7;margin:0 0 32px; <?php if(strpos($hero_styles['text'],'font-size')===false) echo 'font-size:20px;'; ?> <?php if(strpos($hero_styles['text'],'color')===false) echo 'color:rgba(255,255,255,.82);'; ?> <?php echo $hero_styles['text']; ?>">
-                    <?php echo esc_html( $hero_desc ); ?>
-                </p>
+            <div class="cnt-masthead__left">
+                <div class="cnt-eyebrow">
+                    <span class="cnt-eyebrow__line"></span>
+                    <span class="cnt-eyebrow__text">CONTACT</span>
+                    <span class="cnt-eyebrow__line"></span>
+                </div>
+                <h1 class="cnt-masthead__title">Get in<br><em>Touch</em></h1>
+                <p class="cnt-masthead__sub">Whether you have a story tip, want to submit an article, or simply have a question — we read every message and respond within one business day.</p>
+                <div class="cnt-masthead__rule"></div>
             </div>
+
+            <div class="cnt-masthead__right">
+                <div class="cnt-stamp">
+                    <div class="cnt-stamp__inner">
+                        <span class="cnt-stamp__top">MERLOWS</span>
+                        <span class="cnt-stamp__mid">CONTACT</span>
+                        <span class="cnt-stamp__bot">US</span>
+                    </div>
+                </div>
+                <div class="cnt-masthead__stat-block">
+                    <div class="cnt-stat">
+                        <span class="cnt-stat__num">24h</span>
+                        <span class="cnt-stat__label">Response<br>Time</span>
+                    </div>
+                    <div class="cnt-stat">
+                        <span class="cnt-stat__num">6</span>
+                        <span class="cnt-stat__label">Enquiry<br>Types</span>
+                    </div>
+                    <div class="cnt-stat">
+                        <span class="cnt-stat__num">&#10022;</span>
+                        <span class="cnt-stat__label">Open<br>Door</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="cnt-masthead__ticker" aria-hidden="true">
+            <span>Article Submissions &nbsp;&middot;&nbsp; Media Enquiries &nbsp;&middot;&nbsp; Editorial Tips &nbsp;&middot;&nbsp; Partnership &nbsp;&middot;&nbsp; Reader Feedback &nbsp;&middot;&nbsp; General Enquiries &nbsp;&middot;&nbsp;</span>
+            <span aria-hidden="true">Article Submissions &nbsp;&middot;&nbsp; Media Enquiries &nbsp;&middot;&nbsp; Editorial Tips &nbsp;&middot;&nbsp; Partnership &nbsp;&middot;&nbsp; Reader Feedback &nbsp;&middot;&nbsp; General Enquiries &nbsp;&middot;&nbsp;</span>
         </div>
     </section>
 
-    <!-- ══ MAIN CONTENT: DETAILS + FORM ═════════════════════════════════ -->
-    <?php
-    $intro_title  = get_theme_mod( 'mlws_contact_intro_title', 'How Can We Help?' );
-    $intro_text   = get_theme_mod( 'mlws_contact_intro_text',  'Merlows is committed to providing exceptional support to every member of our community. Use the form to send us a message, or reach us directly through any of the channels below.' );
-    $detail_email = get_theme_mod( 'mlws_contact_email',   'info@merlows.com' );
-    $detail_phone = get_theme_mod( 'mlws_contact_phone',   '+44 (0)1628 526 005' );
-    $detail_addr  = get_theme_mod( 'mlws_contact_address', 'Merlows UK Ltd, 4 Renaissance Way, Wooburn Green, HP10 0DF, United Kingdom' );
-    $detail_hours = get_theme_mod( 'mlws_contact_hours',   'Monday – Friday, 9:00 am – 5:00 pm GMT' );
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION 01 — HOW TO REACH US
+    ══════════════════════════════════════════════════════════════════ -->
+    <section class="cnt-section cnt-section--white" data-reveal>
+        <div class="cnt-container">
 
-    $social_linkedin  = get_theme_mod( 'mlws_social_linkedin' );
-    $social_facebook  = get_theme_mod( 'mlws_social_facebook' );
-    $social_twitter   = get_theme_mod( 'mlws_social_twitter' );
-    $social_instagram = get_theme_mod( 'mlws_social_instagram' );
-    ?>
-    <section class="section-padding" style="background: var(--accent-color, #f8fafc);">
-        <div class="container">
-            <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: start;">
-
-                <!-- ─ Left column: details ───────────────────────────── -->
+            <div class="cnt-section__header">
+                <span class="cnt-section__num">01</span>
                 <div>
-                    <h2 style="color: var(--secondary-color); font-size: clamp(26px,3vw,36px); font-weight: 800; margin-bottom: 16px; line-height: 1.2;">
-                        <?php echo esc_html( $intro_title ); ?>
-                    </h2>
-                    <p style="color: var(--text-light); font-size: 16px; line-height: 1.75; margin-bottom: 40px;">
-                        <?php echo esc_html( $intro_text ); ?>
-                    </p>
+                    <h2 class="cnt-section__title">How to Reach Us</h2>
+                    <p class="cnt-section__lead">The Merlows editorial team is a small, dedicated group. Here's how to get to the right person.</p>
+                </div>
+            </div>
 
-                    <!-- Contact detail cards -->
-                    <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px;">
+            <div class="cnt-reach-grid">
 
-                        <?php
-                        $details = array(
-                            array(
-                                'label' => 'Email',
-                                'value' => $detail_email,
-                                'href'  => 'mailto:' . antispambot( $detail_email ),
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>',
-                                'color' => 'var(--primary-color)',
-                            ),
-                            array(
-                                'label' => 'Phone',
-                                'value' => $detail_phone,
-                                'href'  => 'tel:' . preg_replace( '/[^+0-9]/', '', $detail_phone ),
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>',
-                                'color' => '#0ea5e9',
-                            ),
-                            array(
-                                'label' => 'Office Hours',
-                                'value' => $detail_hours,
-                                'href'  => false,
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-                                'color' => '#1B4F8A',
-                            ),
-                            array(
-                                'label' => 'Address',
-                                'value' => $detail_addr,
-                                'href'  => false,
-                                'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>',
-                                'color' => '#C75D8E',
-                            ),
-                        );
-                        foreach ( $details as $d ) : ?>
-                        <div style="display: flex; gap: 16px; align-items: flex-start; background: white; padding: 20px 24px; border-radius: 14px; box-shadow: 0 1px 6px rgba(0,0,0,.06);">
-                            <div style="flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: <?php echo $d['color']; ?>1a; display: flex; align-items: center; justify-content: center;">
-                                <svg width="22" height="22" fill="none" stroke="<?php echo $d['color']; ?>" viewBox="0 0 24 24"><?php echo $d['icon']; ?></svg>
-                            </div>
-                            <div>
-                                <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin: 0 0 4px;"><?php echo esc_html( $d['label'] ); ?></p>
-                                <?php if ( $d['href'] ) : ?>
-                                    <a href="<?php echo esc_url( $d['href'] ); ?>" style="font-size: 15px; color: var(--secondary-color); text-decoration: none; font-weight: 500; line-height: 1.5;"><?php echo esc_html( $d['value'] ); ?></a>
-                                <?php else : ?>
-                                    <p style="font-size: 15px; color: var(--secondary-color); margin: 0; font-weight: 500; line-height: 1.5;"><?php echo esc_html( $d['value'] ); ?></p>
+                <!-- Left column: contact details -->
+                <div class="cnt-details-col">
+
+                    <div class="cnt-detail-card">
+                        <div class="cnt-detail-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="0"/><polyline points="2,4 12,13 22,4"/></svg>
+                        </div>
+                        <div class="cnt-detail-card__body">
+                            <span class="cnt-detail-card__label">EMAIL</span>
+                            <span class="cnt-detail-card__value"><a href="mailto:info@merlows.com">info@merlows.com</a></span>
+                        </div>
+                    </div>
+
+                    <div class="cnt-detail-card">
+                        <div class="cnt-detail-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                        </div>
+                        <div class="cnt-detail-card__body">
+                            <span class="cnt-detail-card__label">RESPONSE</span>
+                            <span class="cnt-detail-card__value">Within one business day, Monday&ndash;Friday</span>
+                        </div>
+                    </div>
+
+                    <div class="cnt-detail-card">
+                        <div class="cnt-detail-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div class="cnt-detail-card__body">
+                            <span class="cnt-detail-card__label">LOCATION</span>
+                            <span class="cnt-detail-card__value">United Kingdom</span>
+                        </div>
+                    </div>
+
+                    <?php
+                    $social_linkedin  = get_theme_mod( 'mlws_social_linkedin' );
+                    $social_twitter   = get_theme_mod( 'mlws_social_twitter' );
+                    $social_instagram = get_theme_mod( 'mlws_social_instagram' );
+
+                    if ( $social_linkedin || $social_twitter || $social_instagram ) : ?>
+                    <div class="cnt-detail-card">
+                        <div class="cnt-detail-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        </div>
+                        <div class="cnt-detail-card__body">
+                            <span class="cnt-detail-card__label">SOCIAL</span>
+                            <div class="cnt-social-links">
+                                <?php if ( $social_linkedin ) : ?>
+                                <a href="<?php echo esc_url( $social_linkedin ); ?>" class="cnt-social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                                <?php endif; ?>
+                                <?php if ( $social_twitter ) : ?>
+                                <a href="<?php echo esc_url( $social_twitter ); ?>" class="cnt-social-btn" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                </a>
+                                <?php endif; ?>
+                                <?php if ( $social_instagram ) : ?>
+                                <a href="<?php echo esc_url( $social_instagram ); ?>" class="cnt-social-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="0"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                                </a>
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Social links -->
-                    <?php
-                    $socials = array(
-                        'linkedin'  => array(
-                            'url'  => $social_linkedin,
-                            'name' => 'LinkedIn',
-                            'icon' => '<path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/>',
-                            'fill' => true,
-                        ),
-                        'facebook'  => array(
-                            'url'  => $social_facebook,
-                            'name' => 'Facebook',
-                            'icon' => '<path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>',
-                            'fill' => true,
-                        ),
-                        'twitter'   => array(
-                            'url'  => $social_twitter,
-                            'name' => 'X',
-                            'icon' => '<path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>',
-                            'fill' => true,
-                        ),
-                        'instagram' => array(
-                            'url'  => $social_instagram,
-                            'name' => 'Instagram',
-                            'icon' => '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>',
-                            'fill' => false,
-                        ),
-                    );
-
-                    // Only show social block if at least one is configured
-                    $has_social = array_filter( array_column( $socials, 'url' ) );
-                    if ( $has_social ) : ?>
-                    <div>
-                        <p style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin-bottom: 14px;">Follow Us</p>
-                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                            <?php foreach ( $socials as $key => $s ) :
-                                if ( empty( $s['url'] ) ) continue; ?>
-                            <a href="<?php echo esc_url( $s['url'] ); ?>" target="_blank" rel="noopener noreferrer"
-                               title="<?php echo esc_attr( $s['name'] ); ?>"
-                               style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 10px; background: white; box-shadow: 0 1px 6px rgba(0,0,0,.1); color: var(--secondary-color); transition: transform .15s, box-shadow .15s;"
-                               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 14px rgba(0,0,0,.15)';"
-                               onmouseout="this.style.transform='';this.style.boxShadow='0 1px 6px rgba(0,0,0,.1)';">
-                                <svg width="20" height="20" fill="<?php echo $s['fill'] ? 'currentColor' : 'none'; ?>" stroke="<?php echo $s['fill'] ? 'none' : 'currentColor'; ?>" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><?php echo $s['icon']; ?></svg>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- ─ Right column: contact form ─────────────────────── -->
-                <div style="background: white; border-radius: 20px; padding: 48px 44px; box-shadow: 0 4px 32px rgba(10,25,41,.1);">
-
-                    <?php if ( $contact_sent ) : ?>
-                    <div style="text-align: center; padding: 40px 0;">
-                        <div style="width: 72px; height: 72px; background: #1B4F8A; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-                            <svg width="36" height="36" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M20 6L9 17l-5-5"/>
-                            </svg>
-                        </div>
-                        <h3 style="font-size: 24px; font-weight: 800; color: var(--secondary-color); margin-bottom: 12px;">Message Sent!</h3>
-                        <p style="color: var(--text-light); font-size: 16px; line-height: 1.7;">Thank you for reaching out. A member of our team will get back to you within one business day.</p>
-                    </div>
-
-                    <?php else : ?>
-
-                    <h3 style="font-size: 24px; font-weight: 800; color: var(--secondary-color); margin: 0 0 8px;">Send Us a Message</h3>
-                    <p style="color: var(--text-light); font-size: 15px; margin: 0 0 32px;">Fields marked <span style="color: var(--primary-color);">*</span> are required.</p>
-
-                    <?php if ( $contact_error ) : ?>
-                    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; color: #dc2626; font-size: 14px;">
-                        <?php echo esc_html( $contact_error ); ?>
                     </div>
                     <?php endif; ?>
 
-                    <form method="post" action="<?php echo esc_url( get_permalink() ); ?>#contact-form" id="contact-form" novalidate>
-                        <?php wp_nonce_field( 'mlws_contact_form', 'mlws_contact_nonce' ); ?>
+                </div><!-- /.cnt-details-col -->
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                            <div>
-                                <label for="contact_name" style="display: block; font-size: 13px; font-weight: 700; color: var(--secondary-color); margin-bottom: 8px; letter-spacing: 0.3px;">
-                                    Full Name <span style="color: var(--primary-color);">*</span>
-                                </label>
-                                <input type="text" id="contact_name" name="contact_name" required
-                                       value="<?php echo esc_attr( $_POST['contact_name'] ?? '' ); ?>"
-                                       placeholder="Your full name"
-                                       style="width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; color: var(--secondary-color); background: #f8fafc; transition: border-color .2s; outline: none; box-sizing: border-box;"
-                                       onfocus="this.style.borderColor='var(--primary-color)';this.style.background='white';"
-                                       onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
+                <!-- Right column: contact form -->
+                <div class="cnt-form-col">
+                    <div class="cnt-form-card" id="contact-form">
+
+                        <?php if ( $contact_sent ) : ?>
+                        <div class="cnt-success">
+                            <div class="cnt-success__icon">&#10003;</div>
+                            <h3>Message Received</h3>
+                            <p>Thank you for reaching out. A member of the editorial team will reply within one business day.</p>
+                        </div>
+                        <?php else : ?>
+
+                        <?php if ( $contact_error ) : ?>
+                        <div class="cnt-error"><?php echo esc_html( $contact_error ); ?></div>
+                        <?php endif; ?>
+
+                        <form method="post" action="<?php echo esc_url( get_permalink() ); ?>#contact-form" id="contact-form-inner" novalidate>
+                            <?php wp_nonce_field( 'mlws_contact_form', 'mlws_contact_nonce' ); ?>
+
+                            <div class="cnt-form-row cnt-form-row--2col">
+                                <div class="cnt-form-group">
+                                    <label class="cnt-form-label" for="contact_name">Full Name <span class="cnt-required" aria-hidden="true">*</span></label>
+                                    <input
+                                        type="text"
+                                        id="contact_name"
+                                        name="contact_name"
+                                        class="cnt-form-input"
+                                        value="<?php echo esc_attr( $_POST['contact_name'] ?? '' ); ?>"
+                                        placeholder="Your full name"
+                                        required
+                                        autocomplete="name"
+                                    >
+                                </div>
+                                <div class="cnt-form-group">
+                                    <label class="cnt-form-label" for="contact_email">Email Address <span class="cnt-required" aria-hidden="true">*</span></label>
+                                    <input
+                                        type="email"
+                                        id="contact_email"
+                                        name="contact_email"
+                                        class="cnt-form-input"
+                                        value="<?php echo esc_attr( $_POST['contact_email'] ?? '' ); ?>"
+                                        placeholder="your@email.com"
+                                        required
+                                        autocomplete="email"
+                                    >
+                                </div>
                             </div>
-                            <div>
-                                <label for="contact_email" style="display: block; font-size: 13px; font-weight: 700; color: var(--secondary-color); margin-bottom: 8px; letter-spacing: 0.3px;">
-                                    Email Address <span style="color: var(--primary-color);">*</span>
-                                </label>
-                                <input type="email" id="contact_email" name="contact_email" required
-                                       value="<?php echo esc_attr( $_POST['contact_email'] ?? '' ); ?>"
-                                       placeholder="your@email.com"
-                                       style="width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; color: var(--secondary-color); background: #f8fafc; transition: border-color .2s; outline: none; box-sizing: border-box;"
-                                       onfocus="this.style.borderColor='var(--primary-color)';this.style.background='white';"
-                                       onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
+
+                            <div class="cnt-form-row">
+                                <div class="cnt-form-group">
+                                    <label class="cnt-form-label" for="contact_subject">Subject</label>
+                                    <select id="contact_subject" name="contact_subject" class="cnt-form-select">
+                                        <option value="">Select a topic&hellip;</option>
+                                        <option value="Article Submission" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Article Submission' ); ?>>Article Submission</option>
+                                        <option value="Editorial Tip" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Editorial Tip' ); ?>>Editorial Tip or Source</option>
+                                        <option value="Media Enquiry" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Media Enquiry' ); ?>>Media Enquiry</option>
+                                        <option value="Partnership" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Partnership' ); ?>>Partnership or Collaboration</option>
+                                        <option value="Reader Feedback" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Reader Feedback' ); ?>>Reader Feedback</option>
+                                        <option value="Other" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Other' ); ?>>Other</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div style="margin-bottom: 20px;">
-                            <label for="contact_subject" style="display: block; font-size: 13px; font-weight: 700; color: var(--secondary-color); margin-bottom: 8px; letter-spacing: 0.3px;">
-                                Subject
-                            </label>
-                            <select id="contact_subject" name="contact_subject"
-                                    style="width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; color: var(--secondary-color); background: #f8fafc; transition: border-color .2s; outline: none; box-sizing: border-box; appearance: none; cursor: pointer;"
-                                    onfocus="this.style.borderColor='var(--primary-color)';this.style.background='white';"
-                                    onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';">
-                                <option value="">Select a topic…</option>
-                                <option value="Patient Enquiry"      <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Patient Enquiry' ); ?>>Patient Enquiry</option>
-                                <option value="Healthcare Professional" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Healthcare Professional' ); ?>>Healthcare Professional</option>
-                                <option value="Media & Press"        <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Media & Press' ); ?>>Media &amp; Press</option>
-                                <option value="Research Collaboration" <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Research Collaboration' ); ?>>Research Collaboration</option>
-                                <option value="Partnership"          <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Partnership' ); ?>>Partnership</option>
-                                <option value="Other"                <?php selected( ( $_POST['contact_subject'] ?? '' ), 'Other' ); ?>>Other</option>
-                            </select>
-                        </div>
+                            <div class="cnt-form-row">
+                                <div class="cnt-form-group">
+                                    <label class="cnt-form-label" for="contact_message">Message <span class="cnt-required" aria-hidden="true">*</span></label>
+                                    <textarea
+                                        id="contact_message"
+                                        name="contact_message"
+                                        class="cnt-form-textarea"
+                                        rows="6"
+                                        placeholder="How can we help you?"
+                                        required
+                                    ><?php echo esc_textarea( $_POST['contact_message'] ?? '' ); ?></textarea>
+                                </div>
+                            </div>
 
-                        <div style="margin-bottom: 28px;">
-                            <label for="contact_message" style="display: block; font-size: 13px; font-weight: 700; color: var(--secondary-color); margin-bottom: 8px; letter-spacing: 0.3px;">
-                                Message <span style="color: var(--primary-color);">*</span>
-                            </label>
-                            <textarea id="contact_message" name="contact_message" required rows="6"
-                                      placeholder="How can we help you?"
-                                      style="width: 100%; padding: 13px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; color: var(--secondary-color); background: #f8fafc; transition: border-color .2s; outline: none; box-sizing: border-box; resize: vertical; font-family: inherit; line-height: 1.6;"
-                                      onfocus="this.style.borderColor='var(--primary-color)';this.style.background='white';"
-                                      onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc';"><?php echo esc_textarea( $_POST['contact_message'] ?? '' ); ?></textarea>
-                        </div>
+                            <button
+                                type="submit"
+                                name="mlws_contact_submit"
+                                value="1"
+                                class="btn btn-primary cnt-form-submit"
+                                style="width:100%; font-size:16px; border-radius:0;"
+                            >Send Message</button>
 
-                        <button type="submit" name="mlws_contact_submit" value="1" class="btn btn-primary"
-                                style="width: 100%; padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; letter-spacing: 0.3px;">
-                            Send Message
-                            <svg style="display:inline-block;vertical-align:middle;margin-left:8px;" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                            </svg>
-                        </button>
+                            <p class="cnt-form-privacy">By submitting this form you agree to our <a href="/privacy-policy">Privacy Policy</a>. We never share your data.</p>
 
-                        <p style="font-size: 12px; color: var(--text-light); text-align: center; margin-top: 16px; line-height: 1.6;">
-                            By submitting this form you agree to our <a href="/privacy-policy" style="color: var(--primary-color);">Privacy Policy</a>. We never share your data.
-                        </p>
-                    </form>
-                    <?php endif; ?>
-                </div><!-- / form card -->
+                        </form>
 
-            </div><!-- / grid -->
+                        <?php endif; ?>
+
+                    </div><!-- /.cnt-form-card -->
+                </div><!-- /.cnt-form-col -->
+
+            </div><!-- /.cnt-reach-grid -->
+
         </div>
     </section>
 
-</main>
+    <!-- ══════════════════════════════════════════════════════════════════
+         SECTION 02 — ENQUIRY TYPES
+    ══════════════════════════════════════════════════════════════════ -->
+    <section class="cnt-section cnt-section--alt" data-reveal>
+        <div class="cnt-container">
+
+            <div class="cnt-section__header">
+                <span class="cnt-section__num">02</span>
+                <div>
+                    <h2 class="cnt-section__title">Enquiry Types</h2>
+                    <p class="cnt-section__lead">Not sure what to write? Here's a guide to what goes to whom.</p>
+                </div>
+            </div>
+
+            <div class="cnt-enquiry-grid">
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">Article Submission</h3>
+                    <p class="cnt-enquiry-card__desc">Send your pitch or completed draft. Include your category choice, word count, and a brief bio. We respond to all submissions.</p>
+                </div>
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">Editorial Tip</h3>
+                    <p class="cnt-enquiry-card__desc">Have information on a diplomatic development we should cover? Tips can be anonymous. We protect source identity as standard.</p>
+                </div>
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">Media Enquiry</h3>
+                    <p class="cnt-enquiry-card__desc">Journalists and producers seeking comment, data, or editorial perspective on our coverage. We respond within four hours during working hours.</p>
+                </div>
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">Partnership</h3>
+                    <p class="cnt-enquiry-card__desc">Academic institutions, NGOs, and diplomatic organisations interested in collaborative coverage or content licensing.</p>
+                </div>
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">Reader Feedback</h3>
+                    <p class="cnt-enquiry-card__desc">Corrections, questions about our editorial process, or comments on our coverage. We read everything.</p>
+                </div>
+
+                <div class="cnt-enquiry-card">
+                    <div class="cnt-enquiry-card__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    </div>
+                    <h3 class="cnt-enquiry-card__title">General</h3>
+                    <p class="cnt-enquiry-card__desc">Anything else &mdash; including technical questions about the site, account help, or newsletter enquiries.</p>
+                </div>
+
+            </div><!-- /.cnt-enquiry-grid -->
+
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FOOTER CTA
+    ══════════════════════════════════════════════════════════════════ -->
+    <section class="cnt-footer-cta" data-reveal>
+        <div class="cnt-container cnt-footer-cta__inner">
+            <p class="cnt-footer-cta__kicker">BEFORE YOU WRITE</p>
+            <h2 class="cnt-footer-cta__title">Read a Few Articles First.</h2>
+            <p class="cnt-footer-cta__body">Understanding our editorial voice helps us both. Browse a few pieces in your area of interest, then get in touch.</p>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="btn btn-primary cnt-footer-cta__btn" style="border-radius:0;">Browse the Archive</a>
+            <p class="cnt-footer-cta__sub-link">
+                <a href="<?php echo esc_url( home_url( '/how-to-use/' ) ); ?>">How to submit an article &rarr;</a>
+            </p>
+        </div>
+    </section>
+
+</main><!-- /#main-content -->
+
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   CNT- PAGE STYLES  |  Contact Us
+══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Reset / base ──────────────────────────────────────────────────────── */
+.cnt-page *,
+.cnt-page *::before,
+.cnt-page *::after {
+    box-sizing: border-box;
+}
+
+.cnt-page {
+    font-family: var(--font-main);
+    color: var(--text-main);
+}
+
+.cnt-container {
+    max-width: var(--container-width, 1200px);
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+/* ─── Masthead ──────────────────────────────────────────────────────────── */
+.cnt-masthead {
+    background: var(--primary-color);
+    color: #ffffff;
+    overflow: hidden;
+    position: relative;
+}
+
+.cnt-masthead__grid {
+    max-width: var(--container-width, 1200px);
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Eyebrow */
+.cnt-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.cnt-eyebrow__line {
+    display: block;
+    height: 1px;
+    width: 40px;
+    background: var(--accent-color);
+}
+
+.cnt-eyebrow__text {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--accent-color);
+    text-transform: uppercase;
+}
+
+/* Title */
+.cnt-masthead__title {
+    font-family: var(--font-heading);
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    color: #ffffff;
+    margin: 0 0 24px;
+}
+
+.cnt-masthead__title em {
+    font-style: italic;
+    color: var(--accent-color);
+}
+
+/* Subtitle */
+.cnt-masthead__sub {
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.78);
+    margin: 0 0 32px;
+    max-width: 440px;
+}
+
+/* Gold rule */
+.cnt-masthead__rule {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+}
+
+/* Right column */
+.cnt-masthead__right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Stamp */
+.cnt-stamp {
+    width: 160px;
+    height: 160px;
+    border: 2px solid var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: cnt-spin 30s linear infinite;
+}
+
+.cnt-stamp__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: cnt-counter-spin 30s linear infinite;
+}
+
+.cnt-stamp__top,
+.cnt-stamp__bot {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-color);
+    text-transform: uppercase;
+}
+
+.cnt-stamp__mid {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 4px 0;
+}
+
+@keyframes cnt-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes cnt-counter-spin {
+    to { transform: rotate(-360deg); }
+}
+
+/* Stats */
+.cnt-masthead__stat-block {
+    display: flex;
+    gap: 32px;
+}
+
+.cnt-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.cnt-stat__num {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent-color);
+    line-height: 1;
+}
+
+.cnt-stat__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Ticker */
+.cnt-masthead__ticker {
+    background: var(--accent-color);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+}
+
+.cnt-masthead__ticker span {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    animation: cnt-ticker 28s linear infinite;
+}
+
+.cnt-masthead__ticker span:last-child {
+    animation-delay: -14s;
+}
+
+@keyframes cnt-ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+}
+
+/* ─── Sections ──────────────────────────────────────────────────────────── */
+.cnt-section {
+    padding: 80px 0;
+}
+
+.cnt-section--white {
+    background: #ffffff;
+}
+
+.cnt-section--alt {
+    background: #F8FAFD;
+}
+
+/* Section header with outlined number */
+.cnt-section__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    margin-bottom: 56px;
+}
+
+.cnt-section__num {
+    font-family: var(--font-heading);
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--primary-color);
+    opacity: 0.18;
+    flex-shrink: 0;
+    margin-top: -8px;
+}
+
+.cnt-section__title {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 10px;
+    line-height: 1.1;
+}
+
+.cnt-section__lead {
+    font-size: 16px;
+    color: var(--text-light);
+    margin: 0;
+    line-height: 1.6;
+    max-width: 560px;
+}
+
+/* ─── Reach grid ────────────────────────────────────────────────────────── */
+.cnt-reach-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 56px;
+    align-items: start;
+}
+
+/* ─── Contact detail cards ──────────────────────────────────────────────── */
+.cnt-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.cnt-detail-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid #E8EEF5;
+}
+
+.cnt-detail-card:last-child {
+    border-bottom: none;
+}
+
+.cnt-detail-card__icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(27, 79, 138, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--primary-color);
+    border-radius: 0;
+}
+
+.cnt-detail-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cnt-detail-card__label {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.cnt-detail-card__value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.cnt-detail-card__value a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.cnt-detail-card__value a:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+/* Social buttons */
+.cnt-social-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.cnt-social-btn {
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border: 1px solid #E8EEF5;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    text-decoration: none;
+    border-radius: 0;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.cnt-social-btn:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(27,79,138,0.25);
+}
+
+/* ─── Form card ─────────────────────────────────────────────────────────── */
+.cnt-form-card {
+    background: #ffffff;
+    border: 1px solid #E8EEF5;
+    padding: 48px;
+    border-radius: 0;
+}
+
+/* Form rows */
+.cnt-form-row {
+    margin-bottom: 24px;
+}
+
+.cnt-form-row--2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.cnt-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cnt-form-label {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-main);
+    text-transform: uppercase;
+}
+
+.cnt-required {
+    color: var(--secondary-color);
+}
+
+.cnt-form-input,
+.cnt-form-select,
+.cnt-form-textarea {
+    border-radius: 0;
+    border: 1.5px solid #E8EEF5;
+    padding: 12px 14px;
+    font-family: var(--font-main);
+    font-size: 15px;
+    color: var(--text-main);
+    background: #ffffff;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.cnt-form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231B4F8A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.cnt-form-textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.6;
+}
+
+.cnt-form-input:hover,
+.cnt-form-select:hover,
+.cnt-form-textarea:hover {
+    border-color: var(--primary-color);
+}
+
+.cnt-form-input:focus,
+.cnt-form-select:focus,
+.cnt-form-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(27,79,138,0.1);
+}
+
+.cnt-form-input::placeholder,
+.cnt-form-textarea::placeholder {
+    color: #b0bac6;
+}
+
+/* Submit button */
+.cnt-form-submit {
+    margin-top: 8px;
+    padding: 16px 24px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.cnt-form-submit:hover {
+    opacity: 0.88;
+}
+
+/* Privacy note */
+.cnt-form-privacy {
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+    margin: 16px 0 0;
+    line-height: 1.5;
+}
+
+.cnt-form-privacy a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.cnt-form-privacy a:hover {
+    text-decoration: underline;
+}
+
+/* ─── Success state ─────────────────────────────────────────────────────── */
+.cnt-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.cnt-success__icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(27,79,138,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+    border-radius: 0;
+    margin-bottom: 24px;
+}
+
+.cnt-success h3 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 12px;
+}
+
+.cnt-success p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 340px;
+}
+
+/* ─── Error state ───────────────────────────────────────────────────────── */
+.cnt-error {
+    background: rgba(139,26,26,0.07);
+    border-left: 3px solid var(--secondary-color);
+    color: var(--secondary-color);
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    border-radius: 0;
+}
+
+/* ─── Enquiry cards grid ────────────────────────────────────────────────── */
+.cnt-enquiry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.cnt-enquiry-card {
+    background: #ffffff;
+    border: 1px solid #E8EEF5;
+    padding: 32px 28px;
+    border-radius: 0;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.cnt-enquiry-card:hover {
+    box-shadow: 0 6px 24px rgba(27,79,138,0.1);
+    transform: translateY(-2px);
+}
+
+.cnt-enquiry-card__icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(27,79,138,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    border-radius: 0;
+}
+
+.cnt-enquiry-card__title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 10px;
+    letter-spacing: 0.01em;
+}
+
+.cnt-enquiry-card__desc {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ─── Footer CTA ────────────────────────────────────────────────────────── */
+.cnt-footer-cta {
+    background: #ffffff;
+    padding: 96px 0;
+    border-top: 1px solid #E8EEF5;
+}
+
+.cnt-footer-cta__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cnt-footer-cta__kicker {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    margin: 0 0 16px;
+}
+
+.cnt-footer-cta__title {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 900;
+    color: var(--text-main);
+    margin: 0 0 20px;
+    line-height: 1.1;
+}
+
+.cnt-footer-cta__body {
+    font-size: 17px;
+    color: var(--text-light);
+    line-height: 1.65;
+    margin: 0 0 40px;
+    max-width: 520px;
+}
+
+.cnt-footer-cta__btn {
+    display: inline-block;
+    padding: 16px 40px;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 0;
+    margin-bottom: 24px;
+    transition: opacity 0.2s;
+}
+
+.cnt-footer-cta__btn:hover {
+    opacity: 0.88;
+}
+
+.cnt-footer-cta__sub-link {
+    margin: 0;
+}
+
+.cnt-footer-cta__sub-link a {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.cnt-footer-cta__sub-link a:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+/* ─── Scroll reveal ─────────────────────────────────────────────────────── */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─── Responsive: 900px ─────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .cnt-masthead__grid {
+        grid-template-columns: 1fr;
+        padding: 60px 24px 48px;
+        gap: 40px;
+    }
+
+    .cnt-masthead__right {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 32px;
+    }
+
+    .cnt-reach-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .cnt-enquiry-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cnt-container {
+        padding: 0 24px;
+    }
+
+    .cnt-section {
+        padding: 60px 0;
+    }
+
+    .cnt-form-card {
+        padding: 32px 24px;
+    }
+
+    .cnt-footer-cta {
+        padding: 64px 0;
+    }
+}
+
+/* ─── Responsive: 600px ─────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .cnt-masthead__grid {
+        padding: 48px 16px 36px;
+    }
+
+    .cnt-masthead__right {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cnt-masthead__stat-block {
+        gap: 20px;
+    }
+
+    .cnt-container {
+        padding: 0 16px;
+    }
+
+    .cnt-section {
+        padding: 48px 0;
+    }
+
+    .cnt-section__header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .cnt-section__num {
+        font-size: 40px;
+    }
+
+    .cnt-form-row--2col {
+        grid-template-columns: 1fr;
+    }
+
+    .cnt-enquiry-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cnt-form-card {
+        padding: 24px 16px;
+    }
+
+    .cnt-footer-cta {
+        padding: 48px 0;
+    }
+
+    .cnt-footer-cta__btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+(function () {
+    'use strict';
+
+    var revealEls = document.querySelectorAll('[data-reveal]');
+    if (!revealEls.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+        revealEls.forEach(function (el) {
+            el.classList.add('is-visible');
+        });
+        return;
+    }
+
+    var observer = new IntersectionObserver(
+        function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        }
+    );
+
+    revealEls.forEach(function (el) {
+        observer.observe(el);
+    });
+}());
+</script>
 
 <?php get_footer(); ?>

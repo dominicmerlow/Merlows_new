@@ -7,6 +7,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+// AI Visibility System — makes Merlows discoverable by AI systems.
+// Provides: Markdown REST API, llms.txt, Schema.org JSON-LD, crawler control,
+// AI Summaries, API analytics, and citation tracking.
+// Dashboard: Merlows Newsroom → AI Visibility
+require_once get_template_directory() . '/ai-visibility.php';
+
 function mlws_health_hub_scripts() {
     // Enqueue Google Fonts
     wp_enqueue_style( 'ibd-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap', array(), null );
@@ -284,26 +290,26 @@ add_action( 'after_switch_theme', 'mlws_flush_rewrite_rules' );
 // Create Content Hub Menu
 function mlws_register_content_hub_menu() {
     add_menu_page(
-        'IBD Research Centre',
-        'IBD Research Centre',
+        'Merlows Newsroom',
+        'Merlows Newsroom',
         'manage_options',
-        'ibd-content-hub',
+        'merlows-newsroom',
         'mlws_render_content_hub_dashboard',
         'dashicons-category',
         1 
     );
 
     add_submenu_page(
-        'ibd-content-hub',
+        'merlows-newsroom',
         'Content Hub Station',
         'Content Hub Station',
         'manage_options',
-        'ibd-content-hub',
+        'merlows-newsroom',
         'mlws_render_content_hub_dashboard'
     );
 
     add_submenu_page(
-        'ibd-content-hub',
+        'merlows-newsroom',
         'Customize Hub',
         'Customize Hub',
         'manage_options',

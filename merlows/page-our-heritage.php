@@ -1,336 +1,1006 @@
 <?php
 /**
  * Template Name: Our Heritage
+ *
+ * Static editorial page for Merlows — Our Mission.
+ * No get_theme_mod() calls; all content is hard-coded.
  */
 
-get_header(); ?>
+get_header();
+?>
 
-<main id="main-content">
-    <?php
-    // Helper function to get style string
-    if (!function_exists('mlws_get_section_style_heritage')) {
-        function mlws_get_section_style_heritage($prefix, $default_bg = '') {
-            $bg = get_theme_mod($prefix . '_bg', $default_bg);
-            $t_color = get_theme_mod($prefix . '_title_color');
-            $t_size = get_theme_mod($prefix . '_title_size');
-            $tx_color = get_theme_mod($prefix . '_text_color');
-            $tx_size = get_theme_mod($prefix . '_text_size');
-            $tag_bg = get_theme_mod($prefix . '_tag_bg');
-            $tag_color = get_theme_mod($prefix . '_tag_color');
+<main id="main-content" class="msn-page">
 
-            $style = '';
-            if ($bg) $style .= "background:$bg;";
-            
-            $inner_title_style = '';
-            if ($t_color) $inner_title_style .= "color:$t_color !important;";
-            if ($t_size) {
-                $t_size = is_numeric($t_size) ? $t_size . 'px' : $t_size;
-                $inner_title_style .= "font-size:$t_size !important;";
-            }
+<!-- ============================================================
+     MASTHEAD
+     ============================================================ -->
+<section class="msn-masthead" aria-label="Page masthead">
+    <div class="msn-masthead__inner">
 
-            $inner_text_style = '';
-            if ($tx_color) $inner_text_style .= "color:$tx_color !important;";
-            if ($tx_size) {
-                $tx_size = is_numeric($tx_size) ? $tx_size . 'px' : $tx_size;
-                $inner_text_style .= "font-size:$tx_size !important;";
-            }
-            
-            $inner_tag_style = '';
-            if ($tag_bg) $inner_tag_style .= "background:$tag_bg !important;";
-            if ($tag_color) $inner_tag_style .= "color:$tag_color !important;";
+        <!-- Left column -->
+        <div class="msn-masthead__left">
 
-            return [
-                'section' => $style,
-                'title' => $inner_title_style,
-                'text' => $inner_text_style,
-                'tag' => $inner_tag_style
-            ];
-        }
-    }
-    ?>
-
-    <!-- HERO SECTION -->
-    <?php if (get_theme_mod('mlws_heritage_hero_show', true)) : 
-        $hero_img    = get_theme_mod('mlws_heritage_hero_img', get_template_directory_uri() . '/assets/img/hcp_hero.png');
-        $hero_bg_color = get_theme_mod('mlws_heritage_hero_bg_color');
-        $hero_tag   = get_theme_mod('mlws_heritage_hero_tag', 'Our Story');
-        $hero_title = get_theme_mod('mlws_heritage_hero_title', 'From Pharma to <span class="highlight">Healthcare</span>');
-        $hero_sub   = get_theme_mod('mlws_heritage_hero_sub', 'A Natural Evolution in Gastrointestinal Care');
-        $hero_desc  = get_theme_mod('mlws_heritage_hero_desc', 'Merlows bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.');
-        
-        $styles = mlws_get_section_style_heritage('mlws_heritage_hero');
-        // Custom background logic for hero because it has a gradient and image
-        $hero_bg_style = "background: linear-gradient(rgba(10,25,41,0.78), rgba(10,25,41,0.93)), url('" . esc_url($hero_img) . "') no-repeat center center; background-size: cover;";
-        if ($hero_bg_color) {
-            $hero_bg_style = "background: " . $hero_bg_color . ";";
-        }
-    ?>
-    <section class="ibd-about-hero" style="padding: 95px 0 140px; display: flex; align-items: flex-start; <?php echo $hero_bg_style; ?> position: relative; overflow: hidden;">
-        <div class="container" style="position:relative;z-index:1;">
-            <div style="max-width: 800px;">
-                <span class="tag-label" style="<?php echo $styles['tag']; ?>"><?php echo esc_html($hero_tag); ?></span>
-                <h1 style="font-weight:900;margin:16px 0 20px;font-family:'Outfit',sans-serif;line-height:1.1; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:clamp(36px,5vw,60px);'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:white;'; ?> <?php echo $styles['title']; ?>">
-                    <?php echo wp_kses_post($hero_title); ?>
-                </h1>
-                <p style="max-width:600px;line-height:1.7;margin:0 0 32px; <?php if(strpos($styles['text'],'font-size')===false) echo 'font-size:20px;'; ?> <?php if(strpos($styles['text'],'color')===false) echo 'color:rgba(255,255,255,.82);'; ?> <?php echo $styles['text']; ?>">
-                    <?php echo esc_html($hero_desc); ?>
-                </p>
+            <!-- Eyebrow -->
+            <div class="msn-eyebrow" aria-hidden="true">
+                <span class="msn-eyebrow__line"></span>
+                <span class="msn-eyebrow__label">OUR MISSION</span>
+                <span class="msn-eyebrow__line"></span>
             </div>
+
+            <h1 class="msn-masthead__title">
+                Why We<br><em>Exist</em>
+            </h1>
+
+            <div class="msn-masthead__rule" aria-hidden="true"></div>
+
+            <p class="msn-masthead__subtitle">
+                Merlows was built around a single conviction: the story of Middle East peace deserves journalism that rises to meet its significance.
+            </p>
+
+            <!-- In-page TOC -->
+            <nav class="msn-toc" aria-label="Page sections">
+                <ol class="msn-toc__list">
+                    <li><a href="#why-we-exist">Why We Exist</a></li>
+                    <li><a href="#editorial-commitment">Editorial Commitment</a></li>
+                    <li><a href="#our-standards">Our Standards</a></li>
+                    <li><a href="#the-vision">The Vision</a></li>
+                    <li><a href="#get-involved">Get Involved</a></li>
+                </ol>
+            </nav>
         </div>
-    </section>
-    <?php endif; ?>
 
-    <!-- ORIGIN SECTION -->
-    <?php if (get_theme_mod('mlws_heritage_origin_show', true)) : 
-        $origin_tag   = get_theme_mod('mlws_heritage_origin_tag', 'From Pharma to Healthcare');
-        $origin_title = get_theme_mod('mlws_heritage_origin_title', 'The Merlows Evolution');
-        $origin_sub   = get_theme_mod('mlws_heritage_origin_sub', 'A Natural Evolution in Gastrointestinal Care');
-        $styles = mlws_get_section_style_heritage('mlws_heritage_origin', '#fff');
-    ?>
-    <section id="our-story" class="section-padding" style="<?php echo $styles['section']; ?>">
-        <div class="container">
-            <div style="text-align:center; max-width:800px; margin:0 auto 60px;">
-                <span class="tag-label" style="<?php echo $styles['tag']; ?>"><?php echo esc_html($origin_tag); ?></span>
-                <h2 style="font-family:'Outfit',sans-serif; font-weight:900; margin: 16px 0; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:40px;'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:var(--secondary-color);'; ?> <?php echo $styles['title']; ?>"><?php echo esc_html($origin_title); ?></h2>
-                <?php if ($origin_sub): ?>
-                <p style="font-size:18px;color:var(--text-light); <?php echo $styles['text']; ?>"><?php echo esc_html($origin_sub); ?></p>
-                <?php endif; ?>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-bottom:60px;">
-                <?php 
-                $pillar_defaults = [
-                    1 => ["Heritage in Pharma", "Merlows has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards."],
-                    2 => ["Patient-Centric Innovation", "We found that medicines alone often fall short for chronic IBD. There is a clear need for evidence-based nutritional support."],
-                    3 => ["The Birth of Merlows", "Merlows bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE."]
-                ];
-                for($i=1; $i<=3; $i++):
-                    $p_title = get_theme_mod("mlws_heritage_p{$i}_title", $pillar_defaults[$i][0]);
-                    $p_desc = get_theme_mod("mlws_heritage_p{$i}_desc", $pillar_defaults[$i][1]);
-                ?>
-                <div class="pillar" style="background:rgba(255,255,255,0.5); border:1px solid rgba(0,0,0,0.05); border-radius: 0;">
-                    <h4 style="<?php echo $styles['title']; ?>"><?php echo esc_html($p_title); ?></h4>
-                    <p style="<?php echo $styles['text']; ?>"><?php echo esc_html($p_desc); ?></p>
+        <!-- Right column -->
+        <div class="msn-masthead__right">
+
+            <!-- Rotating stamp -->
+            <div class="msn-stamp" aria-hidden="true">
+                <div class="msn-stamp__ring">
+                    <svg class="msn-stamp__svg" viewBox="0 0 160 160" aria-hidden="true">
+                        <defs>
+                            <path id="msn-stamp-path"
+                                  d="M 80,80 m -60,0 a 60,60 0 1,1 120,0 a 60,60 0 1,1 -120,0" />
+                        </defs>
+                        <text class="msn-stamp__text">
+                            <textPath href="#msn-stamp-path" startOffset="0%">
+                                MERLOWS &bull; MISSION &bull; 2024 &bull;&nbsp;
+                            </textPath>
+                        </text>
+                    </svg>
+                    <div class="msn-stamp__inner">
+                        <span class="msn-stamp__m">M</span>
+                    </div>
                 </div>
-                <?php endfor; ?>
             </div>
 
             <!-- Stats -->
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;text-align:center;padding-top:40px;border-top:1px solid rgba(0,0,0,0.1);">
-                <?php 
-                $stat_defaults = [
-                    1 => ["25+", "Years of Experience"],
-                    2 => ["Global", "Regulatory Reach"],
-                    3 => ["100%", "Pharma-Grade Standards"]
-                ];
-                for($i=1; $i<=3; $i++):
-                    $s_num = get_theme_mod("mlws_heritage_stat{$i}_num", $stat_defaults[$i][0]);
-                    $s_lbl = get_theme_mod("mlws_heritage_stat{$i}_label", $stat_defaults[$i][1]);
-                ?>
-                <div>
-                    <div style="font-size:48px;font-weight:900;color:var(--primary-color);font-family:'Outfit',sans-serif; <?php echo $styles['title']; ?>"><?php echo esc_html($s_num); ?></div>
-                    <div style="font-size:16px;color:var(--secondary-color);font-weight:600; <?php echo $styles['text']; ?>"><?php echo esc_html($s_lbl); ?></div>
+            <div class="msn-masthead__stats">
+                <div class="msn-stat">
+                    <span class="msn-stat__number">2024</span>
+                    <span class="msn-stat__label">Founded</span>
                 </div>
-                <?php endfor; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-    <!-- MISSION & VALUES -->
-    <?php if (get_theme_mod('mlws_heritage_mission_show', true)) : 
-        $mission_tag = get_theme_mod('mlws_heritage_mission_tag', 'Our Mission');
-        $mission_title = get_theme_mod('mlws_heritage_mission_title', 'Bridging Science & <span class="highlight">Patient Wellbeing</span>');
-        $mission_desc = get_theme_mod('mlws_heritage_mission_desc', 'At Merlows, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.');
-        $styles = mlws_get_section_style_heritage('mlws_heritage_mission', '#f8f9fa');
-    ?>
-    <section id="mission" class="section-padding" style="<?php echo $styles['section']; ?>">
-        <div class="container">
-             <div style="text-align:center; max-width:800px; margin:0 auto 60px;">
-                <span class="tag-label" style="<?php echo $styles['tag']; ?>"><?php echo esc_html($mission_tag); ?></span>
-                <h2 style="font-family:'Outfit',sans-serif; font-weight:900; margin: 16px 0; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:40px;'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:var(--secondary-color);'; ?> <?php echo $styles['title']; ?>"><?php echo wp_kses_post($mission_title); ?></h2>
-                <p style="font-size:18px;color:var(--text-light); <?php echo $styles['text']; ?>"><?php echo esc_html($mission_desc); ?></p>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:32px;">
-                <?php 
-                $val_defaults = [
-                    1 => ["Evidence-Based", "Every product and piece of content we produce meets the highest scientific and regulatory standards, rooted in peer-reviewed clinical research."],
-                    2 => ["Patient-First", "We design every solution around the real-world challenges that patients face — not just clinical endpoints — because lived experience matters."],
-                    3 => ["Pharma-Grade", "Our medical food products are developed with the same rigour applied to licensed medicines — providing a quality benchmark no ordinary supplement can match."],
-                    4 => ["Global Reach", "With a regulatory footprint spanning multiple continents, Merlows delivers consistent, trusted solutions wherever patients and clinicians need them."]
-                ];
-                for($i=1; $i<=4; $i++):
-                    $v_title = get_theme_mod("mlws_heritage_val{$i}_title", $val_defaults[$i][0]);
-                    $v_desc = get_theme_mod("mlws_heritage_val{$i}_desc", $val_defaults[$i][1]);
-                ?>
-                <div style="background:white;padding:32px;border-radius:0;box-shadow:0 4px 6px rgba(0,0,0,0.05);">
-                    <h4 style="color:var(--secondary-color);font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:12px; <?php echo $styles['title']; ?>"><?php echo esc_html($v_title); ?></h4>
-                    <p style="color:var(--text-light);font-size:15px;line-height:1.6;margin:0; <?php echo $styles['text']; ?>"><?php echo esc_html($v_desc); ?></p>
+                <div class="msn-stat">
+                    <span class="msn-stat__number">Peace</span>
+                    <span class="msn-stat__label">Focused</span>
                 </div>
-                <?php endfor; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-    <!-- EPAVANCE SPOTLIGHT -->
-    <?php if (get_theme_mod('mlws_heritage_product_show', true)) : 
-        $prod_tag = get_theme_mod('mlws_heritage_prod_tag', 'Our Flagship Product');
-        $prod_title = get_theme_mod('mlws_heritage_prod_title', 'Introducing EPAVANCE');
-        $prod_desc = get_theme_mod('mlws_heritage_prod_desc', 'EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.');
-        $prod_btn = get_theme_mod('mlws_heritage_prod_btn', 'Learn More About EPAVANCE');
-        $prod_url = get_theme_mod('mlws_heritage_prod_url', '#');
-        $styles = mlws_get_section_style_heritage('mlws_heritage_product', '#fff');
-    ?>
-    <section class="section-padding" style="<?php echo $styles['section']; ?>">
-        <div class="container">
-            <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:center;">
-                <div style="flex:1;min-width:300px;">
-                    <span class="tag-label" style="<?php echo $styles['tag']; ?>"><?php echo esc_html($prod_tag); ?></span>
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:900; margin: 16px 0; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:40px;'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:var(--secondary-color);'; ?> <?php echo $styles['title']; ?>"><?php echo esc_html($prod_title); ?></h2>
-                    <p style="font-size:18px;color:var(--text-light);max-width:100%;margin-bottom:24px; <?php echo $styles['text']; ?>"><?php echo esc_html($prod_desc); ?></p>
-                    <a href="<?php echo esc_url($prod_url); ?>" class="btn btn-primary"><?php echo esc_html($prod_btn); ?></a>
-                </div>
-                <div style="flex:1;min-width:300px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
-                    <?php 
-                    $feat_defaults = [
-                        1 => ["Pharma-Grade Manufacturing", "Produced under strict pharmaceutical cGMP standards — the highest tier of quality assurance in the industry."],
-                        2 => ["Clinically Researched", "Supported by clinical evidence demonstrating meaningful benefit for IBD patients managing their nutritional needs."],
-                        3 => ["High-Dose EPA Omega-3", "A precisely calibrated dose of EPA matched to the needs of IBD-associated gut inflammation."],
-                        4 => ["Regulatory Status", "Classified as a Medical Food (FSMP), enabling it to occupy a unique, trusted position between medication and nutrition."]
-                    ];
-                    for($i=1; $i<=4; $i++):
-                        $f_title = get_theme_mod("mlws_heritage_feat{$i}_title", $feat_defaults[$i][0]);
-                        $f_desc = get_theme_mod("mlws_heritage_feat{$i}_desc", $feat_defaults[$i][1]);
-                    ?>
-                    <div style="background:#f8f9fa;padding:24px;border-radius:0;">
-                        <h4 style="font-size:16px;color:var(--secondary-color);font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:8px; <?php echo $styles['title']; ?>"><?php echo esc_html($f_title); ?></h4>
-                        <p style="font-size:14px;color:var(--text-light);margin:0;line-height:1.5; <?php echo $styles['text']; ?>"><?php echo esc_html($f_desc); ?></p>
-                    </div>
-                    <?php endfor; ?>
+                <div class="msn-stat">
+                    <span class="msn-stat__number">6</span>
+                    <span class="msn-stat__label">Perspectives</span>
                 </div>
             </div>
         </div>
-    </section>
-    <?php endif; ?>
+    </div>
 
-    <!-- PLATFORM SECTION -->
-    <?php if (get_theme_mod('mlws_heritage_platform_show', true)) : 
-        $plat_tag = get_theme_mod('mlws_heritage_plat_tag', 'The Digital Layer');
-        $plat_title = get_theme_mod('mlws_heritage_plat_title', 'The Merlows Platform');
-        $plat_desc = get_theme_mod('mlws_heritage_plat_desc', 'Beyond our medical food products, Merlows is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.');
-        $styles = mlws_get_section_style_heritage('mlws_heritage_platform', '#142846');
-    ?>
-    <section class="section-padding" style="<?php echo $styles['section']; ?> color:white;">
-        <div class="container">
-            <div style="text-align:center; max-width:800px; margin:0 auto 60px;">
-                <span class="tag-label" style="color:var(--primary-color);background:rgba(235,90,51,0.1); <?php echo $styles['tag']; ?>"><?php echo esc_html($plat_tag); ?></span>
-                <h2 style="font-family:'Outfit',sans-serif; font-weight:900; margin: 16px 0; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:40px;'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:white;'; ?> <?php echo $styles['title']; ?>"><?php echo esc_html($plat_title); ?></h2>
-                <p style="font-size:18px;color:rgba(255,255,255,0.8); <?php echo $styles['text']; ?>"><?php echo esc_html($plat_desc); ?></p>
-            </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
-                <?php 
-                $plat_defaults = [
-                    1 => ["Clinical Content Hub", "Peer-reviewed research, expert opinions, and patient education curated by gastroenterologists and dietitians."],
-                    2 => ["IBD-i AI Assistant", "A specialised AI trained on clinical gastroenterology to answer your health questions with precision and safety."],
-                    3 => ["Patient Dashboard", "A secure personal portal to track health records, manage your IBD tools, and connect with your care pathway."],
-                    4 => ["HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with Merlows experts."],
-                    5 => ["Health Calculators", "Evidence-based clinical calculators for malnutrition screening, BMI, and disease activity scoring."],
-                    6 => ["Education Courses", "Multi-chapter learning pathways developed by gastro specialists for both patients and clinicians."]
-                ];
-                for($i=1; $i<=6; $i++):
-                    $pl_title = get_theme_mod("mlws_heritage_plat{$i}_title", $plat_defaults[$i][0]);
-                    $pl_desc = get_theme_mod("mlws_heritage_plat{$i}_desc", $plat_defaults[$i][1]);
-                ?>
-                <div style="background:rgba(255,255,255,0.05);padding:24px;border-radius:0;border:1px solid rgba(255,255,255,0.1);">
-                    <h4 style="color:white;font-family:'Outfit',sans-serif;font-weight:600;margin-bottom:10px;font-size:18px; <?php echo $styles['title']; ?>"><?php echo esc_html($pl_title); ?></h4>
-                    <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0;line-height:1.6; <?php echo $styles['text']; ?>"><?php echo esc_html($pl_desc); ?></p>
+    <!-- Gold ticker tape -->
+    <div class="msn-ticker" aria-hidden="true">
+        <div class="msn-ticker__track">
+            <span>Independent &middot; Constructive &middot; Rigorous &middot; Peace-Focused &middot; Middle East &middot; Diplomacy &middot;&nbsp;</span>
+            <span>Independent &middot; Constructive &middot; Rigorous &middot; Peace-Focused &middot; Middle East &middot; Diplomacy &middot;&nbsp;</span>
+            <span>Independent &middot; Constructive &middot; Rigorous &middot; Peace-Focused &middot; Middle East &middot; Diplomacy &middot;&nbsp;</span>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     SECTION 01 — WHY WE EXIST
+     ============================================================ -->
+<section id="why-we-exist" class="msn-section msn-section--white" aria-labelledby="msn-s01-title">
+    <div class="msn-container">
+
+        <div class="msn-section__header" data-reveal>
+            <span class="msn-section-number" aria-hidden="true">01</span>
+            <h2 class="msn-section__title" id="msn-s01-title">Why We Exist</h2>
+            <p class="msn-section__lead">
+                The Middle East&rsquo;s diplomatic story is one of the most consequential of our era. It deserves journalism that matches its complexity.
+            </p>
+        </div>
+
+        <div class="msn-card-grid msn-card-grid--2col">
+
+            <article class="msn-card msn-card--dark" data-reveal>
+                <h3 class="msn-card__title">The Gap in Coverage</h3>
+                <p class="msn-card__body">Most international media covers the region through a lens of conflict. The work of diplomacy &mdash; the agreements, negotiations, and human connections that make peace possible &mdash; rarely gets the same attention.</p>
+            </article>
+
+            <article class="msn-card" data-reveal>
+                <h3 class="msn-card__title">The Cyrus Accord</h3>
+                <p class="msn-card__body">A potential landmark agreement between Israel and Iran. Merlows was created, in part, to provide the sustained, authoritative coverage this historic development demands.</p>
+            </article>
+
+            <article class="msn-card" data-reveal>
+                <h3 class="msn-card__title">The Abraham Accords Legacy</h3>
+                <p class="msn-card__body">The normalisation agreements between Israel and Gulf states transformed regional dynamics. Merlows tracks their continuing development with the depth that transformation deserves.</p>
+            </article>
+
+            <article class="msn-card" data-reveal>
+                <h3 class="msn-card__title">Solutions Journalism</h3>
+                <p class="msn-card__body">We believe journalism has a role in making peace more imaginable. Our framing is constructive without sacrificing rigour &mdash; we show what&rsquo;s possible, not just what&rsquo;s broken.</p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     SECTION 02 — EDITORIAL COMMITMENT
+     ============================================================ -->
+<section id="editorial-commitment" class="msn-section msn-section--alt" aria-labelledby="msn-s02-title">
+    <div class="msn-container">
+
+        <div class="msn-section__header" data-reveal>
+            <span class="msn-section-number" aria-hidden="true">02</span>
+            <h2 class="msn-section__title" id="msn-s02-title">Our Editorial Commitment</h2>
+            <p class="msn-section__lead">
+                Four commitments define our relationship with readers, sources, and the subjects we cover.
+            </p>
+        </div>
+
+        <ol class="msn-step-list" aria-label="Editorial commitments">
+
+            <li class="msn-step" data-reveal>
+                <div class="msn-step__connector" aria-hidden="true"></div>
+                <div class="msn-step__badge" aria-hidden="true">A</div>
+                <div class="msn-step__content">
+                    <h3 class="msn-step__title">Factual Rigour</h3>
+                    <p class="msn-step__body">Every claim is sourced. Every diplomatic development is cross-referenced against multiple independent sources. When we&rsquo;re wrong, we say so clearly and publicly.</p>
                 </div>
-                <?php endfor; ?>
+            </li>
+
+            <li class="msn-step" data-reveal>
+                <div class="msn-step__connector" aria-hidden="true"></div>
+                <div class="msn-step__badge" aria-hidden="true">B</div>
+                <div class="msn-step__content">
+                    <h3 class="msn-step__title">Independent Voice</h3>
+                    <p class="msn-step__body">Merlows has no government affiliation, no institutional funder with a stake in the outcome, and no commercial interest in any diplomatic process we cover.</p>
+                </div>
+            </li>
+
+            <li class="msn-step" data-reveal>
+                <div class="msn-step__connector" aria-hidden="true"></div>
+                <div class="msn-step__badge" aria-hidden="true">C</div>
+                <div class="msn-step__content">
+                    <h3 class="msn-step__title">Balanced Perspectives</h3>
+                    <p class="msn-step__body">We cover all parties in diplomatic processes with equal seriousness. Israeli, Iranian, Arab, and international voices all appear in our reporting without hierarchy.</p>
+                </div>
+            </li>
+
+            <li class="msn-step" data-reveal>
+                <div class="msn-step__connector" aria-hidden="true"></div>
+                <div class="msn-step__badge" aria-hidden="true">D</div>
+                <div class="msn-step__content">
+                    <h3 class="msn-step__title">Constructive Framing</h3>
+                    <p class="msn-step__body">We do not report conflict for its own sake. Every piece of analysis asks: what does this mean for the prospect of peace? What comes next?</p>
+                </div>
+            </li>
+
+        </ol>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     SECTION 03 — THE MERLOWS STANDARD
+     ============================================================ -->
+<section id="our-standards" class="msn-section msn-section--dark" aria-labelledby="msn-s03-title">
+    <div class="msn-container">
+
+        <div class="msn-section__header" data-reveal>
+            <span class="msn-section-number msn-section-number--dark" aria-hidden="true">03</span>
+            <h2 class="msn-section__title msn-section__title--white" id="msn-s03-title">The Merlows Standard</h2>
+            <p class="msn-section__lead msn-section__lead--muted">
+                What it means to publish under the Merlows name &mdash; the criteria every piece must meet.
+            </p>
+        </div>
+
+        <div class="msn-criteria-grid" role="list">
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">Original Reporting</h3>
+                <p class="msn-criteria-card__body">We do not aggregate. Every article is original, sourced, and adds something to the existing coverage landscape.</p>
+            </article>
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">Regional Expertise</h3>
+                <p class="msn-criteria-card__body">Our contributors have lived or worked in the region. We prioritise ground-level knowledge over metropolitan commentary.</p>
+            </article>
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">Treaty Literacy</h3>
+                <p class="msn-criteria-card__body">Our editorial team ensures every article involving the Cyrus Accord, Abraham Accords, or regional agreements reflects the actual terms of those documents.</p>
+            </article>
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">No Advocacy</h3>
+                <p class="msn-criteria-card__body">We cover peace processes without advocating for any particular outcome. Our job is clarity, not campaigning.</p>
+            </article>
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">Timely Corrections</h3>
+                <p class="msn-criteria-card__body">Corrections are published at the top of the original article with a clear explanation of what changed and why.</p>
+            </article>
+
+            <article class="msn-criteria-card" data-reveal role="listitem">
+                <h3 class="msn-criteria-card__title">Source Protection</h3>
+                <p class="msn-criteria-card__body">We protect the identity of sources where their safety or professional standing requires it &mdash; with editorial oversight on every such decision.</p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================================================
+     SECTION 04 — THE VISION
+     ============================================================ -->
+<section id="the-vision" class="msn-section msn-section--white" aria-labelledby="msn-s04-title">
+    <div class="msn-container">
+
+        <div class="msn-section__header" data-reveal>
+            <span class="msn-section-number" aria-hidden="true">04</span>
+            <h2 class="msn-section__title" id="msn-s04-title">The Vision</h2>
+            <p class="msn-section__lead">
+                What we&rsquo;re working toward &mdash; not just as a publication, but as a contribution to the region&rsquo;s future.
+            </p>
+        </div>
+
+        <div class="msn-vision-layout">
+
+            <!-- Pull quote -->
+            <div class="msn-vision__quote-col" data-reveal>
+                <blockquote class="msn-pull-quote">
+                    <p>&ldquo;A Middle East where dialogue has more coverage than division, and where every step toward peace is documented with the seriousness it deserves.&rdquo;</p>
+                </blockquote>
+            </div>
+
+            <!-- Vision points -->
+            <div class="msn-vision__points-col" data-reveal>
+
+                <div class="msn-vision-point">
+                    <h3 class="msn-vision-point__title">Sustained Coverage</h3>
+                    <p class="msn-vision-point__body">The stories that matter most are not breaking news &mdash; they&rsquo;re the slow, difficult work of diplomacy over years. We&rsquo;re here for the long term.</p>
+                </div>
+
+                <div class="msn-vision-point">
+                    <h3 class="msn-vision-point__title">Regional Voices</h3>
+                    <p class="msn-vision-point__body">Our long-term goal is an editorial network with contributors embedded across the region &mdash; Israeli, Iranian, Arab, international.</p>
+                </div>
+
+                <div class="msn-vision-point">
+                    <h3 class="msn-vision-point__title">The Historical Record</h3>
+                    <p class="msn-vision-point__body">Every Merlows article becomes part of the documentary record of this era&rsquo;s diplomacy. We publish with that weight in mind.</p>
+                </div>
+
             </div>
         </div>
-    </section>
-    <?php endif; ?>
+    </div>
+</section>
 
-    <!-- PROMO BLOCKS -->
-    <?php for ($p=1; $p<=2; $p++) : 
-        $prefix = "mlws_heritage_promo$p";
-        if (get_theme_mod($prefix . '_show', true)) :
-            $img = get_theme_mod($prefix . '_img');
-            $title = get_theme_mod($prefix . '_title', 'Promo title');
-            $sub = get_theme_mod($prefix . '_sub', 'Promo subtitle');
-            $desc = get_theme_mod($prefix . '_desc', 'Promo description text goes here.');
-            $btn_lbl = get_theme_mod($prefix . '_btn_lbl', 'Learn More');
-            $btn_url = get_theme_mod($prefix . '_btn_url', '#');
-            $layout = get_theme_mod($prefix . '_layout', 'img-left');
-            $styles = mlws_get_section_style_heritage($prefix, '#fff');
-            $flex_dir = ($layout == 'img-right') ? 'flex-direction:row-reverse;' : '';
-    ?>
-    <section class="section-padding" style="<?php echo $styles['section']; ?>">
-        <div class="container">
-            <div style="display:flex; flex-wrap:wrap; gap:60px; align-items:center; <?php echo $flex_dir; ?>">
-                <div style="flex:1; min-width:300px;">
-                    <?php if ($img) : ?>
-                        <img src="<?php echo esc_url($img); ?>" alt="<?php echo esc_attr($title); ?>" style="width:100%; border-radius:0; box-shadow:0 20px 40px rgba(0,0,0,0.1);">
-                    <?php else: ?>
-                        <div style="width:100%; aspect-ratio:16/9; background:#eee; border-radius:0; display:flex; align-items:center; justify-content:center; color:#ccc;">No Image Selected</div>
-                    <?php endif; ?>
-                </div>
-                <div style="flex:1; min-width:300px;">
-                    <?php if ($sub) : ?><span class="tag-label" style="<?php echo $styles['tag']; ?>"><?php echo esc_html($sub); ?></span><?php endif; ?>
-                    <h2 style="font-family:'Outfit',sans-serif; font-weight:900; margin:16px 0; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:36px;'; ?> <?php if(strpos($styles['title'],'color')===false) echo 'color:var(--secondary-color);'; ?> <?php echo $styles['title']; ?>"><?php echo esc_html($title); ?></h2>
-                    <p style="font-size:18px; color:var(--text-light); line-height:1.7; margin-bottom:30px; <?php echo $styles['text']; ?>"><?php echo esc_html($desc); ?></p>
-                    <?php if ($btn_lbl) : ?>
-                        <a href="<?php echo esc_url($btn_url); ?>" class="btn btn-primary"><?php echo esc_html($btn_lbl); ?></a>
-                    <?php endif; ?>
-                </div>
-            </div>
+
+<!-- ============================================================
+     FOOTER CTA
+     ============================================================ -->
+<section id="get-involved" class="msn-cta" aria-labelledby="msn-cta-title">
+    <div class="msn-container msn-cta__inner" data-reveal>
+        <span class="msn-cta__kicker">JOIN US</span>
+        <h2 class="msn-cta__title" id="msn-cta-title">Be Part of the Story.</h2>
+        <p class="msn-cta__body">Read, contribute, and stay informed as history unfolds.</p>
+        <div class="msn-cta__buttons">
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="msn-btn msn-btn--primary">Start Reading</a>
+            <a href="<?php echo esc_url( home_url( '/contact-us/' ) ); ?>" class="msn-btn msn-btn--outline">Write for Merlows</a>
         </div>
-    </section>
-    <?php endif; endfor; ?>
+    </div>
+</section>
 
-    <!-- CTA STRIP -->
-    <?php if (get_theme_mod('mlws_heritage_cta_show', true)) : 
-        $cta_title = get_theme_mod('mlws_heritage_cta_title', 'Join the Merlows Community');
-        $cta_desc = get_theme_mod('mlws_heritage_cta_desc', "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at Merlows.");
-        $cta_btn1_lbl = get_theme_mod('mlws_heritage_cta_btn1_label', "About Merlows");
-        $cta_btn1_url = get_theme_mod('mlws_heritage_cta_btn1_url', '/patients/');
-        $cta_btn2_lbl = get_theme_mod('mlws_heritage_cta_btn2_label', "I'm a Healthcare Professional");
-        $cta_btn2_url = get_theme_mod('mlws_heritage_cta_btn2_url', '/healthcare-professionals/');
-        $styles = mlws_get_section_style_heritage('mlws_heritage_cta', '#EB5A33');
-    ?>
-    <section class="section-padding" style="<?php echo $styles['section']; ?> color:white; text-align:center;">
-        <div class="container" style="max-width:800px;">
-            <h2 style="font-family:'Outfit',sans-serif; font-weight:800; margin-bottom:16px; <?php if(strpos($styles['title'],'font-size')===false) echo 'font-size:36px;'; ?> <?php echo $styles['title']; ?>"><?php echo esc_html($cta_title); ?></h2>
-            <p style="opacity:0.9; margin-bottom:32px; line-height:1.6; <?php if(strpos($styles['text'],'font-size')===false) echo 'font-size:18px;'; ?> <?php echo $styles['text']; ?>"><?php echo esc_html($cta_desc); ?></p>
-            <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-                <a href="<?php echo esc_url($cta_btn1_url); ?>" class="btn" style="background:white;color:#EB5A33;font-weight:700;padding:12px 28px;border-radius:0;text-decoration:none;"><?php echo esc_html($cta_btn1_lbl); ?></a>
-                <a href="<?php echo esc_url($cta_btn2_url); ?>" class="btn" style="background:transparent;border:2px solid white;color:white;font-weight:700;padding:10px 28px;border-radius:0;text-decoration:none;"><?php echo esc_html($cta_btn2_lbl); ?></a>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
+</main><!-- /#main-content -->
 
-    <!-- PAGE CONTENT SECTION -->
-    <section class="section-padding content-section" style="background: #ffffff;">
-        <div class="container">
-            <?php
-            while ( have_posts() ) :
-                the_post();
-                ?>
-                <div class="entry-content" style="line-height: 1.8;">
-                    <?php the_content(); ?>
-                </div>
-                <?php
-            endwhile;
-            ?>
-        </div>
-    </section>
-</main>
 
+<!-- ============================================================
+     STYLES
+     ============================================================ -->
 <style>
-.pillar { background:white; padding:32px; border-radius:0; border:1px solid #e2e8f0; text-align:center; }
-.pillar h4 { font-family:'Outfit',sans-serif; color:var(--secondary-color); margin-bottom:12px; font-weight:800; }
-.pillar p { font-size:14px; color:var(--text-light); }
+/* ------------------------------------------------------------------
+   BASE / RESET
+------------------------------------------------------------------ */
+.msn-page *,
+.msn-page *::before,
+.msn-page *::after {
+    box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------
+   CONTAINER
+------------------------------------------------------------------ */
+.msn-container {
+    max-width: var(--container-width, 1200px);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4vw, 60px);
+}
+
+/* ------------------------------------------------------------------
+   REVEAL ANIMATION (initial state — JS adds .is-visible)
+------------------------------------------------------------------ */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+[data-reveal].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ------------------------------------------------------------------
+   MASTHEAD
+------------------------------------------------------------------ */
+.msn-masthead {
+    background: var(--primary-color, #1B4F8A);
+    position: relative;
+    overflow: hidden;
+}
+.msn-masthead::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.04) 0px,
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px,
+            transparent 48px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255,255,255,0.04) 0px,
+            rgba(255,255,255,0.04) 1px,
+            transparent 1px,
+            transparent 48px
+        );
+    pointer-events: none;
+}
+
+.msn-masthead__inner {
+    max-width: var(--container-width, 1200px);
+    margin-inline: auto;
+    padding: clamp(60px, 8vw, 100px) clamp(20px, 4vw, 60px) clamp(50px, 6vw, 80px);
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 60px;
+    align-items: start;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 860px) {
+    .msn-masthead__inner {
+        grid-template-columns: 1fr;
+    }
+    .msn-masthead__right {
+        order: -1;
+    }
+}
+
+/* -- Eyebrow -- */
+.msn-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.msn-eyebrow__line {
+    flex: 1;
+    height: 1px;
+    background: var(--accent-color, #D4AF37);
+}
+.msn-eyebrow__label {
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-color, #D4AF37);
+    white-space: nowrap;
+}
+
+/* -- H1 -- */
+.msn-masthead__title {
+    font-family: var(--font-heading);
+    font-size: clamp(48px, 6vw, 86px);
+    font-weight: 300;
+    line-height: 1.05;
+    color: #fff;
+    margin: 0 0 20px;
+}
+.msn-masthead__title em {
+    font-style: italic;
+    color: var(--accent-color, #D4AF37);
+}
+
+/* -- Gold gradient rule below H1 -- */
+.msn-masthead__rule {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-color, #D4AF37) 0%, transparent 100%);
+    margin-bottom: 24px;
+    border-radius: 0;
+}
+
+/* -- Subtitle -- */
+.msn-masthead__subtitle {
+    font-family: var(--font-main);
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.65;
+    color: rgba(255,255,255,0.78);
+    margin: 0 0 32px;
+    max-width: 520px;
+}
+
+/* -- TOC -- */
+.msn-toc {
+    counter-reset: toc;
+}
+.msn-toc__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+.msn-toc__list li {
+    counter-increment: toc;
+}
+.msn-toc__list li::before {
+    content: counter(toc, decimal-leading-zero) " ";
+    color: var(--accent-color, #D4AF37);
+    margin-right: 4px;
+    font-size: 10px;
+    font-family: var(--font-main);
+}
+.msn-toc__list a {
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+.msn-toc__list a:hover {
+    color: var(--accent-color, #D4AF37);
+}
+
+/* -- Right column -- */
+.msn-masthead__right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+}
+
+/* -- Stamp -- */
+.msn-stamp {
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+}
+.msn-stamp__ring {
+    width: 160px;
+    height: 160px;
+    border: 2px solid var(--accent-color, #D4AF37);
+    border-radius: 50%;
+    position: relative;
+    animation: msn-stamp-spin 30s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.msn-stamp__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+.msn-stamp__text {
+    font-family: var(--font-main);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    fill: var(--accent-color, #D4AF37);
+    text-transform: uppercase;
+}
+.msn-stamp__inner {
+    animation: msn-stamp-counter 30s linear infinite;
+    position: relative;
+    z-index: 1;
+}
+.msn-stamp__m {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent-color, #D4AF37);
+    line-height: 1;
+    display: block;
+    text-align: center;
+}
+@keyframes msn-stamp-spin {
+    to { transform: rotate(360deg); }
+}
+@keyframes msn-stamp-counter {
+    to { transform: rotate(-360deg); }
+}
+
+/* -- Stats -- */
+.msn-masthead__stats {
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.msn-stat {
+    text-align: center;
+}
+.msn-stat__number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(18px, 2vw, 26px);
+    font-weight: 700;
+    color: var(--accent-color, #D4AF37);
+    line-height: 1;
+}
+.msn-stat__label {
+    display: block;
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+}
+
+/* -- Ticker -- */
+.msn-ticker {
+    background: var(--accent-color, #D4AF37);
+    overflow: hidden;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+.msn-ticker__track {
+    display: flex;
+    white-space: nowrap;
+    animation: msn-ticker-scroll 28s linear infinite;
+}
+.msn-ticker__track span {
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--primary-color, #1B4F8A);
+}
+@keyframes msn-ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-33.3333%); }
+}
+
+/* ------------------------------------------------------------------
+   SHARED SECTION STYLES
+------------------------------------------------------------------ */
+.msn-section {
+    padding: clamp(70px, 9vw, 120px) 0;
+}
+.msn-section--white { background: #fff; }
+.msn-section--alt   { background: #F8FAFD; }
+.msn-section--dark  {
+    background: #0F172A;
+    color: #fff;
+}
+
+.msn-section__header {
+    position: relative;
+    margin-bottom: clamp(40px, 5vw, 64px);
+    padding-top: 24px;
+}
+
+/* Section numbers — 96px outlined text */
+.msn-section-number {
+    position: absolute;
+    top: -28px;
+    left: -8px;
+    font-family: var(--font-heading);
+    font-size: 96px;
+    font-weight: 900;
+    -webkit-text-stroke: 1.5px var(--accent-color, #D4AF37);
+    color: transparent;
+    opacity: 0.6;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+.msn-section-number--dark {
+    -webkit-text-stroke: 1.5px rgba(212, 175, 55, 0.35);
+}
+
+.msn-section__title {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700;
+    color: var(--text-main, #1a1a1a);
+    margin: 0 0 16px;
+    position: relative;
+    z-index: 1;
+}
+.msn-section__title--white { color: #fff; }
+
+.msn-section__lead {
+    font-family: var(--font-main);
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.7;
+    color: var(--text-light, #555);
+    max-width: 640px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+.msn-section__lead--muted {
+    color: rgba(255,255,255,0.65);
+}
+
+/* ------------------------------------------------------------------
+   SECTION 01 — CARD GRID
+------------------------------------------------------------------ */
+.msn-card-grid {
+    display: grid;
+    gap: 24px;
+}
+.msn-card-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 680px) {
+    .msn-card-grid--2col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.msn-card {
+    padding: 36px 32px;
+    border-radius: 0;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+}
+.msn-card--dark {
+    background: var(--primary-color, #1B4F8A);
+    border-color: transparent;
+}
+.msn-card--dark .msn-card__title {
+    color: #fff;
+}
+.msn-card--dark .msn-card__body {
+    color: rgba(255,255,255,0.78);
+}
+
+.msn-card__title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main, #1a1a1a);
+    margin: 0 0 12px;
+}
+.msn-card__body {
+    font-family: var(--font-main);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-light, #555);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   SECTION 02 — STEP LIST
+------------------------------------------------------------------ */
+.msn-step-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.msn-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    position: relative;
+    padding-bottom: 48px;
+}
+.msn-step:last-child {
+    padding-bottom: 0;
+}
+
+/* Vertical connecting gradient line */
+.msn-step__connector {
+    position: absolute;
+    left: 21px; /* centred under the 44px badge */
+    top: 44px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        var(--primary-color, #1B4F8A) 0%,
+        transparent 100%
+    );
+}
+.msn-step:last-child .msn-step__connector {
+    display: none;
+}
+
+/* Square badge with primary-color border */
+.msn-step__badge {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--primary-color, #1B4F8A);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary-color, #1B4F8A);
+    background: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.msn-step__content {
+    padding-top: 8px;
+}
+.msn-step__title {
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text-main, #1a1a1a);
+    margin: 0 0 8px;
+}
+.msn-step__body {
+    font-family: var(--font-main);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-light, #555);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   SECTION 03 — CRITERIA GRID (DARK)
+------------------------------------------------------------------ */
+.msn-criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
+@media (max-width: 860px) {
+    .msn-criteria-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 540px) {
+    .msn-criteria-grid { grid-template-columns: 1fr; }
+}
+
+.msn-criteria-card {
+    padding: 36px 28px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 0;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: background 0.25s;
+}
+.msn-criteria-card:hover {
+    background: rgba(255,255,255,0.08);
+}
+.msn-criteria-card__title {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent-color, #D4AF37);
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.msn-criteria-card__body {
+    font-family: var(--font-main);
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.72);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   SECTION 04 — VISION LAYOUT
+------------------------------------------------------------------ */
+.msn-vision-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+@media (max-width: 720px) {
+    .msn-vision-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Pull quote — gold italic, left gold border */
+.msn-pull-quote {
+    margin: 0;
+    padding: 0 0 0 28px;
+    border-left: 3px solid var(--accent-color, #D4AF37);
+    border-radius: 0;
+}
+.msn-pull-quote p {
+    font-family: var(--font-heading);
+    font-size: clamp(20px, 2vw, 26px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--accent-color, #D4AF37);
+    margin: 0;
+}
+
+/* Vision points */
+.msn-vision__points-col {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+.msn-vision-point__title {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-main, #1a1a1a);
+    margin: 0 0 8px;
+}
+.msn-vision-point__body {
+    font-family: var(--font-main);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-light, #555);
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   FOOTER CTA
+------------------------------------------------------------------ */
+.msn-cta {
+    background: var(--secondary-color, #8B1A1A);
+    padding: clamp(70px, 9vw, 110px) 0;
+}
+.msn-cta__inner {
+    text-align: center;
+}
+.msn-cta__kicker {
+    display: inline-block;
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--accent-color, #D4AF37);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+.msn-cta__title {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 4.5vw, 56px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 16px;
+    line-height: 1.1;
+}
+.msn-cta__body {
+    font-family: var(--font-main);
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.78);
+    max-width: 480px;
+    margin: 0 auto 36px;
+}
+.msn-cta__buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* -- Buttons -- */
+.msn-btn {
+    display: inline-block;
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 0;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    cursor: pointer;
+}
+.msn-btn--primary {
+    background: var(--accent-color, #D4AF37);
+    color: var(--primary-color, #1B4F8A);
+    border: 2px solid var(--accent-color, #D4AF37);
+}
+.msn-btn--primary:hover {
+    background: #c09c2a;
+    border-color: #c09c2a;
+    color: #fff;
+}
+.msn-btn--outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.6);
+}
+.msn-btn--outline:hover {
+    border-color: #fff;
+    background: rgba(255,255,255,0.08);
+}
 </style>
+
+
+<!-- ============================================================
+     SCROLL REVEAL — IntersectionObserver
+     ============================================================ -->
+<script>
+(function () {
+    'use strict';
+
+    // Graceful fallback for browsers without IntersectionObserver
+    if (!('IntersectionObserver' in window)) {
+        document.querySelectorAll('[data-reveal]').forEach(function (el) {
+            el.classList.add('is-visible');
+        });
+        return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('[data-reveal]').forEach(function (el) {
+        observer.observe(el);
+    });
+}());
+</script>
 
 <?php get_footer(); ?>
