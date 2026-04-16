@@ -4,9 +4,6 @@
  */
 get_header(); ?>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
 <main id="main-content" class="htu-page">
 
@@ -170,76 +167,93 @@ get_header(); ?>
     </section>
 
     <!-- ═══════════════════════════════════════════════════════
-         SECTION 3 — CONTENT GENERATOR
+         SECTION 3 — WRITING FOR MERLOWS
     ═══════════════════════════════════════════════════════ -->
     <section class="htu-section" id="content-generator" data-reveal>
         <div class="htu-container">
             <div class="htu-section__header">
                 <span class="htu-section__num">03</span>
                 <div>
-                    <h2 class="htu-section__title">Content Generator</h2>
-                    <p class="htu-section__lead">Built for contributors and editorial staff — an AI-assisted drafting workspace at <a href="https://merlows.vercel.app" target="_blank" rel="noopener">merlows.vercel.app</a>.</p>
+                    <h2 class="htu-section__title">Writing for Merlows</h2>
+                    <p class="htu-section__lead">Merlows is a resource for contributors. Use the site's coverage, categories, and editorial context to inform and shape your own articles — then submit them for review.</p>
                 </div>
             </div>
 
-            <div class="htu-cg-layout">
-                <div class="htu-cg-panel">
-                    <div class="htu-cg-panel__label">WHO IT'S FOR</div>
-                    <ul class="htu-cg-list">
-                        <li>
-                            <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>
-                            Merlows contributors drafting first versions of articles
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>
-                            Editorial staff scheduling and managing the content pipeline
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>
-                            Analysts generating structured research briefings
-                        </li>
-                        <li>
-                            <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="3"/></svg>
-                            Social media managers scheduling platform posts
-                        </li>
-                    </ul>
+            <div class="htu-contrib-grid">
+                <!-- Left: use the site as a resource -->
+                <div class="htu-contrib-col">
+                    <div class="htu-contrib-col__label">USING MERLOWS AS A RESOURCE</div>
+                    <div class="htu-contrib-resource">
+                        <div class="htu-contrib-resource__item">
+                            <div class="htu-contrib-resource__icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+                            </div>
+                            <div>
+                                <strong>Read Across Categories</strong>
+                                <p>Browse existing Diplomatic Analysis, Op-Eds, and Regional Voices pieces to understand the tone, depth, and angle Merlows publishes.</p>
+                            </div>
+                        </div>
+                        <div class="htu-contrib-resource__item">
+                            <div class="htu-contrib-resource__icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                            <div>
+                                <strong>Research the Archive</strong>
+                                <p>Use search to find background on the Cyrus Accord, Abraham Accords, and regional actors. Build on what's already been published, not over it.</p>
+                            </div>
+                        </div>
+                        <div class="htu-contrib-resource__item">
+                            <div class="htu-contrib-resource__icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div>
+                                <strong>Ask the AI</strong>
+                                <p>Use the <a href="<?php echo esc_url(home_url('/ask-ai/')); ?>">Ask the AI</a> tool to get context on events, treaties, and key actors before you start writing.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="htu-cg-flow">
-                    <div class="htu-cg-step">
-                        <span class="htu-cg-step__n">1</span>
-                        <div>
-                            <strong>Choose a Category</strong>
-                            <p>Select from the six Merlows coverage zones. Each has a tailored default prompt optimised for that genre's conventions.</p>
+
+                <!-- Right: submission steps -->
+                <div class="htu-contrib-col">
+                    <div class="htu-contrib-col__label">HOW TO SUBMIT</div>
+                    <div class="htu-contrib-steps">
+                        <div class="htu-cg-step">
+                            <span class="htu-cg-step__n">1</span>
+                            <div>
+                                <strong>Choose a Category</strong>
+                                <p>Pick the coverage zone that fits your piece — Breaking News, Diplomatic Analysis, Op-Ed, Cyrus Accord, Abraham Accords, or Regional Voices. Read the format guide in Section 4 below.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="htu-cg-step">
-                        <span class="htu-cg-step__n">2</span>
-                        <div>
-                            <strong>Upload Source Material</strong>
-                            <p>Drop in a PDF, paste text, or add source URLs. The AI reads and synthesises your sources before generating.</p>
+                        <div class="htu-cg-step">
+                            <span class="htu-cg-step__n">2</span>
+                            <div>
+                                <strong>Write Your Article</strong>
+                                <p>Draft in your own editor. Follow the word-count and tone guidelines for your chosen category. British English, clear sourcing, and a constructive framing are editorial requirements.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="htu-cg-step">
-                        <span class="htu-cg-step__n">3</span>
-                        <div>
-                            <strong>Generate & Edit</strong>
-                            <p>Review the AI draft in the editor. Add your own analysis, fact-check, and refine the tone before publishing.</p>
+                        <div class="htu-cg-step">
+                            <span class="htu-cg-step__n">3</span>
+                            <div>
+                                <strong>Submit via the Contact Form</strong>
+                                <p>Send your draft, a one-paragraph pitch, your full name, and any relevant credentials to the editorial team via the <a href="<?php echo esc_url(home_url('/contact-us/')); ?>">Contact Us</a> page.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="htu-cg-step">
-                        <span class="htu-cg-step__n">4</span>
-                        <div>
-                            <strong>Push to WordPress</strong>
-                            <p>One click sends the finalised article to merlows.com as a draft, ready for editorial review and scheduling.</p>
+                        <div class="htu-cg-step">
+                            <span class="htu-cg-step__n">4</span>
+                            <div>
+                                <strong>Editorial Review</strong>
+                                <p>The Merlows team reviews all submissions for factual accuracy, editorial fit, and tone. You'll receive feedback or a publication date within five business days.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <a href="https://merlows.vercel.app" target="_blank" rel="noopener" class="htu-cta-link">
-                Open the Content Generator
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
+            <div class="htu-tip">
+                <span class="htu-tip__icon">✦</span>
+                <p><strong>First-time contributor?</strong> Read two or three pieces in your chosen category before writing. Merlows prizes analysis over narration — explain <em>why</em> something matters, not just what happened.</p>
+            </div>
         </div>
     </section>
 
@@ -411,7 +425,7 @@ get_header(); ?>
 <style>
 /* ─── Base ──────────────────────────────────────────────── */
 .htu-page {
-    font-family: 'DM Sans', var(--font-main);
+    font-family: var(--font-main);
     color: var(--text-main);
     overflow-x: hidden;
 }
@@ -469,7 +483,7 @@ get_header(); ?>
     max-width: 60px;
 }
 .htu-eyebrow__text {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-main);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 3px;
@@ -477,7 +491,7 @@ get_header(); ?>
 }
 
 .htu-masthead__title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: var(--font-heading);
     font-size: clamp(48px, 7vw, 86px);
     font-weight: 300;
     line-height: 1.0;
@@ -534,7 +548,7 @@ get_header(); ?>
 }
 .htu-toc__list li::before {
     content: '0' counter(toc);
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 11px;
     color: var(--accent-color);
     min-width: 22px;
@@ -594,14 +608,14 @@ get_header(); ?>
     to { transform: rotate(-360deg); }
 }
 .htu-stamp__top, .htu-stamp__bot {
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-main);
     font-size: 9px;
     font-weight: 500;
     letter-spacing: 3px;
     color: rgba(255,255,255,0.5);
 }
 .htu-stamp__mid {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 24px;
     font-weight: 700;
     color: var(--accent-color);
@@ -622,7 +636,7 @@ get_header(); ?>
 .htu-stat:last-child { border-right: none; }
 .htu-stat__num {
     display: block;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 36px;
     font-weight: 700;
     color: var(--accent-color);
@@ -649,7 +663,7 @@ get_header(); ?>
 }
 .htu-masthead__ticker span {
     display: inline-block;
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-main);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 2px;
@@ -684,7 +698,7 @@ get_header(); ?>
 .htu-section__header--light {}
 
 .htu-section__num {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 96px;
     font-weight: 700;
     line-height: 0.85;
@@ -699,7 +713,7 @@ get_header(); ?>
 }
 
 .htu-section__title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: clamp(28px, 4vw, 44px);
     font-weight: 600;
     line-height: 1.15;
@@ -753,7 +767,7 @@ get_header(); ?>
 }
 .htu-card__icon svg { width: 100%; height: 100%; }
 .htu-card h3 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 22px;
     font-weight: 600;
     margin: 0 0 10px;
@@ -809,7 +823,7 @@ get_header(); ?>
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 22px;
     font-weight: 700;
     color: var(--primary-color);
@@ -819,7 +833,7 @@ get_header(); ?>
     padding-top: 4px;
 }
 .htu-step__body h3 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 22px;
     font-weight: 600;
     margin: 0 0 8px;
@@ -838,45 +852,73 @@ get_header(); ?>
     margin-left: 21px;
 }
 
-/* ─── CG Layout (Section 3) ─────────────────────────────── */
-.htu-cg-layout {
+/* ─── Contributor Grid (Section 3) ──────────────────────── */
+.htu-contrib-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
-    margin-bottom: 40px;
-    padding: 40px;
-    background: #F8FAFD;
-    border: 1px solid #E0E8F4;
+    margin-bottom: 32px;
+    align-items: start;
 }
-.htu-cg-panel__label {
+.htu-contrib-col__label {
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 2.5px;
     color: var(--primary-color);
     margin-bottom: 20px;
 }
-.htu-cg-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.htu-contrib-resource {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 24px;
 }
-.htu-cg-list li {
+.htu-contrib-resource__item {
     display: flex;
+    gap: 16px;
     align-items: flex-start;
-    gap: 12px;
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text-main);
+    padding-bottom: 24px;
+    border-bottom: 1px solid #E8EEF5;
 }
-.htu-cg-list svg {
-    width: 8px;
-    height: 8px;
+.htu-contrib-resource__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.htu-contrib-resource__icon {
+    width: 36px;
+    height: 36px;
+    background: #EEF4FB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
-    color: var(--accent-color);
-    margin-top: 5px;
+    color: var(--primary-color);
+}
+.htu-contrib-resource__icon svg { width: 18px; height: 18px; }
+.htu-contrib-resource__item strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+.htu-contrib-resource__item p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text-light);
+    margin: 0;
+}
+.htu-contrib-resource__item a {
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.htu-contrib-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #E0E8F4;
+    padding: 28px;
+    background: #F8FAFD;
 }
 
 .htu-cg-flow {
@@ -893,7 +935,7 @@ get_header(); ?>
 }
 .htu-cg-step:last-child { border-bottom: none; padding-bottom: 0; }
 .htu-cg-step__n {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 28px;
     font-weight: 700;
     color: var(--accent-color);
@@ -962,7 +1004,7 @@ get_header(); ?>
 .htu-cat__dot--blue { background: #4A8FD4; }
 .htu-cat__dot--gold { background: var(--accent-color); }
 .htu-cat h3 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 20px;
     font-weight: 600;
     margin: 0 0 8px;
@@ -982,7 +1024,7 @@ get_header(); ?>
     gap: 48px;
 }
 .htu-account-block h3 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: 22px;
     font-weight: 600;
     margin: 0 0 16px;
@@ -1110,7 +1152,7 @@ get_header(); ?>
     margin: 0 0 16px;
 }
 .htu-footer-cta__title {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-heading);
     font-size: clamp(36px, 5vw, 56px);
     font-weight: 300;
     color: var(--text-main);
@@ -1165,7 +1207,7 @@ get_header(); ?>
     .htu-cards {
         grid-template-columns: 1fr;
     }
-    .htu-cg-layout {
+    .htu-contrib-grid {
         grid-template-columns: 1fr;
         gap: 32px;
     }
