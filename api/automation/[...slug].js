@@ -16,6 +16,8 @@ import authHandler from '../../lib/automation/handlers/auth.js';
 import logsHandler from '../../lib/automation/handlers/logs.js';
 import sourcesListHandler from '../../lib/automation/handlers/sources-list.js';
 import bibliographyHandler from '../../lib/automation/handlers/bibliography.js';
+import settingsHandler from '../../lib/automation/handlers/settings.js';
+import migrateHandler from '../../lib/automation/handlers/migrate.js';
 
 export default async function handler(req, res) {
   // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
@@ -54,6 +56,8 @@ export default async function handler(req, res) {
   }
 
   if (first === 'bibliography') return bibliographyHandler(req, res, slug);
+  if (first === 'settings')    return settingsHandler(req, res);
+  if (first === 'migrate')     return migrateHandler(req, res);
 
   return res.status(404).json({ error: 'Not found' });
 }

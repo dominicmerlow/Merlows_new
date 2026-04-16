@@ -3331,6 +3331,18 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <button class="btn btn-orange btn-sm" onclick="saveGodPrompt()">Save Context</button>
         </div>
         <div class="llm-tip" id="godPromptPreview" style="display:none;margin-top:8px;font-style:italic;"></div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0 12px;" />
+
+        <div>
+          <label style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);display:block;margin-bottom:2px;">Master Prompt</label>
+          <div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:6px;">Prepended to every automation-generated article. Paste your master prompt markdown here — stored server-side so it applies to all scheduled and manual runs.</div>
+          <textarea id="masterPromptTextarea" rows="12" placeholder="Paste your master prompt here…" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.72rem;resize:vertical;border-radius:0;"></textarea>
+        </div>
+        <div class="llm-save-row" style="margin-top:8px;">
+          <button class="btn btn-orange btn-sm" onclick="saveMasterPrompt()">Save Master Prompt</button>
+          <span id="masterPromptStatus" style="font-size:0.65rem;color:var(--text-muted);margin-left:8px;"></span>
+        </div>
       </div>
     </div>
 
@@ -5937,6 +5949,40 @@ function saveGodPrompt() {
   showToast('✓ Global context saved');
 }
 
+async function saveMasterPrompt() {
+  var prompt = (document.getElementById('masterPromptTextarea') || {}).value || '';
+  var statusEl = document.getElementById('masterPromptStatus');
+  try {
+    var res = await fetch('/api/automation/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ masterPrompt: prompt.trim() }),
+    });
+    if (res.ok) {
+      showToast('✓ Master prompt saved');
+      if (statusEl) statusEl.textContent = 'Saved ✓';
+    } else {
+      showToast('Failed to save master prompt');
+      if (statusEl) statusEl.textContent = 'Save failed';
+    }
+  } catch (err) {
+    showToast('Error saving master prompt');
+    if (statusEl) statusEl.textContent = 'Error';
+  }
+}
+
+async function loadMasterPrompt() {
+  try {
+    var res = await fetch('/api/automation/settings');
+    if (!res.ok) return;
+    var data = await res.json();
+    var el = document.getElementById('masterPromptTextarea');
+    if (el) el.value = data.masterPrompt || '';
+    var statusEl = document.getElementById('masterPromptStatus');
+    if (statusEl && data.masterPrompt) statusEl.textContent = 'Loaded from server ✓';
+  } catch {}
+}
+
 function getPriorityProvider() { return localStorage.getItem('sla_llm_priority') || 'openrouter'; }
 function setPriorityProvider(p) {
   localStorage.setItem('sla_llm_priority', p);
@@ -7858,6 +7904,9 @@ function loadLLMPage() {
   var preview = getGodPrompt();
   var previewEl = document.getElementById('godPromptPreview');
   if (previewEl) { previewEl.textContent = preview ? ('Preview: ' + preview) : ''; previewEl.style.display = preview ? '' : 'none'; }
+
+  // Master prompt (server-side, stored in KV)
+  loadMasterPrompt();
 
   // OpenRouter key (sync with API key card)
   var apiKey = localStorage.getItem('sla_openrouter_key');
