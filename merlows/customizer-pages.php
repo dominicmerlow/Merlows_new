@@ -985,5 +985,155 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_mission_cta_bg',          array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_hex_color' ) );
     $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_mission_cta_bg', array( 'label' => 'Background Colour', 'section' => 'mlws_mission_cta' ) ) );
 
+    // =========================================================================
+    // ---- HOW TO USE PAGE PANEL ----------------------------------------------
+    // =========================================================================
+    $wp_customize->add_panel( 'mlws_howto_panel', array(
+        'title'    => __( 'How to Use Page', 'merlows' ),
+        'priority' => 48,
+    ) );
+
+    // ── Hero ──────────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_hero', array( 'title' => 'Hero Section', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_hero_show',     array( 'default' => true,  'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_hero_show',     array( 'label' => 'Show Hero Section', 'section' => 'mlws_howto_hero', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_hero_tag',      array( 'default' => 'Get Started', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_hero_tag',      array( 'label' => 'Tag Label',   'section' => 'mlws_howto_hero', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_hero_title',    array( 'default' => 'How to Use <span class="highlight">Merlows</span>', 'sanitize_callback' => 'wp_kses_post' ) );
+    $wp_customize->add_control( 'mlws_howto_hero_title',    array( 'label' => 'Headline',     'section' => 'mlws_howto_hero', 'type' => 'textarea' ) );
+    $wp_customize->add_setting( 'mlws_howto_hero_desc',     array( 'default' => 'Everything you need to navigate the platform, find the analysis that matters, and get the most out of our AI research assistant.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_howto_hero_desc',     array( 'label' => 'Description',  'section' => 'mlws_howto_hero', 'type' => 'textarea' ) );
+    $wp_customize->add_setting( 'mlws_howto_hero_img',      array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'mlws_howto_hero_img', array( 'label' => 'Background Image', 'section' => 'mlws_howto_hero' ) ) );
+    $wp_customize->add_setting( 'mlws_howto_hero_bg_color', array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_hero_bg_color', array( 'label' => 'Override Background Colour', 'section' => 'mlws_howto_hero', 'type' => 'text' ) );
+
+    // ── Quick Start ───────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_quickstart', array( 'title' => 'Quick Start (3 cards)', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_quickstart_show', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_quickstart_show', array( 'label' => 'Show Quick Start Section', 'section' => 'mlws_howto_quickstart', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_qs_tag',   array( 'default' => 'Quick Start', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_qs_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_howto_quickstart', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_qs_title', array( 'default' => 'Up and Running in 3 Steps', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_qs_title', array( 'label' => 'Heading', 'section' => 'mlws_howto_quickstart', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_qs_desc',  array( 'default' => "No account required to read. Just land on the site and start exploring — here's the fastest path to the content you need.", 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_howto_qs_desc',  array( 'label' => 'Description', 'section' => 'mlws_howto_quickstart', 'type' => 'textarea' ) );
+
+    $qs_defaults = array(
+        1 => array( 'Pick a Topic',  'Use the top navigation to choose your area of interest — Breaking News, Diplomatic Analysis, Op-Eds, Abraham Accords, Cyrus Accord, or Regional Voices.', '/diplomatic-analysis/' ),
+        2 => array( 'Read or Ask',   'Browse the latest articles, or jump straight to the AI assistant and ask any question about Middle East diplomacy in plain language.',                    '/ask-ai/'              ),
+        3 => array( 'Go Deeper',     'Every article links to related analyses, source documents, and expert commentary. Follow the threads to build a complete picture.',                      '/about/'               ),
+    );
+    for ( $i = 1; $i <= 3; $i++ ) {
+        $wp_customize->add_setting( "mlws_howto_qs{$i}_title", array( 'default' => $qs_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_howto_qs{$i}_title", array( 'label' => "Step $i Title",       'section' => 'mlws_howto_quickstart', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_howto_qs{$i}_desc",  array( 'default' => $qs_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_howto_qs{$i}_desc",  array( 'label' => "Step $i Description", 'section' => 'mlws_howto_quickstart', 'type' => 'textarea' ) );
+        $wp_customize->add_setting( "mlws_howto_qs{$i}_url",   array( 'default' => $qs_defaults[$i][2], 'sanitize_callback' => 'esc_url_raw' ) );
+        $wp_customize->add_control( "mlws_howto_qs{$i}_url",   array( 'label' => "Step $i Link URL",    'section' => 'mlws_howto_quickstart', 'type' => 'url' ) );
+    }
+
+    // ── Step-by-Step Guide ────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_guide', array( 'title' => 'Step-by-Step Guide (5 steps)', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_guide_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_guide_show',  array( 'label' => 'Show Guide Section', 'section' => 'mlws_howto_guide', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_guide_tag',   array( 'default' => 'The Full Guide', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_guide_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_howto_guide', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_guide_title', array( 'default' => 'Making the Most of Merlows', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_guide_title', array( 'label' => 'Heading', 'section' => 'mlws_howto_guide', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_guide_desc',  array( 'default' => 'A walkthrough of every major feature on the platform.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_howto_guide_desc',  array( 'label' => 'Description', 'section' => 'mlws_howto_guide', 'type' => 'textarea' ) );
+
+    $step_defaults = array(
+        1 => array( 'Navigate the Categories', 'The main menu organises all content into six sections: Breaking News for fast-moving developments; Diplomatic Analysis for expert-written deep dives; Op-Eds & Commentary for regional perspectives; Abraham Accords for normalisation coverage; Cyrus Accord for Merlows\' own peace initiative; and Regional Voices for on-the-ground reporting.', 'Navigation'   ),
+        2 => array( 'Read an Article',          'Every article opens with a summary panel so you can assess relevance before reading. Below the body you\'ll find related articles, source links, and a tag cloud to continue your research.', 'Reading' ),
+        3 => array( 'Use the AI Assistant',     'Click "Ask AI" in the navigation to open the research assistant. Type any question in plain language and receive a sourced, structured response drawing on the Merlows editorial archive.', 'AI Research' ),
+        4 => array( 'Search and Filter',        'Use the search bar to find articles by keyword, author, or topic. On category archive pages, use the filter controls to narrow by date range.', 'Search'       ),
+        5 => array( 'Join the Community',       'Register for a free account to unlock comment threads, save your reading list, receive the weekly diplomatic briefing by email, and submit commentary.', 'Community'    ),
+    );
+    for ( $i = 1; $i <= 5; $i++ ) {
+        $wp_customize->add_setting( "mlws_howto_step{$i}_title", array( 'default' => $step_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_howto_step{$i}_title", array( 'label' => "Step $i Title",       'section' => 'mlws_howto_guide', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_howto_step{$i}_desc",  array( 'default' => $step_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_howto_step{$i}_desc",  array( 'label' => "Step $i Description", 'section' => 'mlws_howto_guide', 'type' => 'textarea' ) );
+        $wp_customize->add_setting( "mlws_howto_step{$i}_label", array( 'default' => $step_defaults[$i][2], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_howto_step{$i}_label", array( 'label' => "Step $i Badge Label", 'section' => 'mlws_howto_guide', 'type' => 'text' ) );
+    }
+
+    // ── Use Cases ─────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_usecases', array( 'title' => 'Use Cases (6 cards)', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_usecases_show', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_usecases_show', array( 'label' => 'Show Use Cases Section', 'section' => 'mlws_howto_usecases', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_uc_tag',   array( 'default' => 'Who Uses Merlows', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_uc_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_howto_usecases', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_uc_title', array( 'default' => 'Built for Every Audience', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_uc_title', array( 'label' => 'Heading', 'section' => 'mlws_howto_usecases', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_uc_desc',  array( 'default' => 'Whether you follow the news casually or work at the heart of diplomacy, Merlows has something for you.', 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_howto_uc_desc',  array( 'label' => 'Description', 'section' => 'mlws_howto_usecases', 'type' => 'textarea' ) );
+
+    $uc_defaults = array(
+        1 => array( 'Policymakers & Diplomats',  'Track the latest developments, access expert analysis, and use the AI assistant to research treaty precedents or regional dynamics in seconds.'       ),
+        2 => array( 'Journalists & Researchers',  'Use Merlows as a primary and secondary source — our editorial archive, expert contributors, and AI research tool are built for serious inquiry.'        ),
+        3 => array( 'Students & Academics',       'Explore the full diplomatic history of the Abraham Accords and Cyrus Accord with cited analysis, timeline tools, and a growing research library.'     ),
+        4 => array( 'Engaged Citizens',            'Cut through the noise. Merlows explains the context behind every headline so you understand not just what happened, but why it matters.'                ),
+        5 => array( 'NGOs & Civil Society',        'Monitor developments relevant to peace-building, human rights, and regional stability — and connect your work to the broader diplomatic conversation.' ),
+        6 => array( 'Business & Investors',        'Understand the geopolitical risk and opportunity landscape shaped by normalisation deals and shifting regional alliances.'                               ),
+    );
+    for ( $i = 1; $i <= 6; $i++ ) {
+        $wp_customize->add_setting( "mlws_howto_uc{$i}_title", array( 'default' => $uc_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_howto_uc{$i}_title", array( 'label' => "Card $i Title",       'section' => 'mlws_howto_usecases', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_howto_uc{$i}_desc",  array( 'default' => $uc_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_howto_uc{$i}_desc",  array( 'label' => "Card $i Description", 'section' => 'mlws_howto_usecases', 'type' => 'textarea' ) );
+    }
+
+    // ── FAQ ───────────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_faq', array( 'title' => 'FAQ (6 items)', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_faq_show',  array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_faq_show',  array( 'label' => 'Show FAQ Section', 'section' => 'mlws_howto_faq', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_faq_tag',   array( 'default' => 'FAQ', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_faq_tag',   array( 'label' => 'Tag Label', 'section' => 'mlws_howto_faq', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_faq_title', array( 'default' => 'Frequently Asked Questions', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_faq_title', array( 'label' => 'Heading', 'section' => 'mlws_howto_faq', 'type' => 'text' ) );
+
+    $faq_defaults = array(
+        1 => array( 'Is Merlows free to use?',                'Yes. All articles, analyses, and the AI assistant are free to access. Registration is optional and unlocks additional features like a saved reading list and the weekly briefing email.' ),
+        2 => array( 'Is the AI assistant reliable?',           'The Merlows AI draws on our curated editorial archive and is designed specifically for diplomatic and geopolitical topics. As with any AI tool, we recommend cross-referencing important claims with the linked source articles.' ),
+        3 => array( 'How often is content published?',         'Breaking news is published as events develop. Diplomatic analysis and op-eds are published several times per week. The weekly briefing email goes out every Monday morning.' ),
+        4 => array( 'Can I submit an article or op-ed?',       'Yes. We welcome contributions from regional experts, academics, and practitioners. Visit our Contact page and select "Submit a Contribution" to send us a pitch.' ),
+        5 => array( 'What is the Cyrus Accord?',               "The Cyrus Accord is Merlows' own diplomatic initiative — a proposed framework for Israel-Iran normalisation inspired by the legacy of Cyrus the Great. Visit our dedicated Cyrus Accord section to learn more." ),
+        6 => array( 'How do I report an error in an article?', 'Click the "Report an Error" link at the bottom of any article, or use the Contact page. We take accuracy seriously and publish corrections promptly.' ),
+    );
+    for ( $i = 1; $i <= 6; $i++ ) {
+        $wp_customize->add_setting( "mlws_howto_faq{$i}_q", array( 'default' => $faq_defaults[$i][0], 'sanitize_callback' => 'sanitize_text_field' ) );
+        $wp_customize->add_control( "mlws_howto_faq{$i}_q", array( 'label' => "FAQ $i Question", 'section' => 'mlws_howto_faq', 'type' => 'text' ) );
+        $wp_customize->add_setting( "mlws_howto_faq{$i}_a", array( 'default' => $faq_defaults[$i][1], 'sanitize_callback' => 'sanitize_textarea_field' ) );
+        $wp_customize->add_control( "mlws_howto_faq{$i}_a", array( 'label' => "FAQ $i Answer",   'section' => 'mlws_howto_faq', 'type' => 'textarea' ) );
+    }
+
+    // ── CTA Strip ─────────────────────────────────────────────────────────────
+    $wp_customize->add_section( 'mlws_howto_cta', array( 'title' => 'CTA Strip', 'panel' => 'mlws_howto_panel' ) );
+
+    $wp_customize->add_setting( 'mlws_howto_cta_show',        array( 'default' => true,  'sanitize_callback' => 'wp_validate_boolean' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_show',        array( 'label' => 'Show CTA Strip', 'section' => 'mlws_howto_cta', 'type' => 'checkbox' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_title',       array( 'default' => 'Ready to Explore?', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_title',       array( 'label' => 'Heading', 'section' => 'mlws_howto_cta', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_desc',        array( 'default' => "Dive into the latest diplomatic analysis, ask the AI your first question, or read about the peace initiative we're championing.", 'sanitize_callback' => 'sanitize_textarea_field' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_desc',        array( 'label' => 'Description', 'section' => 'mlws_howto_cta', 'type' => 'textarea' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_btn1_label',  array( 'default' => 'Read Latest Analysis', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_btn1_label',  array( 'label' => 'Button 1 Label', 'section' => 'mlws_howto_cta', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_btn1_url',    array( 'default' => '/diplomatic-analysis/', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_btn1_url',    array( 'label' => 'Button 1 URL', 'section' => 'mlws_howto_cta', 'type' => 'url' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_btn2_label',  array( 'default' => 'Ask the AI', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_btn2_label',  array( 'label' => 'Button 2 Label', 'section' => 'mlws_howto_cta', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_btn2_url',    array( 'default' => '/ask-ai/', 'sanitize_callback' => 'esc_url_raw' ) );
+    $wp_customize->add_control( 'mlws_howto_cta_btn2_url',    array( 'label' => 'Button 2 URL', 'section' => 'mlws_howto_cta', 'type' => 'url' ) );
+    $wp_customize->add_setting( 'mlws_howto_cta_bg',          array( 'default' => '#1B4F8A', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    $wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, 'mlws_howto_cta_bg', array( 'label' => 'Background Colour', 'section' => 'mlws_howto_cta' ) ) );
+
 }
 add_action( 'customize_register', 'mlws_pages_customize_register', 20 );
