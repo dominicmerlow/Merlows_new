@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Georgia:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.8.2/docx.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
@@ -6837,7 +6838,10 @@ function _wizRenderSources() {
     if (s.type === 'github') {
       inputHtml = '<input placeholder="owner/repo" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.repo=el.value;})(this)" value="' + escHtml(s.repo||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;"> <input placeholder="path (optional)" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.path=el.value;})(this)" value="' + escHtml(s.path||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">';
     } else if (s.type === 'upload') {
-      inputHtml = '<input type="file" accept=".pdf,.doc,.docx,.txt,.html" onchange="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src&&el.files[0])src.url=el.files[0].name;})(this)" style="flex:1;padding:4px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">';
+      var uploadStatus = s.rawText ? ('<span style="font-size:0.75rem;color:var(--success,#16a34a);">' + escHtml(s.filename || 'File loaded') + ' (' + Math.round(s.rawText.length / 1024) + ' KB)</span>') : '<span style="font-size:0.75rem;color:var(--text-muted);">No file selected</span>';
+      inputHtml = '<div style="display:flex;flex-direction:column;gap:4px;flex:1;">'
+        + '<input type="file" accept=".txt,.html,.md,.csv,.xls,.xlsx" onchange="(function(el){var srcId=\'' + s.id + '\';var src=_wizSources.find(function(x){return x.id===srcId;});if(!src||!el.files[0])return;src.filename=el.files[0].name;var file=el.files[0];var nm=file.name.toLowerCase();if(nm.endsWith(\'.xls\')||nm.endsWith(\'.xlsx\')){var r=new FileReader();r.onload=function(e){var wb=XLSX.read(e.target.result,{type:\'array\'});var lines=[];wb.SheetNames.forEach(function(sn){var ws=wb.Sheets[sn];var csv=XLSX.utils.sheet_to_csv(ws);if(csv.trim())lines.push(\'Sheet: \'+sn+\'\\n\'+csv);});src.rawText=lines.join(\'\\n\\n\');_wizRenderSources();};r.readAsArrayBuffer(file);}else{var r=new FileReader();r.onload=function(e){src.rawText=e.target.result;_wizRenderSources();};r.readAsText(file);}})(this)" style="flex:1;padding:4px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">'
+        + uploadStatus + '</div>';
     } else if (s.type === 'google_drive') {
       inputHtml = '<input placeholder="Google Drive folder ID (from URL)" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.folderId=el.value.trim();})(this)" value="' + escHtml(s.folderId||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;" title="Paste the folder ID from the Drive URL: drive.google.com/drive/folders/FOLDER_ID">';
     } else if (s.type === 'dropbox') {
@@ -7056,7 +7060,7 @@ async function _wizSubmit() {
   var payload = {
     name: document.getElementById('wizName').value.trim(),
     category: document.getElementById('wizCategory').value,
-    sources: _wizSources.map(function(s) { var o = {type:s.type}; if(s.url)o.url=s.url; if(s.repo)o.repo=s.repo; if(s.path)o.path=s.path; if(s.branch)o.branch=s.branch; if(s.folderId)o.folderId=s.folderId; if(s.folderPath!==undefined)o.folderPath=s.folderPath; if(s.type==='gmail'){if(s.from!==undefined)o.from=s.from;if(s.subjectContains!==undefined)o.subjectContains=s.subjectContains;if(s.labelIds)o.labelIds=s.labelIds;if(s.maxResults)o.maxResults=s.maxResults;} if(s.type==='google_sheets'){if(s.sheetId)o.sheetId=s.sheetId;if(s.sheetName)o.sheetName=s.sheetName;if(s.urlColumn)o.urlColumn=s.urlColumn;if(s.notesColumn)o.notesColumn=s.notesColumn;if(s.wpLinkColumn)o.wpLinkColumn=s.wpLinkColumn;} if(s.type==='bibliography'){if(s.bibId)o.bibId=s.bibId;if(s.mode)o.mode=s.mode;} return o; }),
+    sources: _wizSources.map(function(s) { var o = {type:s.type}; if(s.url)o.url=s.url; if(s.repo)o.repo=s.repo; if(s.path)o.path=s.path; if(s.branch)o.branch=s.branch; if(s.folderId)o.folderId=s.folderId; if(s.folderPath!==undefined)o.folderPath=s.folderPath; if(s.type==='gmail'){if(s.from!==undefined)o.from=s.from;if(s.subjectContains!==undefined)o.subjectContains=s.subjectContains;if(s.labelIds)o.labelIds=s.labelIds;if(s.maxResults)o.maxResults=s.maxResults;} if(s.type==='google_sheets'){if(s.sheetId)o.sheetId=s.sheetId;if(s.sheetName)o.sheetName=s.sheetName;if(s.urlColumn)o.urlColumn=s.urlColumn;if(s.notesColumn)o.notesColumn=s.notesColumn;if(s.wpLinkColumn)o.wpLinkColumn=s.wpLinkColumn;} if(s.type==='bibliography'){if(s.bibId)o.bibId=s.bibId;if(s.mode)o.mode=s.mode;} if(s.type==='upload'){if(s.filename)o.filename=s.filename;if(s.rawText)o.rawText=s.rawText;} return o; }),
     trigger: {
       type: trigType,
       cron: trigType === 'schedule' ? cronExpr : null,
