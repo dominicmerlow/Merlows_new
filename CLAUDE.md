@@ -8,16 +8,32 @@
 
 ## Deployment
 - GitHub auto-deploy is **disabled** (`"github": {"enabled": false}` in vercel.json).
-- Always deploy manually: `vercel --prod --yes` from repo root.
-- **Vercel Pro** (team org `merlows`): function limit lifted (29 `api/` functions as of 2026-06-22); `maxDuration: 300` on both catch-alls.
+- Always deploy manually: `vercel --prod --yes` (use `npx vercel` — CLI not installed globally).
+- **Vercel Hobby plan** (project under `dominicmerlows-projects`): **12 serverless-function limit per deployment** and `maxDuration` capped at **60s**. The app sits at **11 functions** after the 2026-06-22 catch-all consolidation (see Vercel Routing) — one slot of margin. **Adding a new `api/*.js` route risks breaking the deploy**; prefer adding handlers under an existing catch-all instead. (An SLA Pharma Pro team exists if a future move to Pro is wanted; Vance/Alpha runs on Pro with the same ~26 endpoints unconsolidated.)
 - Production URL: https://merlows.vercel.app
 
 ## Vercel Routing (Critical)
-- All automation routes handled by `api/automation/[...slug].js` (single catch-all).
-- In non-Next.js Vercel: slug key is `req.query['...slug']` (three literal dots), NOT `req.query.slug`.
-- Multi-segment paths arrive as a **slash-joined string** (e.g. `'rules/abc'`), not an array — always `split('/')`.
-- **Never create** subdirectory handler files (`api/automation/rules/index.js` etc.) — they intercept the catch-all even if listed in `.vercelignore`.
-- Handler logic lives in `lib/automation/handlers/` (doesn't count toward function limit).
+- **Five catch-all functions** consolidate most routes to fit the Hobby 12-fn limit:
+  `api/automation/[...slug].js`, `api/social/[...slug].js`, `api/auth/[...slug].js`,
+  `api/content/[...slug].js`, `api/review/[...slug].js`. Each imports handlers from
+  `lib/<area>/handlers/` (outside `api/`, so they don't count as functions) and
+  dispatches by slug. `vercel.json` has a `/api/<area>/:slug*` rewrite per catch-all.
+- In non-Next.js Vercel: slug key is `req.query['...slug']` (three literal dots) OR
+  `req.query.slug` when arriving via the rewrite — read both. Single-segment paths
+  arrive as a plain string; multi-segment as a **slash-joined string** — always `split('/')`.
+- **content** dispatch: empty slug → index (list/create + `?action=` diagnostics);
+  `slug[0]` in the NAMED set (`ab-config`, `article-prompts`, `hero-prompts`,
+  `master-prompt`, `usage-record`, `usage-summary`, `word-limits`) → that handler;
+  else `slug[0]` is a content id → item handler (`?id=`), with `slug[1]` ∈
+  `ai-revise`/`apply-revision`/`comment` for sub-actions.
+- **Test-compat shims**: a few `api/*.js` files (`content/index.js`, `content/[id].js`,
+  `review/[token].js`, `review/send.js`, plus `automation/{fetch,notify,*-schema}.js`)
+  are thin re-exports of the lib handler so co-located `*.test.js` can import them.
+  They are listed in `.vercelignore` so they DON'T count as functions. If you add a
+  new tested handler, add its shim to `.vercelignore` too.
+- **Never add a plain `api/<area>/index.js` or subdir handler** for a consolidated area —
+  it becomes a separate function and can shadow the catch-all. Add a branch to the
+  catch-all + a `lib/<area>/handlers/` module instead.
 
 ## UI Patterns
 - Tab switching: `switchTab('tab-name')` — tab views are `<div id="view-tab-name">`.
@@ -141,8 +157,9 @@ that work as a checkpoint, then finished full parity. Vance is the Alpha/lead.
   provenance display, category-articles view. Skipped `view-archive-legacy`.
 
 ### Config
-- `vercel.json`: `maxDuration` 60→300 (Pro), `github.silent`. Project on Vercel
-  Pro (29 `api/` functions). `package-lock` name → `merlows-content-generator`.
+- `vercel.json`: `github.silent` added. `package-lock` name → `merlows-content-generator`.
+  (NOTE: an earlier edit set `maxDuration: 300` assuming Pro — **reverted to 60** on
+  2026-06-22 once a deploy proved the project is on **Hobby**, see API-consolidation note below.)
 
 ### Pre-existing items flagged (not changed — env-overridable, delivery-sensitive)
 - Email from-defaults are inconsistent (`mail.ibdhealthhub.com` in
@@ -194,3 +211,26 @@ delta (much of the "restore" was already in Merlows from the first sync).
 
 Tests 76 pass / 4 fail (unchanged benchmark-stale baseline). All JS + both
 index.html script blocks pass `node --check`.
+
+---
+
+## API consolidation for Vercel Hobby (2026-06-22)
+
+The first deploy attempt failed: `dominicmerlows-projects` is on **Hobby** (12-function
+cap), and the app had ~26 functions. Rather than move to Pro, the API was consolidated
+to **11 functions** using the existing automation/social catch-all pattern.
+
+- **auth** (4→1): `api/auth/[...slug].js` → `lib/auth/handlers/{login,logout,me,change-password}.js`.
+- **content** (12→1): `api/content/[...slug].js` → `lib/content/handlers/*` (index, item,
+  ai-revise, apply-revision, comment, + 7 NAMED config routes). Shims: `content/index.js`
+  (`buildContentItem`/`validateContentItem`), `content/[id].js` (`applyStatusTransition`).
+- **review** (2→1): `api/review/[...slug].js` → `lib/review/handlers/{token,send}.js`.
+  Shims: `review/[token].js` (`computeNewStatus`), `review/send.js` (`buildApprovalToken`/
+  `parseApprovalToken`) — `send.test.js` imports `./send.js` via dynamic `import()`.
+- `vercel.json`: added `:slug*` rewrites for auth/content/review; `maxDuration` 60 (Hobby cap);
+  content catch-all at 60 for the LLM ai-revise path. `.vercelignore`: added the 4 shims.
+- Verified: 11 deployed functions, full test suite 76/4 (no regressions), all catch-alls
+  import-resolve, and a 20-route dispatch simulation (valid routes reach handlers, bogus → 404).
+- **Divergence from Vance**: Vance keeps these as individual files (it's on Pro). When syncing
+  a content/auth/review endpoint from Vance, port the logic into the matching
+  `lib/<area>/handlers/` module and (if new) add a dispatch branch + shim, not a new `api/` file.

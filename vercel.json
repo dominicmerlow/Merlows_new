@@ -4,12 +4,18 @@
     "silent": true
   },
   "functions": {
-    "api/automation/[...slug].js": { "maxDuration": 300 },
-    "api/social/[...slug].js":    { "maxDuration": 300 }
+    "api/automation/[...slug].js": { "maxDuration": 60 },
+    "api/social/[...slug].js":     { "maxDuration": 60 },
+    "api/content/[...slug].js":    { "maxDuration": 60 }
   },
   "rewrites": [
     { "source": "/api/automation/:slug*", "destination": "/api/automation/[...slug]" },
-    { "source": "/api/social/:slug*",     "destination": "/api/social/[...slug]" }
+    { "source": "/api/social/:slug*",     "destination": "/api/social/[...slug]" },
+    { "source": "/api/auth/:slug*",       "destination": "/api/auth/[...slug]" },
+    { "source": "/api/content",           "destination": "/api/content/[...slug]" },
+    { "source": "/api/content/:slug*",    "destination": "/api/content/[...slug]" },
+    { "source": "/api/review",            "destination": "/api/review/[...slug]" },
+    { "source": "/api/review/:slug*",     "destination": "/api/review/[...slug]" }
   ],
   "crons": [
     { "path": "/api/cron/publish",                  "schedule": "0 8 * * *" },
