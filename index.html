@@ -2227,6 +2227,45 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 </head>
 <body>
 
+<!-- ══════════════════════════════ AUTH OVERLAYS ════════════════════════════ -->
+<div id="authBootCover" style="position:fixed;inset:0;background:#fff;z-index:9998;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;color:var(--text-muted,#888);font-size:0.78rem;">Loading…</div>
+
+<div id="loginOverlay" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#374151 0%,#1f2730 100%);z-index:9999;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;">
+  <form id="loginForm" onsubmit="event.preventDefault();submitLogin();" style="background:#fff;border-radius:10px;padding:32px 36px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.4);">
+    <div style="text-align:center;margin-bottom:24px;">
+      <img src="logo.png" alt="Merlows" style="height:40px;"/>
+    </div>
+    <h2 style="font-size:1.05rem;margin:0 0 4px;color:var(--sla-navy);text-align:center;">Merlows Content Generator</h2>
+    <p style="font-size:0.72rem;color:#6b7a8d;text-align:center;margin:0 0 18px;">Sign in to continue</p>
+    <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;letter-spacing:0.4px;">Email</label>
+    <input id="loginEmail" type="email" autocomplete="username" required style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
+    <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;letter-spacing:0.4px;">Password</label>
+    <input id="loginPassword" type="password" autocomplete="current-password" required style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:6px;font-family:inherit;"/>
+    <div id="loginError" style="font-size:0.7rem;color:#c0392b;min-height:16px;margin-bottom:10px;"></div>
+    <button type="submit" id="loginSubmitBtn" style="width:100%;padding:11px;background:var(--sla-orange);color:#fff;border:none;font-weight:700;font-size:0.85rem;cursor:pointer;font-family:inherit;letter-spacing:0.4px;">Sign in</button>
+  </form>
+</div>
+
+<div id="changePwdModal" style="display:none;position:fixed;inset:0;background:rgba(31,39,48,0.55);z-index:10000;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;">
+  <form onsubmit="event.preventDefault();submitChangePassword();" style="background:#fff;border-radius:10px;padding:28px 32px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <h2 style="font-size:1rem;margin:0 0 6px;color:var(--sla-navy);">Change password</h2>
+    <p id="changePwdHint" style="font-size:0.72rem;color:#6b7a8d;margin:0 0 16px;line-height:1.5;">Set a new password to continue.</p>
+    <div id="oldPwdRow">
+      <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;">Current password</label>
+      <input id="oldPwd" type="password" autocomplete="current-password" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
+    </div>
+    <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;">New password</label>
+    <input id="newPwd" type="password" autocomplete="new-password" required minlength="4" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
+    <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;">Confirm new password</label>
+    <input id="newPwd2" type="password" autocomplete="new-password" required minlength="4" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:6px;font-family:inherit;"/>
+    <div id="changePwdError" style="font-size:0.7rem;color:#c0392b;min-height:16px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" id="changePwdCancelBtn" onclick="closeChangePwd()" style="flex:1;padding:10px;background:#f0f2f5;color:var(--sla-navy);border:1px solid #dde3ea;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;">Cancel</button>
+      <button type="submit" style="flex:2;padding:10px;background:var(--sla-orange);color:#fff;border:none;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit;">Update password</button>
+    </div>
+  </form>
+</div>
+
 <!-- ══════════════════════════════ SIDEBAR NAV ══════════════════════════════ -->
 <aside class="sidebar">
   <a class="sidebar-logo" href="#">
@@ -2316,6 +2355,11 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
   </nav>
 
   <div class="sidebar-footer">
+    <div id="userChip" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(55,65,81,0.06);margin-bottom:8px;cursor:pointer;" onclick="toggleUserMenu()" title="Account menu"></div>
+    <div id="userMenu" style="display:none;position:absolute;bottom:64px;left:8px;right:8px;background:var(--sla-navy);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:50;">
+      <button onclick="openChangePwd(false);toggleUserMenu();" style="width:100%;padding:9px 12px;background:transparent;border:none;color:#fff;text-align:left;font-family:inherit;font-size:0.72rem;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06);">Change password</button>
+      <button onclick="logout();" style="width:100%;padding:9px 12px;background:transparent;border:none;color:#e74c3c;text-align:left;font-family:inherit;font-size:0.72rem;cursor:pointer;">Sign out</button>
+    </div>
     <div id="syncStatus" onclick="ghLoadAll()" title="Click to refresh from GitHub">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;flex-shrink:0;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       <span id="syncText">Loading…</span>
@@ -3079,6 +3123,32 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
   </div>
 </div><!-- /tab-view calendar -->
 
+<!-- ══════════════════════════════ TAB: CATEGORY ARTICLES (all statuses) ══════════════════════════════ -->
+<div class="tab-view" id="view-category-articles">
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-header-title" id="catArticlesTitle">Category Articles</h1>
+      <p class="page-header-subtitle" id="catArticlesSubtitle">All articles in this category, across every status.</p>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:0 20px 10px;font-family:'Montserrat',sans-serif;">
+    <span style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);">Status</span>
+    <div id="catArticlesStatusChips" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+    <button type="button" onclick="catArticlesToggleAll(true)"  style="font-size:0.6rem;color:var(--sla-navy);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0 4px;">all</button>
+    <button type="button" onclick="catArticlesToggleAll(false)" style="font-size:0.6rem;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0 4px;">none</button>
+    <span style="width:1px;height:18px;background:var(--border);margin:0 4px;"></span>
+    <span style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);">Date</span>
+    <select id="catArticlesSort" onchange="renderCategoryArticles()" style="padding:4px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.7rem;font-family:inherit;">
+      <option value="newest">Newest</option>
+      <option value="oldest">Oldest</option>
+    </select>
+    <span id="catArticlesCount" style="font-size:0.65rem;color:var(--text-muted);margin-left:auto;"></span>
+  </div>
+  <div id="catArticlesList" style="padding:0 20px 20px;">
+    <div style="font-size:0.72rem;color:var(--text-muted);padding:14px;">Loading…</div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════ TAB 2: LIBRARY ══════════════════════════════ -->
 <div class="tab-view" id="view-archive">
 <div class="cat-bar" id="catBar-archive">
@@ -3332,6 +3402,73 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <button class="btn btn-orange btn-sm" onclick="saveGodPrompt()">Save Context</button>
         </div>
         <div class="llm-tip" id="godPromptPreview" style="display:none;margin-top:8px;font-style:italic;"></div>
+      </div>
+    </div>
+
+    <!-- Token Usage -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">Token Usage</div>
+          <div class="llm-section-desc">OpenRouter token consumption per model — total, last 24 hours, last hour. Recorded across automation runs, AI revisions, and the in-app generator.</div>
+        </div>
+        <button class="btn btn-orange btn-sm" onclick="loadUsageSummary()">Refresh</button>
+      </div>
+      <div class="llm-section-body">
+        <div id="usageSummary" style="font-size:0.78rem;color:var(--text-muted);">Loading…</div>
+      </div>
+    </div>
+
+    <!-- A/B Testing -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">A/B Test — Models</div>
+          <div class="llm-section-desc">Route a percentage of automation generations to alternative models. Outcomes (success/failure) and cost-per-successful-generation surface below so you can compare effective economics, not just sticker price.</div>
+        </div>
+        <label class="btn btn-orange btn-sm" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="abEnabled" onchange="abMarkDirty()" style="accent-color:#fff;"/> Enabled
+        </label>
+      </div>
+      <div class="llm-section-body">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+          <label style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--sla-navy);">Test name</label>
+          <input type="text" id="abName" placeholder="e.g. Llama vs Gemma vs Llama-paid" oninput="abMarkDirty()" style="flex:1;padding:7px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.78rem;background:var(--bg);color:var(--text);"/>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <label style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--sla-navy);">Variants</label>
+            <button type="button" class="btn btn-outline btn-sm" onclick="abAddVariant()">+ Add variant</button>
+          </div>
+          <div id="abVariants" style="display:flex;flex-direction:column;gap:6px;"></div>
+          <p style="font-size:0.6rem;color:var(--text-muted);margin:6px 0 0;">Need at least 2 variants for the test to be active. Weight controls relative traffic share — higher = picked more often.</p>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px;">
+          <button type="button" id="abSaveBtn" class="btn btn-orange btn-sm" onclick="saveAbConfig()" disabled>Save config</button>
+        </div>
+        <div id="abComparison" style="font-size:0.78rem;color:var(--text-muted);">No A/B data yet.</div>
+      </div>
+    </div>
+
+    <!-- Master Prompt — universal preamble for ALL generations (additive to Global Context above) -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/><path d="M2 7l10 5 10-5"/><path d="M12 22V12"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">Master Prompt (Golden Rules)</div>
+          <div class="llm-section-desc">Prepended to <strong>every</strong> LLM generation — automation and in-browser. Single source of truth for brand identity and global style rules. Edit once, applies everywhere.</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <textarea id="masterPromptTextarea" rows="14" placeholder="Brand context and golden writing rules that apply to every article…" style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--border);font-family:Georgia,serif;font-size:0.78rem;line-height:1.55;resize:vertical;border-radius:0;color:var(--text);background:var(--bg);"></textarea>
+        <p class="llm-tip" style="margin-top:6px;font-size:0.66rem;color:var(--text-muted);">Tip: keep this short and behaviour-focused. Category prompts handle structure and length; this is for cross-category rules that should never be broken.</p>
+        <div class="llm-save-row" style="margin-top:10px;display:flex;gap:8px;align-items:center;justify-content:flex-end;">
+          <span id="masterPromptStatus" style="font-size:0.66rem;color:var(--text-muted);"></span>
+          <button class="btn btn-outline btn-sm" onclick="resetMasterPromptDefault()">Restore defaults</button>
+          <button class="btn btn-orange btn-sm" onclick="saveMasterPrompt()">Save Master Prompt</button>
+        </div>
       </div>
     </div>
 
@@ -5808,7 +5945,7 @@ function switchTab(tab) {
     return;
   }
   // automation-new: show flat form, populate category dropdown
-  var allTabs = ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','llm','automation','automation-new','automation-rules','automation-inbox','bibliography','bibliography-new','categories','trash'];
+  var allTabs = ['dashboard','generator','archive','comparison','reports','pipeline','distribution','calendar','monitoring','settings','llm','automation','automation-new','automation-rules','automation-inbox','bibliography','bibliography-new','categories','trash','category-articles'];
   allTabs.forEach(t => {
     const v = document.getElementById('view-' + t);
     const b = document.getElementById('tab-' + t);
@@ -7889,6 +8026,306 @@ function loadLLMPage() {
     var sel = document.getElementById('llm-social-' + platId);
     if (sel) { var v = getSocialModel(platId); if (v) sel.value = v; }
   });
+
+  // Populate AI-Config sections when the tab opens
+  if (typeof loadMasterPrompt === 'function') loadMasterPrompt();
+  if (typeof loadUsageSummary === 'function') loadUsageSummary();
+  if (typeof loadAbConfig === 'function') loadAbConfig();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AI-CONFIG: Master Prompt / Token Usage / A-B Test
+// ═══════════════════════════════════════════════════════════
+var MASTER_PROMPT_DEFAULT = `[BRAND]
+You are writing for Merlows (merlows.com), a diplomacy and international-affairs content platform.
+
+[STYLE — UNIVERSAL RULES]
+Never use em dashes (—) anywhere in the output. Replace with a comma, colon, semicolon, or restructure the sentence. Apply this rule in titles, headings, body text, takeaways, and disclaimers. Review the entire output before delivering and remove any em dashes that slipped in.
+Use UK British English spelling and punctuation throughout.
+Abbreviations: introduce the term in full at first mention with the abbreviation in brackets, then use the abbreviation throughout. If a term would not naturally be spoken as its abbreviation, write it in full every time.
+Do not bold words mid-sentence or mid-paragraph. Bold is only for titles and subheadings.
+No exclamation marks. No clickbait. Avoid promotional language like "groundbreaking", "revolutionary", "journey", or "game-changing".`;
+
+async function loadMasterPrompt() {
+  var ta = document.getElementById('masterPromptTextarea');
+  var status = document.getElementById('masterPromptStatus');
+  if (!ta) return;
+  try {
+    var rec = await apiFetch('/api/content/master-prompt');
+    var text = rec && typeof rec.text === 'string' ? rec.text : '';
+    if (!text) text = localStorage.getItem('merlows_master_prompt') || MASTER_PROMPT_DEFAULT;
+    ta.value = text;
+    localStorage.setItem('merlows_master_prompt', text);
+    if (status) {
+      status.textContent = rec && rec.updatedAt
+        ? 'Last saved ' + new Date(rec.updatedAt).toLocaleString('en-GB')
+        : 'Not yet saved — defaults shown';
+    }
+  } catch (err) {
+    ta.value = localStorage.getItem('merlows_master_prompt') || MASTER_PROMPT_DEFAULT;
+    if (status) status.textContent = 'Server unreachable — showing local copy';
+  }
+}
+
+async function saveMasterPrompt() {
+  var ta = document.getElementById('masterPromptTextarea');
+  var status = document.getElementById('masterPromptStatus');
+  if (!ta) return;
+  var text = (ta.value || '').trim();
+  if (status) status.textContent = 'Saving…';
+  try {
+    var rec = await apiFetch('/api/content/master-prompt', {
+      method: 'PUT',
+      body: JSON.stringify({ text: text }),
+    });
+    localStorage.setItem('merlows_master_prompt', text);
+    if (status) status.textContent = 'Saved ' + new Date(rec.updatedAt).toLocaleString('en-GB');
+    showToast('✓ Master Prompt saved — applies to every generation');
+  } catch (err) {
+    if (status) status.textContent = 'Save failed: ' + err.message;
+    showToast('Save failed: ' + err.message);
+  }
+}
+
+function resetMasterPromptDefault() {
+  if (!confirm('Replace the current Master Prompt with the built-in defaults?\n\nYour edits will be lost. Click Save afterwards to commit the defaults to the server.')) return;
+  var ta = document.getElementById('masterPromptTextarea');
+  if (ta) ta.value = MASTER_PROMPT_DEFAULT;
+  var status = document.getElementById('masterPromptStatus');
+  if (status) status.textContent = 'Defaults restored — click Save to commit';
+}
+
+// ─── Token usage helpers ───
+function _fmtNum(n) { return (n || 0).toLocaleString('en-GB'); }
+function _fmtUsd(n) {
+  if (!n) return '$0.00';
+  if (n < 0.01)  return '$' + n.toFixed(4);
+  if (n < 1)     return '$' + n.toFixed(3);
+  return '$' + n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function _fmtRate(rate) {
+  if (!rate || (!rate.input && !rate.output)) return '<span style="color:var(--text-muted);">free</span>';
+  return '<span style="color:var(--text-muted);font-size:0.62rem;">$' + rate.input.toFixed(2) + ' / $' + rate.output.toFixed(2) + ' per 1k</span>';
+}
+function _shortModel(m) {
+  const parts = (m || '').split('/');
+  return parts.length > 1 ? parts.slice(1).join('/') : m;
+}
+
+async function loadUsageSummary() {
+  const el = document.getElementById('usageSummary');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--text-muted);">Loading…</div>';
+  try {
+    const r = await fetch('/api/content/usage-summary', { credentials: 'same-origin' });
+    if (!r.ok) throw new Error('Failed to load usage');
+    const data = await r.json();
+    window._lastUsageVariants = data.variants || [];
+    if (typeof abRenderComparison === 'function') abRenderComparison();
+    if (!data.models || !data.models.length) {
+      el.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;">No LLM activity recorded yet. Token counts appear here after the first generation, AI revision, or automation run.</div>';
+      return;
+    }
+    const since = data.firstEventAt ? new Date(data.firstEventAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+
+    const th = function(label, align) {
+      return '<th style="text-align:' + (align || 'left') + ';padding:8px 10px;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);">' + label + '</th>';
+    };
+    const headerRow =
+        '<tr style="background:var(--bg);">'
+      +   th('Model', 'left')
+      +   th('Input / Output rate', 'right')
+      +   th('Total tokens', 'right')
+      +   th('Total cost', 'right')
+      +   th('24h cost', 'right')
+      +   th('1h cost', 'right')
+      +   th('Calls', 'right')
+      + '</tr>';
+
+    const td = function(content, opts) {
+      opts = opts || {};
+      return '<td style="padding:8px 10px;font-size:' + (opts.size || '0.74rem') + ';color:' + (opts.color || 'var(--text)') + ';text-align:' + (opts.align || 'left') + (opts.tabular === false ? '' : ';font-variant-numeric:tabular-nums') + ';' + (opts.weight ? 'font-weight:' + opts.weight + ';' : '') + '"' + (opts.title ? ' title="' + opts.title + '"' : '') + '>' + content + '</td>';
+    };
+
+    const rows = data.models.map(function(m) {
+      return '<tr style="border-top:1px solid var(--border);">'
+        + td(escapeHtml(_shortModel(m.model)), { tabular: false, title: escapeHtml(m.model) })
+        + td(_fmtRate(m.rate), { align: 'right', tabular: false })
+        + td(_fmtNum(m.total.tokens), { align: 'right' })
+        + td(_fmtUsd(m.total.costUsd), { align: 'right' })
+        + td(_fmtUsd(m.d1.costUsd), { align: 'right' })
+        + td(_fmtUsd(m.h1.costUsd), { align: 'right' })
+        + td(_fmtNum(m.total.calls), { align: 'right', size: '0.7rem', color: 'var(--text-muted)' })
+      + '</tr>';
+    }).join('');
+
+    const totalsRow =
+        '<tr style="border-top:2px solid var(--border);background:var(--bg);">'
+      +   td('All models', { weight: 700 })
+      +   td('', { align: 'right' })
+      +   td(_fmtNum(data.overall.total), { align: 'right', weight: 700 })
+      +   td(_fmtUsd(data.overall.costUsd), { align: 'right', weight: 700 })
+      +   td(_fmtUsd(data.overall.costUsdD1), { align: 'right', weight: 700 })
+      +   td(_fmtUsd(data.overall.costUsdH1), { align: 'right', weight: 700 })
+      +   td(_fmtNum(data.overall.calls), { align: 'right', weight: 700, size: '0.7rem', color: 'var(--text-muted)' })
+      + '</tr>';
+
+    const sourceTag = data.pricingSource === 'openrouter-live'
+      ? '<span style="color:#0D9488;">live OpenRouter pricing</span>'
+      : '<span style="color:#e67e22;">fallback pricing (live fetch unavailable)</span>';
+
+    el.innerHTML =
+        '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:680px;">'
+      +   '<thead>' + headerRow + '</thead>'
+      +   '<tbody>' + rows + totalsRow + '</tbody>'
+      + '</table></div>'
+      + '<p style="font-size:0.6rem;color:var(--text-muted);margin-top:10px;line-height:1.6;">'
+      + 'Tracking ' + _fmtNum(data.eventCount) + ' event' + (data.eventCount === 1 ? '' : 's') + ' since ' + since + '. History capped at the most recent 5,000 calls. '
+      + 'Cost from ' + sourceTag + ', refreshed hourly. '
+      + 'Free models show $0; image generation is billed per-image, not tracked here yet.'
+      + '</p>';
+  } catch (e) {
+    el.innerHTML = '<div style="color:#c0392b;font-size:0.72rem;">Failed to load usage: ' + escapeHtml(e.message) + '</div>';
+  }
+}
+
+// ─── A/B Test config + comparison ───
+let _abConfig = { enabled: false, name: '', variants: [] };
+let _abDirty = false;
+
+function abMarkDirty() {
+  _abDirty = true;
+  const btn = document.getElementById('abSaveBtn');
+  if (btn) { btn.disabled = false; btn.textContent = 'Save config'; }
+}
+
+function abRenderVariants() {
+  const list = document.getElementById('abVariants');
+  if (!list) return;
+  if (!_abConfig.variants.length) {
+    list.innerHTML = '<div style="font-size:0.7rem;color:var(--text-muted);padding:8px 0;">No variants yet. Click "+ Add variant" to set up your first model.</div>';
+    return;
+  }
+  list.innerHTML = _abConfig.variants.map(function(v, i) {
+    return ''
+      + '<div style="display:flex;gap:6px;align-items:center;background:var(--bg);border:1px solid var(--border);padding:6px 8px;">'
+      +   '<input type="text" value="' + escapeHtml(v.label || '') + '" placeholder="Label (e.g. Llama 70B free)" oninput="abEditVariant(' + i + ', \'label\', this.value)" style="flex:1;padding:5px 8px;border:1px solid var(--border);font-family:inherit;font-size:0.72rem;background:#fff;color:var(--text);"/>'
+      +   '<input type="text" value="' + escapeHtml(v.model || '') + '" placeholder="OpenRouter model id" oninput="abEditVariant(' + i + ', \'model\', this.value)" style="flex:2;padding:5px 8px;border:1px solid var(--border);font-family:inherit;font-size:0.72rem;background:#fff;color:var(--text);"/>'
+      +   '<input type="number" value="' + (v.weight || 1) + '" min="0" step="1" title="Relative weight" oninput="abEditVariant(' + i + ', \'weight\', this.value)" style="width:64px;padding:5px 8px;border:1px solid var(--border);font-family:inherit;font-size:0.72rem;background:#fff;color:var(--text);text-align:right;"/>'
+      +   '<button type="button" onclick="abRemoveVariant(' + i + ')" title="Remove" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:1rem;line-height:1;padding:0 6px;">×</button>'
+      + '</div>';
+  }).join('');
+}
+
+function abAddVariant() {
+  _abConfig.variants.push({ id: 'tmp_' + Date.now() + '_' + _abConfig.variants.length, label: '', model: '', weight: 1 });
+  abRenderVariants();
+  abMarkDirty();
+}
+function abRemoveVariant(i) {
+  _abConfig.variants.splice(i, 1);
+  abRenderVariants();
+  abMarkDirty();
+}
+function abEditVariant(i, field, value) {
+  if (!_abConfig.variants[i]) return;
+  _abConfig.variants[i][field] = field === 'weight' ? Number(value) || 0 : value;
+  abMarkDirty();
+}
+
+async function loadAbConfig() {
+  try {
+    const r = await fetch('/api/content/ab-config', { credentials: 'same-origin' });
+    if (!r.ok) throw new Error('Failed to load A/B config');
+    _abConfig = await r.json();
+    if (!Array.isArray(_abConfig.variants)) _abConfig.variants = [];
+    document.getElementById('abEnabled').checked = !!_abConfig.enabled;
+    document.getElementById('abName').value = _abConfig.name || '';
+    abRenderVariants();
+    _abDirty = false;
+    const btn = document.getElementById('abSaveBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saved'; }
+  } catch (e) {
+    console.warn('A/B config load failed:', e.message);
+  }
+}
+
+async function saveAbConfig() {
+  const cfg = {
+    enabled: document.getElementById('abEnabled').checked,
+    name: document.getElementById('abName').value.trim(),
+    variants: _abConfig.variants,
+  };
+  const btn = document.getElementById('abSaveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  try {
+    const r = await fetch('/api/content/ab-config', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(cfg),
+    });
+    if (!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      throw new Error(data.error || ('HTTP ' + r.status));
+    }
+    _abConfig = await r.json();
+    _abDirty = false;
+    if (btn) { btn.disabled = true; btn.textContent = 'Saved ✓'; }
+    if (typeof showToast === 'function') showToast(_abConfig.enabled ? 'A/B test enabled' : 'A/B config saved');
+    abRenderComparison();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Save failed — retry'; }
+    alert('Failed to save A/B config: ' + e.message);
+  }
+}
+
+function abRenderComparison() {
+  const el = document.getElementById('abComparison');
+  if (!el) return;
+  const variants = window._lastUsageVariants || [];
+  if (!variants.length) {
+    el.innerHTML = '<div style="font-size:0.7rem;color:var(--text-muted);padding:8px 0;">No A/B data yet. Once the test is enabled and at least one automation run completes, results appear here.</div>';
+    return;
+  }
+  const th = function(label, align) {
+    return '<th style="text-align:' + (align || 'left') + ';padding:7px 9px;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);">' + label + '</th>';
+  };
+  const headerRow = '<tr style="background:var(--bg);">'
+    + th('Variant', 'left')
+    + th('Calls', 'right')
+    + th('Success', 'right')
+    + th('Failure', 'right')
+    + th('Success rate', 'right')
+    + th('Total cost', 'right')
+    + th('Cost / success', 'right')
+    + '</tr>';
+
+  const eligible = variants.filter(function(v) { return v.successes > 0; });
+  const bestId = eligible.length ? eligible.reduce(function(a, b) { return (a.costPerSuccess || Infinity) <= (b.costPerSuccess || Infinity) ? a : b; }).variantId : null;
+
+  const rows = variants.map(function(v) {
+    const ratePct = (v.successRate * 100).toFixed(1) + '%';
+    const isBest = v.variantId === bestId;
+    const rowStyle = isBest ? 'border-top:1px solid var(--border);background:rgba(13,148,136,0.06);' : 'border-top:1px solid var(--border);';
+    const tag = isBest ? ' <span style="background:#0D9488;color:#fff;font-size:0.5rem;padding:1px 5px;letter-spacing:0.5px;">BEST</span>' : '';
+    const cps = v.costPerSuccess != null ? _fmtUsd(v.costPerSuccess) : '<span style="color:var(--text-muted);">—</span>';
+    return '<tr style="' + rowStyle + '">'
+      + '<td style="padding:7px 9px;font-size:0.74rem;color:var(--text);" title="' + escapeHtml(v.models.join(', ')) + '">' + escapeHtml(v.label) + tag + '<div style="font-size:0.58rem;color:var(--text-muted);">' + escapeHtml(v.models.join(', ')) + '</div></td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;">' + _fmtNum(v.calls) + '</td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;color:#0D9488;">' + _fmtNum(v.successes) + '</td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;color:' + (v.failures ? '#c0392b' : 'var(--text-muted)') + ';">' + _fmtNum(v.failures) + '</td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;">' + ratePct + '</td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;">' + _fmtUsd(v.costUsd) + '</td>'
+      + '<td style="padding:7px 9px;font-size:0.74rem;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;">' + cps + '</td>'
+      + '</tr>';
+  }).join('');
+
+  el.innerHTML = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;min-width:640px;">'
+    + '<thead>' + headerRow + '</thead>'
+    + '<tbody>' + rows + '</tbody>'
+    + '</table></div>'
+    + '<p style="font-size:0.6rem;color:var(--text-muted);margin-top:8px;line-height:1.5;">Cost / success penalises variants that fail often — a model that’s 50% cheaper per token but fails twice as often has roughly equal effective cost. "Failure" here means the picked variant’s first attempt was rejected by the provider (rate limit, no endpoints, 5xx). The fallback chain still rescues the user-facing generation, but those rescues don’t count as wins for the variant.</p>';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -8524,6 +8961,26 @@ async function viewArticleFromPipeline(itemId) {
   if (titleEl) {
     titleEl.textContent = item.title || 'Untitled article';
     titleEl.style.display = 'block';
+  }
+  // Source-document provenance line — injected right after the title, shown when
+  // the article was auto-generated from a traceable file/URL. Clickable when URL present.
+  if (titleEl) {
+    let srcEl = document.getElementById('articleSourceDisplay');
+    if (item.sourceDocName) {
+      if (!srcEl) {
+        srcEl = document.createElement('div');
+        srcEl.id = 'articleSourceDisplay';
+        srcEl.style.cssText = 'font-size:0.7rem;color:var(--text-muted);margin:4px 0 2px;display:flex;align-items:center;gap:6px;';
+        titleEl.insertAdjacentElement('afterend', srcEl);
+      }
+      srcEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Source: ' +
+        (item.sourceDocUrl
+          ? '<a href="' + escapeHtml(item.sourceDocUrl) + '" target="_blank" rel="noopener" style="color:var(--sla-orange);text-decoration:underline;">' + escapeHtml(item.sourceDocName) + '</a>'
+          : escapeHtml(item.sourceDocName));
+      srcEl.style.display = 'flex';
+    } else if (srcEl) {
+      srcEl.style.display = 'none';
+    }
   }
   // Hero image: restore from saved item so it shows on view
   heroImageUrl  = item.heroImageUrl || null;
@@ -10340,10 +10797,156 @@ async function cedGenerateCategoryPrompt(catId) {
 // ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════ AUTH / SESSION ═══════════════════════════
+let _currentUser = null;
+function isRole(...roles) { return _currentUser && roles.includes(_currentUser.appRole); }
+function isAdmin()        { return isRole('admin'); }
+function isContentPlus()  { return isRole('admin','content'); }
+
+async function bootAuth() {
+  try {
+    const r = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      _currentUser = await r.json();
+      document.getElementById('loginOverlay').style.display = 'none';
+      document.getElementById('authBootCover').style.display = 'none';
+      if (typeof loadReviewers === 'function') loadReviewers().catch(() => {});
+      applyRoleGating();
+      if (_currentUser.mustChangePassword) openChangePwd(true);
+      return true;
+    }
+  } catch {}
+  // Not authed → show login
+  document.getElementById('authBootCover').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('loginEmail')?.focus(), 50);
+  return false;
+}
+
+async function submitLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const btn = document.getElementById('loginSubmitBtn');
+  errEl.textContent = ''; btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const r = await fetch('/api/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Login failed');
+    _currentUser = data.user;
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('loginPassword').value = '';
+    if (typeof loadReviewers === 'function') loadReviewers().catch(() => {});
+    applyRoleGating();
+    if (_currentUser.mustChangePassword) openChangePwd(true);
+  } catch (e) {
+    errEl.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign in';
+  }
+}
+
+function toggleUserMenu() {
+  const m = document.getElementById('userMenu');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#userChip') && !e.target.closest('#userMenu')) {
+    const m = document.getElementById('userMenu');
+    if (m) m.style.display = 'none';
+  }
+});
+
+async function logout() {
+  try { await fetch('/api/auth/logout', { method:'POST', credentials:'same-origin' }); } catch {}
+  _currentUser = null;
+  location.reload();
+}
+
+function openChangePwd(forced = false) {
+  const m = document.getElementById('changePwdModal');
+  document.getElementById('changePwdError').textContent = '';
+  document.getElementById('oldPwd').value = '';
+  document.getElementById('newPwd').value = '';
+  document.getElementById('newPwd2').value = '';
+  document.getElementById('oldPwdRow').style.display = forced ? 'none' : '';
+  document.getElementById('changePwdCancelBtn').style.display = forced ? 'none' : '';
+  document.getElementById('changePwdHint').textContent = forced
+    ? 'Your password was set by an administrator. Please choose a new password to continue.'
+    : 'Enter your current password, then choose a new one.';
+  m.style.display = 'flex';
+}
+function closeChangePwd() {
+  if (_currentUser?.mustChangePassword) return; // can't cancel forced flow
+  document.getElementById('changePwdModal').style.display = 'none';
+}
+async function submitChangePassword() {
+  const oldPassword = document.getElementById('oldPwd').value;
+  const newPassword = document.getElementById('newPwd').value;
+  const newPassword2 = document.getElementById('newPwd2').value;
+  const errEl = document.getElementById('changePwdError');
+  errEl.textContent = '';
+  if (newPassword !== newPassword2) { errEl.textContent = 'New passwords do not match.'; return; }
+  if (newPassword.length < 4) { errEl.textContent = 'Password must be at least 4 characters.'; return; }
+  try {
+    const r = await fetch('/api/auth/change-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+      body: JSON.stringify({ oldPassword, newPassword }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Failed');
+    if (_currentUser) _currentUser.mustChangePassword = false;
+    document.getElementById('changePwdModal').style.display = 'none';
+    if (typeof showToast === 'function') showToast('Password updated');
+  } catch (e) {
+    errEl.textContent = e.message;
+  }
+}
+
+// ───── Role gating: hide UI that the user's role isn't allowed to use ─────
+function applyRoleGating() {
+  document.body.dataset.role = _currentUser?.appRole || 'user';
+  // Elements with data-require-role="admin" or "admin content" only show for those roles
+  document.querySelectorAll('[data-require-role]').forEach(el => {
+    const allowed = el.getAttribute('data-require-role').split(/\s+/);
+    el.style.display = allowed.includes(_currentUser?.appRole) ? '' : 'none';
+  });
+  // Basic 'user' role: hide automation + most settings sidebar items
+  const navItems = {
+    'tab-automation':  isContentPlus(),
+    'tab-automation-rules': isContentPlus(),
+    'tab-automation-new': isContentPlus(),
+    'tab-automation-inbox': isContentPlus(),
+    'tab-prompts':     isContentPlus(),
+    'tab-categories':  isContentPlus(),
+    'tab-llm':         isContentPlus(),
+    'tab-settings':    isAdmin(),
+    'tab-distribution': isContentPlus(),
+    'tab-monitoring':  isContentPlus(),
+  };
+  Object.entries(navItems).forEach(([id, show]) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+  });
+  // Update the user chip in the sidebar
+  const chip = document.getElementById('userChip');
+  if (chip && _currentUser) {
+    const initials = (_currentUser.name || '').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    chip.innerHTML = '<span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--sla-orange);color:#fff;font-size:0.6rem;font-weight:700;">' + initials + '</span>'
+      + '<span style="font-size:0.7rem;color:var(--sla-navy);font-weight:600;">' + escapeHtml(_currentUser.name || _currentUser.email) + '</span>'
+      + '<span style="font-size:0.55rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-left:auto;">' + _currentUser.appRole + '</span>';
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
+  bootAuth();
   // Restore sidebar collapsed state
   if (localStorage.getItem('sla_sidebar_collapsed') === '1') {
     document.body.classList.add('sidebar-collapsed');
@@ -11357,6 +11960,131 @@ function showHeroLeftStatus(type, msg) {
 // ═══════════════════════════════════════════════════════════
 //  DASHBOARD
 // ═══════════════════════════════════════════════════════════
+// ─── Category Articles tab — opened from dashboard's "View all" button ───
+let _catArticlesCache = { catId: null, items: [] };
+let _catArticlesStatusSel = new Set(['draft','in_review','rejected','approved','scheduled','published','trash']);
+
+const _STATUS_LABELS = {
+  draft: 'Generated',
+  in_review: 'In Review',
+  rejected: 'Changes Requested',
+  approved: 'Approved',
+  scheduled: 'Scheduled',
+  published: 'Published',
+  trash: 'Archived',
+};
+const _STATUS_COLORS = {
+  draft:     { bg: 'rgba(107,122,141,0.10)', fg: '#6b7a8d' },
+  in_review: { bg: 'rgba(244,121,32,0.12)',  fg: '#d96a18' },
+  rejected:  { bg: 'rgba(231,76,60,0.10)',   fg: '#c0392b' },
+  approved:  { bg: 'rgba(13,148,136,0.10)',  fg: '#0D9488' },
+  scheduled: { bg: 'rgba(52,152,219,0.10)',  fg: '#2980b9' },
+  published: { bg: 'rgba(46,125,50,0.10)',   fg: '#2e7d32' },
+  trash:     { bg: 'rgba(0,0,0,0.05)',       fg: '#7a7a7a' },
+};
+
+function catArticlesRenderChips() {
+  const wrap = document.getElementById('catArticlesStatusChips');
+  if (!wrap) return;
+  const order = ['draft','in_review','rejected','approved','scheduled','published','trash'];
+  wrap.innerHTML = order.map(function(st) {
+    const on = _catArticlesStatusSel.has(st);
+    const color = _STATUS_COLORS[st] || _STATUS_COLORS.draft;
+    const label = _STATUS_LABELS[st] || st;
+    return '<label style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid ' + (on ? color.fg : 'var(--border)') + ';background:' + (on ? color.bg : 'transparent') + ';color:' + (on ? color.fg : 'var(--text-muted)') + ';font-size:0.62rem;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;cursor:pointer;user-select:none;">'
+      + '<input type="checkbox" ' + (on ? 'checked' : '') + ' onchange="catArticlesToggleStatus(\'' + st + '\', this.checked)" style="margin:0;accent-color:' + color.fg + ';"/>'
+      + escapeHtml(label)
+      + '</label>';
+  }).join('');
+}
+
+function catArticlesToggleStatus(st, on) {
+  if (on) _catArticlesStatusSel.add(st); else _catArticlesStatusSel.delete(st);
+  catArticlesRenderChips();
+  renderCategoryArticles();
+}
+
+function catArticlesToggleAll(all) {
+  _catArticlesStatusSel = new Set(all ? ['draft','in_review','rejected','approved','scheduled','published','trash'] : []);
+  catArticlesRenderChips();
+  renderCategoryArticles();
+}
+
+async function viewCategoryArticles(catId) {
+  switchTab('category-articles');
+  const titleEl = document.getElementById('catArticlesTitle');
+  const subEl   = document.getElementById('catArticlesSubtitle');
+  const listEl  = document.getElementById('catArticlesList');
+  const catLabel = (typeof CATEGORY_LABELS !== 'undefined' && CATEGORY_LABELS[catId]) || catId;
+  if (titleEl) titleEl.textContent = catLabel + ' — All Articles';
+  if (subEl)   subEl.textContent   = 'Every article in this category, across every status.';
+  if (listEl)  listEl.innerHTML    = '<div style="font-size:0.72rem;color:var(--text-muted);padding:14px;">Loading…</div>';
+
+  // Reset filters to defaults on each open: all statuses on, newest first
+  _catArticlesStatusSel = new Set(['draft','in_review','rejected','approved','scheduled','published','trash']);
+  catArticlesRenderChips();
+  const sortSel = document.getElementById('catArticlesSort');
+  if (sortSel) sortSel.value = 'newest';
+
+  try {
+    const r = await fetch('/api/content', { credentials: 'same-origin' });
+    const all = r.ok ? await r.json() : [];
+    _catArticlesCache = {
+      catId,
+      items: all.filter(it => (it.category || '') === catId),
+    };
+  } catch {
+    if (listEl) listEl.innerHTML = '<div style="font-size:0.72rem;color:#c0392b;padding:14px;">Could not load articles.</div>';
+    return;
+  }
+  renderCategoryArticles();
+}
+
+function renderCategoryArticles() {
+  const listEl  = document.getElementById('catArticlesList');
+  const countEl = document.getElementById('catArticlesCount');
+  if (!listEl) return;
+  const sort = document.getElementById('catArticlesSort')?.value || 'newest';
+
+  let items = _catArticlesCache.items.slice();
+  // Filter by the selected status set — empty set means nothing matches
+  items = items.filter(it => _catArticlesStatusSel.has(it.status || 'draft'));
+  items.sort((a, b) => {
+    const ta = new Date(a.createdAt || a.updatedAt || 0).getTime();
+    const tb = new Date(b.createdAt || b.updatedAt || 0).getTime();
+    return sort === 'oldest' ? ta - tb : tb - ta;
+  });
+
+  if (countEl) countEl.textContent = items.length + ' article' + (items.length === 1 ? '' : 's');
+
+  if (!items.length) {
+    listEl.innerHTML = '<div style="font-size:0.72rem;color:var(--text-muted);padding:14px;background:var(--card-bg,#fff);border:1px solid var(--border);">No articles match the current filters.</div>';
+    return;
+  }
+
+  listEl.innerHTML = '<div style="display:flex;flex-direction:column;gap:6px;">'
+    + items.map(function(it) {
+        const st = it.status || 'draft';
+        const stLabel = _STATUS_LABELS[st] || st;
+        const stColor = _STATUS_COLORS[st] || _STATUS_COLORS.draft;
+        const date = it.createdAt ? new Date(it.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '';
+        const words = it.body ? it.body.split(/\s+/).filter(Boolean).length : 0;
+        return ''
+          + '<div style="display:flex;align-items:center;gap:12px;background:var(--card-bg,#fff);border:1px solid var(--border);padding:10px 14px;">'
+          +   '<div style="flex:1;min-width:0;">'
+          +     '<div style="font-size:0.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escapeHtml(it.title || 'Untitled') + '</div>'
+          +     '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:2px;">'
+          +       (date ? date : '')
+          +       (words ? ' &middot; ' + words + ' words' : '')
+          +     '</div>'
+          +   '</div>'
+          +   '<span style="display:inline-block;font-size:0.55rem;font-weight:800;letter-spacing:0.6px;text-transform:uppercase;padding:3px 8px;background:' + stColor.bg + ';color:' + stColor.fg + ';">' + escapeHtml(stLabel) + '</span>'
+          +   '<button class="btn btn-outline btn-sm" onclick="viewArticleFromPipeline(\'' + it.id + '\')">View</button>'
+          + '</div>';
+      }).join('')
+    + '</div>';
+}
+
 function loadDashboard() {
   // Build unified category list — CATEGORIES already contains both built-ins and custom
   // (activateCustomCategories() pushes custom cats into CATEGORIES), so iterate once.
@@ -11376,7 +12104,10 @@ function loadDashboard() {
         '<div class="dash-cat-icon">' + getCatSvgIcon(cat.id) + '</div>' +
         '<div class="dash-cat-name">' + escapeHtml(cat.name) + '</div>' +
         '<div class="dash-cat-count">' + reviews.length + ' saved</div>' +
-        '<button class="dash-cat-btn" onclick="event.stopPropagation();startGeneratorForCategory(\'' + cat.id + '\')">Generate</button>' +
+        '<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">' +
+          '<button class="dash-cat-btn" onclick="event.stopPropagation();startGeneratorForCategory(\'' + cat.id + '\')">Generate</button>' +
+          '<button class="dash-cat-btn" style="background:transparent;color:var(--sla-navy);border:1px solid var(--sla-navy);" onclick="event.stopPropagation();viewCategoryArticles(\'' + cat.id + '\')">View all</button>' +
+        '</div>' +
         '</div>';
     }).join('') +
     '<div class="dash-cat-card add-cat" onclick="switchTab(\'categories\')">' +
@@ -11879,13 +12610,20 @@ function renderKanbanCard(item) {
   } else if (item.status === 'rejected') {
     badge = `<div class="kbadge" style="background:rgba(231,76,60,0.12);color:#c0392b;border:1px solid rgba(231,76,60,0.3);">↩ Changes Requested</div>`;
     const comments = (item.rejectionComments || []);
+    const canAiEditInReview = isContentPlus();
     if (comments.length) {
-      extra = comments.map(c => `
+      extra = comments.map((c, idx) => `
         <div style="margin-top:8px;background:rgba(231,76,60,0.06);border-left:3px solid #e74c3c;border-radius:0 6px 6px 0;padding:8px 10px;">
-          <div style="font-size:0.62rem;color:#c0392b;font-weight:700;margin-bottom:3px;">Reviewer feedback</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:3px;">
+            <div style="font-size:0.62rem;color:#c0392b;font-weight:700;">Reviewer feedback</div>
+            ${canAiEditInReview ? `<button onclick="openAiRevise('${item.id}',[${idx}])" title="Use AI to revise the article based on this comment" style="background:var(--sla-navy);color:#fff;border:none;padding:3px 8px;font-size:0.58rem;font-weight:700;letter-spacing:0.4px;cursor:pointer;font-family:inherit;">✨ AI REVISE</button>` : ''}
+          </div>
           <div style="font-size:0.72rem;color:var(--text);line-height:1.5;">${escapeHtml(c.comment)}</div>
           <div style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;">${c.at ? new Date(c.at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : ''}</div>
         </div>`).join('');
+      if (canAiEditInReview && comments.length > 1) {
+        extra += `<div style="margin-top:8px;"><button class="btn btn-sm" style="background:var(--sla-navy);color:#fff;border:1px solid var(--sla-navy);width:100%;justify-content:center;" onclick="openAiRevise('${item.id}', 'all')" title="Use AI to revise the article addressing all reviewer comments">✨ AI revise — all comments</button></div>`;
+      }
     }
     actions = `
       <button class="btn btn-orange btn-sm" onclick="resetToDraft('${item.id}')">
@@ -11911,6 +12649,7 @@ function renderKanbanCard(item) {
       <input type="checkbox" class="pipeline-bulk-cb" ${cbChecked} onchange="togglePipelineSelect('${item.id}', this.checked)" style="position:absolute;top:8px;right:8px;cursor:pointer;z-index:2;" />
       <span class="kcard-cat">${escapeHtml(catLabel)}</span>
       <div class="kcard-title">${escapeHtml(item.title || 'Untitled')}</div>
+      ${item.sourceDocName ? `<div style="font-size:0.6rem;color:var(--text-muted);margin:2px 0 4px;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:10px;height:10px;flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Source: ${item.sourceDocUrl ? `<a href="${escapeHtml(item.sourceDocUrl)}" target="_blank" rel="noopener" style="color:var(--sla-orange);text-decoration:underline;">${escapeHtml(item.sourceDocName)}</a>` : escapeHtml(item.sourceDocName)}</div>` : ''}
       ${badge}
       ${extra}
       <div class="kcard-meta">
@@ -11928,6 +12667,126 @@ function renderKanbanCard(item) {
         <button class="btn-trash-sm" onclick="movePipelineToTrash('${item.id}')">Move to Trash</button>
       </div>
     </div>`;
+}
+
+// ───── AI revise from rejection comments (admin/content only) ─────
+function _aiReviseReviewerName(id) {
+  try {
+    if (typeof reviewerName === 'function') return reviewerName(id);
+    if (Array.isArray(window.reviewers)) {
+      const r = window.reviewers.find(function(x){ return x && x.id === id; });
+      if (r) return r.name || r.email || 'Reviewer';
+    }
+  } catch (e) {}
+  return 'Reviewer';
+}
+
+async function openAiRevise(contentId, selector) {
+  if (!isContentPlus()) { alert('Only Admin and Content roles can use AI revise.'); return; }
+
+  // Load the content item to get its comments + body
+  let item;
+  try {
+    const r = await fetch('/api/content/' + contentId, { credentials:'same-origin' });
+    if (!r.ok) throw new Error('Failed to load article');
+    item = await r.json();
+  } catch (e) { alert(e.message); return; }
+  const comments = item.rejectionComments || [];
+  if (!comments.length) { alert('No reviewer comments to revise from.'); return; }
+
+  const applyAll = selector === 'all';
+  const commentIndexes = applyAll ? comments.map((_, i) => i) : (Array.isArray(selector) ? selector : [selector]);
+  const selectedComments = commentIndexes.map(i => comments[i]).filter(Boolean);
+
+  // Build the modal shell — show selected comments, then a "Generating…" state
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,34,0.6);z-index:9700;display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif;padding:20px;';
+  wrap.innerHTML = `
+    <div style="background:#fff;border-radius:10px;padding:24px 28px;width:min(900px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.35);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="background:var(--sla-navy);color:#fff;font-size:0.6rem;font-weight:700;padding:3px 8px;letter-spacing:0.6px;">✨ AI REVISE</span>
+        <h3 style="font-size:1rem;margin:0;color:var(--sla-navy);flex:1;">${escapeHtml(item.title || 'Article')}</h3>
+        <button id="aiReviseClose" type="button" style="background:none;border:none;font-size:1.3rem;color:#6b7a8d;cursor:pointer;line-height:1;">×</button>
+      </div>
+      <p style="font-size:0.72rem;color:#6b7a8d;margin:0 0 14px;">Addressing ${selectedComments.length} comment${selectedComments.length !== 1 ? 's' : ''}. Review the suggested rewrite before applying.</p>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;padding:10px 12px;margin-bottom:14px;max-height:160px;overflow-y:auto;">
+        ${selectedComments.map(c => `<div style="font-size:0.72rem;color:var(--sla-navy);margin-bottom:6px;">
+          <strong>${escapeHtml(_aiReviseReviewerName(c.reviewerId))}:</strong> ${escapeHtml(c.comment)}
+        </div>`).join('')}
+      </div>
+      <div id="aiReviseStatus" style="font-size:0.78rem;color:#6b7a8d;text-align:center;padding:30px 10px;">Generating revision… this may take 20–60 seconds.</div>
+      <div id="aiReviseResult" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+        <label style="font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Proposed revision <span id="aiReviseModelTag" style="font-size:0.55rem;color:#9aa5b4;font-weight:500;text-transform:none;letter-spacing:0;"></span></label>
+        <textarea id="aiReviseBody" style="flex:1;min-height:280px;width:100%;padding:12px;font-family:Georgia,serif;font-size:0.78rem;line-height:1.7;border:1px solid #dde3ea;color:#333;resize:vertical;"></textarea>
+        <p style="font-size:0.65rem;color:#6b7a8d;margin:6px 0 0;">You can edit the rewrite directly before applying.</p>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+        <button type="button" id="aiReviseCancel" style="padding:9px 16px;background:#f0f2f5;color:var(--sla-navy);border:1px solid #dde3ea;font-weight:600;font-size:0.78rem;cursor:pointer;font-family:inherit;">Cancel</button>
+        <button type="button" id="aiReviseRetry" style="display:none;padding:9px 16px;background:#fff;color:var(--sla-navy);border:1px solid #dde3ea;font-weight:600;font-size:0.78rem;cursor:pointer;font-family:inherit;">Retry</button>
+        <button type="button" id="aiReviseApply" style="display:none;padding:9px 20px;background:#0D9488;color:#fff;border:none;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:inherit;">Apply &amp; return to draft</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+
+  const cleanup = () => wrap.remove();
+  wrap.querySelector('#aiReviseClose').onclick = cleanup;
+  wrap.querySelector('#aiReviseCancel').onclick = cleanup;
+
+  let proposed = null;
+  async function generate() {
+    document.getElementById('aiReviseStatus').style.display = '';
+    document.getElementById('aiReviseStatus').textContent = 'Generating revision… this may take 20–60 seconds.';
+    document.getElementById('aiReviseResult').style.display = 'none';
+    document.getElementById('aiReviseApply').style.display = 'none';
+    document.getElementById('aiReviseRetry').style.display = 'none';
+    try {
+      const r = await fetch('/api/content/' + contentId + '/ai-revise', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ applyAll, commentIndexes }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Generation failed');
+      proposed = data;
+      document.getElementById('aiReviseStatus').style.display = 'none';
+      document.getElementById('aiReviseResult').style.display = 'flex';
+      document.getElementById('aiReviseBody').value = data.proposedBody;
+      document.getElementById('aiReviseModelTag').textContent = '· ' + (data.model || 'unknown model');
+      document.getElementById('aiReviseApply').style.display = '';
+      document.getElementById('aiReviseRetry').style.display = '';
+    } catch (e) {
+      document.getElementById('aiReviseStatus').innerHTML = '<div style="color:#c0392b;">' + escapeHtml(e.message) + '</div>';
+      document.getElementById('aiReviseRetry').style.display = '';
+    }
+  }
+
+  wrap.querySelector('#aiReviseRetry').onclick = generate;
+  wrap.querySelector('#aiReviseApply').onclick = async () => {
+    const newBody = document.getElementById('aiReviseBody').value.trim();
+    if (!newBody) { alert('Revision body is empty.'); return; }
+    const btn = wrap.querySelector('#aiReviseApply');
+    btn.disabled = true; btn.textContent = 'Applying…';
+    try {
+      const r = await fetch('/api/content/' + contentId + '/apply-revision', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({
+          newBody,
+          newTitle: proposed?.proposedTitle,
+          model: proposed?.model,
+          addressedCommentIndexes: proposed?.addressedCommentIndexes,
+        }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Apply failed');
+      cleanup();
+      if (typeof showToast === 'function') showToast('Article revised and returned to draft');
+      if (typeof loadPipeline === 'function') loadPipeline();
+    } catch (e) {
+      alert('Failed to apply revision: ' + e.message);
+      btn.disabled = false; btn.textContent = 'Apply & return to draft';
+    }
+  };
+
+  generate();
 }
 
 async function resetToDraft(contentId) {
@@ -12032,9 +12891,16 @@ async function loadReviewRequestCard() {
     var st = item.status || 'draft';
     badge.textContent = ST[st] || st;
     badge.className = 'review-req-status s-' + st;
-    var logHtml = (item.rejectionComments || []).map(function(c) {
+    var canAiEditInReview = isContentPlus();
+    var rejComments = (item.rejectionComments || []);
+    var logHtml = rejComments.map(function(c, idx) {
+      var aiBtn = canAiEditInReview
+        ? '<button onclick="openAiRevise(\'' + item.id + '\',[' + idx + '])" title="Use AI to revise the article based on this comment" style="background:var(--sla-navy);color:#fff;border:none;padding:3px 8px;font-size:0.58rem;font-weight:700;letter-spacing:0.4px;cursor:pointer;font-family:inherit;">✨ AI REVISE</button>'
+        : '';
       return '<div class="review-req-log-item">' +
-        '<div class="rr-label">Changes Requested</div>' +
+        '<div class="rr-label" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">' +
+          '<span>Changes Requested</span>' + aiBtn +
+        '</div>' +
         '<div class="rr-comment">' + escapeHtml(c.comment) + '</div>' +
         '<div class="rr-ts">' + (c.at ? new Date(c.at).toLocaleString('en-GB') : '') + '</div>' +
         '</div>';
@@ -12049,13 +12915,25 @@ async function loadReviewRequestCard() {
       ? '<p style="font-size:0.68rem;color:var(--text-muted);margin-bottom:8px;">Last updated: ' +
         new Date(item.updatedAt).toLocaleString('en-GB') + '</p>'
       : '';
+    var sourceLine = item.sourceDocName
+      ? '<p style="font-size:0.7rem;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+        'Source: ' + (item.sourceDocUrl
+          ? '<a href="' + escapeHtml(item.sourceDocUrl) + '" target="_blank" rel="noopener" style="color:var(--sla-orange);text-decoration:underline;"><strong>' + escapeHtml(item.sourceDocName) + '</strong></a>'
+          : '<strong>' + escapeHtml(item.sourceDocName) + '</strong>') +
+        '</p>'
+      : '';
     var closeBtn = st !== 'draft'
       ? '<button class="btn btn-outline btn-sm" onclick="closeReviewRequest()">Close &amp; Reset to Draft</button>'
       : '';
+    var aiAllBtn = (canAiEditInReview && rejComments.length > 1)
+      ? '<button class="btn btn-sm" style="background:var(--sla-navy);color:#fff;border:1px solid var(--sla-navy);" onclick="openAiRevise(\'' + item.id + '\', \'all\')" title="Use AI to revise the article addressing all reviewer comments">✨ AI revise — all comments</button>'
+      : '';
     var sendLabel = (st === 'draft') ? 'Send for Review' : 'Resend for Review';
-    body.innerHTML = ts +
+    body.innerHTML = ts + sourceLine +
       (logHtml ? '<div class="review-req-log">' + logHtml + '</div>' : '') +
       '<div class="review-req-actions">' +
+        aiAllBtn +
         '<button class="btn btn-orange btn-sm" onclick="resendReview()">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
           ' ' + sendLabel +
