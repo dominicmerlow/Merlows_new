@@ -9,7 +9,7 @@
 ## Deployment
 - GitHub auto-deploy is **disabled** (`"github": {"enabled": false}` in vercel.json).
 - Always deploy manually: `vercel --prod --yes` from repo root.
-- Vercel Hobby plan: **12 serverless function limit** — do not add new files under `api/`.
+- **Vercel Pro** (team org `merlows`): function limit lifted (29 `api/` functions as of 2026-06-22); `maxDuration: 300` on both catch-alls.
 - Production URL: https://merlows.vercel.app
 
 ## Vercel Routing (Critical)
@@ -101,3 +101,51 @@
 - DEFAULT_MODEL: `google/gemma-3-27b-it:free`
 - SEED_PASSWORD: `2026`
 - App name in LLM X-Title headers: `Merlows Content Generator` / `Merlows Content Revision`
+
+---
+
+## VANCE → Merlows Sync — Completion to full parity
+
+**Synced**: 2026-06-22 (benchmark: Vance HEAD `86c4c11`)
+
+The 2026-06-19 sync above was backend-only and uncommitted. This pass committed
+that work as a checkpoint, then finished full parity. Vance is the Alpha/lead.
+
+### Backend (Phase 1) — remaining deltas ported, Merlows divergence preserved
+- `api/content/index.js`: source-doc provenance fields, review-tasks/summary/
+  diagnostic actions, slim GET, approvals/rejections init.
+- `api/review/[token].js`: inline-highlight review widget, multi-reviewer,
+  POST-gated approval, feedback page. `api/review/send.js`: urgent reminders,
+  reviewerIds filtering. `api/content/[id].js`: Request-Changes is not a veto.
+- `run.js`: timeout budget + parallel job loading, urgent_reminder, hero
+  fallback URL, source-doc labeling, post-gen job init. **notify.js now returns
+  `{errors, reviewerIds}`** (Vance contract) — run.js consumes the resolved
+  recipient set; both callers updated.
+- `fetch.js`, `sources-list.js`, `telegram.js`, `rule-schema.js` (onTimeout
+  default → `urgent_reminder`), `job-schema.js`, `cloud-drives.js`, social
+  `generate.js`/`ava-prompts.js`, `kv.js` (sorted-set helpers).
+- `bibliography.js`: ported Vance title-verification subsystem; **preserved
+  Merlows diplomacy sources** (ReliefWeb v2, Congress, World Bank, fetchWithRetry).
+- Tests: ported notify/telegram/rule-schema updates. Suite 76 pass / 4 fail —
+  the 4 are **pre-existing stale tests in Vance itself** (`buildWpPayload` +
+  3 `fetchSources` cases), not Merlows regressions.
+
+### Frontend (Phase 2) — `index.html` (the June-19 sync never touched it)
+- **Auth login wall activated** (`/api/auth/*` backends + seeded team users,
+  password `2026`, forced change on first login): `#loginOverlay`,
+  `#changePwdModal`, sidebar `#userChip/#userMenu`, `bootAuth()`,
+  `isRole/isContentPlus/isAdmin`, `applyRoleGating()`.
+- AI-Config tab: Token Usage dashboard, A/B Test config, Master Prompt editor
+  (additive — Global Context form kept).
+- AI-revise modal + inline buttons (gated by `isContentPlus()`), source-doc
+  provenance display, category-articles view. Skipped `view-archive-legacy`.
+
+### Config
+- `vercel.json`: `maxDuration` 60→300 (Pro), `github.silent`. Project on Vercel
+  Pro (29 `api/` functions). `package-lock` name → `merlows-content-generator`.
+
+### Pre-existing items flagged (not changed — env-overridable, delivery-sensitive)
+- Email from-defaults are inconsistent (`mail.ibdhealthhub.com` in
+  content/review, `slapharmagroup.com` in notify) — all overridable via
+  `RESEND_FROM_EMAIL`; `HTTP-Referer`/`APP_URL` defaults still `ibdhealthhub`.
+  Left as-is to avoid breaking verified-sender delivery; set env vars to align.
