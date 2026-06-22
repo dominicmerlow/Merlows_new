@@ -1,6 +1,7 @@
 import { kv } from '../../lib/kv.js';
 import { randomUUID } from 'crypto';
 import { getCurrentUser, requireRole } from '../../lib/auth.js';
+import { countBodyWords } from '../../lib/word-count.js';
 
 // ── Pure helpers (exported for testing) ─────────────────────────────────────
 
@@ -19,6 +20,19 @@ export function buildContentItem(data) {
     heroImageUrl: data.heroImageUrl ?? null,   // stored for WP featured image upload
     heroImageType: data.heroImageType ?? null, // 'pexels' | 'ai'
     wpCategorySlug: data.wpCategorySlug ?? null, // per-category WP slug override
+    // Per-row sub-category name (from the multi-column bulk-upload spreadsheet,
+    // e.g. "Diplomatic Analysis"). When set, the publish endpoint resolves it
+    // by name/slug and posts to that sub-category instead of the app category's
+    // top-level slug — auto-creating the term under the inferred parent if needed.
+    subCategory: data.subCategory ?? null,
+    // Per-row WP tag list. Accepts a comma-separated string ("Israel, Iran") OR an
+    // array. The publish endpoint resolves each tag by name and auto-creates
+    // missing tags before posting.
+    tags: Array.isArray(data.tags) ? data.tags : (data.tags ?? null),
+    // Author-supplied research / writing-style focus for this article (from the
+    // spreadsheet's Notes column). Stitched into the LLM prompt at generation
+    // time so each article gets per-row guidance on what to emphasise.
+    rowNotes: data.rowNotes ?? null,
     // Automation provenance — snapshotted at creation so the rule name shows
     // on cards/emails/logs without a per-render rule lookup. Null for manual.
     automationRuleId: data.automationRuleId ?? null,
@@ -108,8 +122,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // Slim each open task to only what the UI renders. wordCount derived
-    // server-side so the response doesn't need to carry the body.
+    // Slim each open task to only what the UI renders. wordCount is the body-prose
+    // count (shared with the generation limit) derived server-side so the response
+    // doesn't need to carry the body.
     const openTasks = openTasksRaw
       .sort((a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0))
       .map(it => ({
@@ -119,7 +134,7 @@ export default async function handler(req, res) {
         sentForReviewAt: it.sentForReviewAt || null,
         updatedAt:       it.updatedAt || null,
         createdAt:       it.createdAt || null,
-        wordCount:       it.body ? it.body.split(/\s+/).filter(Boolean).length : 0,
+        wordCount:       countBodyWords(it.body),
       }));
 
     // Slim shape for the dashboard's per-bucket popup. Every row carries
@@ -412,11 +427,14 @@ export default async function handler(req, res) {
     if (!ids.length) return res.json([]);
     const items = await Promise.all(ids.map(id => kv.get(`content:${id}`)));
     const filtered = items.filter(Boolean).reverse();
-    // ?slim=1 strips the byte-heavy fields (body, excerpt, rejectionComments).
-    // App boot uses this to populate the in-memory publishingQueue cache
-    // without dragging in 38 MB of article bodies. Anything that actually
-    // needs a body (the Pipeline article view, AI revise, etc.) fetches the
-    // single item via /api/content/:id which still carries the full record.
+    // ?slim=1 strips only the one byte-heavy field — `body` (full article HTML,
+    // which is the bulk of the ~38 MB unslimmed payload) — and substitutes a
+    // server-computed `wordCount` so list tabs (Pipeline/Library) never need the
+    // body to show their word count. Every other field passes through, so this
+    // payload is a universal render source for all list tabs and the in-memory
+    // contentCache. Anything that actually needs the body (Pipeline article
+    // view, social-post generation, AI revise) lazy-fetches the single item via
+    // /api/content/:id, which still carries the full record.
     if (req.query.slim === '1') {
       // Strip data: URIs from heroImageUrl — these are inline base64 PNGs that
       // can run to 1 MB+ each (AI-generated hero images). 43 items × 1 MB ≈
@@ -426,21 +444,16 @@ export default async function handler(req, res) {
       const slimHero = (url) =>
         (url && typeof url === 'string' && !url.startsWith('data:')) ? url : null;
       return res.json(filtered.map(i => ({
-        id: i.id,
-        sourceId: i.sourceId ?? null,
-        title: i.title,
-        category: i.category,
-        status: i.status,
+        ...i,
+        body: undefined,
+        // versions[] holds full prior-body snapshots and auditLog[] is an
+        // uncapped event log — both are byte-heavy and only the Approval Log's
+        // expand view needs them, which lazy-fetches the full record via
+        // /api/content/:id. Strip them so the list payload stays small.
+        versions: undefined,
+        auditLog: undefined,
+        wordCount: countBodyWords(i.body),
         heroImageUrl: slimHero(i.heroImageUrl),
-        automationRuleId: i.automationRuleId ?? null,
-        automationRuleName: i.automationRuleName ?? null,
-        sourceDocName: i.sourceDocName ?? null,
-        sourceDocUrl: i.sourceDocUrl ?? null,
-        createdAt: i.createdAt,
-        updatedAt: i.updatedAt,
-        scheduledAt: i.scheduledAt ?? null,
-        publishedAt: i.publishedAt ?? null,
-        wpPostUrl: i.wpPostUrl ?? null,
       })));
     }
     return res.json(filtered);

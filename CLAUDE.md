@@ -149,3 +149,48 @@ that work as a checkpoint, then finished full parity. Vance is the Alpha/lead.
   content/review, `slapharmagroup.com` in notify) — all overridable via
   `RESEND_FROM_EMAIL`; `HTTP-Referer`/`APP_URL` defaults still `ibdhealthhub`.
   Left as-is to avoid breaking verified-sender delivery; set env vars to align.
+
+---
+
+## VANCE → Merlows Sync — Second pass (new Alpha fixes)
+
+**Synced**: 2026-06-22 (benchmark: Vance HEAD `54de3da` + uncommitted fixes)
+
+Vance advanced past `86c4c11` with 5 commits (hero-prompt library, multi-column
+xlsx, prompt-name→WP sub-category routing, toolbar regroup, and a "restore
+orphaned live work" commit) plus uncommitted fixes. Ported the genuinely-new
+delta (much of the "restore" was already in Merlows from the first sync).
+
+### Backend
+- `api/content/[id]/comment.js`: **new** article-comment endpoint (copied, imports verified).
+- `api/publish/index.js`: drop "Reading Time" meta line from published body.
+  Preserved Merlows CATEGORY_SLUG_MAP + MerlowsBot UA + Source linkification.
+- `run.js`: ported `categoryDefaultPrompt`, `enforceCategoryPrefix`,
+  `subCategoryForRulePrompt` (PROMPT_SUBCATEGORY_MAP **empty** for diplomacy —
+  scaffolding), added `isTransientServerError` (5xx) retry, consumed-source
+  writeback, `forceAll`. **Skipped `migrateClearRulePromptsOnce`** (would wipe
+  Merlows custom rule prompts). All 6 diplomacy prompts/word-limit/history kept.
+- `fetch.js`: multi-column xlsx parsing (`fetchUploadUrls`) — Merlows inline
+  `rawText` upload still wins. `rule-schema.js`/`sources-list.js`/`cloud-drives.js`:
+  upload-rows + consumed-dedup + drive provenance. Merlows Dropbox path kept.
+- `media.js`: ported model-fallback chain + configurable hero-prompt template;
+  **preserved Merlows' newer image models** (gemini-3.1/riverflow/seedream).
+- `content/index.js`, `content/[id].js`, `review/[token].js`: provenance/audit/
+  optional-overall-feedback deltas. `bibliography.js`/`kv.js`/`approve.js`:
+  no new Vance work — left as-is (diplomacy divergence preserved).
+
+### Frontend (`index.html`, +496/-49)
+- Hero Image Prompts library (global `view-llm` section + per-category editor
+  field, wired into loadLLMPage). Prompt-name→sub-category routing mechanism
+  (`subCategoryForActivePrompt`, empty map). Article comment thread UI
+  (`#articleComments`, gated by isContentPlus). Article toolbar regrouped into
+  Content/Export/Workflow zones (all existing buttons preserved; skipped
+  inventing Vance-only buttons). Removed hero-preview overlay buttons.
+
+### Branding cleanup (pre-existing leftovers fixed)
+- `godIndustrySelect` dropdown: medical industries → diplomacy/news sectors.
+- `IBDHealthHubBot` User-Agent → `MerlowsBot/1.0` in fetch-url.js, proxy-image.js,
+  google-sheets.js. `auth.js` APP_URL default → merlows.vercel.app.
+
+Tests 76 pass / 4 fail (unchanged benchmark-stale baseline). All JS + both
+index.html script blocks pass `node --check`.

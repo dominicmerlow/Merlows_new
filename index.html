@@ -493,9 +493,25 @@ textarea { resize: vertical; line-height: 1.6; min-height: 120px; }
   background: var(--sla-navy); border-radius: var(--radius) var(--radius) 0 0;
   flex-wrap: wrap;
 }
-.article-toolbar-left { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; }
+.article-toolbar-left { display: flex; align-items: center; gap: 6px; flex: 1; flex-wrap: wrap; min-width: 120px; }
 .word-count { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; color: rgba(255,255,255,0.5); }
 .model-used-badge { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 99px; display: none; }
+
+/* Toolbar groups: cluster actions by intent (Content / Export / Workflow) so the
+   bar reads as zones rather than a flat wall of identical buttons. */
+.tb-group { display: flex; align-items: center; gap: 4px; }
+.tb-divider { align-self: stretch; width: 1px; background: rgba(255,255,255,0.16); margin: 3px 5px; flex-shrink: 0; }
+/* Navy-bar outline button — replaces the repeated inline white-translucent styling. */
+.btn-tb { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #fff; }
+.btn-tb:hover:not(:disabled) { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4); }
+/* Compact icon-only buttons for secondary content/export actions — label lives in
+   the tooltip + aria-label, cutting visual noise without losing discoverability. */
+.tb-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 26px; padding: 0; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #fff; cursor: pointer; border-radius: 0; transition: all 0.15s; }
+.tb-icon-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4); }
+.tb-icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.tb-icon-btn svg { width: 14px; height: 14px; }
+.tb-icon-btn:focus-visible, .article-toolbar .btn:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.tb-icon-btn.active { background: var(--sla-orange); border-color: var(--sla-orange); }
 .article-output { background: var(--card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); padding: 24px 28px; min-height: 300px; display: none; }
 .article-output.visible { display: block; }
 .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; text-align: center; color: var(--text-muted); gap: 10px; }
@@ -2768,38 +2784,53 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <span class="word-count" id="wordCount"></span>
         <span class="model-used-badge" id="modelUsedBadge"></span>
       </div>
-      <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="copyArticle()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy
-      </button>
-      <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="downloadPDF()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        PDF
-      </button>
-      <button class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;" onclick="queueCurrentForPublishing()" id="queueForPublishBtn" disabled>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        Add to Pipeline
-      </button>
-      <button class="btn btn-outline btn-xs" id="sendForReviewBtn" onclick="sendForReviewFromToolbar()" disabled style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Send for Review
-      </button>
-      <button class="btn btn-orange btn-xs" onclick="saveReviewToArchive()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-        Save to Library
-      </button>
-      <button class="btn btn-outline btn-xs" id="editArticleBtn" onclick="enterEditMode()" disabled style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Edit
-      </button>
-      <button class="btn btn-xs" id="approveArticleBtn" onclick="approveCurrentArticle()" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.45);color:#10b981;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="20 6 9 17 4 12"/></svg>
-        Approve &amp; Publish
-      </button>
-      <a class="btn btn-outline btn-xs" id="viewOnWpBtn" href="#" target="_blank" style="display:none;background:rgba(0,201,167,0.15);border-color:rgba(0,201,167,0.4);color:#00c9a7;text-decoration:none;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        View on WordPress ↗
-      </a>
+      <div class="tb-divider"></div>
+
+      <!-- CONTENT — work on this article. Primary "Edit" labelled. -->
+      <div class="tb-group" id="tbGroupContent">
+        <button class="btn btn-tb btn-xs" id="editArticleBtn" onclick="enterEditMode()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+      </div>
+
+      <div class="tb-divider"></div>
+
+      <!-- EXPORT — take it out. Copy/PDF as icon buttons; WP link appears once published. -->
+      <div class="tb-group" id="tbGroupExport">
+        <button class="tb-icon-btn" onclick="copyArticle()" title="Copy article text" aria-label="Copy article text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+        <button class="tb-icon-btn" onclick="downloadPDF()" title="Download as PDF" aria-label="Download as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </button>
+        <a class="btn btn-xs" id="viewOnWpBtn" href="#" target="_blank" style="display:none;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.4);color:#0D9488;text-decoration:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          View on WordPress ↗
+        </a>
+      </div>
+
+      <div class="tb-divider"></div>
+
+      <!-- WORKFLOW — move it forward. Save to Library is the primary CTA (solid); the rest are secondary; Approve uses the success treatment. -->
+      <div class="tb-group" id="tbGroupWorkflow">
+        <button class="btn btn-orange btn-xs" onclick="saveReviewToArchive()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+          Save to Library
+        </button>
+        <button class="btn btn-tb btn-xs" onclick="queueCurrentForPublishing()" id="queueForPublishBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          Add to Pipeline
+        </button>
+        <button class="btn btn-tb btn-xs" id="sendForReviewBtn" onclick="sendForReviewFromToolbar()" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send for Review
+        </button>
+        <button class="btn btn-xs" id="approveArticleBtn" onclick="approveCurrentArticle()" style="display:none;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.45);color:#10b981;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="20 6 9 17 4 12"/></svg>
+          Approve &amp; Publish
+        </button>
+      </div>
     </div>
     <div class="progress-wrap hidden" id="progressWrap">
       <div style="padding:8px 14px 0;">
@@ -2816,10 +2847,6 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
     <div class="article-output" id="articleOutput">
       <div id="articleHeroPreview" style="display:none;position:relative;margin-bottom:12px;">
         <img id="articleHeroImg" src="" alt="Hero image" style="width:100%;max-height:220px;object-fit:cover;display:block;" />
-        <div style="position:absolute;bottom:8px;right:8px;display:flex;gap:4px;">
-          <button class="btn btn-outline btn-xs" onclick="removeArticleHero()" style="background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.3);color:#fff;font-size:0.65rem;">✕ Remove</button>
-          <button class="btn btn-outline btn-xs" onclick="document.getElementById('heroLeftKeywordInput').focus();setHeroLeftMode('search');" style="background:rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.3);color:#fff;font-size:0.65rem;">🔄 Change</button>
-        </div>
       </div>
       <h1 id="articleTitleDisplay" style="display:none;font-family:'Montserrat',sans-serif;font-size:1.4rem;font-weight:800;color:var(--sla-navy);margin:0 0 12px 0;line-height:1.25;"></h1>
       <div id="articleContent"></div>
@@ -2835,6 +2862,21 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         </button>
         <button class="btn btn-outline btn-sm" onclick="exitEditMode()">Cancel</button>
         <span class="edit-hint">Save Changes replaces the current version. Save as New adds to library.</span>
+      </div>
+      <!-- In-app comments — feedback thread on a saved/pipeline article -->
+      <div id="articleComments" style="display:none;margin-top:18px;border-top:1px solid var(--border);padding-top:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;color:var(--sla-orange);"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="articleCommentsHeading" style="font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:800;color:var(--sla-navy);">Comments</span>
+        </div>
+        <div id="articleCommentsList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+        <div id="articleCommentForm" style="display:none;">
+          <textarea id="articleCommentInput" rows="3" placeholder="Add a comment on this article…" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.78rem;line-height:1.5;resize:vertical;border-radius:0;color:var(--text);background:var(--bg);"></textarea>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:8px;">
+            <span id="articleCommentStatus" style="font-size:0.66rem;color:var(--text-muted);"></span>
+            <button class="btn btn-orange btn-sm" onclick="postArticleComment()">Post comment</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3374,18 +3416,17 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <div>
             <label style="font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);display:block;margin-bottom:4px;">Industry</label>
             <select id="godIndustrySelect" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:0.72rem;border-radius:0;background:var(--bg);color:var(--sla-navy);appearance:none;-webkit-appearance:none;">
-              <option value="">— Select industry —</option>
-              <option value="Medical / Healthcare">Medical / Healthcare</option>
-              <option value="Pharmaceutical">Pharmaceutical</option>
-              <option value="Biotechnology">Biotechnology</option>
-              <option value="Medical Technology (MedTech)">Medical Technology (MedTech)</option>
-              <option value="Gastroenterology">Gastroenterology / IBD</option>
-              <option value="Oncology">Oncology</option>
-              <option value="Cardiology">Cardiology</option>
-              <option value="Neurology">Neurology</option>
-              <option value="Mental Health">Mental Health</option>
-              <option value="Nutrition & Wellness">Nutrition &amp; Wellness</option>
-              <option value="Health Information Technology">Health Information Technology</option>
+              <option value="">— Select sector —</option>
+              <option value="News & Media">News &amp; Media</option>
+              <option value="International Relations / Diplomacy">International Relations / Diplomacy</option>
+              <option value="Middle East Affairs">Middle East Affairs</option>
+              <option value="Public Policy / Think Tank">Public Policy / Think Tank</option>
+              <option value="Political Analysis">Political Analysis</option>
+              <option value="Government / Public Sector">Government / Public Sector</option>
+              <option value="NGO / Non-Profit">NGO / Non-Profit</option>
+              <option value="Peace & Conflict Studies">Peace &amp; Conflict Studies</option>
+              <option value="Economics & Trade">Economics &amp; Trade</option>
+              <option value="Energy & Security">Energy &amp; Security</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -3469,6 +3510,35 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <button class="btn btn-outline btn-sm" onclick="resetMasterPromptDefault()">Restore defaults</button>
           <button class="btn btn-orange btn-sm" onclick="saveMasterPrompt()">Save Master Prompt</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Section A2: Hero Image Prompts — image generation prompt library -->
+    <div class="llm-section">
+      <div class="llm-section-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <div style="flex:1;">
+          <div class="llm-section-title">Hero Image Prompts</div>
+          <div class="llm-section-desc">The prompt that drives AI hero image generation — for the in-app generator and automated runs. Use <code>{topic}</code> where the article subject should be inserted. Set a per-category override on the <a href="#" onclick="switchTab('categories');return false;" style="color:var(--sla-orange);">Categories</a> page; this is the global default plus a reusable preset library.</div>
+        </div>
+      </div>
+      <div class="llm-section-body">
+        <label style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--sla-navy);display:block;margin-bottom:6px;">Global default prompt</label>
+        <textarea id="heroDefaultPromptTextarea" rows="8" placeholder="Describe the hero image style… include {topic} where the article subject goes." style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--border);font-family:Georgia,serif;font-size:0.78rem;line-height:1.55;resize:vertical;border-radius:0;color:var(--text);background:var(--bg);"></textarea>
+        <div class="llm-save-row" style="margin-top:10px;display:flex;gap:8px;align-items:center;justify-content:flex-end;">
+          <span id="heroDefaultPromptStatus" style="font-size:0.66rem;color:var(--text-muted);"></span>
+          <button class="btn btn-outline btn-sm" onclick="restoreHeroPromptDefault()">Restore default</button>
+          <button class="btn btn-orange btn-sm" onclick="saveHeroPromptDefault()">Save default prompt</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;" />
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <label style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--sla-navy);">Saved presets</label>
+          <button type="button" class="btn btn-outline btn-sm" onclick="addHeroPreset()">+ Add preset</button>
+        </div>
+        <p style="font-size:0.6rem;color:var(--text-muted);margin:0 0 10px;">Reusable hero prompts you can apply to any category from the category editor. Editing a preset here does not retroactively change categories already using its text.</p>
+        <div id="heroPresetsList" style="display:flex;flex-direction:column;gap:8px;"></div>
       </div>
     </div>
 
@@ -4653,6 +4723,14 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
               <div class="ced-section-title">Default AI Model</div>
               <p style="font-size:0.69rem;color:var(--text-muted);margin:0 0 10px;">AI model used by default for this category. Can also be set on the LLM Management page.</p>
               <select id="catEditorLlm" class="ced-input" style="appearance:none;-webkit-appearance:none;background:var(--bg);cursor:pointer;"></select>
+            </div>
+
+            <div class="ced-section">
+              <div class="ced-section-title">Hero Image Prompt</div>
+              <p style="font-size:0.69rem;color:var(--text-muted);margin:0 0 10px;">The AI image prompt used when generating a hero image for this category — in the generator and in automation. Leave on <strong>Global default</strong> to inherit the prompt set on the LLM page, or override it here. Use <code>{topic}</code> where the article subject should be inserted.</p>
+              <label class="ced-label">Prompt source</label>
+              <select id="catEditorHeroPromptPreset" class="ced-input" style="appearance:none;-webkit-appearance:none;background:var(--bg);cursor:pointer;margin-bottom:8px;" onchange="onCatHeroPromptPresetChange()"></select>
+              <textarea id="catEditorHeroPrompt" class="ced-input" rows="6" placeholder="Leave blank to use the global default prompt." style="font-family:Georgia,serif;line-height:1.5;resize:vertical;"></textarea>
             </div>
 
             <!-- Hidden inputs used by saveCategoryConfig -->
@@ -8031,6 +8109,8 @@ function loadLLMPage() {
   if (typeof loadMasterPrompt === 'function') loadMasterPrompt();
   if (typeof loadUsageSummary === 'function') loadUsageSummary();
   if (typeof loadAbConfig === 'function') loadAbConfig();
+  // Hero Image Prompts (server-backed library + per-category overrides)
+  if (typeof loadHeroPrompts === 'function') loadHeroPrompts();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -8093,6 +8173,194 @@ function resetMasterPromptDefault() {
   if (ta) ta.value = MASTER_PROMPT_DEFAULT;
   var status = document.getElementById('masterPromptStatus');
   if (status) status.textContent = 'Defaults restored — click Save to commit';
+}
+
+// ── Hero Image Prompts (server-backed: merlows:hero-prompts) ─────────────────
+// Drives AI hero image generation for the in-app generator AND automation runs.
+// {topic} in a prompt is replaced with the article subject at generation time.
+var HERO_PROMPT_DEFAULT = 'Professional editorial hero image for an in-depth article about: {topic}. ' +
+  'Right-weighted composition: all visual elements (relevant imagery, abstract geopolitical or thematic elements, soft patterns) on the RIGHT 60% of the frame; ' +
+  'LEFT 40% kept clean with a subtle navy-to-teal gradient for text overlay. ' +
+  'Style: clean modern editorial aesthetic, professional photography or refined illustration, ' +
+  'teal (#0D9488) and slate-navy brand palette, soft natural lighting, calm authoritative mood, no recognisable faces, ' +
+  'widescreen 16:9 cinematic. ' +
+  'Absolutely no text, words, letters, numbers, labels, captions, watermarks, logos, or typography anywhere in the image.';
+
+// In-memory + localStorage cache so the generator and category editor can read synchronously.
+var heroPromptsConfig = (function() {
+  try { return JSON.parse(localStorage.getItem('merlows_hero_prompts') || 'null') || { default: '', presets: [], categories: {} }; }
+  catch (_) { return { default: '', presets: [], categories: {} }; }
+})();
+
+function cacheHeroPromptsConfig(rec) {
+  heroPromptsConfig = {
+    default: typeof rec.default === 'string' ? rec.default : '',
+    presets: Array.isArray(rec.presets) ? rec.presets : [],
+    categories: (rec.categories && typeof rec.categories === 'object') ? rec.categories : {},
+  };
+  try { localStorage.setItem('merlows_hero_prompts', JSON.stringify(heroPromptsConfig)); } catch (_) {}
+}
+
+async function loadHeroPrompts() {
+  try {
+    var rec = await apiFetch('/api/content/hero-prompts');
+    if (rec) cacheHeroPromptsConfig(rec);
+  } catch (_) { /* keep cached copy */ }
+  // Populate LLM-page UI if present
+  var ta = document.getElementById('heroDefaultPromptTextarea');
+  if (ta) ta.value = heroPromptsConfig.default || HERO_PROMPT_DEFAULT;
+  var status = document.getElementById('heroDefaultPromptStatus');
+  if (status) status.textContent = heroPromptsConfig.default ? '' : 'Built-in default shown — Save to store it.';
+  renderHeroPresets();
+}
+
+// Resolve the effective hero prompt for a category, with {topic} substituted.
+function getResolvedHeroPrompt(catId, topic) {
+  var perCat = heroPromptsConfig.categories && heroPromptsConfig.categories[catId];
+  var tmpl = (perCat && perCat.trim()) ? perCat : (heroPromptsConfig.default || HERO_PROMPT_DEFAULT);
+  var t = (topic || '').trim() || 'current affairs and diplomacy';
+  var hasToken = /\{topic\}|\{title\}/i.test(tmpl);
+  var filled = tmpl.replace(/\{topic\}/gi, t).replace(/\{title\}/gi, t);
+  return hasToken ? filled : (filled + ' Subject: ' + t + '.');
+}
+
+async function saveHeroPromptDefault() {
+  var ta = document.getElementById('heroDefaultPromptTextarea');
+  if (!ta) return;
+  var status = document.getElementById('heroDefaultPromptStatus');
+  var text = (ta.value || '').trim();
+  if (status) status.textContent = 'Saving…';
+  try {
+    var rec = await apiFetch('/api/content/hero-prompts', { method: 'PUT', body: JSON.stringify({ default: text }) });
+    cacheHeroPromptsConfig(rec);
+    if (status) status.textContent = 'Saved ' + new Date(rec.updatedAt).toLocaleString('en-GB');
+    showToast('✓ Hero image default prompt saved');
+  } catch (err) {
+    if (status) status.textContent = 'Save failed: ' + err.message;
+    showToast('Save failed: ' + err.message);
+  }
+}
+
+function restoreHeroPromptDefault() {
+  if (!confirm('Replace the hero image default prompt with the built-in template?\n\nClick Save afterwards to commit it.')) return;
+  var ta = document.getElementById('heroDefaultPromptTextarea');
+  if (ta) ta.value = HERO_PROMPT_DEFAULT;
+  var status = document.getElementById('heroDefaultPromptStatus');
+  if (status) status.textContent = 'Built-in template restored — click Save to commit';
+}
+
+function renderHeroPresets() {
+  var el = document.getElementById('heroPresetsList');
+  if (!el) return;
+  var presets = heroPromptsConfig.presets || [];
+  if (!presets.length) {
+    el.innerHTML = '<div style="font-size:0.7rem;color:var(--text-muted);font-style:italic;padding:6px 2px;">No presets yet. Add one to build a reusable library.</div>';
+    return;
+  }
+  el.innerHTML = presets.map(function(p, i) {
+    return '<div style="border:1px solid var(--border);padding:10px 12px;background:var(--bg);">' +
+      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">' +
+        '<input type="text" id="heroPresetName-' + i + '" value="' + escapeHtml(p.name || '') + '" placeholder="Preset name" style="flex:1;padding:6px 8px;border:1px solid var(--border);font-family:\'Montserrat\',sans-serif;font-size:0.72rem;background:var(--bg);color:var(--text);" />' +
+        '<button class="btn btn-orange btn-xs" onclick="saveHeroPreset(' + i + ')">Save</button>' +
+        '<button class="btn btn-outline btn-xs" style="color:var(--error);" onclick="deleteHeroPreset(' + i + ')" title="Delete preset">✕</button>' +
+      '</div>' +
+      '<textarea id="heroPresetText-' + i + '" rows="4" placeholder="Prompt text… use {topic} for the article subject." style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--border);font-family:Georgia,serif;font-size:0.74rem;line-height:1.5;resize:vertical;background:var(--bg);color:var(--text);">' + escapeHtml(p.text || '') + '</textarea>' +
+    '</div>';
+  }).join('');
+}
+
+async function persistHeroPresets() {
+  try {
+    var rec = await apiFetch('/api/content/hero-prompts', { method: 'PUT', body: JSON.stringify({ presets: heroPromptsConfig.presets }) });
+    cacheHeroPromptsConfig(rec);
+    return true;
+  } catch (err) {
+    showToast('Save failed: ' + err.message);
+    return false;
+  }
+}
+
+function addHeroPreset() {
+  heroPromptsConfig.presets = heroPromptsConfig.presets || [];
+  heroPromptsConfig.presets.push({ id: 'hp_' + Date.now().toString(36), name: 'New preset', text: '' });
+  renderHeroPresets();
+}
+
+async function saveHeroPreset(i) {
+  var nameEl = document.getElementById('heroPresetName-' + i);
+  var textEl = document.getElementById('heroPresetText-' + i);
+  if (!heroPromptsConfig.presets || !heroPromptsConfig.presets[i]) return;
+  heroPromptsConfig.presets[i].name = (nameEl && nameEl.value.trim()) || 'Untitled preset';
+  heroPromptsConfig.presets[i].text = textEl ? textEl.value.trim() : '';
+  if (await persistHeroPresets()) { renderHeroPresets(); showToast('✓ Preset saved'); }
+}
+
+async function deleteHeroPreset(i) {
+  if (!heroPromptsConfig.presets || !heroPromptsConfig.presets[i]) return;
+  if (!confirm('Delete the preset "' + (heroPromptsConfig.presets[i].name || '') + '"?')) return;
+  heroPromptsConfig.presets.splice(i, 1);
+  if (await persistHeroPresets()) { renderHeroPresets(); showToast('Preset deleted'); }
+}
+
+// ── Per-category hero image prompt control (category editor → Settings) ───────
+// Populates the preset dropdown + textarea from heroPromptsConfig. The stored
+// override is the textarea value ('' = inherit the global default).
+function renderCatHeroPromptControls(catId) {
+  var sel = document.getElementById('catEditorHeroPromptPreset');
+  var ta  = document.getElementById('catEditorHeroPrompt');
+  if (!sel || !ta) return;
+  var presets = (typeof heroPromptsConfig !== 'undefined' && heroPromptsConfig.presets) ? heroPromptsConfig.presets : [];
+  var current = (typeof heroPromptsConfig !== 'undefined' && heroPromptsConfig.categories && heroPromptsConfig.categories[catId]) || '';
+  var opts = '<option value="__default">Global default (inherit from LLM page)</option>';
+  presets.forEach(function(p, i) { opts += '<option value="preset:' + i + '">Preset: ' + escapeHtml(p.name || ('Preset ' + (i + 1))) + '</option>'; });
+  opts += '<option value="__custom">Custom (edit below)</option>';
+  sel.innerHTML = opts;
+  ta.value = current;
+  // Pick the dropdown state that matches the stored value.
+  if (!current.trim()) {
+    sel.value = '__default';
+    ta.disabled = true;
+  } else {
+    var matchIdx = presets.findIndex(function(p) { return (p.text || '').trim() === current.trim(); });
+    sel.value = matchIdx >= 0 ? ('preset:' + matchIdx) : '__custom';
+    ta.disabled = false;
+  }
+}
+
+function onCatHeroPromptPresetChange() {
+  var sel = document.getElementById('catEditorHeroPromptPreset');
+  var ta  = document.getElementById('catEditorHeroPrompt');
+  if (!sel || !ta) return;
+  var v = sel.value;
+  if (v === '__default') {
+    ta.value = '';
+    ta.disabled = true;
+  } else if (v === '__custom') {
+    ta.disabled = false;
+    ta.focus();
+  } else if (v.indexOf('preset:') === 0) {
+    var i = parseInt(v.slice(7), 10);
+    var p = (heroPromptsConfig.presets || [])[i];
+    ta.value = p ? (p.text || '') : '';
+    ta.disabled = false;
+  }
+}
+
+// Persist the per-category override into heroPromptsConfig + KV. Called from
+// saveCategoryConfig once the catId is known.
+async function persistCategoryHeroPrompt(catId, text) {
+  if (!catId) return;
+  if (typeof heroPromptsConfig === 'undefined') return;
+  heroPromptsConfig.categories = heroPromptsConfig.categories || {};
+  var t = (text || '').trim();
+  if (t) heroPromptsConfig.categories[catId] = t;
+  else delete heroPromptsConfig.categories[catId];
+  try {
+    var rec = await apiFetch('/api/content/hero-prompts', { method: 'PUT', body: JSON.stringify({ categories: heroPromptsConfig.categories }) });
+    if (typeof cacheHeroPromptsConfig === 'function' && rec) cacheHeroPromptsConfig(rec);
+  } catch (err) {
+    showToast('Hero prompt save failed: ' + err.message);
+  }
 }
 
 // ─── Token usage helpers ───
@@ -8444,6 +8712,10 @@ async function generateReview() {
   document.getElementById('modelInUse').classList.remove('visible');
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('articleOutput').classList.add('visible');
+  // Fresh generation is not yet a saved record — clear the comment thread context.
+  currentContentId = null;
+  var _cmtWrap = document.getElementById('articleComments');
+  if (_cmtWrap) _cmtWrap.style.display = 'none';
   document.getElementById('articleContent').innerHTML =
     '<div class="empty-state" style="padding:3rem;"><p style="font-size:0.9rem;color:var(--sla-orange);" class="streaming-cursor">Generating your content</p></div>';
 
@@ -9017,6 +9289,8 @@ async function viewArticleFromPipeline(itemId) {
   // Link the pipeline record so the Review Requests card can load
   currentContentId = item.id;
   loadReviewRequestCard();
+  // In-app comment thread for this saved article
+  if (typeof renderArticleComments === 'function') renderArticleComments(item);
 
   switchTab('generator');
 }
@@ -9661,6 +9935,34 @@ async function approveDirect(contentId) {
   }
 }
 
+// ── Prompt-name → WP sub-category routing (frontend mechanism) ───────────────
+// Empty by default for Merlows — diplomacy categories have no sub-category split
+// today, matching the backend run.js which also uses an empty map. When a prompt
+// name should route a category's output into a WP sub-category, add an entry like
+// { 'category-id': { 'prompt name lowercased': 'Sub-Category Display Name' } }.
+const PROMPT_SUBCATEGORY_MAP = {};
+
+// The name of the currently-loaded prompt preset, or '' if none is active.
+// Mirrors the active-prompt badge (#activePromptName, shown via #activePromptBadge).
+function getActivePromptName() {
+  var badge = document.getElementById('activePromptBadge');
+  if (!badge || badge.classList.contains('hidden')) return '';
+  var nameEl = document.getElementById('activePromptName');
+  return nameEl ? (nameEl.textContent || '').trim() : '';
+}
+
+// Resolve the WP sub-category name implied by the active prompt for a category.
+// Returns the sub-category display name, or null when no prompt-based routing
+// applies (always null while PROMPT_SUBCATEGORY_MAP is empty).
+function subCategoryForActivePrompt(catId) {
+  catId = catId || currentCategory;
+  var name = getActivePromptName().toLowerCase();
+  if (!name) return null;
+  var map = PROMPT_SUBCATEGORY_MAP[catId];
+  if (map && map[name]) return map[name];
+  return null;
+}
+
 // Queue the currently generated (unsaved) article for publishing
 async function queueCurrentForPublishing() {
   if (!rawArticleText) return;
@@ -9671,11 +9973,13 @@ async function queueCurrentForPublishing() {
   const wordCount = rawArticleText.split(/\s+/).filter(w=>w).length;
   const catCfg = getCatConfig(currentCategory);
   const wpSlug = catCfg?.wpCategorySlug || catCfg?.wpSlug || null;
+  const subCat = subCategoryForActivePrompt(currentCategory);
   const created = await contentApi.create({
     title,
     body: rawArticleText,
     excerpt: rawArticleText.split(/\s+/).slice(0, 30).join(' ') + '…',
     category: currentCategory,
+    ...(subCat ? { subCategory: subCat } : {}),
     ...(heroImageUrl ? { heroImageUrl, heroImageType } : {}),
     ...(wpSlug ? { wpCategorySlug: wpSlug } : {}),
   });
@@ -9683,6 +9987,8 @@ async function queueCurrentForPublishing() {
     currentContentId = created.id;
     publishingQueue.push({ ...created, model, wordCount, queuedAt: created.createdAt });
     loadReviewRequestCard();
+    // The article now has a KV record — surface the in-app comment thread.
+    if (typeof renderArticleComments === 'function') renderArticleComments(created);
   }
   renderQueuePanel();
   updateQueueHeaderBtn();
@@ -10445,6 +10751,7 @@ function openCategoryEditor(id) {
       if (el) { el.checked = eid === 'csrc-paste'; el.disabled = false; }
     });
     populateCatEditorLlm('');
+    renderCatHeroPromptControls('');
 
   } else if (id.startsWith('builtin:')) {
     // ── Edit built-in category ──
@@ -10461,6 +10768,7 @@ function openCategoryEditor(id) {
     const promptTA = document.getElementById('catEditorPrompt');
     if (promptTA) promptTA.value = config.prompt || '';
     populateCatEditorLlm(config.llm || getCategoryModel(catId) || '');
+    renderCatHeroPromptControls(catId);
     // Load prompt panel for this category
     renderCatPromptPanel(catId);
 
@@ -10482,6 +10790,7 @@ function openCategoryEditor(id) {
       if (el) { el.checked = (cat.sources || []).includes(val); el.disabled = false; }
     });
     populateCatEditorLlm(cat.llm || '');
+    renderCatHeroPromptControls(id);
     // Load prompt panel for this category
     renderCatPromptPanel(id);
   }
@@ -10504,6 +10813,7 @@ function saveCategoryConfig() {
   const wpSlug  = document.getElementById('catEditorWpSlug').value.trim();
   const prompt  = document.getElementById('catEditorPrompt').value.trim();
   const llm     = document.getElementById('catEditorLlm').value;
+  const heroPrompt = (document.getElementById('catEditorHeroPrompt')?.value || '').trim();
 
   if (!editingCategoryId && !name) { alert('Please enter a category name.'); document.getElementById('catEditorName').focus(); return; }
 
@@ -10519,6 +10829,7 @@ function saveCategoryConfig() {
       createdAt: new Date().toISOString()
     };
     customCategories.push(newCat);
+    persistCategoryHeroPrompt(newCat.id, heroPrompt);
     saveCustomCategories();
     activateCustomCategories();
     // Load the default prompt into the generator when this category is active
@@ -10534,6 +10845,7 @@ function saveCategoryConfig() {
     const overrides = getBuiltinOverrides();
     overrides[catId] = { ...overrides[catId], description: desc, wpCategorySlug: wpSlug, prompt, llm, icon: selectedCatIcon };
     saveBuiltinOverrides(overrides);
+    persistCategoryHeroPrompt(catId, heroPrompt);
     // Update per-category LLM if set
     if (llm) { const cm = JSON.parse(localStorage.getItem('sla_cat_models') || '{}'); cm[catId] = llm; localStorage.setItem('sla_cat_models', JSON.stringify(cm)); }
     renderCategoriesPage();
@@ -10547,6 +10859,7 @@ function saveCategoryConfig() {
     if (idx === -1) return;
     const sources = ['single','multiple','links','paste'].filter(s => document.getElementById('csrc-' + s)?.checked);
     customCategories[idx] = { ...customCategories[idx], name, description: desc, sources, wpCategorySlug: wpSlug, prompt, llm, icon: selectedCatIcon };
+    persistCategoryHeroPrompt(editingCategoryId, heroPrompt);
     // Update CATEGORIES label
     const catEntry = CATEGORIES.find(c => c.id === editingCategoryId);
     if (catEntry) catEntry.label = name;
@@ -10961,6 +11274,9 @@ window.addEventListener('DOMContentLoaded', () => {
   loadApiKeyUI();
   loadCustomCategories();
   activateCustomCategories();
+  // Hero image prompt library — needed by the generator + category editor before
+  // the LLM page is opened. Refreshes the localStorage-cached copy from KV.
+  if (typeof loadHeroPrompts === 'function') loadHeroPrompts();
   updateCategoryHeader('diplomatic-analysis');
   updateGenCatOptions('diplomatic-analysis');
   // Hash deep-link: /#pipeline, /#generator, etc. (used by review confirmation pages)
@@ -12667,6 +12983,137 @@ function renderKanbanCard(item) {
         <button class="btn-trash-sm" onclick="movePipelineToTrash('${item.id}')">Move to Trash</button>
       </div>
     </div>`;
+}
+
+// ───── In-app article comments (pairs with /api/content/{id}/comment) ─────
+// A feedback thread on a saved/pipeline article. Comments are stored on the
+// item as rejectionComments[] (shared with reviewer "Request changes" feedback)
+// but are feedback-only — they never change the article body or its status.
+// Posting + resolve/delete are gated by isContentPlus() (admin/content), matching
+// the backend's requireRole guard.
+function _commentAuthorName(c) {
+  if (c && c.authorName) return c.authorName;
+  if (c && c.reviewerId && typeof reviewerName === 'function') { try { return reviewerName(c.reviewerId); } catch (e) {} }
+  return (c && c.reviewerId) || 'Reviewer';
+}
+
+function renderArticleComments(item) {
+  var wrap = document.getElementById('articleComments');
+  var list = document.getElementById('articleCommentsList');
+  var form = document.getElementById('articleCommentForm');
+  var heading = document.getElementById('articleCommentsHeading');
+  if (!wrap || !list) return;
+
+  var canComment = (typeof isContentPlus === 'function') ? isContentPlus() : false;
+  // The comment thread is only meaningful for a saved/pipeline article.
+  if (!currentContentId) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  if (form) form.style.display = canComment ? '' : 'none';
+
+  var rcs = (item && Array.isArray(item.rejectionComments)) ? item.rejectionComments : [];
+  // Skip soft-deleted entries; flatten overall + inline-note text into one string.
+  var rows = [];
+  rcs.forEach(function(rc, idx) {
+    if (!rc || rc.deleted) return;
+    var inline = '';
+    if (Array.isArray(rc.highlights) && rc.highlights.length) {
+      inline = rc.highlights.filter(function(h){ return h && h.quote && h.comment; })
+        .map(function(h){ return '<div style="font-size:0.72rem;color:var(--text);margin-top:4px;"><span style="font-style:italic;color:var(--text-muted);">“' + escapeHtml((h.quote || '').slice(0, 200)) + '”</span><br>↳ ' + escapeHtml(h.comment || '') + '</div>'; })
+        .join('');
+    }
+    var overall = (rc.overall != null && String(rc.overall).trim())
+      ? String(rc.overall).trim()
+      : ((!Array.isArray(rc.highlights) || !rc.highlights.length) ? String(rc.comment || '').trim() : '');
+    if (!overall && !inline) return;
+    rows.push({ idx: idx, who: _commentAuthorName(rc), when: rc.at ? new Date(rc.at).toLocaleString('en-GB') : '', overall: overall, inline: inline, resolved: !!rc.resolved, viaApp: !!rc.viaApp });
+  });
+
+  if (heading) heading.textContent = 'Comments' + (rows.length ? ' (' + rows.length + ')' : '');
+
+  if (!rows.length) {
+    list.innerHTML = '<div style="font-size:0.72rem;color:var(--text-muted);font-style:italic;">No comments yet.</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(function(r) {
+    var actions = '';
+    if (canComment) {
+      actions = '<div style="display:flex;gap:6px;margin-top:6px;">' +
+        '<button class="btn btn-outline btn-xs" onclick="resolveArticleComment(' + r.idx + ',' + (r.resolved ? 'true' : 'false') + ')">' + (r.resolved ? 'Unresolve' : '✓ Resolve') + '</button>' +
+        '<button class="btn btn-outline btn-xs" style="color:var(--error);" onclick="deleteArticleComment(' + r.idx + ')">Delete</button>' +
+      '</div>';
+    }
+    var meta = '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:4px;">' + escapeHtml(r.who) + (r.who && r.when ? ' · ' : '') + escapeHtml(r.when) + (r.viaApp ? ' · in-app' : '') + '</div>';
+    return '<div style="border:1px solid var(--border);padding:8px 10px;background:var(--bg);' + (r.resolved ? 'opacity:0.6;' : '') + '">' +
+      (r.overall ? '<div style="font-size:0.78rem;color:var(--text);line-height:1.5;white-space:pre-wrap;">' + escapeHtml(r.overall) + '</div>' : '') +
+      r.inline +
+      meta + actions +
+    '</div>';
+  }).join('');
+}
+
+// Fetch the current article record and render its comment thread.
+async function loadArticleComments() {
+  if (!currentContentId) { var w = document.getElementById('articleComments'); if (w) w.style.display = 'none'; return; }
+  try {
+    var item = (await contentApi.getAll()).find(function(i) { return i.id === currentContentId; });
+    renderArticleComments(item || {});
+  } catch (e) {
+    renderArticleComments({});
+  }
+}
+
+async function postArticleComment() {
+  if (!currentContentId) return;
+  if (typeof isContentPlus === 'function' && !isContentPlus()) return;
+  var ta = document.getElementById('articleCommentInput');
+  var status = document.getElementById('articleCommentStatus');
+  var text = ta ? (ta.value || '').trim() : '';
+  if (!text) { if (ta) ta.focus(); return; }
+  if (status) status.textContent = 'Posting…';
+  try {
+    var r = await fetch('/api/content/' + currentContentId + '/comment', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+      body: JSON.stringify({ overall: text }),
+    });
+    var data = await r.json().catch(function() { return {}; });
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    if (ta) ta.value = '';
+    if (status) status.textContent = '';
+    renderArticleComments(data);
+    if (typeof loadReviewRequestCard === 'function') loadReviewRequestCard();
+    if (typeof showToast === 'function') showToast('Comment added');
+  } catch (e) {
+    if (status) status.textContent = 'Failed: ' + e.message;
+  }
+}
+
+async function resolveArticleComment(index, isResolved) {
+  if (!currentContentId) return;
+  try {
+    var r = await fetch('/api/content/' + currentContentId + '/comment', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+      body: JSON.stringify({ action: isResolved ? 'unresolve' : 'resolve', index: index }),
+    });
+    var data = await r.json().catch(function() { return {}; });
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    renderArticleComments(data);
+  } catch (e) { alert('Failed to update comment: ' + e.message); }
+}
+
+async function deleteArticleComment(index) {
+  if (!currentContentId) return;
+  if (!confirm('Remove this comment from view? It will be retained in the article log.')) return;
+  try {
+    var r = await fetch('/api/content/' + currentContentId + '/comment', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+      body: JSON.stringify({ action: 'delete', index: index }),
+    });
+    var data = await r.json().catch(function() { return {}; });
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    renderArticleComments(data);
+    if (typeof loadReviewRequestCard === 'function') loadReviewRequestCard();
+  } catch (e) { alert('Failed to delete comment: ' + e.message); }
 }
 
 // ───── AI revise from rejection comments (admin/content only) ─────
