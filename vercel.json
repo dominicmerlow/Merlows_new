@@ -1,10 +1,11 @@
 {
   "github": {
-    "enabled": false
+    "enabled": false,
+    "silent": true
   },
   "functions": {
-    "api/automation/[...slug].js": { "maxDuration": 60 },
-    "api/social/[...slug].js":    { "maxDuration": 60 }
+    "api/automation/[...slug].js": { "maxDuration": 300 },
+    "api/social/[...slug].js":    { "maxDuration": 300 }
   },
   "rewrites": [
     { "source": "/api/automation/:slug*", "destination": "/api/automation/[...slug]" },
