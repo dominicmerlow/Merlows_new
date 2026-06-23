@@ -23,3 +23,6 @@ api/content/index.js
 api/content/[id].js
 api/review/[token].js
 api/review/send.js
+api/publish/index.js
+api/reviewers/index.js
+api/schedule/index.js

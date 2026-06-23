@@ -9,15 +9,21 @@
 ## Deployment
 - GitHub auto-deploy is **disabled** (`"github": {"enabled": false}` in vercel.json).
 - Always deploy manually: `vercel --prod --yes` (use `npx vercel` — CLI not installed globally).
-- **Vercel Hobby plan** (project under `dominicmerlows-projects`): **12 serverless-function limit per deployment** and `maxDuration` capped at **60s**. The app sits at **11 functions** after the 2026-06-22 catch-all consolidation (see Vercel Routing) — one slot of margin. **Adding a new `api/*.js` route risks breaking the deploy**; prefer adding handlers under an existing catch-all instead. (An SLA Pharma Pro team exists if a future move to Pro is wanted; Vance/Alpha runs on Pro with the same ~26 endpoints unconsolidated.)
+- **Vercel Hobby plan** (project under `dominicmerlows-projects`): **12 serverless-function limit per deployment** and `maxDuration` capped at **60s**. The app sits at **7 serverless functions** + **2 Edge functions** (`fetch-url`, `proxy-image` — Edge functions do NOT count toward the 12 cap) after the 2026-06-22/23 consolidation — comfortable margin. **Adding a new serverless `api/*.js` route eats a slot**; prefer adding handlers under an existing catch-all, or use the Edge runtime for pure-fetch utilities. (An SLA Pharma Pro team exists if a future move to Pro is wanted; Vance/Alpha runs on Pro with the same endpoints unconsolidated.)
 - Production URL: https://merlows.vercel.app
 
 ## Vercel Routing (Critical)
-- **Five catch-all functions** consolidate most routes to fit the Hobby 12-fn limit:
+- **Six catch-all functions** consolidate most routes to fit the Hobby 12-fn limit:
   `api/automation/[...slug].js`, `api/social/[...slug].js`, `api/auth/[...slug].js`,
-  `api/content/[...slug].js`, `api/review/[...slug].js`. Each imports handlers from
+  `api/content/[...slug].js`, `api/review/[...slug].js`, and `api/core/[...slug].js`
+  (handles `publish`, `reviewers`, `schedule`). Each imports handlers from
   `lib/<area>/handlers/` (outside `api/`, so they don't count as functions) and
-  dispatches by slug. `vercel.json` has a `/api/<area>/:slug*` rewrite per catch-all.
+  dispatches by slug. `vercel.json` rewrites map the friendly paths (e.g.
+  `/api/publish`, `/api/reviewers`, `/api/schedule`) to `/api/core/<name>`.
+- **Edge functions** `api/fetch-url.js` + `api/proxy-image.js` use
+  `export const config = { runtime: 'edge' }` and the Web `Request`→`Response`
+  signature (NOT Node `req,res`). They don't count toward the 12 serverless cap and
+  keep their own paths (no rewrite). Only pure-fetch/no-KV-Node-API routes belong here.
 - In non-Next.js Vercel: slug key is `req.query['...slug']` (three literal dots) OR
   `req.query.slug` when arriving via the rewrite — read both. Single-segment paths
   arrive as a plain string; multi-segment as a **slash-joined string** — always `split('/')`.

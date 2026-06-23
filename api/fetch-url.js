@@ -1,22 +1,35 @@
 /**
  * Server-side URL fetcher — avoids all CORS issues that plague public proxies.
  * GET /api/fetch-url?url=https://...
+ *
+ * Runs on the Vercel Edge runtime so it does NOT count toward the Hobby
+ * 12 serverless-function limit. Uses only Web-standard APIs (Request/Response,
+ * fetch, URL) — no Node-only modules.
  */
-export default async function handler(req, res) {
-  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+export const config = { runtime: 'edge' };
 
-  const { url } = req.query;
-  if (!url) return res.status(400).json({ error: 'url parameter required' });
+function json(obj, status = 200, extraHeaders) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...(extraHeaders || {}) },
+  });
+}
+
+export default async function handler(request) {
+  if (request.method !== 'GET') return json({ error: 'Method not allowed' }, 405);
+
+  const url = new URL(request.url).searchParams.get('url');
+  if (!url) return json({ error: 'url parameter required' }, 400);
 
   // Basic URL validation
   let parsed;
   try {
     parsed = new URL(url);
     if (!['http:', 'https:'].includes(parsed.protocol)) {
-      return res.status(400).json({ error: 'Only http/https URLs are supported' });
+      return json({ error: 'Only http/https URLs are supported' }, 400);
     }
   } catch {
-    return res.status(400).json({ error: 'Invalid URL' });
+    return json({ error: 'Invalid URL' }, 400);
   }
 
   try {
@@ -30,20 +43,17 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: `Remote server returned ${response.status} ${response.statusText}`,
-      });
+      return json({ error: `Remote server returned ${response.status} ${response.statusText}` }, response.status);
     }
 
     const contentType = response.headers.get('content-type') || '';
     if (!contentType.includes('text/html') && !contentType.includes('text/plain') && !contentType.includes('application/xhtml')) {
-      return res.status(415).json({ error: `Unsupported content type: ${contentType}` });
+      return json({ error: `Unsupported content type: ${contentType}` }, 415);
     }
 
     const html = await response.text();
-    res.setHeader('Content-Type', 'application/json');
-    return res.json({ contents: html, status: response.status, url: parsed.href });
+    return json({ contents: html, status: response.status, url: parsed.href }, 200);
   } catch (err) {
-    return res.status(500).json({ error: 'Fetch failed: ' + err.message });
+    return json({ error: 'Fetch failed: ' + err.message }, 500);
   }
 }

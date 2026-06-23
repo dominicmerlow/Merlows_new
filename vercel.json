@@ -6,7 +6,8 @@
   "functions": {
     "api/automation/[...slug].js": { "maxDuration": 60 },
     "api/social/[...slug].js":     { "maxDuration": 60 },
-    "api/content/[...slug].js":    { "maxDuration": 60 }
+    "api/content/[...slug].js":    { "maxDuration": 60 },
+    "api/core/[...slug].js":       { "maxDuration": 60 }
   },
   "rewrites": [
     { "source": "/api/automation/:slug*", "destination": "/api/automation/[...slug]" },
@@ -15,7 +16,13 @@
     { "source": "/api/content",           "destination": "/api/content/[...slug]" },
     { "source": "/api/content/:slug*",    "destination": "/api/content/[...slug]" },
     { "source": "/api/review",            "destination": "/api/review/[...slug]" },
-    { "source": "/api/review/:slug*",     "destination": "/api/review/[...slug]" }
+    { "source": "/api/review/:slug*",     "destination": "/api/review/[...slug]" },
+    { "source": "/api/publish",           "destination": "/api/core/publish" },
+    { "source": "/api/publish/:p*",       "destination": "/api/core/publish/:p*" },
+    { "source": "/api/reviewers",         "destination": "/api/core/reviewers" },
+    { "source": "/api/reviewers/:p*",     "destination": "/api/core/reviewers/:p*" },
+    { "source": "/api/schedule",          "destination": "/api/core/schedule" },
+    { "source": "/api/schedule/:p*",      "destination": "/api/core/schedule/:p*" }
   ],
   "crons": [
     { "path": "/api/cron/publish",                  "schedule": "0 8 * * *" },
