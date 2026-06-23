@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildContentItem, validateContentItem } from './index.js';
+import { buildContentItem, validateContentItem } from '../../lib/content/handlers/index.js';
 
 test('buildContentItem creates item with correct defaults', () => {
   const item = buildContentItem({ title: 'Test', body: '<p>Hello</p>', category: 'news' });

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildWpPayload } from './index.js';
+import { buildWpPayload } from '../../lib/core/handlers/publish.js';
 
 test('buildWpPayload maps known category', () => {
   const item = { title: 'Test', body: '<p>Body</p>', excerpt: 'Short', category: 'industry-news' };

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildReviewer, validateReviewer } from './index.js';
+import { buildReviewer, validateReviewer } from '../../lib/core/handlers/reviewers.js';
 
 test('buildReviewer creates reviewer with id', () => {
   const r = buildReviewer({ name: 'Alice', email: 'alice@slahealth.co.uk' });

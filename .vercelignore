@@ -16,13 +16,8 @@ api/automation/notify.js
 api/automation/rule-schema.js
 api/automation/job-schema.js
 
-# Test-compat shims for consolidated catch-alls (api/content, api/review).
-# Real logic lives in lib/<area>/handlers/; these only exist so co-located
-# *.test.js can import named exports. Excluded so they don't count as functions.
-api/content/index.js
-api/content/[id].js
-api/review/[token].js
-api/review/send.js
-api/publish/index.js
-api/reviewers/index.js
-api/schedule/index.js
+# NOTE: consolidated catch-alls (content/review/core) have NO api/ shims — their
+# tests import directly from lib/<area>/handlers/. Do NOT add bracketed shim files
+# like `api/content/[id].js`: a `[...]` entry here is read as a glob char-class and
+# won't match the literal filename, so the shim would deploy and collide with the
+# catch-all (`[...slug].js`). Point tests at lib/ instead.

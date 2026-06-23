@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { computeNewStatus } from './[token].js';
+import { computeNewStatus } from '../../lib/review/handlers/token.js';
 
 test('any-approval: first approval sets approved', () => {
   const item = { requireAllApprovals: false, reviewers: ['r1','r2'], approvals: ['r1'], rejections: [] };
