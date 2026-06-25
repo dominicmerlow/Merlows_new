@@ -31,7 +31,15 @@ while ( have_posts() ) :
     $type_label = 'Article';
     $categories = get_the_category();
     if ( ! empty( $categories ) ) {
-        $type_label = $categories[0]->name;
+        // Prefer a sub-category as the primary, and show it as "Parent › Sub-category".
+        $primary = $categories[0];
+        foreach ( $categories as $c ) { if ( $c->parent ) { $primary = $c; break; } }
+        if ( $primary->parent ) {
+            $parent_cat = get_category( $primary->parent );
+            $type_label = ( $parent_cat && ! is_wp_error( $parent_cat ) ) ? ( $parent_cat->name . ' › ' . $primary->name ) : $primary->name;
+        } else {
+            $type_label = $primary->name;
+        }
     } elseif ( $post_type !== 'post' ) {
         $type_obj = get_post_type_object( $post_type );
         $type_label = $type_obj->labels->singular_name;
@@ -56,7 +64,7 @@ while ( have_posts() ) :
         $hero_map = array(
             'breaking-news'       => 'news_hero.png',
             'diplomatic-analysis' => 'research_hero.png',
-            'op-eds-commentary'   => 'opinion_hero.png',
+            'blitzspirit'         => 'opinion_hero.png',
             'cyrus-accord'        => 'hcp_hero.png',
             'abraham-accords'     => 'education_hero.png',
             'regional-voices'     => 'patient_hero.png',
@@ -124,6 +132,16 @@ while ( have_posts() ) :
                     <div class="oped-article-body">
                         <?php the_content(); ?>
                     </div>
+
+                    <!-- Tags (from the content generator's per-row Tags column) -->
+                    <?php $mlws_post_tags = get_the_tags(); if ( $mlws_post_tags ) : ?>
+                        <div class="oped-tags" style="margin-top:28px; padding-top:20px; border-top:1px solid #e2e8f0; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                            <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:#64748b; margin-right:4px;">Tags</span>
+                            <?php foreach ( $mlws_post_tags as $mlws_tag ) : ?>
+                                <a href="<?php echo esc_url( get_tag_link( $mlws_tag->term_id ) ); ?>" style="display:inline-block; padding:4px 12px; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:999px; font-size:13px; color:#334155; text-decoration:none;"><?php echo esc_html( $mlws_tag->name ); ?></a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Large Infographic Section -->
                     <?php if ( $large_infographic ) : ?>
@@ -455,7 +473,7 @@ while ( have_posts() ) :
                                     <div class="oped-related-thumb" style="background-image: url('<?php echo get_the_post_thumbnail_url(get_the_ID(), 'thumbnail'); ?>'); background-size: cover;"></div>
                                     <div class="oped-related-info">
                                         <span class="oped-related-title"><?php the_title(); ?></span>
-                                        <span class="oped-related-date"><?php echo get_the_date('M j'); ?></span>
+                                        <span class="oped-related-date"><?php echo get_the_date('M j'); ?><?php if ( function_exists( 'mlws_get_reading_time' ) ) { echo ' &middot; ' . esc_html( mlws_get_reading_time() ) . ' min'; } ?></span>
                                     </div>
                                 </a>
                             <?php 
@@ -496,7 +514,9 @@ while ( have_posts() ) :
                         $thumb = get_the_post_thumbnail_url(get_the_ID(), 'medium');
                 ?>
                     <a href="<?php the_permalink(); ?>" style="text-decoration: none; display: flex; flex-direction: column; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s; border: 1px solid #e2e8f0;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="height: 200px; background-color: #cbd5e1; background-image: url('<?php echo $thumb; ?>'); background-size: cover; background-position: center;"></div>
+                        <div style="position: relative; height: 200px; background-color: #cbd5e1; background-image: url('<?php echo $thumb; ?>'); background-size: cover; background-position: center;">
+                            <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay(); } ?>
+                        </div>
                         <div style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
                             <span style="font-size: 12px; font-weight: 600; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;"><?php echo get_the_date(); ?></span>
                             <h4 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 12px; line-height: 1.4;"><?php the_title(); ?></h4>

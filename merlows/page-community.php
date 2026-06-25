@@ -158,7 +158,7 @@ get_header();
 <section class="community-hero">
     <div class="container">
         <h1>Our Community</h1>
-        <p>A trusted space for patients, carers, and healthcare professionals navigating inflammatory bowel disease together.</p>
+        <p>A trusted space for readers and writers following Middle East diplomacy and the story of the Accords together.</p>
         <a href="<?php echo wp_registration_url(); ?>" class="btn btn-primary" style="background: white; color: #1B4F8A; padding: 14px 32px; font-weight: 700; border-radius: var(--radius-md);">Join the Community</a>
     </div>
 </section>
@@ -175,15 +175,15 @@ get_header();
                 <div class="community-card-icon" style="background: #F5E6A3;">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
-                <h3>Patient Support</h3>
-                <p>Connect with others living with Crohn's disease, ulcerative colitis, and microscopic colitis. Share experiences and find understanding.</p>
+                <h3>Reader Community</h3>
+                <p>Connect with other readers following Israel-Iran relations, the Cyrus Accord, and the Abraham Accords. Share perspectives and discuss the issues that matter.</p>
             </div>
             <div class="community-card">
                 <div class="community-card-icon" style="background: #EFF6FF;">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 </div>
-                <h3>Evidence-Based Education</h3>
-                <p>Access clinical reviews, expert opinions, and research summaries written in plain language by healthcare professionals.</p>
+                <h3>In-Depth Analysis</h3>
+                <p>Access diplomatic analysis, expert opinions, and briefings written in clear language by our writers and contributors.</p>
             </div>
             <div class="community-card">
                 <div class="community-card-icon" style="background: #F5F0FA;">
@@ -203,8 +203,8 @@ get_header();
                 <div class="community-card-icon" style="background: #FEF2F2;">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </div>
-                <h3>HCP Resources</h3>
-                <p>Healthcare professionals access clinical guidelines, prescribing information, and continuing education modules.</p>
+                <h3>Writer Resources</h3>
+                <p>Writers and contributors access submission guidelines, editorial standards, and our style guide for publishing on Merlows.</p>
             </div>
             <div class="community-card">
                 <div class="community-card-icon" style="background: #ECFDF5;">
@@ -236,7 +236,7 @@ get_header();
                 <div class="value-icon">&#x1F91D;</div>
                 <div>
                     <h4>Inclusive & Respectful</h4>
-                    <p>All IBD conditions, all perspectives. We respect patient experiences alongside clinical expertise.</p>
+                    <p>All viewpoints, all perspectives. We respect our readers' perspectives alongside our writers' expertise.</p>
                 </div>
             </div>
             <div class="value-item">

@@ -13,7 +13,9 @@
                 ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class('news-card'); ?>>
                     <?php if ( has_post_thumbnail() ) : ?>
-                        <div class="card-image" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');"></div>
+                        <div class="card-image" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');">
+                            <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay(); } ?>
+                        </div>
                     <?php endif; ?>
                     
                     <div class="card-content">

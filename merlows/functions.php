@@ -65,8 +65,8 @@ function mlws_health_hub_setup() {
         array(
             'primary-menu' => esc_html__('Primary Menu', 'merlows' ),
             'footer-menu-1' => esc_html__('Footer Menu Topics', 'merlows' ),
-            'footer-menu-2' => esc_html__('Footer Menu Professionals', 'merlows' ),
-            'footer-menu-3' => esc_html__('Footer Menu Patients', 'merlows' ),
+            'footer-menu-2' => esc_html__('Footer Menu Writers', 'merlows' ),
+            'footer-menu-3' => esc_html__('Footer Menu Readers', 'merlows' ),
         )
     );
 }
@@ -81,7 +81,7 @@ function mlws_theme_activation() {
     $categories = array(
         'Breaking News'        => 'breaking-news',
         'Diplomatic Analysis'  => 'diplomatic-analysis',
-        'Op-Eds & Commentary'  => 'op-eds-commentary',
+        'BlitzSpirit'          => 'blitzspirit',
         'Cyrus Accord Updates' => 'cyrus-accord',
         'Abraham Accords'      => 'abraham-accords',
         'Regional Voices'      => 'regional-voices',
@@ -141,7 +141,7 @@ add_action( 'after_switch_theme', 'mlws_theme_activation' );
 function mlws_maybe_seed_categories() {
     // Check if the core categories actually exist — not just a flag
     $required_cats = array(
-        'Breaking News', 'Diplomatic Analysis', 'Op-Eds & Commentary',
+        'Breaking News', 'Diplomatic Analysis', 'BlitzSpirit',
         'Cyrus Accord Updates', 'Abraham Accords', 'Regional Voices',
     );
 
@@ -387,6 +387,58 @@ function mlws_get_category_icon_url($name) {
     
     // Default if no match
     return $theme_dir . '/assets/img/icons/medkit.svg';
+}
+
+/**
+ * Estimated reading time (in whole minutes) for a post.
+ *
+ * Uses the manually-set `_oped_read_time` post meta when present, otherwise
+ * estimates from the word count at ~200 wpm. Mirrors the logic used on the
+ * single-post hero so the figure is consistent everywhere it is shown.
+ *
+ * @param int|null $post_id Post ID (defaults to the current post in the loop).
+ * @return int Minutes (minimum 1).
+ */
+function mlws_get_reading_time( $post_id = null ) {
+    $post_id = $post_id ? $post_id : get_the_ID();
+    $read_time = get_post_meta( $post_id, '_oped_read_time', true );
+    if ( ! $read_time ) {
+        $word_count = str_word_count( strip_tags( get_post_field( 'post_content', $post_id ) ) );
+        $read_time = (int) ceil( $word_count / 200 );
+    }
+    return max( 1, (int) $read_time );
+}
+
+/**
+ * Render the standard thumbnail text-overlay badges (category, date, reading
+ * time) used across post cards. Intended to be echoed inside a thumbnail
+ * container that is `position: relative` (e.g. `.dispatch-card__img`).
+ *
+ * Matches the dispatch-card badge styling: category top-left, date bottom-left,
+ * reading time bottom-right. Any badge can be suppressed via $args.
+ *
+ * @param int|null $post_id Post ID (defaults to current post in the loop).
+ * @param array    $args    { 'cat' => bool, 'date' => bool, 'read_time' => bool }
+ */
+function mlws_thumb_overlay( $post_id = null, $args = array() ) {
+    $post_id = $post_id ? $post_id : get_the_ID();
+    $args = array_merge( array( 'cat' => true, 'date' => true, 'read_time' => true ), $args );
+
+    if ( $args['cat'] ) {
+        $cats = get_the_category( $post_id );
+        if ( ! empty( $cats ) ) {
+            echo '<span class="mlws-thumb-badge mlws-thumb-badge--cat">' . esc_html( $cats[0]->name ) . '</span>';
+        }
+    }
+    if ( $args['date'] ) {
+        echo '<span class="mlws-thumb-badge mlws-thumb-badge--date">' . esc_html( get_the_date( 'j M Y', $post_id ) ) . '</span>';
+    }
+    if ( $args['read_time'] ) {
+        $rt = mlws_get_reading_time( $post_id );
+        echo '<span class="mlws-thumb-badge mlws-thumb-badge--read">'
+            . '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+            . esc_html( $rt ) . ' min</span>';
+    }
 }
 
 /**
@@ -783,9 +835,9 @@ function mlws_google_oauth_callback() {
         
         update_user_meta( $user_id, 'google_id', $google_id );
         
-        // Default to Patient Role
-        update_user_meta( $user_id, '_mlws_user_type', 'patient' );
-        update_user_meta( $user_id, '_mlws_dashboard_role', 'patient' );
+        // Default to Member (reader) Role
+        update_user_meta( $user_id, '_mlws_user_type', 'member' );
+        update_user_meta( $user_id, '_mlws_dashboard_role', 'member' );
         
         $user = get_user_by( 'id', $user_id );
     }
@@ -966,7 +1018,7 @@ function mlws_customize_register( $wp_customize ) {
     ) );
 
     $wp_customize->add_setting( 'mlws_hero_custom_subtitle', array(
-        'default'           => 'Pharma-grade clinical resources, research, and tools for healthcare professionals.',
+        'default'           => 'Independent reporting, diplomatic analysis, and regional voices for readers and writers.',
         'sanitize_callback' => 'sanitize_textarea_field',
     ) );
     $wp_customize->add_control( 'mlws_hero_custom_subtitle', array(
@@ -1017,7 +1069,7 @@ function mlws_customize_register( $wp_customize ) {
     ) );
 
     $wp_customize->add_setting( 'mlws_hero_button_2_link', array(
-        'default'           => '/patients/',
+        'default'           => '/',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_hero_button_2_link', array(
@@ -1298,33 +1350,33 @@ function mlws_customize_register( $wp_customize ) {
         'panel'    => 'mlws_homepage_panel',
     ) );
 
-    // Practitioner Tile
+    // Readers Tile (pillar 1)
     $wp_customize->add_setting( 'mlws_practitioner_tile_title', array(
-        'default'           => 'For Practitioners',
+        'default'           => 'For Readers',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_practitioner_tile_title', array(
-        'label'   => __('Practitioner Tile Title', 'merlows' ),
+        'label'   => __('Readers Tile Title', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'text',
     ) );
 
     $wp_customize->add_setting( 'mlws_practitioner_tile_desc', array(
-        'default'           => 'Access clinical reviews, evidence-based guidelines, and professional tools tailored for modern healthcare practitioners.',
+        'default'           => 'Browse breaking dispatches, diplomatic analysis, and regional voices covering Israel-Iran relations and the Abraham Accords.',
         'sanitize_callback' => 'sanitize_textarea_field',
     ) );
     $wp_customize->add_control( 'mlws_practitioner_tile_desc', array(
-        'label'   => __('Practitioner Tile Description', 'merlows' ),
+        'label'   => __('Readers Tile Description', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'textarea',
     ) );
 
     $wp_customize->add_setting( 'mlws_practitioner_tile_extra', array(
-        'default'           => 'Bridging science and clinical outcomes',
+        'default'           => 'Explore the archive',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_practitioner_tile_extra', array(
-        'label'   => __('Practitioner Tile Extra Font Text', 'merlows' ),
+        'label'   => __('Readers Tile Extra Font Text', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'text',
     ) );
@@ -1334,37 +1386,37 @@ function mlws_customize_register( $wp_customize ) {
         'sanitize_callback' => 'esc_url_raw',
     ) );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'mlws_practitioner_tile_image', array(
-        'label'   => __('Practitioner Tile Bottom Image', 'merlows' ),
+        'label'   => __('Readers Tile Bottom Image', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
     ) ) );
 
-    // Patient Tile
+    // Writers Tile (pillar 2)
     $wp_customize->add_setting( 'mlws_patient_tile_title', array(
-        'default'           => 'For Patients',
+        'default'           => 'For Writers',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_patient_tile_title', array(
-        'label'   => __('Patient Tile Title', 'merlows' ),
+        'label'   => __('Writers Tile Title', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'text',
     ) );
 
     $wp_customize->add_setting( 'mlws_patient_tile_desc', array(
-        'default'           => 'Learn about chronic conditions, health optimization, and healthy living through our expert-led patient curriculum.',
+        'default'           => 'Submit analysis, op-eds, and regional voices. Our editorial team reviews all submissions for fit, tone, and factual accuracy.',
         'sanitize_callback' => 'sanitize_textarea_field',
     ) );
     $wp_customize->add_control( 'mlws_patient_tile_desc', array(
-        'label'   => __('Patient Tile Description', 'merlows' ),
+        'label'   => __('Writers Tile Description', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'textarea',
     ) );
 
     $wp_customize->add_setting( 'mlws_patient_tile_extra', array(
-        'default'           => 'Empowering your health journey daily',
+        'default'           => 'Submit an article',
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_patient_tile_extra', array(
-        'label'   => __('Patient Tile Extra Font Text', 'merlows' ),
+        'label'   => __('Writers Tile Extra Font Text', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'text',
     ) );
@@ -1374,23 +1426,23 @@ function mlws_customize_register( $wp_customize ) {
         'sanitize_callback' => 'esc_url_raw',
     ) );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'mlws_patient_tile_image', array(
-        'label'   => __('Patient Tile Bottom Image', 'merlows' ),
+        'label'   => __('Writers Tile Bottom Image', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
     ) ) );
 
-    $wp_customize->add_setting( 'mlws_practitioner_tile_link', array( 'default' => '/healthcare-professionals/', 'sanitize_callback' => 'sanitize_text_field' ) );
-    $wp_customize->add_control( 'mlws_practitioner_tile_link', array( 'label' => 'Practitioner Tile Link', 'section' => 'mlws_pathway_tiles_settings', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_practitioner_tile_link', array( 'default' => '/', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_practitioner_tile_link', array( 'label' => 'Readers Tile Link', 'section' => 'mlws_pathway_tiles_settings', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_patient_tile_link', array( 'default' => '/patients/', 'sanitize_callback' => 'sanitize_text_field' ) );
-    $wp_customize->add_control( 'mlws_patient_tile_link', array( 'label' => 'Patient Tile Link', 'section' => 'mlws_pathway_tiles_settings', 'type' => 'text' ) );
+    $wp_customize->add_setting( 'mlws_patient_tile_link', array( 'default' => '/contact-us/', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_control( 'mlws_patient_tile_link', array( 'label' => 'Writers Tile Link', 'section' => 'mlws_pathway_tiles_settings', 'type' => 'text' ) );
 
-    // Border Radius Controls - Patient
+    // Border Radius Controls - Writers Tile
     $wp_customize->add_setting( 'mlws_patient_tile_radius', array(
         'default'           => 16,
         'sanitize_callback' => 'absint',
     ) );
     $wp_customize->add_control( 'mlws_patient_tile_radius', array(
-        'label'   => __('Patient Tile Radius (px)', 'merlows' ),
+        'label'   => __('Writers Tile Radius (px)', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'number',
         'input_attrs' => array( 'min' => 0, 'max' => 100 ),
@@ -1401,19 +1453,19 @@ function mlws_customize_register( $wp_customize ) {
         'sanitize_callback' => 'absint',
     ) );
     $wp_customize->add_control( 'mlws_patient_image_radius', array(
-        'label'   => __('Patient Image Radius (px)', 'merlows' ),
+        'label'   => __('Writers Image Radius (px)', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'number',
         'input_attrs' => array( 'min' => 0, 'max' => 100 ),
     ) );
 
-    // Border Radius Controls - Practitioner
+    // Border Radius Controls - Readers Tile
     $wp_customize->add_setting( 'mlws_practitioner_tile_radius', array(
         'default'           => 16,
         'sanitize_callback' => 'absint',
     ) );
     $wp_customize->add_control( 'mlws_practitioner_tile_radius', array(
-        'label'   => __('Practitioner Tile Radius (px)', 'merlows' ),
+        'label'   => __('Readers Tile Radius (px)', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'number',
         'input_attrs' => array( 'min' => 0, 'max' => 100 ),
@@ -1424,7 +1476,7 @@ function mlws_customize_register( $wp_customize ) {
         'sanitize_callback' => 'absint',
     ) );
     $wp_customize->add_control( 'mlws_practitioner_image_radius', array(
-        'label'   => __('Practitioner Image Radius (px)', 'merlows' ),
+        'label'   => __('Readers Image Radius (px)', 'merlows' ),
         'section' => 'mlws_pathway_tiles_settings',
         'type'    => 'number',
         'input_attrs' => array( 'min' => 0, 'max' => 100 ),
@@ -1658,21 +1710,21 @@ function mlws_customize_register( $wp_customize ) {
     ) );
 
     $wp_customize->add_setting( 'mlws_join_practitioner_label', array(
-        'default'           => "I'm a Healthcare Practitioner",
+        'default'           => "I'm a Writer",
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_join_practitioner_label', array(
-        'label'   => __('Practitioner Checkbox Label', 'merlows' ),
+        'label'   => __('Writer Checkbox Label', 'merlows' ),
         'section' => 'mlws_join_community',
         'type'    => 'text',
     ) );
 
     $wp_customize->add_setting( 'mlws_join_patient_label', array(
-        'default'           => "About Merlows / Caregiver",
+        'default'           => "I'm a Reader",
         'sanitize_callback' => 'sanitize_text_field',
     ) );
     $wp_customize->add_control( 'mlws_join_patient_label', array(
-        'label'   => __('Patient Checkbox Label', 'merlows' ),
+        'label'   => __('Reader Checkbox Label', 'merlows' ),
         'section' => 'mlws_join_community',
         'type'    => 'text',
     ) );
@@ -2113,10 +2165,10 @@ function mlws_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'mlws_footer_heading_col1', array( 'default' => 'Topics', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_footer_heading_col1', array( 'label' => 'Column 1 Heading', 'section' => 'mlws_footer_brand', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_footer_heading_col2', array( 'default' => 'For Professionals', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_footer_heading_col2', array( 'default' => 'For Writers', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_footer_heading_col2', array( 'label' => 'Column 2 Heading', 'section' => 'mlws_footer_brand', 'type' => 'text' ) );
 
-    $wp_customize->add_setting( 'mlws_footer_heading_col3', array( 'default' => 'For Patients', 'sanitize_callback' => 'sanitize_text_field' ) );
+    $wp_customize->add_setting( 'mlws_footer_heading_col3', array( 'default' => 'For Readers', 'sanitize_callback' => 'sanitize_text_field' ) );
     $wp_customize->add_control( 'mlws_footer_heading_col3', array( 'label' => 'Column 3 Heading', 'section' => 'mlws_footer_brand', 'type' => 'text' ) );
 
     // 5. Category Hero Overrides Section
@@ -2189,7 +2241,7 @@ function mlws_customize_register( $wp_customize ) {
     $visibility_sections = array(
         'hero'         => array( 'Show Hero Section', true ),
         'pathway'      => array( 'Show Journey Pillars & Latest Content', true ),
-        'stats'        => array( 'Show Stats Counter Bar', true ),
+        'stats'        => array( 'Show Homepage Stats Bar (uncheck to hide)', true ),
         'cats'         => array( 'Show Browse by Topic', true ),
         'tools'        => array( 'Show Featured Tools', true ),
         'discovery'    => array( 'Show Content Discovery Suite', true ),
@@ -2571,13 +2623,23 @@ add_action( 'transition_post_status', 'mlws_trigger_social_share', 10, 3 );
  * Add Custom Roles
  */
 function mlws_setup_custom_roles() {
-    add_role( 'practitioner', __('Practitioner', 'merlows' ), array(
-        'read' => true, 
+    // The two key user roles on Merlows: Writers (contributors) and Members
+    // (readers). 'practitioner' is the internal slug for the Writer role; its
+    // display label is "Writer". 'member' is the new reader-tier role.
+    add_role( 'practitioner', __('Writer', 'merlows' ), array(
+        'read' => true,
         'edit_posts' => false,
         'delete_posts' => false,
     ));
-    add_role( 'patient', __('Patient', 'merlows' ), array(
-        'read' => true, 
+    add_role( 'member', __('Member', 'merlows' ), array(
+        'read' => true,
+        'edit_posts' => false,
+        'delete_posts' => false,
+    ));
+    // Backward-compat: keep the legacy 'patient' role registered so existing
+    // users assigned to it are not orphaned. New signups use 'member'.
+    add_role( 'patient', __('Member', 'merlows' ), array(
+        'read' => true,
         'edit_posts' => false,
         'delete_posts' => false,
     ));
@@ -2631,19 +2693,19 @@ function mlws_login_redirect( $redirect_to, $request, $user ) {
 add_filter( 'login_redirect', 'mlws_login_redirect', 10, 3 );
 
 /**
- * Default new signups to 'patient' role
+ * Default new signups to the 'member' (reader) role
  */
 function mlws_default_user_role_on_register( $user_id ) {
     $user = new WP_User( $user_id );
-    $user->set_role( 'patient' );
-    
-    update_user_meta( $user_id, '_mlws_user_type', 'patient' );
-    update_user_meta( $user_id, '_mlws_dashboard_role', 'patient' );
+    $user->set_role( 'member' );
+
+    update_user_meta( $user_id, '_mlws_user_type', 'member' );
+    update_user_meta( $user_id, '_mlws_dashboard_role', 'member' );
 }
 add_action( 'user_register', 'mlws_default_user_role_on_register' );
 
 /**
- * Rename 'Subscriber' role to 'Patient'
+ * Rename 'Subscriber' role to 'Member' (disabled — left for reference)
  */
 function mlws_rename_subscriber_role() {
     $role = get_role( 'subscriber' );
@@ -2764,7 +2826,7 @@ add_action('login_footer', 'mlws_add_register_link_to_login');
 function mlws_handle_registration_redirect() {
     if (isset($_GET['role']) && !is_user_logged_in()) {
         $role = sanitize_text_field($_GET['role']);
-        if (in_array($role, array('practitioner', 'patient'))) {
+        if (in_array($role, array('practitioner', 'member', 'patient'))) {
             setcookie('mlws_pending_role', $role, time() + 3600, '/');
         }
     }
@@ -2784,9 +2846,9 @@ function mlws_set_role_from_cookie($user_id) {
             update_user_meta($user_id, '_mlws_user_type', 'practitioner');
             update_user_meta($user_id, '_mlws_dashboard_role', 'practitioner');
         } else {
-            $user->set_role('subscriber');
-            update_user_meta($user_id, '_mlws_user_type', 'patient');
-            update_user_meta($user_id, '_mlws_dashboard_role', 'patient');
+            $user->set_role('member');
+            update_user_meta($user_id, '_mlws_user_type', 'member');
+            update_user_meta($user_id, '_mlws_dashboard_role', 'member');
         }
         
         // Clear cookie
@@ -3025,7 +3087,7 @@ function mlws_testimonial_meta_callback( $post ) {
     ?>
     <p>
         <label for="testimonial_role" style="font-weight: 600;">Author Role/Title:</label><br>
-        <input type="text" id="testimonial_role" name="testimonial_role" value="<?php echo esc_attr( $role ); ?>" style="width: 100%; margin-top: 5px;" placeholder="e.g. Cardiologist, Patient, or CTO">
+        <input type="text" id="testimonial_role" name="testimonial_role" value="<?php echo esc_attr( $role ); ?>" style="width: 100%; margin-top: 5px;" placeholder="e.g. Editor, Reader, or Analyst">
     </p>
     <?php
 }
@@ -3043,7 +3105,7 @@ add_action( 'save_post', 'mlws_save_testimonial_meta' );
 
 
 /**
- * HCP, Patient & About Us Pages Customizer Settings
+ * Writer, Reader & About Us Pages Customizer Settings
  */
 require_once get_template_directory() . '/customizer-pages.php';
 

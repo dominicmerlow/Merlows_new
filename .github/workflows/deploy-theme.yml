@@ -1,0 +1,44 @@
+name: Deploy theme to merlows.com
+
+# Deploys the WordPress theme (the merlows/ subdir of this repo) to the live
+# theme folder over FTPS, on every push to the Wordpress branch (or a manual run).
+# FTP credentials live in repo Settings → Secrets and variables → Actions:
+#   FTP_SERVER      server801.web-hosting.com   (matches the *.web-hosting.com cert)
+#   FTP_USERNAME    brian@merlows.com            (cPanel FTP account jailed to themes/merlows)
+#   FTP_PASSWORD    that account's password
+#   FTP_SERVER_DIR  /                            (the account root IS themes/merlows/)
+on:
+  push:
+    branches: [Wordpress]
+  workflow_dispatch: {}
+
+concurrency:
+  group: theme-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:     ${{ secrets.FTP_SERVER }}
+          username:   ${{ secrets.FTP_USERNAME }}
+          password:   ${{ secrets.FTP_PASSWORD }}
+          protocol:   ftps
+          port:       21
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # Only the theme subdir is deployed; repo-root files (build_zips.py, dist/,
+          # .github/) are outside local-dir and never uploaded.
+          local-dir:  ./merlows/
+          # First run uploads everything; later runs upload only changed files
+          # (state kept in .ftp-deploy-sync-state.json on the server). Overwrite-only,
+          # never deletes remote files.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/*.zip
+            **/node_modules/**

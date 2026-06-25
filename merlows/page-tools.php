@@ -307,7 +307,7 @@ get_header();
             Interactive Health Tools
         </div>
         <h1>Your Health Toolkit</h1>
-        <p>Free, evidence-based tools to help you track, understand, and manage your IBD health. Built by healthcare professionals, designed for everyone.</p>
+        <p>Free, interactive tools to help you explore and understand Middle East diplomacy and the story of the Accords. Built for Merlows readers, designed for everyone.</p>
 
         <div class="tools-hero-stats">
             <div class="tools-hero-stat">
@@ -336,71 +336,53 @@ get_header();
 
         <div class="tools-featured-grid">
 
-            <!-- Blood Test Tracker -->
-            <a href="/tools/blood-test-tracker/" class="tool-featured-card">
-                <div class="tool-card-visual" style="background: linear-gradient(135deg, #FEF2F2, #FEE2E2);">
-                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="0.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                    <div class="tool-card-icon" style="background: #EF4444;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                    </div>
-                </div>
-                <div class="tool-card-body">
-                    <span class="tool-card-tag" style="background: #FEF2F2; color: #DC2626;">Tracking</span>
-                    <h3>Blood Test Tracker</h3>
-                    <p>Upload or enter your blood test results to track inflammatory markers, nutritional levels, and health trends over time.</p>
-                    <div class="tool-card-features">
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            CRP, ESR, Calprotectin tracking
-                        </div>
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            Iron, B12, Vitamin D monitoring
-                        </div>
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            Visual trend charts
-                        </div>
-                    </div>
-                    <span class="tool-card-cta">
-                        Open Tool
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </span>
-                </div>
-            </a>
-
-            <!-- Malnutrition Calculator -->
-            <a href="/tools/malnutrition-calculator/" class="tool-featured-card">
-                <div class="tool-card-visual" style="background: linear-gradient(135deg, #F5E6A3, #D8D8F0);">
-                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="0.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+            <!-- Accords Timeline Explorer (coming soon) -->
+            <div class="tool-featured-card" style="cursor: default;">
+                <div class="tool-card-visual" style="background: linear-gradient(135deg, #EEF4FB, #DCE7F5);">
+                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="0.5"><line x1="3" y1="12" x2="21" y2="12"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="12" r="2"/></svg>
                     <div class="tool-card-icon" style="background: #1B4F8A;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="12" r="2"/><line x1="12" y1="5" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="19"/></svg>
                     </div>
                 </div>
                 <div class="tool-card-body">
-                    <span class="tool-card-tag" style="background: #F5E6A3; color: #1B4F8A;">Assessment</span>
-                    <h3>Malnutrition Risk Calculator</h3>
-                    <p>Screen for nutritional risk using validated criteria. Particularly relevant for IBD patients at risk of deficiencies.</p>
-                    <div class="tool-card-features">
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            BMI-based assessment
-                        </div>
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            Unplanned weight loss scoring
-                        </div>
-                        <div class="tool-card-feature">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            Risk level classification
-                        </div>
-                    </div>
-                    <span class="tool-card-cta">
-                        Open Tool
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </span>
+                    <span class="tool-card-tag" style="background: #EEF4FB; color: #1B4F8A;">Coming Soon</span>
+                    <h3>Accords Timeline Explorer</h3>
+                    <p>An interactive timeline of the Abraham Accords and Cyrus Accord &mdash; scrub through the milestones, signings and turning points that shaped the region.</p>
+                    <span class="tool-card-cta" style="opacity: 0.6;">In development</span>
                 </div>
-            </a>
+            </div>
+
+            <!-- Middle East Map Room (coming soon) -->
+            <div class="tool-featured-card" style="cursor: default;">
+                <div class="tool-card-visual" style="background: linear-gradient(135deg, #F0FAF7, #D8F0E8);">
+                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="0.5"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+                    <div class="tool-card-icon" style="background: #0D9488;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                    </div>
+                </div>
+                <div class="tool-card-body">
+                    <span class="tool-card-tag" style="background: #F0FAF7; color: #0D9488;">Coming Soon</span>
+                    <h3>Middle East Map Room</h3>
+                    <p>A clickable regional map that surfaces the latest Merlows reporting by country &mdash; explore signatories, hotspots and diplomatic ties at a glance.</p>
+                    <span class="tool-card-cta" style="opacity: 0.6;">In development</span>
+                </div>
+            </div>
+
+            <!-- Test Your Knowledge Quiz (coming soon) -->
+            <div class="tool-featured-card" style="cursor: default;">
+                <div class="tool-card-visual" style="background: linear-gradient(135deg, #FFF7ED, #FFE8D6);">
+                    <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="#FD4F00" stroke-width="0.5"><circle cx="12" cy="12" r="10"/></svg>
+                    <div class="tool-card-icon" style="background: #FD4F00;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                </div>
+                <div class="tool-card-body">
+                    <span class="tool-card-tag" style="background: #FFF7ED; color: #C2410C;">Coming Soon</span>
+                    <h3>Test Your Knowledge Quiz</h3>
+                    <p>A quick, fun current-affairs quiz on regional history and the Blitz Spirit &mdash; rack up a streak and see how your knowledge stacks up against other readers.</p>
+                    <span class="tool-card-cta" style="opacity: 0.6;">In development</span>
+                </div>
+            </div>
 
             <!-- IBDi AI Assistant -->
             <a href="/ask-ai/" class="tool-featured-card">

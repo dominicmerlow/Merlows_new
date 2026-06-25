@@ -207,6 +207,60 @@ if ( is_category() ) {
     gap: 28px;
 }
 
+/* ── Sub-category sections (parent category landing) ───────────── */
+.arc-subcat { margin-bottom: 56px; }
+.arc-subcat:last-of-type { margin-bottom: 0; }
+.arc-subcat__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #E2E8F0;
+}
+.arc-subcat__title {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.arc-subcat__title::before {
+    content: '';
+    width: 6px;
+    height: 26px;
+    background: var(--accent-color);
+    flex-shrink: 0;
+}
+.arc-subcat__count {
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94A3B8;
+    margin-left: 4px;
+}
+.arc-subcat__viewall {
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+}
+.arc-subcat__viewall:hover { gap: 10px; }
+
 /* ── Dispatch Card ─────────────────────────────────────────────── */
 .dispatch-card {
     background: white;
@@ -244,7 +298,7 @@ if ( is_category() ) {
 .dispatch-card__cat-badge {
     position: absolute;
     top: 12px;
-    right: 12px;
+    left: 12px;
     background: var(--accent-color);
     padding: 3px 9px;
     font-size: 10px;
@@ -387,58 +441,107 @@ if ( is_category() ) {
         <?php get_template_part( 'template-parts/inner-category-nav' ); ?>
     </div>
 
+    <?php
+    // Reusable dispatch-card renderer — assumes it runs inside a post loop
+    // (the global post is set). Used by both the flat grid and the per
+    // sub-category sections so the markup stays identical.
+    if ( ! function_exists( 'mlws_render_dispatch_card' ) ) :
+    function mlws_render_dispatch_card( $card_hero_map ) {
+        $thumb = get_the_post_thumbnail_url( get_the_ID(), 'medium_large' );
+        if ( ! $thumb ) {
+            $thumb = get_template_directory_uri() . '/assets/img/news_hero.png';
+            $post_cats = get_the_category();
+            if ( ! empty( $post_cats ) ) {
+                foreach ( $post_cats as $pc ) {
+                    if ( isset( $card_hero_map[ $pc->slug ] ) ) {
+                        $thumb = get_template_directory_uri() . '/assets/img/' . $card_hero_map[ $pc->slug ];
+                        break;
+                    }
+                }
+            }
+        }
+        $first_cat = '';
+        $post_cats_all = get_the_category();
+        if ( ! empty( $post_cats_all ) ) {
+            $first_cat = $post_cats_all[0]->name;
+        }
+        ?>
+        <article id="post-<?php the_ID(); ?>" <?php post_class('dispatch-card'); ?>>
+            <div class="dispatch-card__img" style="background-image: url('<?php echo esc_url( $thumb ); ?>');">
+                <?php if ( $first_cat ) : ?>
+                    <span class="dispatch-card__cat-badge"><?php echo esc_html( $first_cat ); ?></span>
+                <?php endif; ?>
+                <span class="dispatch-card__date-badge"><?php echo get_the_date( 'j M Y' ); ?></span>
+                <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay( get_the_ID(), array( 'cat' => false, 'date' => false ) ); } ?>
+            </div>
+            <div class="dispatch-card__body">
+                <h2 class="dispatch-card__title">
+                    <a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
+                </h2>
+                <div class="dispatch-card__excerpt">
+                    <?php the_excerpt(); ?>
+                </div>
+                <a href="<?php the_permalink(); ?>" class="dispatch-card__read-more">
+                    Read Dispatch
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+        </article>
+        <?php
+    }
+    endif;
+
+    // On a parent-category landing that has child sub-categories, render one
+    // section per sub-category instead of a flat list. Each section pulls its
+    // own posts (so it works regardless of parent/child archive inclusion) and
+    // links through to the sub-category's full archive when it overflows.
+    $arc_children = ( is_category() && isset( $cat ) )
+        ? get_terms( [ 'taxonomy' => 'category', 'parent' => $cat->term_id, 'hide_empty' => true ] )
+        : [];
+    $arc_has_sections = ( ! is_wp_error( $arc_children ) && ! empty( $arc_children ) );
+    $arc_subcat_limit = 12; // cards shown per sub-category on the landing
+    ?>
+
     <!-- Articles -->
     <section class="arc-section">
         <div class="container">
+        <?php if ( $arc_has_sections ) : ?>
+            <?php foreach ( $arc_children as $child ) :
+                $sub_q = new WP_Query( [
+                    'cat'                 => $child->term_id,
+                    'post_type'           => 'any',
+                    'posts_per_page'      => $arc_subcat_limit,
+                    'ignore_sticky_posts' => true,
+                ] );
+                if ( ! $sub_q->have_posts() ) { wp_reset_postdata(); continue; }
+                $sub_total = (int) $sub_q->found_posts;
+                ?>
+                <div class="arc-subcat">
+                    <div class="arc-subcat__head">
+                        <h2 class="arc-subcat__title">
+                            <?php echo esc_html( $child->name ); ?>
+                            <span class="arc-subcat__count"><?php echo esc_html( number_format( $sub_total ) ); ?> <?php echo $sub_total === 1 ? 'dispatch' : 'dispatches'; ?></span>
+                        </h2>
+                        <?php if ( $sub_total > $arc_subcat_limit ) : ?>
+                            <a class="arc-subcat__viewall" href="<?php echo esc_url( get_category_link( $child->term_id ) ); ?>">
+                                View all
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                    <div class="arc-grid">
+                        <?php while ( $sub_q->have_posts() ) : $sub_q->the_post(); ?>
+                            <?php mlws_render_dispatch_card( $card_hero_map ); ?>
+                        <?php endwhile; ?>
+                    </div>
+                </div>
+                <?php wp_reset_postdata(); ?>
+            <?php endforeach; ?>
+        <?php else : ?>
             <div class="arc-grid">
                 <?php if ( have_posts() ) : ?>
                     <?php while ( have_posts() ) : the_post(); ?>
-                        <?php
-                        // Resolve thumbnail
-                        $thumb = get_the_post_thumbnail_url( get_the_ID(), 'medium_large' );
-                        if ( ! $thumb ) {
-                            $thumb = get_template_directory_uri() . '/assets/img/news_hero.png';
-                            $post_cats = get_the_category();
-                            if ( ! empty( $post_cats ) ) {
-                                foreach ( $post_cats as $pc ) {
-                                    if ( isset( $card_hero_map[ $pc->slug ] ) ) {
-                                        $thumb = get_template_directory_uri() . '/assets/img/' . $card_hero_map[ $pc->slug ];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        // First category label
-                        $first_cat = '';
-                        $post_cats_all = get_the_category();
-                        if ( ! empty( $post_cats_all ) ) {
-                            $first_cat = $post_cats_all[0]->name;
-                        }
-                        ?>
-                        <article id="post-<?php the_ID(); ?>" <?php post_class('dispatch-card'); ?>>
-
-                            <div class="dispatch-card__img" style="background-image: url('<?php echo esc_url( $thumb ); ?>');">
-                                <?php if ( $first_cat ) : ?>
-                                    <span class="dispatch-card__cat-badge"><?php echo esc_html( $first_cat ); ?></span>
-                                <?php endif; ?>
-                                <span class="dispatch-card__date-badge"><?php echo get_the_date( 'j M Y' ); ?></span>
-                            </div>
-
-                            <div class="dispatch-card__body">
-                                <h2 class="dispatch-card__title">
-                                    <a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
-                                </h2>
-                                <div class="dispatch-card__excerpt">
-                                    <?php the_excerpt(); ?>
-                                </div>
-                                <a href="<?php the_permalink(); ?>" class="dispatch-card__read-more">
-                                    Read Dispatch
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                                </a>
-                            </div>
-
-                        </article>
+                        <?php mlws_render_dispatch_card( $card_hero_map ); ?>
                     <?php endwhile; ?>
                 <?php else : ?>
                     <div class="arc-empty">
@@ -457,6 +560,7 @@ if ( is_category() ) {
                     ] ); ?>
                 </div>
             <?php endif; ?>
+        <?php endif; ?>
         </div>
     </section>
 

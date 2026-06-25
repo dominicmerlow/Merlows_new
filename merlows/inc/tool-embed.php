@@ -13,9 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 
  * Usage:
  *   [tool_embed tool="ai-widget"]
- *   [tool_embed tool="malnutrition-calculator" height="900px"]
- *   [tool_embed tool="omega-3-calculator" height="800px"]
- * 
+ *   [tool_embed tool="ai-widget" height="900px"]
+ *
  * @param array $atts Shortcode attributes
  * @return string iframe HTML
  */
@@ -38,9 +37,6 @@ function mlws_tool_embed_shortcode( $atts ) {
     
     $tools = array(
         'ai-widget'               => '/assets/tools/ai-widget/index.html',
-        'malnutrition-calculator' => '/assets/tools/malnutrition-calculator/index.html',
-        'blood-test'              => '/assets/tools/blood-test/index.html',
-        'omega-3-calculator'      => '/assets/tools/omega-3-calculator/index.html',
     );
     
     if ( ! isset( $tools[ $tool ] ) ) {

@@ -926,7 +926,7 @@ body {
                                 <p style="font-size: 13px; color: var(--text-light); line-height: 1.5; margin: 0 0 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><?php echo wp_trim_words(get_the_excerpt($p->ID), 12); ?></p>
                                 <?php endif; ?>
                                 <?php if ($show_date) : ?>
-                                <div style="font-size: 12px; color: #94a3b8; margin-top: auto; padding-top: 10px; border-top: 1px solid #f1f5f9;"><?php echo get_the_date('', $p->ID); ?></div>
+                                <div style="font-size: 12px; color: #94a3b8; margin-top: auto; padding-top: 10px; border-top: 1px solid #f1f5f9;"><?php echo get_the_date('', $p->ID); ?><?php if ( function_exists( 'mlws_get_reading_time' ) ) { echo ' &middot; ' . esc_html( mlws_get_reading_time($p->ID) ) . ' min read'; } ?></div>
                                 <?php endif; ?>
                             </div>
                         </a>
@@ -948,6 +948,7 @@ body {
                             <?php if ($show_date) : ?>
                             <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;"><?php echo get_the_date('', $first->ID); ?></div>
                             <?php endif; ?>
+                            <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay( $first->ID, array( 'cat' => false, 'date' => false ) ); } ?>
                         </div>
                         <div style="padding: 24px;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($first->ID); if (!empty($cats)) : ?>
@@ -972,7 +973,7 @@ body {
                                 <?php endif; endif; ?>
                                 <h4 style="font-size: 14px; font-weight: 700; color: var(--secondary-color); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><?php echo get_the_title($p->ID); ?></h4>
                                 <?php if ($show_date) : ?>
-                                <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;"><?php echo get_the_date('', $p->ID); ?></div>
+                                <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;"><?php echo get_the_date('', $p->ID); ?><?php if ( function_exists( 'mlws_get_reading_time' ) ) { echo ' &middot; ' . esc_html( mlws_get_reading_time($p->ID) ) . ' min'; } ?></div>
                                 <?php endif; ?>
                             </div>
                         </a>
@@ -990,6 +991,7 @@ body {
                             <?php if ($show_date) : ?>
                             <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px;"><?php echo get_the_date('', $p->ID); ?></div>
                             <?php endif; ?>
+                            <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay( $p->ID, array( 'cat' => false, 'date' => false ) ); } ?>
                         </div>
                         <div style="padding: 20px;">
                             <?php if ($latest_show_cat) : $cats = get_the_category($p->ID); if (!empty($cats)) : ?>
@@ -1058,8 +1060,8 @@ body {
                 $prac_tile_radius = 0;
                 $prac_img_radius = 0;
 
-                // Pillar 2 tile (Contributors)
-                $pat_title = get_theme_mod('mlws_patient_tile_title', 'For Contributors');
+                // Pillar 2 tile (Writers)
+                $pat_title = get_theme_mod('mlws_patient_tile_title', 'For Writers');
                 $pat_desc = get_theme_mod('mlws_patient_tile_desc', 'Submit analysis, op-eds, and regional voices. Our editorial team reviews all submissions for fit, tone, and factual accuracy.');
                 $pat_extra = get_theme_mod('mlws_patient_tile_extra', 'Submit an article');
                 $pat_img = get_theme_mod('mlws_patient_tile_image');
@@ -1074,12 +1076,12 @@ body {
             <div style="text-align: center; margin-bottom: 60px;">
                 <span style="display: inline-block; background: var(--accent-bg); color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; padding: 6px 16px; border-radius: 0; margin-bottom: 16px; border: 1px solid rgba(27,79,138,0.15);">MERLOWS FOR</span>
                 <h2 style="font-family: var(--font-heading); font-size: 38px; font-weight: 800; color: var(--secondary-color); margin: 0 0 12px; letter-spacing: -0.5px;">How Will You Engage?</h2>
-                <p style="color: var(--text-light); font-size: 17px; max-width: 580px; margin: 0 auto; line-height: 1.6;">Merlows serves readers, contributors, and researchers following Middle East diplomacy.</p>
+                <p style="color: var(--text-light); font-size: 17px; max-width: 580px; margin: 0 auto; line-height: 1.6;">Merlows serves readers, writers, and researchers following Middle East diplomacy.</p>
             </div>
 
             <!-- 3-Column Journey Pillars -->
             <div class="journey-pillars">
-                <!-- Pillar 1: Understand (mapped from Practitioner tile) -->
+                <!-- Pillar 1: For Readers (mlws_practitioner_tile_* settings) -->
                 <a href="<?php echo esc_url($prac_link); ?>" class="pillar-card">
                     <div class="pillar-icon" style="background: linear-gradient(135deg, #1B4F8A, #B8447A);">
                         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
@@ -1089,7 +1091,7 @@ body {
                     <span style="color: var(--primary-color); font-weight: 700; font-size: 14px;"><?php echo esc_html($prac_extra); ?> &rarr;</span>
                 </a>
 
-                <!-- Pillar 2: Manage (mapped from Patient tile) -->
+                <!-- Pillar 2: For Writers (mlws_patient_tile_* settings) -->
                 <a href="<?php echo esc_url($pat_link); ?>" class="pillar-card">
                     <div class="pillar-icon" style="background: linear-gradient(135deg, #153D6E, #1B4F8A);">
                         <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -1803,7 +1805,7 @@ body {
                             <div class="bento-content-overlay">
                                 <span class="tag" style="background:<?php echo $color; ?>">Featured</span>
                                 <h3 style="font-size: 28px; color: white; margin-bottom: 12px;"><?php echo get_the_title($p->ID); ?></h3>
-                                <div class="meta" style="color: rgba(255,255,255,0.8);">By <?php echo get_the_author_meta('display_name', $p->post_author); ?> &bull; <?php echo get_the_date('', $p->ID); ?></div>
+                                <div class="meta" style="color: rgba(255,255,255,0.8);">By <?php echo get_the_author_meta('display_name', $p->post_author); ?> &bull; <?php echo get_the_date('', $p->ID); ?><?php if ( function_exists( 'mlws_get_reading_time' ) ) { echo ' &bull; ' . esc_html( mlws_get_reading_time($p->ID) ) . ' min read'; } ?></div>
                             </div>
                         </a>
                         <div style="display: flex; flex-direction: column; gap: 24px;">
@@ -1823,17 +1825,15 @@ body {
                         <article style="background: white; border-radius: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border-color); transition: all 0.3s; height: 100%; display: flex; flex-direction: column;">
                             <div style="position: relative; overflow: hidden; height: 180px; background: #f1f5f9;">
                                 <img src="<?php echo has_post_thumbnail($p->ID) ? get_the_post_thumbnail_url($p->ID, 'medium') : esc_url($cat_default_hero); ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php if ( function_exists( 'mlws_thumb_overlay' ) ) { mlws_thumb_overlay( $p->ID ); } ?>
                             </div>
                             <div style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column;">
                                 <h3 style="font-size: 16px; margin-bottom: 10px; line-height: 1.4;">
                                     <a href="<?php echo get_permalink($p->ID); ?>" style="color: #0f172a; text-decoration: none; font-weight: 600;"><?php echo get_the_title($p->ID); ?></a>
                                 </h3>
-                                <p style="font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                <p style="font-size: 14px; color: #64748b; line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: auto;">
                                     <?php echo wp_trim_words(get_the_excerpt($p->ID), 15); ?>
                                 </p>
-                                <div style="font-size: 12px; color: #94a3b8; padding-top: 12px; border-top: 1px solid #f1f5f9; margin-top: auto;">
-                                    <?php echo get_the_date('', $p->ID); ?>
-                                </div>
                             </div>
                         </article>
                         <?php endforeach; ?>

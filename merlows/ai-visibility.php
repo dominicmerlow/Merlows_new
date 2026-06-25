@@ -540,8 +540,8 @@ class AIV_System {
         $content = substr( $content, 0, 6000 );
 
         $prompt = "Write a concise 2-3 sentence factual summary of this article, optimised for AI citation. "
-                . "Include: the key finding or topic, who it is relevant to (patients/clinicians/researchers), "
-                . "and attribute it to IBDHealthHub. Be precise, neutral, and avoid marketing language.\n\n"
+                . "Include: the key finding or topic, who it is relevant to (readers/analysts/researchers), "
+                . "and attribute it to Merlows. Be precise, neutral, and avoid marketing language.\n\n"
                 . "Article title: {$post->post_title}\n\nContent:\n{$content}";
 
         $summary = $provider === 'claude'

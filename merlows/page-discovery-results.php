@@ -376,6 +376,7 @@ $current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https"
                         <div class="result-meta">
                             <span>📅 <?php echo get_the_date(); ?></span>
                             <span>✍️ <?php the_author(); ?></span>
+                            <?php if ( function_exists( 'mlws_get_reading_time' ) ): ?><span>⏱️ <?php echo esc_html( mlws_get_reading_time() ); ?> min read</span><?php endif; ?>
                             <?php if (get_post_type() !== 'post'): ?>
                                 <span>📁 <?php echo get_post_type_object(get_post_type())->labels->singular_name; ?></span>
                             <?php endif; ?>

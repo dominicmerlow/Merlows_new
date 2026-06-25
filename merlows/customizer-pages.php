@@ -3,19 +3,19 @@
 function mlws_pages_customize_register( $wp_customize ) {
     // ---- HCP PAGE PANEL ----
     $wp_customize->add_panel( "mlws_hcp_panel", array(
-        "title"    => __("HCP Page Settings", "merlows" ),
+        "title"    => __("Writer Page Settings", "merlows" ),
         "priority" => 46,
     ) );
 
     // HCP Hero
     $wp_customize->add_section( "mlws_hcp_hero", array( "title" => "Hero Section", "panel" => "mlws_hcp_panel" ) );
-    $wp_customize->add_setting( "mlws_hcp_hero_tag", array( "default" => "Professional Portal", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_hcp_hero_tag", array( "default" => "Writer Portal", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_hcp_hero_tag", array( "label" => "Tag Label", "section" => "mlws_hcp_hero", "type" => "text" ) );
     
-    $wp_customize->add_setting( "mlws_hcp_hero_title", array( "default" => "Advancing <span class=\"highlight\">Clinical Practice</span> Through Nutrition", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_hcp_hero_title", array( "default" => "Shaping the <span class=\"highlight\">Diplomacy Story</span> Through Reporting", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_hcp_hero_title", array( "label" => "Title", "section" => "mlws_hcp_hero", "type" => "textarea" ) );
     
-    $wp_customize->add_setting( "mlws_hcp_hero_desc", array( "default" => "Evidence-based resources, clinical protocols, and CME opportunities designed for gastroenterologists, dietitians, GPs, and allied health professionals.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_hcp_hero_desc", array( "default" => "Evidence-based resources, editorial guidelines, and commissioning opportunities designed for correspondents, analysts, columnists, and contributing writers covering Middle East diplomacy.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_hcp_hero_desc", array( "label" => "Description", "section" => "mlws_hcp_hero", "type" => "textarea" ) );
     
     $wp_customize->add_setting("mlws_hcp_hero_bg", array("default"=>"","sanitize_callback"=>"esc_url_raw"));
@@ -29,14 +29,14 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_setting( "mlws_hcp_res_title", array( "default" => "What You'll Access", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_hcp_res_title", array( "label" => "Title", "section" => "mlws_hcp_resources", "type" => "text" ) );
     
-    $wp_customize->add_setting( "mlws_hcp_res_desc", array( "default" => "We invite passionate healthcare practitioners to join us in advancing clinical nutrition. Share your expertise and help shape the future of specialized healthcare content.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_hcp_res_desc", array( "default" => "We invite knowledgeable writers to join us in advancing independent coverage of Middle East diplomacy. Share your expertise and help shape the future of in-depth news and analysis.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_hcp_res_desc", array( "label" => "Description", "section" => "mlws_hcp_resources", "type" => "textarea" ) );
 
     $res_defaults = array(
-        1 => array("Clinical Protocols", "Step-by-step treatment algorithms for common and complex GI conditions, including FSMP integration."),
-        2 => array("Research Summaries", "Curated abstracts and commentary on the latest Omega-3, gut microbiome, and longevity research."),
-        3 => array("Webinars & CME", "On-demand educational sessions with CPD accreditation from leading gastroenterology experts."),
-        4 => array("Patient Handouts", "Downloadable, branded resources to share with patients to reinforce dietary and treatment advice.")
+        1 => array("Editorial Guidelines", "Step-by-step style and sourcing standards for covering complex diplomatic stories, including the Cyrus Accord and Abraham Accords."),
+        2 => array("Research Summaries", "Curated briefings and commentary on the latest Israel-Iran relations, regional security, and policy developments."),
+        3 => array("Webinars & Briefings", "On-demand sessions with leading correspondents and analysts on the region's fast-moving diplomacy."),
+        4 => array("Reader Briefings", "Downloadable, branded explainers to share with readers to provide context behind the headlines.")
     );
     for($i=1; $i<=4; $i++) {
         $wp_customize->add_setting("mlws_hcp_res{$i}_title", array("default"=>$res_defaults[$i][0],"sanitize_callback"=>"sanitize_text_field"));
@@ -51,10 +51,10 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_control( "mlws_hcp_collab_title", array( "label" => "Title", "section" => "mlws_hcp_collab", "type" => "text" ) );
     
     $collab_defaults = array(
-        1 => array("Submit Articles", "Publish your clinical insights and case studies to our global network of peers."),
-        2 => array("Co-Author Content", "Partner with our medical writing team to develop robust, evidence-based clinical guides."),
-        3 => array("Podcast Guest", "Join our clinical podcast series to discuss innovations, challenges, and success stories."),
-        4 => array("Clinical Trials", "Work with us on our pipeline of clinical and in-market trials investigating novel specific treatments.")
+        1 => array("Submit Articles", "Publish your reporting, analysis, and on-the-ground insight to our global readership."),
+        2 => array("Co-Author Content", "Partner with our editorial team to develop robust, well-sourced explainers and long-reads."),
+        3 => array("Podcast Guest", "Join our diplomacy podcast series to discuss developments, challenges, and the stories behind the headlines."),
+        4 => array("Research Tools", "Work with us using our research tools and archives covering the Accords, treaties, and regional affairs.")
     );
     for($i=1; $i<=4; $i++) {
         $wp_customize->add_setting("mlws_hcp_col{$i}_title", array("default"=>$collab_defaults[$i][0],"sanitize_callback"=>"sanitize_text_field"));
@@ -65,27 +65,27 @@ function mlws_pages_customize_register( $wp_customize ) {
     
     // HCP CTA
     $wp_customize->add_section( "mlws_hcp_cta", array( "title" => "CTA Section", "panel" => "mlws_hcp_panel" ) );
-    $wp_customize->add_setting( "mlws_hcp_cta_title", array( "default" => "Join the Professional Network", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_hcp_cta_title", array( "default" => "Join the Writer Network", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_hcp_cta_title", array( "label" => "Title", "section" => "mlws_hcp_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_hcp_cta_desc", array( "default" => "Free registration gives you full access to protocols, research, and CME opportunities.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_hcp_cta_desc", array( "default" => "Free registration gives you full access to editorial guidelines, research, and commissioning opportunities.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_hcp_cta_desc", array( "label" => "Description", "section" => "mlws_hcp_cta", "type" => "textarea" ) );
 
 
     // ---- PATIENT PAGE PANEL ----
     $wp_customize->add_panel( "mlws_pat_panel", array(
-        "title"    => __("Patient Page Settings", "merlows" ),
+        "title"    => __("Reader Page Settings", "merlows" ),
         "priority" => 47,
     ) );
 
     // Patient Hero
     $wp_customize->add_section( "mlws_pat_hero", array( "title" => "Hero Section", "panel" => "mlws_pat_panel" ) );
-    $wp_customize->add_setting( "mlws_pat_hero_tag", array( "default" => "Patient Portal", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_pat_hero_tag", array( "default" => "Reader Portal", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_pat_hero_tag", array( "label" => "Tag Label", "section" => "mlws_pat_hero", "type" => "text" ) );
     
-    $wp_customize->add_setting( "mlws_pat_hero_title", array( "default" => "Empowering Your <span class=\"highlight\">Wellness Journey</span>", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_pat_hero_title", array( "default" => "Understanding the <span class=\"highlight\">Diplomacy Reshaping the Region</span>", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_pat_hero_title", array( "label" => "Title", "section" => "mlws_pat_hero", "type" => "textarea" ) );
     
-    $wp_customize->add_setting( "mlws_pat_hero_desc", array( "default" => "More than just a news site—a truly useful platform providing the highest quality clinical information, innovative tools, and expert opinions to help you explore and manage your gastro healthcare concerns.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_pat_hero_desc", array( "default" => "More than just a news site—a truly useful platform providing the highest quality reporting, innovative tools, and expert analysis to help you follow and understand Middle East diplomacy.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_pat_hero_desc", array( "label" => "Description", "section" => "mlws_pat_hero", "type" => "textarea" ) );
     
     $wp_customize->add_setting("mlws_pat_hero_bg", array("default"=>"","sanitize_callback"=>"esc_url_raw"));
@@ -99,13 +99,13 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_setting( "mlws_pat_ben_title", array( "default" => "Not Just Another Community", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_pat_ben_title", array( "label" => "Title", "section" => "mlws_pat_benefits", "type" => "text" ) );
     
-    $wp_customize->add_setting( "mlws_pat_ben_desc", array( "default" => "Merlows is a comprehensive suite of resources designed to aid your personal health journey. We bridge the gap between complex medical research and practical, daily wellness by providing clinical information in a format that is easy to understand.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_pat_ben_desc", array( "default" => "Merlows is a comprehensive suite of resources designed to keep you informed. We bridge the gap between complex regional politics and clear, everyday understanding by providing reporting and analysis in a format that is easy to follow.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_pat_ben_desc", array( "label" => "Description", "section" => "mlws_pat_benefits", "type" => "textarea" ) );
 
     $ben_defaults = array(
-        1 => array("Clear Clinical Info", "Access cutting-edge clinical information translated into a clear, easy-to-understand format tailored for patients, without the medical jargon."),
-        2 => array("Renowned Expertise", "Engage with exclusive content, insights, and guidance produced directly by Merlows specialists and world-renowned gastro healthcare experts."),
-        3 => array("Actionable Solutions", "Take control with highly interactive calculators, health trackers, and personalized AI to bring the clinic directly into your home life.")
+        1 => array("Clear Reporting", "Access cutting-edge reporting translated into a clear, easy-to-understand format tailored for readers, without the diplomatic jargon."),
+        2 => array("Renowned Expertise", "Engage with exclusive content, insights, and analysis produced directly by Merlows correspondents and world-renowned regional affairs experts."),
+        3 => array("Actionable Insight", "Stay ahead with interactive timelines, story trackers, and personalised AI to bring expert context directly to you.")
     );
     for($i=1; $i<=3; $i++) {
         $wp_customize->add_setting("mlws_pat_ben{$i}_title", array("default"=>$ben_defaults[$i][0],"sanitize_callback"=>"sanitize_text_field"));
@@ -120,12 +120,12 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_control( "mlws_pat_tool_title", array( "label" => "Title", "section" => "mlws_pat_tools", "type" => "text" ) );
     
     $tool_defaults = array(
-        1 => array("Ask IBD-i Expert", "Interact with our AI intelligence trained specifically in clinical gastro conditions for instant, reliable answers to your health questions."),
-        2 => array("Bookmark & Clip", "Easily save important articles, clip vital paragraphs, and create your own customized research notes directly in your portal."),
-        3 => array("History & AI Tracking", "Upload your medical history documents to allow IBD-i to securely analyze data, track your ongoing wellness, and spot trends."),
-        4 => array("Healthcare Calculators", "Evaluate potential malnutrition, calculate BMI, and score related healthcare symptoms to stay on top of your physical needs."),
-        5 => array("Exclusive Courses", "Enroll in customized, multi-chapter curriculums developed by gastro specialists focusing on diet, recovery, and lifestyle routines."),
-        6 => array("Downloadable Guides", "Save and export patient-focused literature, daily checklists, and clear instructions for managing clinical nutrition products.")
+        1 => array("Ask the Merlows Expert", "Interact with our AI intelligence trained specifically on Middle East diplomacy for instant, reliable answers to your questions."),
+        2 => array("Bookmark & Clip", "Easily save important articles, clip vital paragraphs, and create your own customised research notes directly in your portal."),
+        3 => array("Story & AI Tracking", "Follow developing stories and let our AI securely track ongoing diplomatic events, surface connections, and spot trends."),
+        4 => array("Interactive Timelines", "Explore the Cyrus Accord, the Abraham Accords, and Israel-Iran relations through clear, interactive timelines and maps."),
+        5 => array("Exclusive Explainers", "Work through customised, multi-chapter explainers developed by our analysts on the region's key issues and players."),
+        6 => array("Downloadable Guides", "Save and export reader-focused explainers, daily briefings, and clear background on the stories that matter.")
     );
     for($i=1; $i<=6; $i++) {
         $wp_customize->add_setting("mlws_pat_tool{$i}_title", array("default"=>$tool_defaults[$i][0],"sanitize_callback"=>"sanitize_text_field"));
@@ -138,7 +138,7 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_pat_cta", array( "title" => "CTA Section", "panel" => "mlws_pat_panel" ) );
     $wp_customize->add_setting( "mlws_pat_cta_title", array( "default" => "Begin Your Journey", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_pat_cta_title", array( "label" => "Title", "section" => "mlws_pat_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_pat_cta_desc", array( "default" => "Join thousands of patients taking control of their gut health and longevity. It's completely free to start using our clinical resources today.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_pat_cta_desc", array( "default" => "Join thousands of readers staying ahead of Middle East diplomacy. It's completely free to start using our reporting and research tools today.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_pat_cta_desc", array( "label" => "Description", "section" => "mlws_pat_cta", "type" => "textarea" ) );
 
 
@@ -152,11 +152,11 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_about_hero", array( "title" => "Hero Section", "panel" => "mlws_about_panel" ) );
     $wp_customize->add_setting( "mlws_about_hero_tag",   array( "default" => "Our Story", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_hero_tag",   array( "label" => "Tag Label", "section" => "mlws_about_hero", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_hero_title", array( "default" => "From Pharma to <span class=\"highlight\">Healthcare</span>", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_about_hero_title", array( "default" => "Independent <span class=\"highlight\">Diplomacy Journalism</span>", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_about_hero_title", array( "label" => "Title (HTML allowed)", "section" => "mlws_about_hero", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_about_hero_sub",   array( "default" => "A Natural Evolution in Gastrointestinal Care", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_hero_sub",   array( "default" => "Clear-Eyed Coverage of a Changing Middle East", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_hero_sub",   array( "label" => "Sub-title (italic)", "section" => "mlws_about_hero", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_hero_desc",  array( "default" => "Merlows bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_about_hero_desc",  array( "default" => "Merlows bridges rigorous reporting and accessible analysis, delivering evidence-based coverage of Middle East diplomacy and the Accords reshaping the region.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_about_hero_desc",  array( "label" => "Description", "section" => "mlws_about_hero", "type" => "textarea" ) );
     $wp_customize->add_setting( "mlws_about_hero_img",    array( "default" => "", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "mlws_about_hero_img", array( "label" => "Hero Background Image", "section" => "mlws_about_hero" ) ) );
@@ -181,17 +181,17 @@ function mlws_pages_customize_register( $wp_customize ) {
 
     // ── Origin / Pillars ──────────────────────────────────────
     $wp_customize->add_section( "mlws_about_origin", array( "title" => "Origin Section", "panel" => "mlws_about_panel" ) );
-    $wp_customize->add_setting( "mlws_about_origin_tag",   array( "default" => "From Pharma to Healthcare", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_origin_tag",   array( "default" => "How Merlows Began", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_origin_tag",   array( "label" => "Section Tag", "section" => "mlws_about_origin", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_origin_title", array( "default" => "From Pharma to Healthcare", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_origin_title", array( "default" => "How Merlows Began", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_origin_title", array( "label" => "Heading", "section" => "mlws_about_origin", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_origin_sub",   array( "default" => "A Natural Evolution in Gastrointestinal Care", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_origin_sub",   array( "default" => "Clear-Eyed Coverage of a Changing Middle East", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_origin_sub",   array( "label" => "Sub-heading", "section" => "mlws_about_origin", "type" => "text" ) );
 
     $pillar_defaults = array(
-        1 => array( "Heritage in Pharma",       "Merlows has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards." ),
-        2 => array( "Patient-Centric Innovation","We found that medicines alone often fall short for chronic IBD. There is a clear need for evidence-based nutritional support." ),
-        3 => array( "The Birth of Merlows",  "Merlows bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE." ),
+        1 => array( "Rooted in Rigour",       "Merlows was founded by journalists with a long record of reporting on Middle East politics and security to the highest standards." ),
+        2 => array( "Reader-Centric Coverage","We found that breaking news alone often falls short. There is a clear need for evidence-based context and analysis." ),
+        3 => array( "The Birth of Merlows",  "Merlows bridges fast reporting and deep analysis, delivering trusted coverage of the Accords and the wider region." ),
     );
     for ( $i = 1; $i <= 3; $i++ ) {
         $wp_customize->add_setting( "mlws_about_p{$i}_title", array( "default" => $pillar_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -202,8 +202,8 @@ function mlws_pages_customize_register( $wp_customize ) {
     // Stats
     $stat_defaults = array(
         1 => array( "25+",    "Years of Experience" ),
-        2 => array( "Global", "Regulatory Reach" ),
-        3 => array( "100%",   "Pharma-Grade Standards" ),
+        2 => array( "Global", "Editorial Reach" ),
+        3 => array( "100%",   "Editorial Independence" ),
     );
     for ( $i = 1; $i <= 3; $i++ ) {
         $wp_customize->add_setting( "mlws_about_stat{$i}_num",   array( "default" => $stat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -234,16 +234,16 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_about_mission", array( "title" => "Mission & Values", "panel" => "mlws_about_panel" ) );
     $wp_customize->add_setting( "mlws_about_mission_tag",   array( "default" => "Our Mission", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_mission_tag",   array( "label" => "Section Tag", "section" => "mlws_about_mission", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_mission_title", array( "default" => "Bridging Science & <span class=\"highlight\">Patient Wellbeing</span>", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_about_mission_title", array( "default" => "Bridging Reporting & <span class=\"highlight\">Reader Understanding</span>", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_about_mission_title", array( "label" => "Heading (HTML allowed)", "section" => "mlws_about_mission", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_about_mission_desc",  array( "default" => "At Merlows, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_about_mission_desc",  array( "default" => "At Merlows, our mission is to empower readers following Middle East diplomacy by making world-class analysis accessible, actionable, and clear.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_about_mission_desc",  array( "label" => "Description", "section" => "mlws_about_mission", "type" => "textarea" ) );
 
     $val_defaults = array(
-        1 => array( "Evidence-Based",  "Every product and piece of content we produce meets the highest scientific and regulatory standards, rooted in peer-reviewed clinical research." ),
-        2 => array( "Patient-First",   "We design every solution around the real-world challenges that patients face — not just clinical endpoints — because lived experience matters." ),
-        3 => array( "Pharma-Grade",    "Our medical food products are developed with the same rigour applied to licensed medicines — providing a quality benchmark no ordinary supplement can match." ),
-        4 => array( "Global Reach",    "With a regulatory footprint spanning multiple continents, Merlows delivers consistent, trusted solutions wherever patients and clinicians need them." ),
+        1 => array( "Evidence-Based",  "Every story and piece of analysis we produce meets the highest editorial standards, rooted in verified sources and primary documents." ),
+        2 => array( "Reader-First",    "We frame every story around the questions readers actually have — not just the day's headlines — because understanding matters." ),
+        3 => array( "Independent",     "Our coverage is editorially independent, free from political or commercial influence — a benchmark for trustworthy reporting." ),
+        4 => array( "Global Reach",    "With correspondents and contributors across multiple continents, Merlows delivers consistent, trusted coverage wherever readers and writers need it." ),
     );
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "mlws_about_val{$i}_title", array( "default" => $val_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -270,24 +270,24 @@ function mlws_pages_customize_register( $wp_customize ) {
 
     }
 
-    // ── EPAVANCE Product Spotlight ────────────────────────────
-    $wp_customize->add_section( "mlws_about_product", array( "title" => "EPAVANCE Spotlight", "panel" => "mlws_about_panel" ) );
-    $wp_customize->add_setting( "mlws_about_prod_tag",       array( "default" => "Our Flagship Product", "sanitize_callback" => "sanitize_text_field" ) );
+    // ── Flagship Coverage Spotlight ───────────────────────────
+    $wp_customize->add_section( "mlws_about_product", array( "title" => "Flagship Coverage", "panel" => "mlws_about_panel" ) );
+    $wp_customize->add_setting( "mlws_about_prod_tag",       array( "default" => "Our Flagship Coverage", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_prod_tag",       array( "label" => "Section Tag", "section" => "mlws_about_product", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_prod_title",     array( "default" => "Introducing EPAVANCE", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_prod_title",     array( "default" => "The Cyrus Accord Series", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_prod_title",     array( "label" => "Title", "section" => "mlws_about_product", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_prod_desc",      array( "default" => "EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_about_prod_desc",      array( "default" => "Our flagship series follows the Cyrus Accord and its impact on Israel-Iran relations and the wider region. Unlike wire copy, every instalment is built on primary sources, expert interviews, and the same editorial rigour that defines Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_about_prod_desc",      array( "label" => "Description", "section" => "mlws_about_product", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_about_prod_btn",       array( "default" => "Learn More About EPAVANCE", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_prod_btn",       array( "default" => "Read the Cyrus Accord Series", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_prod_btn",       array( "label" => "Button Label", "section" => "mlws_about_product", "type" => "text" ) );
     $wp_customize->add_setting( "mlws_about_prod_url",       array( "default" => "#", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_about_prod_url",       array( "label" => "Button URL", "section" => "mlws_about_product", "type" => "url" ) );
 
     $feat_defaults = array(
-        1 => array( "Pharma-Grade Manufacturing", "Produced under strict pharmaceutical cGMP standards — the highest tier of quality assurance in the industry." ),
-        2 => array( "Clinically Researched",      "Supported by clinical evidence demonstrating meaningful benefit for IBD patients managing their nutritional needs." ),
-        3 => array( "High-Dose EPA Omega-3",       "A precisely calibrated dose of EPA matched to the needs of IBD-associated gut inflammation." ),
-        4 => array( "Regulatory Status",           "Classified as a Medical Food (FSMP), enabling it to occupy a unique, trusted position between medication and nutrition." ),
+        1 => array( "Rigorous Sourcing",      "Built on primary documents and verified sources — the highest tier of editorial assurance in the field." ),
+        2 => array( "Expert Analysis",        "Supported by interviews and commentary from leading specialists in regional diplomacy and security." ),
+        3 => array( "In-Depth Context",       "Carefully framed background matched to the complexity of Israel-Iran relations and the Accords." ),
+        4 => array( "Editorial Independence", "Produced free from political or commercial influence, occupying a unique, trusted position in regional reporting." ),
     );
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "mlws_about_feat{$i}_title", array( "default" => $feat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -320,16 +320,16 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_control( "mlws_about_plat_tag",   array( "label" => "Section Tag", "section" => "mlws_about_platform", "type" => "text" ) );
     $wp_customize->add_setting( "mlws_about_plat_title", array( "default" => "The Merlows Platform", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_plat_title", array( "label" => "Heading", "section" => "mlws_about_platform", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_plat_desc",  array( "default" => "Beyond our medical food products, Merlows is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_about_plat_desc",  array( "default" => "Beyond our reporting, Merlows is building a world-class digital news hub - combining in-depth content, AI-powered tools, and a vibrant community for readers and writers.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_about_plat_desc",  array( "label" => "Description", "section" => "mlws_about_platform", "type" => "textarea" ) );
 
     $plat_defaults = array(
-        1 => array( "Clinical Content Hub",    "Peer-reviewed research, expert opinions, and patient education curated by gastroenterologists and dietitians." ),
-        2 => array( "IBD-i AI Assistant",      "A specialised AI trained on clinical gastroenterology to answer your health questions with precision and safety." ),
-        3 => array( "Patient Dashboard",       "A secure personal portal to track health records, manage your IBD tools, and connect with your care pathway." ),
-        4 => array( "HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with Merlows experts." ),
-        5 => array( "Health Calculators",      "Evidence-based clinical calculators for malnutrition screening, BMI, and disease activity scoring." ),
-        6 => array( "Education Courses",       "Multi-chapter learning pathways developed by gastro specialists for both patients and clinicians." ),
+        1 => array( "News & Analysis Hub",    "In-depth reporting, expert opinion, and explainers curated by our correspondents and regional analysts." ),
+        2 => array( "Merlows AI Assistant",   "A specialised AI trained on Middle East diplomacy to answer your questions with precision and context." ),
+        3 => array( "Reader Dashboard",       "A secure personal portal to follow stories, save research, and track the developments you care about." ),
+        4 => array( "Writer Portal",          "A dedicated space for writers to access editorial guidelines, submit articles, and collaborate with Merlows editors." ),
+        5 => array( "Research Tools",         "Interactive timelines, maps, and archives covering the Accords, treaties, and regional affairs." ),
+        6 => array( "Explainer Series",       "Multi-chapter learning pathways developed by our analysts for both readers and writers." ),
     );
     for ( $i = 1; $i <= 6; $i++ ) {
         $wp_customize->add_setting( "mlws_about_plat{$i}_title", array( "default" => $plat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -360,15 +360,15 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_about_cta", array( "title" => "CTA Strip", "panel" => "mlws_about_panel" ) );
     $wp_customize->add_setting( "mlws_about_cta_title",      array( "default" => "Join the Merlows Community", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_cta_title",      array( "label" => "Heading", "section" => "mlws_about_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_cta_desc",       array( "default" => "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_about_cta_desc",       array( "default" => "Whether you're a reader following the region, a writer covering diplomacy, or a researcher exploring the Accords - there's a place for you at Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_about_cta_desc",       array( "label" => "Description", "section" => "mlws_about_cta", "type" => "textarea" ) );
     $wp_customize->add_setting( "mlws_about_cta_btn1_label", array( "default" => "About Merlows", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_cta_btn1_label", array( "label" => "Button 1 Label", "section" => "mlws_about_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_cta_btn1_url",   array( "default" => "/patients/", "sanitize_callback" => "esc_url_raw" ) );
+    $wp_customize->add_setting( "mlws_about_cta_btn1_url",   array( "default" => "/", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_about_cta_btn1_url",   array( "label" => "Button 1 URL", "section" => "mlws_about_cta", "type" => "url" ) );
-    $wp_customize->add_setting( "mlws_about_cta_btn2_label", array( "default" => "I'm a Healthcare Professional", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_about_cta_btn2_label", array( "default" => "I'm a Writer", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_about_cta_btn2_label", array( "label" => "Button 2 Label", "section" => "mlws_about_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_about_cta_btn2_url",   array( "default" => "/healthcare-professionals/", "sanitize_callback" => "esc_url_raw" ) );
+    $wp_customize->add_setting( "mlws_about_cta_btn2_url",   array( "default" => "/", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_about_cta_btn2_url",   array( "label" => "Button 2 URL", "section" => "mlws_about_cta", "type" => "url" ) );
     // Styles for CTA Strip
     $wp_customize->add_setting( "mlws_about_cta_show", array( "default" => true, "sanitize_callback" => "absint" ) );
@@ -394,11 +394,11 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_heritage_hero", array( "title" => "Hero Section", "panel" => "mlws_heritage_panel" ) );
     $wp_customize->add_setting( "mlws_heritage_hero_tag",   array( "default" => "Our Story", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_hero_tag",   array( "label" => "Tag Label", "section" => "mlws_heritage_hero", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_hero_title", array( "default" => "From Pharma to <span class=\"highlight\">Healthcare</span>", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_heritage_hero_title", array( "default" => "A Heritage of <span class=\"highlight\">Resilience</span>", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_heritage_hero_title", array( "label" => "Title (HTML allowed)", "section" => "mlws_heritage_hero", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_heritage_hero_sub",   array( "default" => "A Natural Evolution in Gastrointestinal Care", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_hero_sub",   array( "default" => "The BlitzSpirit That Shapes Our Reporting", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_hero_sub",   array( "label" => "Sub-title (italic)", "section" => "mlws_heritage_hero", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_hero_desc",  array( "default" => "Merlows bridges the worlds of pharmaceutical science and patient-centred nutrition, delivering evidence-based medical food solutions for life with IBD.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_hero_desc",  array( "default" => "Merlows draws on a spirit of steadfast, independent reporting - delivering evidence-based coverage of Middle East diplomacy with the same resolve that defined Britain through the Blitz.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_heritage_hero_desc",  array( "label" => "Description", "section" => "mlws_heritage_hero", "type" => "textarea" ) );
     $wp_customize->add_setting( "mlws_heritage_hero_img",    array( "default" => "", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "mlws_heritage_hero_img", array( "label" => "Hero Background Image", "section" => "mlws_heritage_hero" ) ) );
@@ -423,17 +423,17 @@ function mlws_pages_customize_register( $wp_customize ) {
 
     // ── Origin / Pillars ──────────────────────────────────────
     $wp_customize->add_section( "mlws_heritage_origin", array( "title" => "Origin Section", "panel" => "mlws_heritage_panel" ) );
-    $wp_customize->add_setting( "mlws_heritage_origin_tag",   array( "default" => "From Pharma to Healthcare", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_origin_tag",   array( "default" => "A Heritage of Resilience", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_origin_tag",   array( "label" => "Section Tag", "section" => "mlws_heritage_origin", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_origin_title", array( "default" => "From Pharma to Healthcare", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_origin_title", array( "default" => "A Heritage of Resilience", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_origin_title", array( "label" => "Heading", "section" => "mlws_heritage_origin", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_origin_sub",   array( "default" => "A Natural Evolution in Gastrointestinal Care", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_origin_sub",   array( "default" => "The BlitzSpirit That Shapes Our Reporting", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_origin_sub",   array( "label" => "Sub-heading", "section" => "mlws_heritage_origin", "type" => "text" ) );
 
     $pillar_defaults = array(
-        1 => array( "Heritage in Pharma",       "Merlows has a long record of developing specialised gastrointestinal medicines under rigorous regulatory standards." ),
-        2 => array( "Patient-Centric Innovation","We found that medicines alone often fall short for chronic IBD. There is a clear need for evidence-based nutritional support." ),
-        3 => array( "The Birth of Merlows",  "Merlows bridges pharma and nutrition, delivering \"pharma-grade\" medical food products like EPAVANCE." ),
+        1 => array( "A Spirit of Resilience",   "Merlows draws on the steadfast, independent resolve that carried Britain through the Blitz and applies it to its reporting." ),
+        2 => array( "Reader-Centric Innovation","We found that breaking news alone often falls short. There is a clear need for evidence-based context and analysis." ),
+        3 => array( "The Birth of Merlows",  "Merlows bridges fast reporting and deep analysis, delivering trusted coverage of the Accords and the wider region." ),
     );
     for ( $i = 1; $i <= 3; $i++ ) {
         $wp_customize->add_setting( "mlws_heritage_p{$i}_title", array( "default" => $pillar_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -444,8 +444,8 @@ function mlws_pages_customize_register( $wp_customize ) {
     // Stats
     $stat_defaults = array(
         1 => array( "25+",    "Years of Experience" ),
-        2 => array( "Global", "Regulatory Reach" ),
-        3 => array( "100%",   "Pharma-Grade Standards" ),
+        2 => array( "Global", "Editorial Reach" ),
+        3 => array( "100%",   "Editorial Independence" ),
     );
     for ( $i = 1; $i <= 3; $i++ ) {
         $wp_customize->add_setting( "mlws_heritage_stat{$i}_num",   array( "default" => $stat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -476,16 +476,16 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_heritage_mission", array( "title" => "Mission & Values", "panel" => "mlws_heritage_panel" ) );
     $wp_customize->add_setting( "mlws_heritage_mission_tag",   array( "default" => "Our Mission", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_mission_tag",   array( "label" => "Section Tag", "section" => "mlws_heritage_mission", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_mission_title", array( "default" => "Bridging Science & <span class=\"highlight\">Patient Wellbeing</span>", "sanitize_callback" => "wp_kses_post" ) );
+    $wp_customize->add_setting( "mlws_heritage_mission_title", array( "default" => "Bridging Reporting & <span class=\"highlight\">Reader Understanding</span>", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_heritage_mission_title", array( "label" => "Heading (HTML allowed)", "section" => "mlws_heritage_mission", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_heritage_mission_desc",  array( "default" => "At Merlows, our mission is to empower patients living with chronic gastrointestinal conditions by making world-class clinical nutrition science accessible, actionable, and personal.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_mission_desc",  array( "default" => "At Merlows, our mission is to empower readers following Middle East diplomacy by making world-class analysis accessible, actionable, and clear.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_heritage_mission_desc",  array( "label" => "Description", "section" => "mlws_heritage_mission", "type" => "textarea" ) );
 
     $val_defaults = array(
-        1 => array( "Evidence-Based",  "Every product and piece of content we produce meets the highest scientific and regulatory standards, rooted in peer-reviewed clinical research." ),
-        2 => array( "Patient-First",   "We design every solution around the real-world challenges that patients face — not just clinical endpoints — because lived experience matters." ),
-        3 => array( "Pharma-Grade",    "Our medical food products are developed with the same rigour applied to licensed medicines — providing a quality benchmark no ordinary supplement can match." ),
-        4 => array( "Global Reach",    "With a regulatory footprint spanning multiple continents, Merlows delivers consistent, trusted solutions wherever patients and clinicians need them." ),
+        1 => array( "Evidence-Based",  "Every story and piece of analysis we produce meets the highest editorial standards, rooted in verified sources and primary documents." ),
+        2 => array( "Reader-First",    "We frame every story around the questions readers actually have — not just the day's headlines — because understanding matters." ),
+        3 => array( "Independent",     "Our coverage is editorially independent, free from political or commercial influence — a benchmark for trustworthy reporting." ),
+        4 => array( "Global Reach",    "With correspondents and contributors across multiple continents, Merlows delivers consistent, trusted coverage wherever readers and writers need it." ),
     );
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "mlws_heritage_val{$i}_title", array( "default" => $val_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -512,24 +512,24 @@ function mlws_pages_customize_register( $wp_customize ) {
 
     }
 
-    // ── EPAVANCE Product Spotlight ────────────────────────────
-    $wp_customize->add_section( "mlws_heritage_product", array( "title" => "EPAVANCE Spotlight", "panel" => "mlws_heritage_panel" ) );
-    $wp_customize->add_setting( "mlws_heritage_prod_tag",       array( "default" => "Our Flagship Product", "sanitize_callback" => "sanitize_text_field" ) );
+    // ── Flagship Coverage Spotlight ───────────────────────────
+    $wp_customize->add_section( "mlws_heritage_product", array( "title" => "Flagship Coverage", "panel" => "mlws_heritage_panel" ) );
+    $wp_customize->add_setting( "mlws_heritage_prod_tag",       array( "default" => "Our BlitzSpirit Series", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_prod_tag",       array( "label" => "Section Tag", "section" => "mlws_heritage_product", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_prod_title",     array( "default" => "Introducing EPAVANCE", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_prod_title",     array( "default" => "The BlitzSpirit Series", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_prod_title",     array( "label" => "Title", "section" => "mlws_heritage_product", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_prod_desc",      array( "default" => "EPAVANCE is a pharma-grade Omega-3 medical food especially formulated for patients with Inflammatory Bowel Disease. Unlike generic supplements, EPAVANCE is developed under the same rigorous manufacturing standards applied to licensed medicines.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_prod_desc",      array( "default" => "BlitzSpirit revisits the resilience that defined Britain through the Second World War, drawing lessons that inform how Merlows reports on conflict and diplomacy today. Every instalment is built on archives, primary sources, and the same editorial rigour that defines Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_heritage_prod_desc",      array( "label" => "Description", "section" => "mlws_heritage_product", "type" => "textarea" ) );
-    $wp_customize->add_setting( "mlws_heritage_prod_btn",       array( "default" => "Learn More About EPAVANCE", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_prod_btn",       array( "default" => "Read the BlitzSpirit Series", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_prod_btn",       array( "label" => "Button Label", "section" => "mlws_heritage_product", "type" => "text" ) );
     $wp_customize->add_setting( "mlws_heritage_prod_url",       array( "default" => "#", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_heritage_prod_url",       array( "label" => "Button URL", "section" => "mlws_heritage_product", "type" => "url" ) );
 
     $feat_defaults = array(
-        1 => array( "Pharma-Grade Manufacturing", "Produced under strict pharmaceutical cGMP standards — the highest tier of quality assurance in the industry." ),
-        2 => array( "Clinically Researched",      "Supported by clinical evidence demonstrating meaningful benefit for IBD patients managing their nutritional needs." ),
-        3 => array( "High-Dose EPA Omega-3",       "A precisely calibrated dose of EPA matched to the needs of IBD-associated gut inflammation." ),
-        4 => array( "Regulatory Status",           "Classified as a Medical Food (FSMP), enabling it to occupy a unique, trusted position between medication and nutrition." ),
+        1 => array( "Rigorous Sourcing",      "Built on archives and verified sources — the highest tier of editorial assurance in the field." ),
+        2 => array( "Expert Analysis",        "Supported by historians and commentators who connect wartime resilience to today's diplomacy." ),
+        3 => array( "In-Depth Context",       "Carefully framed background matched to the complexity of the period and its lessons for the present." ),
+        4 => array( "Editorial Independence", "Produced free from political or commercial influence, occupying a unique, trusted position in feature reporting." ),
     );
     for ( $i = 1; $i <= 4; $i++ ) {
         $wp_customize->add_setting( "mlws_heritage_feat{$i}_title", array( "default" => $feat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -562,16 +562,16 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_control( "mlws_heritage_plat_tag",   array( "label" => "Section Tag", "section" => "mlws_heritage_platform", "type" => "text" ) );
     $wp_customize->add_setting( "mlws_heritage_plat_title", array( "default" => "The Merlows Platform", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_plat_title", array( "label" => "Heading", "section" => "mlws_heritage_platform", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_plat_desc",  array( "default" => "Beyond our medical food products, Merlows is building a world-class digital health hub - combining clinical-grade content, AI-powered tools, and a vibrant community for patients and healthcare professionals.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_plat_desc",  array( "default" => "Beyond our reporting, Merlows is building a world-class digital news hub - combining in-depth content, AI-powered tools, and a vibrant community for readers and writers.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_heritage_plat_desc",  array( "label" => "Description", "section" => "mlws_heritage_platform", "type" => "textarea" ) );
 
     $plat_defaults = array(
-        1 => array( "Clinical Content Hub",    "Peer-reviewed research, expert opinions, and patient education curated by gastroenterologists and dietitians." ),
-        2 => array( "IBD-i AI Assistant",      "A specialised AI trained on clinical gastroenterology to answer your health questions with precision and safety." ),
-        3 => array( "Patient Dashboard",       "A secure personal portal to track health records, manage your IBD tools, and connect with your care pathway." ),
-        4 => array( "HCP Professional Portal", "A dedicated space for healthcare practitioners to access protocols, CME, and collaborate with Merlows experts." ),
-        5 => array( "Health Calculators",      "Evidence-based clinical calculators for malnutrition screening, BMI, and disease activity scoring." ),
-        6 => array( "Education Courses",       "Multi-chapter learning pathways developed by gastro specialists for both patients and clinicians." ),
+        1 => array( "News & Analysis Hub",    "In-depth reporting, expert opinion, and explainers curated by our correspondents and regional analysts." ),
+        2 => array( "Merlows AI Assistant",   "A specialised AI trained on Middle East diplomacy to answer your questions with precision and context." ),
+        3 => array( "Reader Dashboard",       "A secure personal portal to follow stories, save research, and track the developments you care about." ),
+        4 => array( "Writer Portal",          "A dedicated space for writers to access editorial guidelines, submit articles, and collaborate with Merlows editors." ),
+        5 => array( "Research Tools",         "Interactive timelines, maps, and archives covering the Accords, treaties, and regional affairs." ),
+        6 => array( "Explainer Series",       "Multi-chapter learning pathways developed by our analysts for both readers and writers." ),
     );
     for ( $i = 1; $i <= 6; $i++ ) {
         $wp_customize->add_setting( "mlws_heritage_plat{$i}_title", array( "default" => $plat_defaults[$i][0], "sanitize_callback" => "sanitize_text_field" ) );
@@ -602,15 +602,15 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_section( "mlws_heritage_cta", array( "title" => "CTA Strip", "panel" => "mlws_heritage_panel" ) );
     $wp_customize->add_setting( "mlws_heritage_cta_title",      array( "default" => "Join the Merlows Community", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_cta_title",      array( "label" => "Heading", "section" => "mlws_heritage_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_cta_desc",       array( "default" => "Whether you're a patient managing IBD, a clinician advancing your practice, or a researcher exploring gut health - there's a place for you at Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_cta_desc",       array( "default" => "Whether you're a reader following the region, a writer covering diplomacy, or a researcher exploring the Accords - there's a place for you at Merlows.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_heritage_cta_desc",       array( "label" => "Description", "section" => "mlws_heritage_cta", "type" => "textarea" ) );
     $wp_customize->add_setting( "mlws_heritage_cta_btn1_label", array( "default" => "About Merlows", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_cta_btn1_label", array( "label" => "Button 1 Label", "section" => "mlws_heritage_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_cta_btn1_url",   array( "default" => "/patients/", "sanitize_callback" => "esc_url_raw" ) );
+    $wp_customize->add_setting( "mlws_heritage_cta_btn1_url",   array( "default" => "/", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_heritage_cta_btn1_url",   array( "label" => "Button 1 URL", "section" => "mlws_heritage_cta", "type" => "url" ) );
-    $wp_customize->add_setting( "mlws_heritage_cta_btn2_label", array( "default" => "I'm a Healthcare Professional", "sanitize_callback" => "sanitize_text_field" ) );
+    $wp_customize->add_setting( "mlws_heritage_cta_btn2_label", array( "default" => "I'm a Writer", "sanitize_callback" => "sanitize_text_field" ) );
     $wp_customize->add_control( "mlws_heritage_cta_btn2_label", array( "label" => "Button 2 Label", "section" => "mlws_heritage_cta", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_heritage_cta_btn2_url",   array( "default" => "/healthcare-professionals/", "sanitize_callback" => "esc_url_raw" ) );
+    $wp_customize->add_setting( "mlws_heritage_cta_btn2_url",   array( "default" => "/", "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( "mlws_heritage_cta_btn2_url",   array( "label" => "Button 2 URL", "section" => "mlws_heritage_cta", "type" => "url" ) );
     // Styles for CTA Strip
     $wp_customize->add_setting( "mlws_heritage_cta_show", array( "default" => true, "sanitize_callback" => "absint" ) );
@@ -765,7 +765,7 @@ function mlws_pages_customize_register( $wp_customize ) {
     $wp_customize->add_control( "mlws_contact_hero_tag",      array( "label" => "Tag Label",                  "section" => "mlws_contact_hero", "type" => "text" ) );
     $wp_customize->add_setting( "mlws_contact_hero_title",    array( "default" => "We'd Love to Hear From You", "sanitize_callback" => "wp_kses_post" ) );
     $wp_customize->add_control( "mlws_contact_hero_title",    array( "label" => "Heading (HTML allowed)",     "section" => "mlws_contact_hero", "type" => "text" ) );
-    $wp_customize->add_setting( "mlws_contact_hero_desc",     array( "default" => "Whether you're a patient, healthcare professional, researcher, or media contact — our team is here to help.", "sanitize_callback" => "sanitize_textarea_field" ) );
+    $wp_customize->add_setting( "mlws_contact_hero_desc",     array( "default" => "Whether you're a reader, writer, researcher, or media contact — our team is here to help.", "sanitize_callback" => "sanitize_textarea_field" ) );
     $wp_customize->add_control( "mlws_contact_hero_desc",     array( "label" => "Description",                "section" => "mlws_contact_hero", "type" => "textarea" ) );
     $wp_customize->add_setting( "mlws_contact_hero_img",      array( "default" => "",                         "sanitize_callback" => "esc_url_raw" ) );
     $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "mlws_contact_hero_img", array( "label" => "Background Image", "section" => "mlws_contact_hero" ) ) );

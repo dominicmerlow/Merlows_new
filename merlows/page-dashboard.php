@@ -76,7 +76,7 @@ get_header();
                 <svg width="32" height="32" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
             </div>
             <h1 style="margin-bottom: 12px; color: #0f172a;">Welcome to Your Hub</h1>
-            <p style="color: #64748b; margin-bottom: 32px;">Access your personalized readings, courses, and health records.</p>
+            <p style="color: #64748b; margin-bottom: 32px;">Access your personalised reading list, notes, and saved content.</p>
             
             <?php echo do_shortcode('[google_login]'); ?>
             
@@ -113,9 +113,7 @@ get_header();
     // SVG icon helper - all icons use currentColor so they inherit the nav text color
     $nav_icons = [
         'home'             => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
-        'clinical-profile' => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.6A2 2 0 0 1 6.8 1h.6a2 2 0 0 1 2 1.6l.5 3a2 2 0 0 1-1 2.1L7.1 9a12 12 0 0 0 7.9 7.9l1.3-1.8a2 2 0 0 1 2.1-1l3 .5A2 2 0 0 1 23 16.6v.6a2 2 0 0 1-1.6 2A18 18 0 0 1 2.6 4.8"/><path d="M14 2h2a4 4 0 0 1 4 4v2"/><path d="M14 6h4"/><path d="M16 4v4"/></svg>',
-        'records'          => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
-        'calculators'      => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+        'calculators'      =>'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
         'reading-list'     => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
         'searches'         => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
         'notes'            => '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
@@ -129,9 +127,7 @@ get_header();
         'main' => [
             'home'        => ['label' => 'Dashboard', 'icon' => $nav_icons['home']],
         ],
-        'Medical Tools' => [
-            'clinical-profile' => ['label' => 'Clinical Profile', 'icon' => $nav_icons['clinical-profile']],
-            'records'     => ['label' => 'My Records', 'icon' => $nav_icons['records']],
+        'Tools' => [
             'calculators' => ['label' => 'My Tools', 'icon' => $nav_icons['calculators']],
         ],
         'learning' => [
@@ -235,8 +231,8 @@ get_header();
             <?php endforeach; ?>
 
             <div class="nav-section" style="margin-top: auto; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;">
-                <div class="nav-item" style="cursor: pointer;" onclick="switchRole('<?php echo $is_practitioner ? 'subscriber' : 'practitioner'; ?>')">
-                    <span style="width:20px;text-align:center;display:inline-flex;justify-content:center;"><?php echo $nav_icons['switch']; ?></span> Switch to <?php echo $is_practitioner ? 'Patient' : 'Practitioner'; ?>
+                <div class="nav-item" style="cursor: pointer;" onclick="switchRole('<?php echo $is_practitioner ? 'member' : 'practitioner'; ?>')">
+                    <span style="width:20px;text-align:center;display:inline-flex;justify-content:center;"><?php echo $nav_icons['switch']; ?></span> Switch to <?php echo $is_practitioner ? 'Reader' : 'Writer'; ?>
                 </div>
                 <a href="<?php echo wp_logout_url(home_url()); ?>" class="nav-item"><span style="width:20px;text-align:center;display:inline-flex;justify-content:center;"><?php echo $nav_icons['logout']; ?></span> Log Out</a>
             </div>
@@ -259,20 +255,20 @@ get_header();
                     }
                     echo $tab_label; 
                     ?> 
-                    <span class="role-badge"><?php echo $is_practitioner ? 'Practitioner' : 'Patient'; ?></span>
+                    <span class="role-badge"><?php echo $is_practitioner ? 'Writer' : 'Reader'; ?></span>
                 </div>
             </div>
             
             <div style="display: flex; align-items: center; gap: 20px;">
                  <!-- Toggle in Header as backup/quick access -->
-                 <button onclick="switchRole('<?php echo $is_practitioner ? 'subscriber' : 'practitioner'; ?>')" style="font-size:12px; border:1px solid #E2E8F0; background:white; padding:4px 10px; border-radius:0; cursor:pointer; color:#64748B;">
-                    View as <?php echo $is_practitioner ? 'Patient' : 'Pro'; ?>
+                 <button onclick="switchRole('<?php echo $is_practitioner ? 'member' : 'practitioner'; ?>')" style="font-size:12px; border:1px solid #E2E8F0; background:white; padding:4px 10px; border-radius:0; cursor:pointer; color:#64748B;">
+                    View as <?php echo $is_practitioner ? 'Reader' : 'Writer'; ?>
                  </button>
                 
                 <div class="user-profile">
                     <div style="text-align: right; display: none; @media(min-width:768px){display:block;}">
                         <div style="font-size: 14px; font-weight: 600; color: #0F172A;"><?php echo esc_html($first_name); ?></div>
-                        <div style="font-size: 11px; color: #64748B;"><?php echo esc_html($is_practitioner ? 'MD, ' . $org : 'Member'); ?></div>
+                        <div style="font-size: 11px; color: #64748B;"><?php echo esc_html($is_practitioner ? ( $org ? 'Writer, ' . $org : 'Writer' ) : 'Member'); ?></div>
                     </div>
                     <img src="<?php echo esc_url($profile_img); ?>" class="profile-avatar">
                 </div>
@@ -295,10 +291,8 @@ get_header();
                     <p style="color:#64748B; margin:0;">
                         <?php 
                         switch($current_tab) {
-                            case 'home': echo $is_practitioner ? 'You have 3 patient updates pending review.' : "Hi {$first_name}, welcome back to your IBD Research Centre."; break;
-                            case 'clinical-profile': echo 'View your health discovery results and update your clinical profile details.'; break;
-                            case 'records': echo 'Access and manage your uploaded health records and posters.'; break;
-                            case 'notes': echo 'Your private clinical and personal notes.'; break;
+                            case 'home': echo $is_practitioner ? 'You have 3 writer updates pending review.' : "Hi {$first_name}, welcome back to Merlows."; break;
+                            case 'notes': echo 'Your private personal notes.'; break;
                             case 'ai-chats': echo 'History of your consultations with Merlows AI.'; break;
                             default: echo 'Manage your personalized hub content.';
                         }
@@ -569,470 +563,55 @@ get_header();
                     </script>
                 <?php break;
 
-                case 'clinical-profile':
-                    $quiz_results = get_user_meta($current_user->ID, '_mlws_healthcare_quiz_results', true) ?: array();
-                    $clinical_profile = get_user_meta($current_user->ID, '_mlws_clinical_profile', true) ?: array();
-                    
-                    // Defaults for form
-                    $defaults = array(
-                        'digital_apps' => '', 'medication' => '', 'supplements' => '', 
-                        'lifestyle_changes' => '', 'flare_up_freq' => '', 'last_flare_up' => '',
-                        'weight' => '', 'height' => '', 'blood_pressure' => '', 'additional_details' => ''
-                    );
-                    $profile = array_merge($defaults, $clinical_profile);
-                    ?>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
-                        <!-- Quiz Results Section -->
-                        <div class="dash-card">
-                            <div class="card-header">
-                                <h3 class="card-title">My Clinical Profile Responses</h3>
-                                <?php if($quiz_results): ?>
-                                    <button onclick="openQuizModal(1)" class="card-link" style="font-size:12px; border:1px solid #E2E8F0; padding:4px 10px; border-radius:0; background:white;">Edit Answers</button>
-                                <?php endif; ?>
-                            </div>
-                            <?php if(empty($quiz_results)): ?>
-                                <div style="text-align:center; padding:40px;">
-                                    <p style="color:#64748B; margin-bottom:20px;">You haven't completed your clinical profile responses yet.</p>
-                                    <button onclick="openQuizModal()" class="btn-primary" style="display:inline-block; background:#1B4F8A; color:white; border:none; padding:10px 24px; border-radius:0; font-weight:600; cursor:pointer;">Start Discovery Quiz</button>
-                                </div>
-                            <?php else: ?>
-                                <div class="dash-list">
-                                    <?php 
-                                    $labels = array(
-                                        'age' => 'Age Range', 'gender' => 'Gender',
-                                        'gastro_condition' => 'Gastro Condition', 'condition_type' => 'Primary Concern',
-                                        'looking_for' => 'Searching For', 'duration' => 'Duration/Interest',
-                                        'seeing_specialist' => 'Seeing Specialist', 'current_tools' => 'Digital Tool Use',
-                                        'learning_pref' => 'Learning Style'
-                                    );
-                                    foreach($quiz_results as $key => $val): if(isset($labels[$key])): ?>
-                                        <div class="list-item" style="cursor:pointer;" onclick="openQuizModal(<?php echo array_search($key, array_keys($labels)) + 1; ?>, true)">
-                                            <span style="font-size:13px; font-weight:600; color:#64748B;"><?php echo $labels[$key]; ?></span>
-                                            <div style="display:flex; align-items:center; gap:8px;">
-                                                <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo esc_html(ucfirst($val)); ?></span>
-                                                <span style="font-size:12px; color:#1B4F8A; opacity:0; transition:opacity 0.2s;" class="edit-hint">Edit &rarr;</span>
-                                            </div>
-                                        </div>
-                                    <?php endif; endforeach; ?>
-                                </div>
-                                <div style="margin-top:24px; text-align:center; display:flex; flex-direction:column; gap:12px;">
-                                    <button onclick="openQuizModal()" style="font-size:12px; color:#1B4F8A; font-weight:600; background:none; border:none; cursor:pointer;">Retake Entire Quiz &rarr;</button>
-                                    <div style="display:flex; gap:12px;">
-                                        <a href="/ask-ai/?context=clinical_eval" class="btn-primary" style="flex: 1; background:#0F172A; color:white; text-decoration:none; padding:12px; border-radius:0; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Ask IBDi
-                                        </a>
-                                        <a href="/ask-ai/?context=suggest_content" class="btn-primary" style="flex: 1; background:#1B4F8A; color:white; text-decoration:none; padding:12px; border-radius:0; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px;">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg> Suggest Content
-                                        </a>
-                                    </div>
-                                </div>
-                                <style>
-                                    .list-item:hover .edit-hint { opacity: 1 !important; }
-                                    .list-item:hover { background: #f8fafc; }
-                                </style>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- Combined Profile Details Section -->
-                        <div class="dash-card">
-                            <div class="card-header">
-                                <h3 class="card-title">Clinical Details & Lifestyle</h3>
-                                <button onclick="openClinicalInfoModal()" class="card-link" style="font-size:12px; border:1px solid #E2E8F0; padding:4px 10px; border-radius:0; background:white;">Update Details</button>
-                            </div>
-                            
-                            <div class="dash-list">
-                                <div class="list-item">
-                                    <span style="font-size:13px; font-weight:600; color:#64748B;">Weight / Height</span>
-                                    <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo $profile['weight'] ? esc_html($profile['weight']) . 'kg' : '---'; ?> / <?php echo $profile['height'] ? esc_html($profile['height']) . 'cm' : '---'; ?></span>
-                                </div>
-                                <div class="list-item">
-                                    <span style="font-size:13px; font-weight:600; color:#64748B;">Medication</span>
-                                    <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo $profile['medication'] ?: 'None listed'; ?></span>
-                                </div>
-                                <div class="list-item">
-                                    <span style="font-size:13px; font-weight:600; color:#64748B;">Supplements</span>
-                                    <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo $profile['supplements'] ?: 'None listed'; ?></span>
-                                </div>
-                                <div class="list-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                                    <span style="font-size:13px; font-weight:600; color:#64748B;">Lifestyle Changes</span>
-                                    <p style="font-size:14px; color:#334155; margin:0; line-height:1.4;"><?php echo $profile['lifestyle_changes'] ?: 'No lifestyle updates yet.'; ?></p>
-                                </div>
-                                <div class="list-item">
-                                    <span style="font-size:13px; font-weight:600; color:#64748B;">Flare-up History</span>
-                                    <span style="font-size:14px; color:#0F172A; font-weight:700;"><?php echo $profile['flare_up_freq'] ?: '---'; ?> (Last: <?php echo $profile['last_flare_up'] ?: 'N/A'; ?>)</span>
-                                </div>
-                            </div>
-
-                            <div style="margin-top:30px; border-top:1px solid #E2E8F0; padding-top:20px;">
-                                <label style="display:block; font-size:13px; font-weight:700; color:#0F172A; margin-bottom:12px;">Additional Discovery Details</label>
-                                <form id="dashboard-additional-details-form">
-                                    <?php wp_nonce_field( 'mlws_dashboard_nonce', 'nonce' ); ?>
-                                    <input type="hidden" name="action" value="mlws_save_clinical_profile">
-                                    <input type="hidden" name="weight" value="<?php echo esc_attr($profile['weight']); ?>">
-                                    <input type="hidden" name="height" value="<?php echo esc_attr($profile['height']); ?>">
-                                    <input type="hidden" name="medication" value="<?php echo esc_attr($profile['medication']); ?>">
-                                    <input type="hidden" name="supplements" value="<?php echo esc_attr($profile['supplements']); ?>">
-                                    <input type="hidden" name="digital_apps" value="<?php echo esc_attr($profile['digital_apps']); ?>">
-                                    <input type="hidden" name="lifestyle_changes" value="<?php echo esc_attr($profile['lifestyle_changes']); ?>">
-                                    <input type="hidden" name="flare_up_freq" value="<?php echo esc_attr($profile['flare_up_freq']); ?>">
-                                    <input type="hidden" name="last_flare_up" value="<?php echo esc_attr($profile['last_flare_up']); ?>">
-                                    <input type="hidden" name="blood_pressure" value="<?php echo esc_attr($profile['blood_pressure']); ?>">
-                                    
-                                    <textarea name="additional_details" rows="5" placeholder="Add any other symptoms, observations or clinical notes you would like to track..." style="width:100%; padding:14px; border:1px solid #E2E8F0; border-radius:0; font-size:14px; background:#F8FAFC; margin-bottom:12px; resize:none;"><?php echo esc_textarea($profile['additional_details']); ?></textarea>
-                                    <button type="submit" style="width:100%; padding:10px; background:#F1F5F9; border:1px solid #E2E8F0; border-radius:0; font-weight:700; color:#475569; cursor:pointer; transition:all 0.2s;">Save Additional Details</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <script>
-                    jQuery('#dashboard-additional-details-form').on('submit', function(e) {
-                        e.preventDefault();
-                        const btn = jQuery(this).find('button');
-                        btn.prop('disabled', true).text('Saving...');
-                        jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', jQuery(this).serialize(), function(res) {
-                            if(res.success) {
-                                btn.text('Details Saved!').css('background', '#D1FAE5').css('color', '#065F46');
-                                setTimeout(() => btn.prop('disabled', false).text('Save Additional Details').css('background', '#F1F5F9').css('color', '#475569'), 2000);
-                            }
-                        });
-                    });
-                    </script>
-                <?php break;
-
-                case 'records': ?>
-                    <div class="dash-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                            <h3 class="card-title">My Documents</h3>
-                            <button onclick="triggerPosterUpload()" style="background:#F1F5F9; border:1px dashed #CBD5E1; color:#0F172A; padding:8px 16px; border-radius:0; cursor:pointer; font-weight:600; font-size:13px;">+ Upload PDF</button>
-                            <input type="file" id="poster-uploader" style="display:none;" accept=".pdf" onchange="uploadPoster(this)">
-                        </div>
-                        <?php 
-                        $posters = get_user_meta($current_user->ID, '_mlws_posters', true) ?: array();
-                        if(empty($posters)): ?>
-                            <div style="text-align:center; padding:48px; background:#F8FAFC; border:2px dashed #E2E8F0; border-radius:0;">
-                                <p style="color:#64748B; margin-bottom:16px;">No records found. Upload your health posters or medical records.</p>
-                            </div>
-                        <?php else: ?>
-                            <div class="dash-list">
-                                <?php 
-                                $posters_safe = is_array($posters) ? $posters : array();
-                                foreach(array_reverse($posters_safe) as $poster): ?>
-                                <div class="list-item" style="padding:16px 0;">
-                                    <div style="display:flex; gap:16px; align-items:center; flex:1;">
-                                        <div style="width:48px; height:48px; background:#F1F5F9; border-radius:0; display:flex; align-items:center; justify-content:center; font-size:24px;">📄</div>
-                                        <div>
-                                            <div class="item-title"><?php echo esc_html($poster['name']); ?></div>
-                                            <div class="item-meta">Uploaded on <?php echo date('M j, Y', strtotime($poster['date'])); ?></div>
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; gap:12px; align-items:center;">
-                                        <a href="/ask-ai/?context=document_eval&doc_id=<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>" class="card-link" style="color:#0F172A; font-weight:700;">Ask IBDi</a>
-                                        <a href="/ask-ai/?context=view_eval&doc_id=<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>" class="card-link" style="color:#1B4F8A; font-weight:700;">View IBDi</a>
-                                        <a href="<?php echo esc_url($poster['url']); ?>" target="_blank" class="card-link">View</a>
-                                        <button onclick="deletePoster(<?php echo isset($poster['id']) ? $poster['id'] : 0; ?>)" style="color:#EF4444; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600;">Delete</button>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Blood Test Analyzer -->
-                    <style>
-                        .bt-section-header { display:flex; align-items:center; justify-content:space-between; margin:32px 0 16px; }
-                        .bt-section-title { font-size:18px; font-weight:800; color:#0F172A; font-family:'Outfit',sans-serif; display:flex; align-items:center; gap:10px; }
-                        .bt-section-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; background:#F5F0FA; color:#1B4F8A; border:1px solid rgba(255,90,0,0.2); padding:3px 10px; border-radius:0; }
-                        .bt-tool-card { background:white; border:1px solid #E2E8F0; border-radius:0; overflow:hidden; box-shadow:0 4px 16px rgba(10,25,41,0.06); }
-                        .bt-tool-bar { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; }
-                        .bt-tool-bar-left { display:flex; align-items:center; gap:10px; }
-                        .bt-tool-icon { width:30px; height:30px; background:linear-gradient(135deg,#fd4f00,#ff7a33); border-radius:0; display:flex; align-items:center; justify-content:center; font-size:14px; }
-                        .bt-tool-name { font-size:13px; font-weight:700; color:#0f172a; }
-                        .bt-tool-sub { font-size:11px; color:#64748b; }
-                        .bt-tool-bar-right { display:flex; gap:8px; }
-                        .bt-tool-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 13px; background:white; border:1px solid #e2e8f0; border-radius:0; font-size:12px; font-weight:600; color:#475569; cursor:pointer; text-decoration:none; transition:all 0.2s; }
-                        .bt-tool-btn:hover { background:#f1f5f9; }
-                        .bt-iframe { width:100%; height:820px; border:none; display:block; }
-                        @media (max-width:768px) { .bt-iframe { height:650px; } .bt-tool-bar { flex-direction:column; gap:10px; align-items:flex-start; } }
-                    </style>
-                    <div class="bt-section-header">
-                        <div class="bt-section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6l3 3"/><path d="M12 22a7 7 0 0 0 0-14v14z"/></svg> Blood Test Analyser <span class="bt-section-badge">Clinical Tool</span></div>
-                        <a href="/blood-test/" class="bt-tool-btn" style="font-size:11px;">Open Full Page →</a>
-                    </div>
-                    <div class="bt-tool-card">
-                        <div class="bt-tool-bar">
-                            <div class="bt-tool-bar-left">
-                                <div class="bt-tool-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v8l4 9H5l4-9V3z"/><path d="M9 3h6"/></svg></div>
-                                <div>
-                                    <div class="bt-tool-name">IBD Blood Test Analyser</div>
-                                    <div class="bt-tool-sub">Merlows · Precision Diagnostics</div>
-                                </div>
-                            </div>
-                            <div class="bt-tool-bar-right">
-                                <button class="bt-tool-btn" onclick="document.getElementById('bt-iframe').contentWindow.location.reload()">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-                                    Reset
-                                </button>
-                            </div>
-                        </div>
-                        <iframe id="bt-iframe" class="bt-iframe" src="<?php echo get_template_directory_uri(); ?>/assets/tools/blood-test/index.html" loading="lazy" title="Blood Test Analyser" allow="clipboard-write"></iframe>
-                    </div>
-                <?php break;
-
                 case 'calculators': ?>
                     <style>
-                        .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
-                        .calc-card { background: white; border-radius: 0; overflow: hidden; border: 1px solid #e2e8f0; transition: all 0.3s ease; position: relative; }
-                        .calc-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(10,25,41,0.1); border-color: transparent; }
-                        .calc-card-header { padding: 24px; position: relative; overflow: hidden; }
-                        .calc-card-header.malnutrition-bg { background: linear-gradient(135deg, #fd4f00 0%, #ff7a33 60%, #ffa366 100%); }
-                        .calc-card-header.omega-bg { background: linear-gradient(135deg, #0F172A 0%, #1e3a5f 60%, #2563eb 100%); }
-                        .calc-card-header .card-emoji { font-size: 40px; margin-bottom: 12px; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15)); }
-                        .calc-card-header h3 { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: white; margin: 0 0 6px; letter-spacing: -0.02em; }
-                        .calc-card-header .card-subtitle { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
-                        .calc-card-header .card-version-badge { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); border-radius: 0; padding: 4px 12px; font-size: 10px; color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-                        .calc-card-body { padding: 24px; }
-                        .calc-card-body > p { font-size: 14px; color: #64748b; line-height: 1.7; margin: 0 0 20px; }
-                        .calc-card-actions { display: flex; gap: 10px; }
-                        .calc-btn-launch { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 16px; border-radius: 0; font-size: 13px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-                        .calc-btn-launch.primary { background: linear-gradient(135deg, #fd4f00, #ff7a33); color: white; box-shadow: 0 4px 16px rgba(253,79,0,0.25); }
-                        .calc-btn-launch.primary:hover { box-shadow: 0 8px 24px rgba(253,79,0,0.35); transform: translateY(-1px); }
-                        .calc-btn-launch.secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
-                        .calc-btn-launch.secondary:hover { background: #e2e8f0; }
-
-                        /* Calculator Popup */
-                        .calc-popup-overlay { display: none; position: fixed; inset: 0; background: rgba(10,25,41,0.75); backdrop-filter: blur(4px); z-index: 100000; align-items: center; justify-content: center; padding: 20px; }
-                        .calc-popup-overlay.active { display: flex; }
-                        .calc-popup-container { background: white; width: 100%; max-width: 780px; height: 92vh; border-radius: 0; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.3); animation: calcPopIn 0.3s cubic-bezier(0.16,1,0.3,1); }
-                        @keyframes calcPopIn { from { opacity:0; transform:scale(0.95) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
-                        .calc-popup-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
-                        .popup-tool-left { display: flex; align-items: center; gap: 10px; }
-                        .popup-tool-icon { width: 30px; height: 30px; background: linear-gradient(135deg, #fd4f00, #ff7a33); border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-                        .popup-tool-title { font-size: 13px; font-weight: 700; color: #0f172a; }
-                        .popup-tool-sub { font-size: 11px; color: #64748b; }
-                        .popup-tool-right { display: flex; gap: 8px; align-items: center; }
-                        .popup-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 0; font-size: 12px; font-weight: 600; border: 1px solid #e2e8f0; background: white; color: #475569; cursor: pointer; transition: all 0.2s; text-decoration: none; font-family: inherit; }
-                        .popup-btn:hover { background: #f1f5f9; }
-                        .popup-btn-close { background: #0f172a; color: white !important; border-color: #0f172a; }
-                        .popup-btn-close:hover { background: #1e293b; }
-                        .calc-popup-iframe-wrap { flex: 1; overflow: hidden; }
-                        .calc-popup-iframe-wrap iframe { width: 100%; height:100%; border:none; }
-
-                        /* Results modal */
-                        .results-modal-overlay { display:none; position:fixed; inset:0; background:rgba(10,25,41,0.7); backdrop-filter:blur(4px); z-index:100001; align-items:center; justify-content:center; padding:20px; }
-                        .results-modal-overlay.active { display:flex; }
-                        .results-modal { background:white; width:100%; max-width:660px; max-height:85vh; border-radius:0; overflow:hidden; box-shadow:0 40px 100px rgba(0,0,0,0.25); display:flex; flex-direction:column; animation:calcPopIn 0.3s cubic-bezier(0.16,1,0.3,1); }
-                        .results-modal-header { padding:20px 24px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
-                        .results-modal-title { font-size:17px; font-weight:800; color:#0F172A; font-family:'Outfit',sans-serif; }
-                        .results-modal-body { overflow-y:auto; padding:20px 24px; flex:1; }
-                        .result-entry { background:#f8fafc; border:1px solid #e2e8f0; border-radius:0; padding:16px 18px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
-                        .result-entry:last-child { margin-bottom:0; }
-                        .result-entry-left { flex:1; }
-                        .result-entry-date { font-size:12px; color:#64748b; font-weight:500; margin-bottom:4px; }
-                        .result-entry-label { font-size:15px; font-weight:800; font-family:'Outfit',sans-serif; }
-                        .result-entry-detail { font-size:12px; color:#64748b; margin-top:4px; }
-                        .result-risk-badge { padding:5px 14px; border-radius:0; font-size:12px; font-weight:700; white-space:nowrap; }
-                        .risk-low { background:#f0fdf4; color:#16a34a; }
-                        .risk-medium { background:#fffbeb; color:#d97706; }
-                        .risk-high { background:#F5F0FA; color:#ff5a00; }
-                        .results-empty { text-align:center; padding:40px 20px; color:#64748b; font-size:14px; }
-                        .results-empty .empty-icon { font-size:40px; margin-bottom:12px; }
-
-                        @media (max-width: 768px) {
-                            .calc-grid { grid-template-columns: 1fr; }
-                            .calc-popup-container { height: 98vh; border-radius: 0; max-width:100%; }
-                            .calc-card-actions { flex-direction: column; }
-                            .calc-popup-toolbar { flex-wrap: wrap; gap: 8px; }
-                        }
+                        .tool-idea-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+                        .tool-idea-card { background: white; border: 1px solid #e2e8f0; border-radius: 0; padding: 28px; display: flex; flex-direction: column; min-height: 220px; position: relative; transition: box-shadow 0.25s, transform 0.25s; }
+                        .tool-idea-card:hover { box-shadow: 0 12px 40px rgba(10,25,41,0.08); transform: translateY(-3px); }
+                        .tool-idea-card .tool-idea-icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: #F1F5F9; color: var(--dash-primary); margin-bottom: 18px; }
+                        .tool-idea-card h3 { font-size: 18px; font-weight: 700; color: #0F172A; margin: 0 0 8px; }
+                        .tool-idea-card p { font-size: 14px; color: #64748B; line-height: 1.6; margin: 0; }
+                        .tool-idea-badge { position: absolute; top: 18px; right: 18px; background: #E8DDF0; color: #6D28D9; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 9px; }
+                        .tool-idea-cta { margin-top: auto; padding-top: 18px; font-size: 13px; font-weight: 700; color: var(--dash-primary); }
                     </style>
-
-                    <div class="calc-grid">
-                        <!-- Omega-3 Calculator Card -->
-                        <div class="calc-card">
-                            <div class="calc-card-header omega-bg">
-                                <span class="card-version-badge">v1.0</span>
-                                <span class="card-emoji"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6-3.56 0-7.56-2.54-8.5-6z"/><circle cx="16" cy="12" r="1"/><path d="M2 12s2-3 5-3"/><path d="M2 12s2 3 5 3"/></svg></span>
-                                <h3>Omega-3 Calculator</h3>
-                                <span class="card-subtitle">EPA/DHA Dosage Optimiser</span>
-                            </div>
-                            <div class="calc-card-body">
-                                <p>Calculate your optimal Omega-3 EPA/DHA intake based on your clinical profile, weight, and condition type.</p>
-                                <div class="calc-card-actions">
-                                    <button class="calc-btn-launch primary" onclick="openCalcPopup('omega-3-calculator', 'Omega-3 Calculator', 'omega')">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Launch Calculator
-                                    </button>
-                                    <button class="calc-btn-launch secondary" onclick="openResultsModal('omega')">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-                                        View Results
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Malnutrition Calculator Card -->
-                        <div class="calc-card">
-                            <div class="calc-card-header malnutrition-bg">
-                                <span class="card-version-badge">v2.0</span>
-                                <span class="card-emoji"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 5-2.55 5-7.5C21 9.94 17.31 6 13 6c-.55 0-1 .45-1 1v1c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55-.45-1-1-1C4.69 6 1 9.94 1 14.5 1 19.45 3 22 6 22c1.25 0 2.5-1.06 4-1.06h2z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></span>
-                                <h3>Malnutrition Calculator</h3>
-                                <span class="card-subtitle">IBD Risk Screening Tool</span>
-                            </div>
-                            <div class="calc-card-body">
-                                <p>A clinically-grounded 11-step malnutrition risk screener for IBD patients. Based on MUST, IBD-NST &amp; GLIM criteria.</p>
-                                <div class="calc-card-actions">
-                                    <button class="calc-btn-launch primary" onclick="openCalcPopup('malnutrition-calculator', 'IBD Malnutrition Calculator', 'malnutrition')">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Launch Calculator
-                                    </button>
-                                    <button class="calc-btn-launch secondary" onclick="openResultsModal('malnutrition')">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-                                        View Results
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="dash-card" style="margin-bottom: 24px;">
+                        <h3 class="card-title">My Tools</h3>
+                        <p style="color:#64748B; margin:8px 0 0; font-size:14px; line-height:1.6;">
+                            We're building a fresh set of tools for Merlows readers. Here's a preview of what's coming &mdash; tell us which you'd use most.
+                        </p>
                     </div>
-
-                    <!-- Calculator Popup Modal -->
-                    <div class="calc-popup-overlay" id="calc-popup-overlay" onclick="if(event.target===this) closeCalcPopup()">
-                        <div class="calc-popup-container">
-                            <div class="calc-popup-toolbar">
-                                <div class="popup-tool-left">
-                                    <div class="popup-tool-icon" id="calc-popup-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 5-2.55 5-7.5C21 9.94 17.31 6 13 6c-.55 0-1 .45-1 1v1c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55-.45-1-1-1C4.69 6 1 9.94 1 14.5 1 19.45 3 22 6 22c1.25 0 2.5-1.06 4-1.06h2z"/><path d="M10 2c1 .5 2 2 2 5"/></svg></div>
-                                    <div>
-                                        <div class="popup-tool-title" id="calc-popup-title">Calculator</div>
-                                        <div class="popup-tool-sub">Merlows · Precision Diagnostics</div>
-                                    </div>
-                                </div>
-                                <div class="popup-tool-right">
-                                    <button class="popup-btn" onclick="document.getElementById('calc-popup-iframe').contentWindow.location.reload()">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-                                        Reset
-                                    </button>
-                                    <a href="#" class="popup-btn" id="calc-popup-fullpage" target="_blank">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                                        Full Page
-                                    </a>
-                                    <button class="popup-btn popup-btn-close" onclick="closeCalcPopup()">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                        Close
-                                    </button>
-                                </div>
+                    <div class="tool-idea-grid">
+                        <?php
+                        $tool_ideas = array(
+                            array(
+                                'title' => 'Accords Timeline Explorer',
+                                'desc'  => 'An interactive timeline of the Abraham Accords and Cyrus Accord &mdash; scrub through the milestones, signings and turning points that shaped the region.',
+                                'cta'   => 'Coming soon',
+                                'icon'  => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="12" r="2"/><line x1="12" y1="5" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="19"/></svg>',
+                            ),
+                            array(
+                                'title' => 'Middle East Map Room',
+                                'desc'  => 'A clickable regional map that surfaces the latest Merlows reporting by country &mdash; explore signatories, hotspots and diplomatic ties at a glance.',
+                                'cta'   => 'Coming soon',
+                                'icon'  => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+                            ),
+                            array(
+                                'title' => 'Test Your Knowledge Quiz',
+                                'desc'  => 'A quick, fun current-affairs quiz on regional history and the Blitz Spirit &mdash; rack up a streak and see how your knowledge stacks up against other readers.',
+                                'cta'   => 'Coming soon',
+                                'icon'  => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                            ),
+                        );
+                        foreach ( $tool_ideas as $idea ) : ?>
+                            <div class="tool-idea-card">
+                                <span class="tool-idea-badge"><?php echo esc_html( $idea['cta'] ); ?></span>
+                                <span class="tool-idea-icon"><?php echo $idea['icon']; ?></span>
+                                <h3><?php echo esc_html( $idea['title'] ); ?></h3>
+                                <p><?php echo wp_kses_post( $idea['desc'] ); ?></p>
+                                <div class="tool-idea-cta">In development &rarr;</div>
                             </div>
-                            <div class="calc-popup-iframe-wrap">
-                                <iframe id="calc-popup-iframe" src="about:blank" title="Calculator"></iframe>
-                            </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
-
-                    <!-- View Results Modal -->
-                    <div class="results-modal-overlay" id="results-modal-overlay" onclick="if(event.target===this) closeResultsModal()">
-                        <div class="results-modal">
-                            <div class="results-modal-header">
-                                <div>
-                                    <div class="results-modal-title" id="results-modal-title">Saved Results</div>
-                                    <div style="font-size:12px; color:#64748b; margin-top:2px;">Your previous calculator results, sorted by date</div>
-                                </div>
-                                <button class="popup-btn popup-btn-close" onclick="closeResultsModal()">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                    Close
-                                </button>
-                            </div>
-                            <div class="results-modal-body" id="results-modal-body">
-                                <div class="results-empty"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>No saved results yet.<br>Run the calculator and tap "Save Results" to save.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                    var calcNonce = '<?php echo wp_create_nonce('mlws_dashboard_nonce'); ?>';
-                    var ajaxUrl   = '<?php echo admin_url('admin-ajax.php'); ?>';
-                    var tplDir     = '<?php echo get_template_directory_uri(); ?>';
-
-                    function openCalcPopup(toolSlug, title, type) {
-                        var icons = {
-                            'malnutrition-calculator':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 5-2.55 5-7.5C21 9.94 17.31 6 13 6c-.55 0-1 .45-1 1v1c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55-.45-1-1-1C4.69 6 1 9.94 1 14.5 1 19.45 3 22 6 22c1.25 0 2.5-1.06 4-1.06h2z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>',
-                            'omega-3-calculator':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.46-3.44 6-7 6-3.56 0-7.56-2.54-8.5-6z"/><circle cx="16" cy="12" r="1"/><path d="M2 12s2-3 5-3"/><path d="M2 12s2 3 5 3"/></svg>'
-                        };
-                        var defaultIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
-                        var pages = { 'malnutrition-calculator':'/malnutrition-calculator/', 'omega-3-calculator':'/omega-3-calculator/' };
-                        document.getElementById('calc-popup-icon').innerHTML  = icons[toolSlug] || defaultIcon;
-                        document.getElementById('calc-popup-title').textContent  = title;
-                        document.getElementById('calc-popup-fullpage').href       = pages[toolSlug] || '#';
-                        document.getElementById('calc-popup-iframe').src          = tplDir + '/assets/tools/' + toolSlug + '/index.html';
-                        document.getElementById('calc-popup-overlay').classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-
-                    function closeCalcPopup() {
-                        document.getElementById('calc-popup-overlay').classList.remove('active');
-                        document.getElementById('calc-popup-iframe').src = 'about:blank';
-                        document.body.style.overflow = 'auto';
-                    }
-
-                    // Listen for save-results postMessage from iframe
-                    window.addEventListener('message', function(e) {
-                        if (!e.data || e.data.type !== 'IBD_SAVE_MALNUTRITION_RESULT') return;
-                        var r = e.data;
-                        jQuery.post(ajaxUrl, {
-                            action: 'mlws_save_calc_result',
-                            nonce:  calcNonce,
-                            tool:   'malnutrition',
-                            result_id:   r.id,
-                            score:       r.score,
-                            risk_level:  r.riskLevel,
-                            risk_label:  r.riskLabel,
-                            bmi:         r.bmi,
-                            bmi_cat:     r.bmiCat,
-                            ibd_type:    r.ibdType,
-                            date:        r.date
-                        }, function(res) {
-                            if (res.success) console.log('Result saved.');
-                        });
-                    });
-
-                    function openResultsModal(type) {
-                        var titles = { malnutrition: 'Malnutrition Calculator — Results', omega: 'Omega-3 Calculator — Results' };
-                        document.getElementById('results-modal-title').textContent = titles[type] || 'Saved Results';
-                        var body = document.getElementById('results-modal-body');
-                        body.innerHTML = '<div style="text-align:center;padding:24px;color:#64748b;">Loading…</div>';
-                        document.getElementById('results-modal-overlay').classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                        jQuery.post(ajaxUrl, { action: 'mlws_get_calc_results', nonce: calcNonce, tool: type }, function(res) {
-                            if (!res.success || !res.data || res.data.length === 0) {
-                                body.innerHTML = '<div class="results-empty"><div class="empty-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>No saved results yet.<br>Run the calculator and tap &ldquo;Save Results&rdquo; to record your score.</div>';
-                                return;
-                            }
-                            var html = '';
-                            res.data.forEach(function(r) {
-                                var riskClass = r.risk_level === 'low' ? 'risk-low' : r.risk_level === 'medium' ? 'risk-medium' : 'risk-high';
-                                var dateStr = new Date(r.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-                                var extra = r.bmi ? ' &nbsp;·&nbsp; BMI ' + r.bmi + ' (' + r.bmi_cat + ')' : '';
-                                if (r.ibd_type) extra += ' &nbsp;·&nbsp; ' + (r.ibd_type === 'crohns' ? "Crohn's" : r.ibd_type === 'uc' ? 'UC' : 'IBD');
-                                html += '<div class="result-entry">' +
-                                    '<div class="result-entry-left">' +
-                                    '<div class="result-entry-date">' + dateStr + '</div>' +
-                                    '<div class="result-entry-label" style="color:' + (r.risk_level==='low'?'#16a34a':r.risk_level==='medium'?'#d97706':'#1B4F8A') + '">' + (r.risk_label || 'Result') + '</div>' +
-                                    '<div class="result-entry-detail">Score: <strong>' + (r.score||'—') + '</strong>' + extra + '</div>' +
-                                    '</div>' +
-                                    '<span class="result-risk-badge ' + riskClass + '">' + (r.risk_label || 'Recorded') + '</span>' +
-                                    '</div>';
-                            });
-                            body.innerHTML = html;
-                        });
-                    }
-
-                    function closeResultsModal() {
-                        document.getElementById('results-modal-overlay').classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-
-                    document.addEventListener('keydown', function(e) {
-                        if (e.key !== 'Escape') return;
-                        closeCalcPopup();
-                        closeResultsModal();
-                    });
-                    </script>
                 <?php break;
 
                 case 'reading-list': ?>
@@ -1230,27 +809,6 @@ get_header();
         }, function(res) {
             if(res.success) location.reload(); else alert('Error: ' + res.data);
         });
-    }
-
-    // Records/Posters
-    function triggerPosterUpload() { document.getElementById('poster-uploader').click(); }
-    function uploadPoster(input) {
-        if (input.files[0]) {
-            var fd = new FormData();
-            fd.append('action', 'mlws_upload_poster');
-            fd.append('poster', input.files[0]);
-            fd.append('nonce', '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>');
-            jQuery.ajax({
-                url: '<?php echo admin_url('admin-ajax.php'); ?>', type: 'POST', data: fd, processData: false, contentType: false,
-                success: function(res) { if(res.success) location.reload(); else alert(res.data); }
-            });
-        }
-    }
-    function deletePoster(id) {
-         if(!confirm('Delete this file?')) return;
-         jQuery.post('<?php echo admin_url('admin-ajax.php'); ?>', {
-            action: 'mlws_delete_poster', id: id, nonce: '<?php echo wp_create_nonce("mlws_dashboard_nonce"); ?>'
-        }, function(res) { if(res.success) location.reload(); else alert(res.data); });
     }
 
     // Bookmarks

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mlws_register_submit'
         $errors[] = 'Passwords do not match.';
     }
     
-    if (empty($role) || !in_array($role, array('subscriber', 'practitioner'))) {
+    if (empty($role) || !in_array($role, array('member', 'subscriber', 'practitioner'))) {
         $errors[] = 'Please select a valid role.';
     }
     
@@ -72,9 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mlws_register_submit'
                 'display_name' => $first_name . ' ' . $last_name,
             ));
             
-            // Set role
+            // Set role (normalise legacy 'subscriber' selection to 'member')
+            $role = ( $role === 'subscriber' ) ? 'member' : $role;
             $user = new WP_User($user_id);
             $user->set_role($role);
+            update_user_meta($user_id, '_mlws_user_type', $role);
+            update_user_meta($user_id, '_mlws_dashboard_role', $role);
             
             // Log user in
             wp_set_current_user($user_id);
@@ -322,15 +325,15 @@ get_header();
                     <label class="role-option">
                         <input type="radio" name="user_role" value="practitioner" <?php echo (isset($_GET['role']) && $_GET['role'] === 'practitioner') ? 'checked' : ''; ?> required>
                         <div class="role-card">
-                            <div class="role-icon">🩺</div>
-                            <div class="role-name">Practitioner</div>
+                            <div class="role-icon">✍️</div>
+                            <div class="role-name">Writer</div>
                         </div>
                     </label>
                     <label class="role-option">
-                        <input type="radio" name="user_role" value="subscriber" <?php echo (isset($_GET['role']) && $_GET['role'] === 'patient') || !isset($_GET['role']) ? 'checked' : ''; ?> required>
+                        <input type="radio" name="user_role" value="member" <?php echo (isset($_GET['role']) && in_array($_GET['role'], array('member','patient'), true)) || !isset($_GET['role']) ? 'checked' : ''; ?> required>
                         <div class="role-card">
-                            <div class="role-icon">❤️</div>
-                            <div class="role-name">Patient</div>
+                            <div class="role-icon">📰</div>
+                            <div class="role-name">Reader</div>
                         </div>
                     </label>
                 </div>

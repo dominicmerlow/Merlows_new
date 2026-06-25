@@ -207,31 +207,32 @@ function mlws_dashboard_switch_role() {
         wp_send_json_error( 'Not logged in' );
     }
 
-    $role = isset( $_POST['role'] ) ? sanitize_text_field( $_POST['role'] ) : 'subscriber';
+    $role = isset( $_POST['role'] ) ? sanitize_text_field( $_POST['role'] ) : 'member';
     $user_id = get_current_user_id();
     $user = new WP_User( $user_id );
 
-    // Store preferred view and primary differentiator in meta
-    // Map 'patient' UI role to 'subscriber' WP role
-    $wp_role = ( $role === 'practitioner' ) ? 'practitioner' : 'subscriber';
-    
+    // Two key roles: 'practitioner' (Writer) and 'member' (Reader). Anything that
+    // isn't an explicit Writer switch resolves to the Member (reader) role.
+    $is_writer = ( $role === 'practitioner' );
+    $role = $is_writer ? 'practitioner' : 'member';
+
     update_user_meta( $user_id, '_mlws_dashboard_role', $role );
     update_user_meta( $user_id, '_mlws_user_type', $role );
 
-    // Correctly add/remove the practitioner role
-    if ( $role === 'practitioner' ) {
+    // Correctly add/remove the practitioner (Writer) role
+    if ( $is_writer ) {
         if ( ! in_array( 'practitioner', $user->roles ) ) {
             $user->add_role( 'practitioner' );
         }
-        // Optionally remove subscriber if they have both, but keeping both is safer for permissions
+        // Keep member/subscriber too — harmless for read permissions.
     } else {
-        // Switching to patient (subscriber)
+        // Switching to Member (reader): drop the Writer role.
         if ( in_array( 'practitioner', $user->roles ) ) {
             $user->remove_role( 'practitioner' );
         }
-        // Ensure they still have subscriber role
-        if ( ! in_array( 'subscriber', $user->roles ) ) {
-            $user->add_role( 'subscriber' );
+        // Ensure they have the member role.
+        if ( ! in_array( 'member', $user->roles ) ) {
+            $user->add_role( 'member' );
         }
     }
 
