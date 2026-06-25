@@ -240,3 +240,222 @@ to **11 functions** using the existing automation/social catch-all pattern.
 - **Divergence from Vance**: Vance keeps these as individual files (it's on Pro). When syncing
   a content/auth/review endpoint from Vance, port the logic into the matching
   `lib/<area>/handlers/` module and (if new) add a dispatch branch + shim, not a new `api/` file.
+
+---
+
+## Op-Eds → BlitzSpirit category + per-row xlsx upload (2026-06-23)
+
+Replaced the **Op-Eds** category with **BlitzSpirit** (British WWII "Blitz Spirit":
+resilience / "Keep Calm and Carry On"), and wired one-article-**per-row** spreadsheet
+upload. Driven by a 366-day content-calendar deliverable in `../blitzspirit-calendar/`.
+
+### Key decision — the internal category id stays `op-eds`
+BlitzSpirit **reuses the `op-eds` slot in place** rather than introducing a new id.
+Everything user-facing + behavioural is now BlitzSpirit, but the internal id is still
+`'op-eds'` so the coupled features keep working untouched: the tone panel
+(`showTone === 'op-eds'`), `multiDocs['op-eds']`, `opedDocList`, `llm-cat-op-eds`,
+`saveCategoryModel('op-eds')`, `data-cat="op-eds"`, and the `CATS` array. **When you
+pick "BlitzSpirit" in the UI, the category id sent to the API is `op-eds`.**
+
+### Changed (label/prompt/slug/image only — no id churn)
+- `lib/automation/handlers/run.js`: `DEFAULT_PROMPT_OP_EDS`→`DEFAULT_PROMPT_BLITZSPIRIT`
+  (new prompt); `CATEGORY_SUBTITLE_PREFIX['op-eds']` `'Op-Ed'`→`'BlitzSpirit'`;
+  `ANY_CATEGORY_PREFIX_RE` adds `BlitzSpirit`; new `CATEGORY_HERO_PROMPTS` map (WWII
+  home-front hero template) now **passed into `generateImageFast(title,'16:9',template)`**
+  — previously automation hero images always used the clinical default.
+- `lib/core/handlers/publish.js`: `CATEGORY_SLUG_MAP['op-eds']` → `'blitzspirit'` (WP slug).
+- `index.html`: `CATEGORIES` label, `getCatDefaultPrompt` (+`DEFAULT_PROMPT_BLITZSPIRIT`),
+  the panel-meta + `BUILTIN_CATEGORY_META` (desc/slug `blitzspirit`/icon/titleParts
+  `['Blitz','Spirit']`), `CATEGORY_SVG_ICONS` (shield), category-bar buttons, LLM
+  picker, both `<option>`s, the subtitle label map, and the section-header regex.
+- `lib/email-content.js`: `SECTION_HEADER_RE` adds `BlitzSpirit`.
+
+### Per-row xlsx upload (one article per row)
+The rule-wizard upload previously dumped the whole sheet to `rawText` → **one** article.
+Now `index.html` parses the first sheet into `rows:[{title,subCategory,tags,notes}]`:
+- new `wizHandleUploadFile(el,srcId)` (detects Title / Sub-Category / Tags / Notes headers,
+  Title defaults to col A); the file `<input>` `onchange` calls it; status shows row count.
+- **Both** the edit-time source map (~L6890) **and** the save serializer (~L7278) now
+  preserve upload fields (`rows`, `originalFilename`, `urls`, `titlesOnly`,
+  `consumedTitles`) — they used to copy only `filename`/`rawText`, which would have
+  dropped `rows` on save. Backend `rule-schema.js` `buildRule` + `fetch.js`
+  `fetchUploadUrls` already consumed this shape. `rawText` is left empty for sheets so
+  fetch.js takes the per-row path. `.csv` is parsed the same way; other files still rawText.
+
+### BlitzSpirit sub-categories — fixed set (2026-06-24)
+The 5 WP sub-categories under the `blitzspirit` parent are registered canonically as
+`CATEGORY_SUBCATEGORIES`, **mirrored in `lib/core/handlers/publish.js` AND `index.html`**
+(keep in sync, like `CATEGORY_SLUG_MAP`↔`BUILTIN_CATEGORY_META`): `original-spirit`
+(Original Spirit), `explainers` (Explainers), `blitz-echoes` (Blitz Echoes),
+`spirit-today` (Spirit Today), `carry-on` (Carry On).
+- A category present in `CATEGORY_SUBCATEGORIES` is a **fixed set**. `publish.js`
+  `normalizeSubCategory(category, raw)` matches the incoming `subCategory` by **slug**
+  (so the spreadsheet cell may hold the slug, the display name, or a case/spacing
+  variant), and an UNRECOGNIZED value is **not auto-created** — it posts under the
+  parent only + logs a warning (`autoCreate: !fixedSet`). Categories absent from the
+  map keep the legacy free-text resolve-or-create behaviour (diplomacy unchanged).
+- `index.html` `wizHandleUploadFile` validates each uploaded row's Sub-Category against
+  the rule category's set: recognized values are normalized to the canonical display
+  name; unrecognized ones surface a ⚠ warning in the upload source status
+  (`src.subCatWarnings`, transient — not serialized into the rule).
+- Assignment is via the per-row xlsx **Sub-Category column only** (no dropdown). Flow
+  unchanged downstream: content `subCategory` → `publish.js`
+  `resolveOrCreateWpCategory(name, { parentSlug: 'blitzspirit' })`.
+
+### Verification / deploy
+- All edited JS + both `index.html` inline script blocks pass `node --check`.
+- Test suite unchanged: same 5 pre-existing failures with and without these changes
+  (verified via `git stash` A/B) — `buildWpPayload maps known category`, `fetchSources`
+  (3 cases), `any rejection sets rejected`. No regressions introduced.
+- **Deployed to prod 2026-06-24.** Deploy requires a **Dominic Merlows owner token** —
+  the user's `slapharma` account is not on the `dominicmerlows-projects` team, so
+  `npx vercel login` lands on the wrong team ("Not authorized"). Use:
+  `cd content-generator && VERCEL_TOKEN=<owner-token> npx vercel --prod --yes`
+  (verify scope first with `VERCEL_TOKEN=… npx vercel whoami` → `dominicmerlow`).
+
+---
+
+## Abraham Accords — weekly calendar + 1,200-word target + sub-categories (2026-06-24)
+
+Companion to the BlitzSpirit calendar; deliverable in `../abraham-accords-calendar/`
+(53 weekly rows, Mon 23 Jun 2025 → 22 Jun 2026, topics anchored to real Accords news of
+the period). No new category — uses the built-in `abraham-accords`. Code changes:
+- **Word target 600–900 → ~1,200 (1,100–1,300)** with section counts scaled proportionally —
+  **journalistic tone/structure/output-format unchanged** (only the numbers). Mirrored in
+  `run.js` `DEFAULT_PROMPT_ABRAHAM_ACCORDS` (automation path) and `index.html`
+  `DEFAULT_PROMPT_INFOGRAPHICS` (manual generator; that const name is a legacy mislabel for
+  the Abraham Accords prompt).
+- **3 sub-categories registered as a fixed set** in `CATEGORY_SUBCATEGORIES` (both
+  `publish.js` and `index.html`): `normalisation-diplomacy`, `regional-security`,
+  `trade-connectivity`. The spreadsheet's display names slugify to these, so upload
+  validation recognises them and they won't auto-create junk child terms.
+- Verified: `node --check` on all touched JS + both index.html inline blocks; test suite
+  unchanged (same 5 pre-existing failures, no regressions). **Needs redeploy** to take effect.
+
+## Hero-image prompt resolution — honour the KV category prompt (2026-06-24)
+
+Bug: automation hero images for **Abraham Accords** came out clinical/medical with the
+wrong colours. Cause: `run.js` `heroPromptFor()` only handled `op-eds` (BlitzSpirit) and
+returned `undefined` for every other category → `media.js` fell back to its still-clinical
+`DEFAULT_HERO_PROMPT_TEMPLATE`. The per-category prompt operators edit in the UI lives in
+KV (`vance:hero-prompts` → `categories[catId]`) and was **never read by the runner**. Fix:
+- `heroPromptFor(category, subCategory, heroCfg)` precedence: **(1)** KV per-category
+  override (the UI "category hero prompt") → **(2)** composed BlitzSpirit / Abraham Accords
+  template (shared template + per-sub-category scene) → **(3)** code `CATEGORY_HERO_PROMPTS`
+  → **(4)** KV global default → **(5)** undefined (media.js clinical default).
+- Added `ABRAHAM_HERO_TEMPLATE` + `ABRAHAM_SUBCATEGORY_SCENES` (Middle East diplomacy,
+  navy/desert-gold/teal palette, explicitly NO medical/molecular imagery) keyed by the 3
+  Abraham sub-category slugs.
+- `run.js` now loads `vance:hero-prompts` once per rule run (next to `getWordLimit`) and
+  passes it into `heroPromptFor`.
+- **media.js medical defaults neutralised site-wide (2026-06-24):** `DEFAULT_HERO_PROMPT_TEMPLATE`
+  (hero fallback), `craftImagePrompt` + the `generateImage` hard suffix (social-kit two-step
+  path used by `lib/social/handlers/generate.js`), and the `startVideoGeneration` style/fallback
+  are now generic **news/editorial** (deep navy + slate with a restrained teal #0D9488 accent),
+  with the old "no molecules → use clinical/anatomical imagery" rule flipped to a **"STRICTLY no
+  clinical/medical/molecular imagery"** guard. Categories without their own template
+  (breaking-news, diplomatic-analysis, cyrus-accord, regional-voices) therefore no longer default
+  to a medical look. Right-weighted (60/40) composition + no-text rules preserved throughout.
+- Verified `node --check` + test suite (same 5 baseline failures). **Deployed to prod 2026-06-24.**
+
+## Cyrus Accord — weekly calendar + 1,200-word target + sub-categories + hero (2026-06-24)
+
+Same treatment as Abraham Accords, for the built-in `cyrus-accord` category (Merlows'
+Israel–Iran reconciliation theme). Deliverable in `../cyrus-accord-calendar/` (53 weekly
+rows, Mon 23 Jun 2025 → 22 Jun 2026; topics anchored to real Israel–Iran events of the
+period — Twelve-Day War, IAEA/snapback collapse, the 2026 Iran war, the 17 Jun 2026 Islamabad
+MoU — with the "Cyrus Accord" framed editorially as Reza Pahlavi's *aspirational vision*,
+not a signed accord, sceptics included for balance). Code changes:
+- **Word target 1,000–1,400 → ~1,200 (1,100–1,300)** in `run.js` `DEFAULT_PROMPT_CYRUS_ACCORD`
+  and `index.html` `DEFAULT_PROMPT_WHITE_PAPERS` (the Cyrus prompt mirror; legacy const name).
+  Policy-analyst structure/tone unchanged — only the total-length figure.
+- **3 sub-categories registered** in `CATEGORY_SUBCATEGORIES` (publish.js + index.html):
+  `the-cyrus-vision`, `persian-jewish-heritage`, `conflict-diplomacy` (display names slugify
+  to these).
+- **Bespoke hero template** (`CYRUS_HERO_TEMPLATE` + `CYRUS_SUBCATEGORY_SCENES` + `cyrus-accord`
+  branch in `heroPromptFor`): Persian-blue/turquoise + gold heritage palette, explicitly
+  non-medical, with per-sub-category scenes (vision / heritage / conflict).
+- Verified `node --check` (run.js, publish.js, both index.html blocks) + test suite (same 5
+  baseline failures, no regressions). **Deployed to prod 2026-06-24.**
+
+## FUNCTION_INVOCATION_TIMEOUT on /api/automation/run — time guards (2026-06-24)
+
+`GET /api/automation/run` (cron) returned 504 / FUNCTION_INVOCATION_TIMEOUT: the `waitUntil`
+background run still counts against the Hobby **60s `maxDuration`**, and the LLM + hero-image
+fetches had **no timeouts** — a slow free-tier model (worsened by the new ~1,200-word prompts)
+ran until the function was killed. Guards added:
+- `run.js` `callLLM`: 28s `AbortController` timeout. `generateArticle` loop: per-model
+  try/catch (abort → next model) + a **32s overall LLM budget** that stops starting new attempts.
+- `media.js` `callImageModel`: 16s `AbortController` timeout. `generateWithFallback`: **20s
+  overall image budget**.
+- `run.js` `executeRun`: a `runStartedAt` wall-clock; the hero step is **skipped (→ category
+  fallback URL) once >34s of the run has elapsed** (covers source-fetch + LLM + store), so the
+  worst case stays well under 60s.
+- Trade-off: under sustained slowness a hero may be skipped and the rule's
+  `heroImageFallbackUrl` used instead. Internal `/api/content` + `/api/publish` round-trips are
+  not timeout-guarded (left as-is; fast in practice). Verified `node --check` + test suite (same
+  5 baseline failures). **Deployed to prod 2026-06-24.**
+
+## Hero images failed: invalid OpenRouter image model slugs (2026-06-24)
+
+ROOT CAUSE of "hero images failing to generate" (NOT the timeout): all four configured image
+models were **missing from OpenRouter** — `google/gemini-3.1-flash-image-preview-20260226`
+(bogus `-20260226` suffix; real slug has none), `sourceful/riverflow-v2-fast`,
+`sourceful/riverflow-v2-pro`, `bytedance-seed/seedream-4.5`. Every image call 404'd, so heroes
+ALWAYS failed (the 404 is instant — unrelated to the function timeout work above). Verified
+against the public OpenRouter catalogue (`GET /api/v1/models`, filter `output_modalities`
+includes `image`). Fixed to valid image-output slugs in **all** spots:
+- `lib/social/media.js`: `IMAGE_MODELS` + `DEFAULT_IMAGE_MODEL` →
+  `google/gemini-3.1-flash-image` (primary), `google/gemini-2.5-flash-image`,
+  `google/gemini-3-pro-image`; the linkedin/facebook `generateImage` preference → `gemini-3-pro-image`.
+  Also restored the image fetch timeout 14s→20s (14s was too aggressive) and `IMG_BUDGET_MS`→22s.
+- `lib/social/handlers/image.js`: `ALLOWED_MODELS` + default.
+- `index.html`: `heroAiModelSelect` `<option>`s + the manual hero-gen default.
+- `lib/usage.js`: pricing-map keys (cost-tracking only).
+- **To add/replace image models, only use slugs present in the OpenRouter catalogue with
+  `image` in `output_modalities`.** Overridable at runtime via `SOCIAL_IMAGE_MODELS` env.
+  Verified `node --check` (all touched JS + both index.html blocks) + test suite (same 5
+  baseline failures). **Deployed to prod 2026-06-24.**
+
+---
+
+## Moved to Pro + concurrency/time-budget retune (2026-06-25)
+
+The `merlows` Vercel project was transferred from the `dominicmerlows` personal account
+(Hobby) into the **SLA Pharma team (`slapharma`, Pro)** — now at vercel.com/slapharma/merlows.
+Pro lifts `maxDuration` from 60s → **300s**, so the time budgets that were squeezed under
+the Hobby 60s ceiling were retuned. **The 12-function Hobby cap no longer applies** (Pro is
+1000+), so the catch-all consolidation is no longer forced — but it's harmless, so it stays.
+
+Two coupled symptoms this fixed: (a) only ever **1 article per run**, and (b) the **hero
+image frequently not generating** (category fallback used instead). Both were Hobby-60s
+workarounds:
+- `vercel.json`: all four catch-all `maxDuration` 60 → **300**.
+- `run.js` `executeRun`: introduced budget constants near `runStartedAt` —
+  `FN_BUDGET_MS` (290000, env `RUN_FN_BUDGET_MS`), `NEW_ARTICLE_CUTOFF` (= budget − 55s),
+  `HERO_RESERVE_MS` (30000). The per-rule guard and a **new per-item wall-clock guard**
+  (top of the `for (const item of toProcess)` loop) use `NEW_ARTICLE_CUTOFF` to stop
+  *starting* new articles near the ceiling and defer the rest to the next tick — this is
+  the real timeout protection, so the article count can be high safely.
+- `run.js` article cap: removed the hard `max = 1` when hero enabled. Now
+  `max = min(rule.generation.maxArticlesPerRun, MAX_ARTICLES_PER_RUN_CAP)` (cap default
+  **8**, env `MAX_ARTICLES_PER_RUN_CAP`). **To raise throughput, set the rule's
+  `maxArticlesPerRun` in the wizard** (and/or the env cap).
+- `run.js` hero guard: `heroBudgetLeft = 30000 - elapsed` → `msLeft = FN_BUDGET_MS - elapsed;
+  if (heroEnabled && msLeft > HERO_RESERVE_MS)`. On 300s this rarely trips → heroes generate.
+- `run.js` LLM timeouts: `callLLM` abort 28s → **60s** (env `LLM_CALL_TIMEOUT_MS`);
+  `LLM_BUDGET_MS` 32s → **90s** (env `LLM_BUDGET_MS`).
+- `media.js`: image abort 20s → **30s** (env `IMAGE_CALL_TIMEOUT_MS`); `IMG_BUDGET_MS`
+  22s → **45s** (env `IMG_BUDGET_MS`).
+- Note: the external cron-job.org pinger has a ~30s request timeout, but the run is GET-202
+  + `waitUntil` background, so a longer run doesn't time out the pinger.
+- Verified `node --check` (run.js, media.js) + valid `vercel.json` + `node --test`
+  (94 pass / **same 5 pre-existing baseline failures**, run.test.js 7/7). **Deployed to
+  prod 2026-06-25** (dpl_JEBaFYM1mCcnbkBb7cY2tZdYRL9M, aliased merlows.vercel.app) — the
+  deploy succeeding with `maxDuration: 300` confirms the project is on Pro.
+- **Deploy is now under the slapharma Pro team**, NOT dominicmerlows. `.vercel/project.json`
+  `orgId` was updated to `team_wfWc4ILtXQU6jPvk2dgfnApj` (the old dominicmerlows org id was
+  stale after transfer). Deploy with a **slapharma-scoped** token:
+  `cd content-generator && VERCEL_TOKEN=<slapharma-token> npx vercel --prod --yes`
+  (`npx vercel whoami --token …` → `slapharma`). The old "Dominic Merlows owner token"
+  instruction elsewhere in this doc is obsolete.

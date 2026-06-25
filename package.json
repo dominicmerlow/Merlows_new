@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@vercel/functions": "^3.7.3",
     "@vercel/kv": "^1.0.0",
     "cron-parser": "^5.5.0",
     "jose": "^5.2.0",

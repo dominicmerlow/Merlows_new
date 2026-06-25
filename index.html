@@ -193,6 +193,17 @@ body.sidebar-collapsed #syncStatus { width: auto; justify-content: center; }
   flex: 1;
 }
 .topbar-title span { color: var(--sla-teal); }
+.hard-refresh-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: 0; cursor: pointer;
+  font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  background: rgba(13,148,136,0.08); color: var(--sla-orange);
+  border: 1px solid rgba(13,148,136,0.35); transition: all 0.15s;
+}
+.hard-refresh-btn:hover { background: rgba(13,148,136,0.16); border-color: var(--sla-orange); }
+.hard-refresh-btn svg { width: 13px; height: 13px; }
+.hard-refresh-btn.syncing svg { animation: spin 0.8s linear infinite; }
 
 /* ── App main (right of sidebar) ── */
 .app-main {
@@ -412,6 +423,10 @@ body.sidebar-collapsed #syncStatus { width: auto; justify-content: center; }
    CARDS & FORMS
 ══════════════════════════════════════════════════ */
 .app-container { max-width: 1440px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 320px 1fr; gap: 1.25rem; width: 100%; }
+/* Viewing a saved article: hide the generator's left controls panel and let the article reflow full-width.
+   #genLeftPanel carries an inline display:flex, so the hide needs !important to win over it. */
+#view-generator.viewing-article #genLeftPanel { display: none !important; }
+#view-generator.viewing-article .app-container { grid-template-columns: 1fr; }
 .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
 .card-header { background: var(--sla-navy); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; }
 .card-header h2 { color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
@@ -2282,9 +2297,27 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
   </form>
 </div>
 
+<!-- ══════════════════════════════ HERO IMAGE MODAL ══════════════════════════════ -->
+<!-- Replace-hero modal: relocates the live #heroLeftCard picker into #heroModalMount
+     on open (reusing its search / AI-generate / select wiring) and moves it back on close. -->
+<div id="heroModal" onclick="if(event.target===this)closeHeroModal()"
+  style="display:none;position:fixed;inset:0;background:rgba(15,23,34,0.6);z-index:9700;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;">
+  <div style="background:var(--card,#fff);width:min(620px,100%);box-shadow:0 12px 48px rgba(0,0,0,0.3);">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <h3 style="margin:0;font-family:'Montserrat',sans-serif;font-size:0.95rem;font-weight:800;color:var(--sla-navy);">Replace hero image</h3>
+      <button class="btn btn-outline btn-xs" onclick="closeHeroModal()">Cancel</button>
+    </div>
+    <div id="heroModalMount" style="padding:16px 18px;"></div>
+    <div style="padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-outline btn-sm" onclick="closeHeroModal()">Cancel</button>
+      <button class="btn btn-orange btn-sm" onclick="saveHeroFromModal()">Use this image</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════════════════════════ SIDEBAR NAV ══════════════════════════════ -->
 <aside class="sidebar">
-  <a class="sidebar-logo" href="#">
+  <a class="sidebar-logo" href="#" onclick="switchTab('dashboard');return false;" title="Home">
     <img class="sidebar-logo-img" id="brandLogoImg" src="logo.png" alt="Merlows"/>
     <div class="sidebar-logo-text">
       <div class="sidebar-logo-name" id="brandName">Merlows<span> ■</span></div>
@@ -2395,6 +2428,11 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <button type="button" id="hardRefreshBtn" class="hard-refresh-btn" onclick="hardRefresh()"
+      title="Hard refresh — clears the browser cache and reloads. Use this after a new deploy or if data looks stale.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      <span id="hardRefreshText">Refresh</span>
+    </button>
     <div id="statusBadge" class="status-badge idle">
       <div class="status-dot"></div>
       <span id="statusText">Ready</span>
@@ -2444,7 +2482,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <div class="app-container">
 
   <!-- LEFT PANEL -->
-  <div style="display:flex;flex-direction:column;gap:1.25rem;">
+  <div id="genLeftPanel" style="display:flex;flex-direction:column;gap:1.25rem;">
 
     <!-- Category selector card -->
     <div class="card">
@@ -2455,8 +2493,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <select id="genCategorySelect" onchange="onGenCategoryChange()" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;font-family:'Montserrat',sans-serif;">
           <option value="diplomatic-analysis">Diplomatic Analysis</option>
           <option value="breaking-news">Breaking News</option>
-          <option value="op-eds">Op-Eds</option>
-          <option value="cyrus-accord">Cyrus Accord</option>
+          <option value="op-eds">BlitzSpirit</option>
+          <option value="cyrus-accord">Cyrus Accords</option>
           <option value="abraham-accords">Abraham Accords</option>
           <option value="regional-voices">Regional Voices</option>
         </select>
@@ -2614,8 +2652,9 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <div id="heroAiModelRow" style="display:none;margin-bottom:8px;">
           <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Image Model</label>
           <select id="heroAiModelSelect" style="width:100%;padding:5px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.75rem;font-family:'Montserrat',sans-serif;">
-            <option value="google/gemini-3.1-flash-image-preview-20260226">Gemini 3.1 Flash Image (Nano Banana 2)</option>
-            <option value="sourceful/riverflow-v2-fast">Riverflow v2 Fast</option>
+            <option value="google/gemini-3.1-flash-image">Gemini 3.1 Flash Image</option>
+            <option value="google/gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
+            <option value="google/gemini-3-pro-image">Gemini 3 Pro Image</option>
           </select>
         </div>
         <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:3px;" id="heroLeftHint">Keywords extracted from source (max 6):</div>
@@ -2781,6 +2820,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
   <div class="article-panel">
     <div class="article-toolbar">
       <div class="article-toolbar-left">
+        <button class="btn btn-tb btn-xs" id="articleBackBtn" onclick="goBackFromArticle()" style="display:none;" title="Back to the previous list">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="width:12px;height:12px;"><polyline points="15 18 9 12 15 6"/></svg>
+          <span id="articleBackBtnText">← Back</span>
+        </button>
         <span class="word-count" id="wordCount"></span>
         <span class="model-used-badge" id="modelUsedBadge"></span>
       </div>
@@ -2791,6 +2834,10 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <button class="btn btn-tb btn-xs" id="editArticleBtn" onclick="enterEditMode()" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Edit
+        </button>
+        <button class="btn btn-tb btn-xs" id="replaceHeroBtn" onclick="openHeroModal()" style="display:none;" title="Replace the hero image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Image
         </button>
       </div>
 
@@ -3196,8 +3243,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <div class="cat-bar" id="catBar-archive">
   <button class="cat-bar-btn active" data-cat="diplomatic-analysis" onclick="switchCategory('diplomatic-analysis')">Diplomatic Analysis</button>
   <button class="cat-bar-btn" data-cat="breaking-news" onclick="switchCategory('breaking-news')">Breaking News</button>
-  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
-  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accord</button>
+  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">BlitzSpirit</button>
+  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accords</button>
   <button class="cat-bar-btn" data-cat="abraham-accords" onclick="switchCategory('abraham-accords')">Abraham Accords</button>
   <button class="cat-bar-btn" data-cat="regional-voices" onclick="switchCategory('regional-voices')">Regional Voices</button>
   <span id="customCatBtns-archive"></span>
@@ -3311,8 +3358,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 <div class="cat-bar" id="catBar-reports">
   <button class="cat-bar-btn active" data-cat="diplomatic-analysis" onclick="switchCategory('diplomatic-analysis')">Diplomatic Analysis</button>
   <button class="cat-bar-btn" data-cat="breaking-news" onclick="switchCategory('breaking-news')">Breaking News</button>
-  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">Op-Eds</button>
-  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accord</button>
+  <button class="cat-bar-btn" data-cat="op-eds" onclick="switchCategory('op-eds')">BlitzSpirit</button>
+  <button class="cat-bar-btn" data-cat="cyrus-accord" onclick="switchCategory('cyrus-accord')">Cyrus Accords</button>
   <button class="cat-bar-btn" data-cat="abraham-accords" onclick="switchCategory('abraham-accords')">Abraham Accords</button>
 </div>
   <div class="reports-container">
@@ -3693,8 +3740,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           </div>
           <!-- Op-Eds -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">Op-Eds</div>
-            <select id="llm-cat-op-eds" class="llm-quick-select" onchange="saveCategoryModel('op-eds',this.value);showToast('✓ Saved for Op-Eds')">
+            <div class="llm-cat-name">BlitzSpirit</div>
+            <select id="llm-cat-op-eds" class="llm-quick-select" onchange="saveCategoryModel('op-eds',this.value);showToast('✓ Saved for BlitzSpirit')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -3722,8 +3769,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           </div>
           <!-- Cyrus Accord -->
           <div class="llm-cat-card">
-            <div class="llm-cat-name">Cyrus Accord</div>
-            <select id="llm-cat-cyrus-accord" class="llm-quick-select" onchange="saveCategoryModel('cyrus-accord',this.value);showToast('✓ Saved for Cyrus Accord')">
+            <div class="llm-cat-name">Cyrus Accords</div>
+            <select id="llm-cat-cyrus-accord" class="llm-quick-select" onchange="saveCategoryModel('cyrus-accord',this.value);showToast('✓ Saved for Cyrus Accords')">
               <option value="">— Use global default —</option>
               <optgroup label="── Recommended (Free) ──">
                 <option value="arcee-ai/trinity-large-preview:free">Arcee AI: Trinity Large ★</option>
@@ -4228,7 +4275,13 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <button type="button" data-wiz-freq="weekly" onclick="wizSetFreq('weekly')" style="padding:6px 14px;border:1px solid var(--sla-navy);background:var(--sla-navy);color:#fff;font-size:0.82rem;cursor:pointer;">Weekly</button>
             <button type="button" data-wiz-freq="biweekly" onclick="wizSetFreq('biweekly')" style="padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.82rem;cursor:pointer;">Bi-weekly</button>
             <button type="button" data-wiz-freq="monthly" onclick="wizSetFreq('monthly')" style="padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.82rem;cursor:pointer;">Monthly</button>
+            <button type="button" data-wiz-freq="minutes" onclick="wizSetFreq('minutes')" style="padding:6px 14px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.82rem;cursor:pointer;">Minutes</button>
           </div>
+        </div>
+        <div style="margin-bottom:14px;display:none;" id="wizMinutesRow">
+          <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Run every (minutes)</label>
+          <input id="wizMinutes" type="number" value="5" min="1" max="59" onchange="wizUpdateCronPreview()" style="width:120px;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;line-height:1.5;">Generates 1 article per run. Requires an external scheduler pinging <code>/api/automation/run</code> this often — Vercel Hobby crons only fire once a day.</div>
         </div>
         <div style="margin-bottom:14px;" id="wizDayRow">
           <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:8px;color:var(--text);">Day</label>
@@ -4242,7 +4295,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <button type="button" data-wiz-dow="0" onclick="wizSetDay(0)" style="padding:5px 10px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Sun</button>
           </div>
         </div>
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:14px;" id="wizTimeRow">
           <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Time (GMT)</label>
           <select id="wizHour" onchange="wizUpdateCronPreview()" style="padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
             <option value="0">00:00 GMT</option><option value="1">01:00 GMT</option><option value="2">02:00 GMT</option><option value="3">03:00 GMT</option><option value="4">04:00 GMT</option><option value="5">05:00 GMT</option><option value="6">06:00 GMT</option><option value="7" selected>07:00 GMT</option><option value="8">08:00 GMT</option><option value="9">09:00 GMT</option><option value="10">10:00 GMT</option><option value="11">11:00 GMT</option><option value="12">12:00 GMT</option><option value="13">13:00 GMT</option><option value="14">14:00 GMT</option><option value="15">15:00 GMT</option><option value="16">16:00 GMT</option><option value="17">17:00 GMT</option><option value="18">18:00 GMT</option><option value="19">19:00 GMT</option><option value="20">20:00 GMT</option><option value="21">21:00 GMT</option><option value="22">22:00 GMT</option><option value="23">23:00 GMT</option>
@@ -4517,7 +4570,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
             <select id="bibIndication" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
               <option value="Middle East Diplomacy">Middle East Diplomacy</option>
               <option value="Abraham Accords">Abraham Accords</option>
-              <option value="Cyrus Accord">Cyrus Accord</option>
+              <option value="Cyrus Accords">Cyrus Accords</option>
               <option value="Israeli-Iranian Relations">Israeli-Iranian Relations</option>
               <option value="Regional Security">Regional Security</option>
               <option value="Other">Other</option>
@@ -4836,8 +4889,8 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <select id="schedCategory">
           <option value="diplomatic-analysis">Diplomatic Analysis</option>
           <option value="breaking-news">Breaking News</option>
-          <option value="op-eds">Opinion &amp; Commentary</option>
-          <option value="cyrus-accord">Cyrus Accord &amp; Guides</option>
+          <option value="op-eds">BlitzSpirit</option>
+          <option value="cyrus-accord">Cyrus Accords &amp; Guides</option>
           <option value="regional-voices">Regional Voices</option>
         </select>
       </div>
@@ -4880,10 +4933,80 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 // ═══════════════════════════════════════════════════════════
 const contentApi = {
   async getAll()      { try { const r = await fetch('/api/content'); if (!r.ok) return []; return r.json(); } catch { return []; } },
-  async create(data)  { try { const r = await fetch('/api/content', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) }); return r.ok ? r.json() : null; } catch { return null; } },
-  async update(id, d) { try { const r = await fetch(`/api/content/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d) }); return r.ok ? r.json() : null; } catch { return null; } },
-  async remove(id)    { try { await fetch(`/api/content/${id}`, { method:'DELETE' }); } catch {} },
+  async create(data)  { try { const r = await fetch('/api/content', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) }); const out = r.ok ? await r.json() : null; if (out) contentCache.refresh(); return out; } catch { return null; } },
+  async update(id, d) { try { const r = await fetch(`/api/content/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d) }); const out = r.ok ? await r.json() : null; if (out) contentCache.refresh(); return out; } catch { return null; } },
+  async remove(id)    { try { await fetch(`/api/content/${id}`, { method:'DELETE' }); contentCache.refresh(); } catch {} },
 };
+
+// ═══════════════════════════════════════════════════════════
+//  SHARED SLIM CONTENT CACHE — stale-while-revalidate.
+//  The slow list tabs (Pipeline, Notifications) only need metadata
+//  (id/title/status/category/updatedAt), not the byte-heavy article
+//  `body`. The backend strips `body` on `?slim=1`, shrinking the
+//  ~tens-of-MB /api/content payload to a few KB. We paint instantly
+//  from the cached list, kick a deduped background refresh, and
+//  repaint only if the data actually changed (signature differs).
+//  `getAll()` above is left untouched (still returns full records)
+//  so callers that read article bodies keep working; only the hot
+//  list paths opt into the slim cache.
+// ═══════════════════════════════════════════════════════════
+const contentCache = {
+  list: null, sig: '', fetchedAt: 0, inflight: null,
+  _sig(items) { return items.length + ':' + items.reduce((m, i) => (i.updatedAt > m ? i.updatedAt : m), ''); },
+  async refresh() {
+    if (this.inflight) return this.inflight;            // dedupe concurrent callers
+    this.inflight = fetch('/api/content?slim=1', { credentials: 'same-origin' })
+      .then(r => r.ok ? r.json() : (this.list || []))
+      .then(items => {
+        this.list = Array.isArray(items) ? items : [];
+        this.sig = this._sig(this.list);
+        this.fetchedAt = Date.now();
+        return this.list;
+      })
+      .catch(() => this.list || [])
+      .finally(() => { this.inflight = null; });
+    return this.inflight;
+  },
+};
+
+// Render now from cache (instant paint), then again after the background
+// refresh resolves IF the data changed (or the cache was cold).
+async function withContent(render) {
+  if (contentCache.list) render(contentCache.list, false);
+  const before = contentCache.sig;
+  const fresh = await contentCache.refresh();
+  if (!before || contentCache.sig !== before) render(fresh, true);
+}
+
+// Render fn for the currently-visible content tab, so the live-sync poll can
+// repaint it in place when another user's change lands. Cleared by switchTab.
+let activeContentRender = null;
+const CONTENT_POLL_MS = 15000;
+let _contentPollTimer = null;
+
+async function _contentPollTick() {
+  if (document.visibilityState === 'visible' && activeContentRender) {
+    const render = activeContentRender;
+    const before = contentCache.sig;
+    await contentCache.refresh();
+    if (activeContentRender === render && contentCache.sig !== before) render(contentCache.list);
+  }
+  _contentPollTimer = setTimeout(_contentPollTick, CONTENT_POLL_MS);
+}
+
+function initContentPolling() {
+  if (_contentPollTimer) return; // already running
+  _contentPollTimer = setTimeout(_contentPollTick, CONTENT_POLL_MS);
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && activeContentRender) {
+      const render = activeContentRender;
+      const before = contentCache.sig;
+      contentCache.refresh().then(function() {
+        if (activeContentRender === render && contentCache.sig !== before) render(contentCache.list);
+      });
+    }
+  });
+}
 
 // ═══════════════════════════════════════════════════════════
 //  CONSTANTS
@@ -4928,8 +5051,8 @@ const GH_TOKEN  = String.fromCharCode(103,104,112,95,67,80,48,74,118,97,76,67,11
 const CATEGORIES = [
   { id: 'diplomatic-analysis', label: 'Diplomatic Analysis' },
   { id: 'breaking-news',    label: 'Breaking News' },
-  { id: 'op-eds',           label: 'Op-Eds' },
-  { id: 'cyrus-accord',     label: 'Cyrus Accord' },
+  { id: 'op-eds',           label: 'BlitzSpirit' },
+  { id: 'cyrus-accord',     label: 'Cyrus Accords' },
   { id: 'abraham-accords',     label: 'Abraham Accords' },
   { id: 'regional-voices',       label: 'Regional Voices' }
 ];
@@ -4974,23 +5097,23 @@ OUTPUT FORMAT
 Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + one-line summary. All other headers use "## ".
 Total length: 350–500 words. UK British English. Do not reproduce verbatim text from the source.`;
 
-const DEFAULT_PROMPT_OP_EDS = `You are a commentator writing an opinion piece for Merlows — a news portal dedicated to fostering understanding between Israel and Iran and supporting the vision of the Cyrus Accord. Write for an engaged, globally-minded readership.
+const DEFAULT_PROMPT_BLITZSPIRIT = `You are a writer for BlitzSpirit — an independent British publication exploring the "Blitz Spirit": the history, the myth, and the modern meaning of resilience, solidarity and "Keep Calm and Carry On" under pressure. Turn the source material (a title/topic plus any notes) into an engaging, well-researched article for a general British readership.
 
 TONE & STYLE
-Persuasive, thoughtful, constructive. Grounded in facts and history. Hopeful but not naive. You may argue a position — but acknowledge counterarguments fairly. Accessible to a general reader.
+Warm, vivid and accessible. Grounded in real history and honest about it — celebrate genuine courage and community, but acknowledge the myths, hardships and debates rather than flattening them into nostalgia. Respectful, never jingoistic. Active voice. Write for a curious general reader, not an academic.
 
 STRUCTURE
-1. Title (5–10 words).
-2. Subtitle starting with "Op-Ed:": the core argument in one line (5–10 words).
-3. Introduction (100–150 words): the issue and why it matters now.
-4. The Case (200–250 words): evidence and reasoning for your position.
-5. The Counterargument (100–150 words): steelman the other side, then rebut it.
-6. The Path Forward (150–200 words): constructive, realistic recommendation.
-7. Closing (75–100 words): call to thought or action.
+1. Title (~6–12 words) — evocative and specific, no category label.
+2. Subtitle (~8–14 words) — the hook or core idea.
+3. Opening (80–120 words) — a vivid scene, question or fact that draws the reader in.
+4. Body (450–650 words) in 2–4 short "## " sections suited to the topic — e.g. what happened, the human story, myth vs reality, the legacy.
+5. Why It Matters Today (100–150 words) — connect to contemporary resilience, community or current affairs where it is honest to do so.
+6. Close (60–100 words) — a reflective takeaway or, where fitting, a gentle call to action (remember, visit, volunteer, prepare, check on a neighbour).
+7. Sources / further reading line where the source material supports it.
 
 OUTPUT FORMAT
 Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
-Total length: 700–900 words. UK British English.`;
+Total length: 700–1,000 words. UK British English. Do not invent specific quotations, casualty figures or personal testimony the source does not support — for a "personal story" topic with no sourced testimony, write clearly-framed representative social history, not fabricated eyewitness quotes.`;
 
 const DEFAULT_PROMPT_WHITE_PAPERS = `You are a policy analyst writing for Merlows — an independent news portal covering the Cyrus Accord and its role in reshaping Israel-Iran relations. Produce a comprehensive, authoritative report for merlows.com.
 
@@ -4998,7 +5121,7 @@ TONE & STYLE
 Formal, authoritative, policy-focused. Correct diplomatic and geopolitical terminology. Continuous prose with section headers. Balanced treatment of all parties. Active voice where natural.
 
 STRUCTURE
-1. Title Block: full title, subtitle, prepared for Merlows, date.
+1. Title and subtitle only — do NOT include a dateline, publication date, byline, author, or "prepared for" line anywhere in the output (the publish date is set automatically).
 2. Executive Summary (100–150 words).
 3. Background (150–200 words): the Cyrus Accord origins and objectives.
 4. Current Status (200–300 words): where things stand as of the source material.
@@ -5009,7 +5132,7 @@ STRUCTURE
 
 OUTPUT FORMAT
 Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
-Total length: 1,000–1,400 words. UK British English. Add note: This report is for informational purposes. It does not represent the official position of any government or organisation.`;
+Total length: approximately 1,200 words (1,100–1,300). UK British English. Add note: This report is for informational purposes. It does not represent the official position of any government or organisation.`;
 
 const DEFAULT_PROMPT_INFOGRAPHICS = `You are a diplomatic correspondent writing for Merlows — an independent news portal covering Middle East normalisation and the Abraham Accords. Write a balanced, context-rich report for merlows.com.
 
@@ -5018,16 +5141,16 @@ Balanced, context-rich, factual. Journalistic but with depth. Acknowledge comple
 
 STRUCTURE
 1. Headline (~10 words): clear, informative.
-2. Context (75–100 words): what the Abraham Accords are and where they stand today.
-3. Progress Made (150–200 words): concrete developments covered by the source.
-4. Challenges (150–200 words): honest assessment of obstacles and tensions.
-5. Israel-Iran Dimension (100–150 words): how this relates to the Merlows focus area.
-6. Path Forward (100–125 words): what comes next realistically.
+2. Context (120–160 words): what the Abraham Accords are and where they stand today.
+3. Progress Made (250–320 words): concrete developments covered by the source.
+4. Challenges (250–320 words): honest assessment of obstacles and tensions.
+5. Israel-Iran Dimension (160–220 words): how this relates to the Merlows focus area.
+6. Path Forward (160–200 words): what comes next realistically.
 7. Source attribution.
 
 OUTPUT FORMAT
 Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + one-line framing. All other headers use "## ".
-Total length: 600–900 words. UK British English.`;
+Total length: approximately 1,200 words (1,100–1,300). UK British English.`;
 
 const DEFAULT_PROMPT_IBD_LIVING = `You are a writer for Merlows — an independent news portal focused on Israel-Iran relations and regional peace. Write a human-interest piece that brings the regional perspective to life for an international readership.
 
@@ -5052,7 +5175,7 @@ function getCatDefaultPrompt(catId) {
   var MAP = {
     'diplomatic-analysis': DEFAULT_PROMPT,
     'breaking-news':    DEFAULT_PROMPT_INDUSTRY_NEWS,
-    'op-eds':           DEFAULT_PROMPT_OP_EDS,
+    'op-eds':           DEFAULT_PROMPT_BLITZSPIRIT,
     'cyrus-accord':     DEFAULT_PROMPT_WHITE_PAPERS,
     'abraham-accords':     DEFAULT_PROMPT_INFOGRAPHICS,
     'regional-voices':       DEFAULT_PROMPT_IBD_LIVING,
@@ -5495,9 +5618,9 @@ const CATEGORY_META = {
     titleParts: ['Industry ', 'News']
   },
   'op-eds': {
-    desc: 'Evidence-informed opinion pieces and expert perspectives on healthcare topics',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
-    titleParts: ['Op-', 'Eds']
+    desc: 'The history, myth and modern meaning of the British Blitz Spirit — resilience, solidarity and carrying on under pressure',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    titleParts: ['Blitz', 'Spirit']
   },
   'cyrus-accord': {
     desc: 'In-depth analytical reports on clinical, regulatory and commercial healthcare topics',
@@ -6030,6 +6153,9 @@ function switchTab(tab) {
     if (v) v.classList.toggle('active', t === tab);
     if (b) b.classList.toggle('active', t === tab);
   });
+  // Stop live-sync repaint by default; the loader for a content list tab
+  // (pipeline / notifications) re-sets activeContentRender below.
+  activeContentRender = null;
   if (tab === 'archive')           renderArchive();
   if (tab === 'reports')           renderReports();
   if (tab === 'pipeline')          loadPipeline();
@@ -6050,10 +6176,21 @@ function switchTab(tab) {
   const tt = document.getElementById('topbarTitle');
   if (tt) tt.textContent = TAB_TITLES[tab] || tab;
 
-  // Hide category header on non-content tabs
+  // Hide category header on non-content tabs — and on Generate + Library per request.
   const catHdr = document.getElementById('categoryHeader');
-  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts','llm','automation','automation-new','automation-rules','automation-inbox','bibliography','bibliography-new','categories','trash'].includes(tab);
+  const hideCat = ['dashboard','calendar','pipeline','monitoring','distribution','reports','settings','prompts','llm','automation','automation-new','automation-rules','automation-inbox','bibliography','bibliography-new','categories','trash','generator','archive'].includes(tab);
   if (catHdr) catHdr.style.display = hideCat ? 'none' : '';
+
+  // Reset the generator's "viewing saved article" full-width mode on every tab
+  // switch; the view-article functions re-apply it after calling switchTab('generator').
+  document.getElementById('view-generator')?.classList.remove('viewing-article');
+  // Hide the in-article Back / Replace-image controls on every tab switch.
+  // viewArticleFromPipeline re-shows them AFTER its own switchTab('generator'),
+  // so an article view keeps them while a plain Generate visit clears them.
+  var _bk = document.getElementById('articleBackBtn');
+  if (_bk) _bk.style.display = 'none';
+  var _rh = document.getElementById('replaceHeroBtn');
+  if (_rh) _rh.style.display = 'none';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -6543,20 +6680,33 @@ function renderSourcesFilesBody(data, append) {
   if (!groups.length && !append) { body.innerHTML = '<div style="color:var(--text-muted);">No sources configured for this rule.</div>'; return; }
   var html = '';
   groups.forEach(function(g, gi) {
-    var typeLabel = g.source.type === 'google_drive' ? 'Google Drive' : (g.source.type === 'dropbox' ? 'Dropbox' : g.source.type);
+    var t = g.source.type;
+    var typeLabel = t === 'google_drive' ? 'Google Drive' : (t === 'dropbox' ? 'Dropbox' : (t === 'upload' ? 'Upload' : t));
+    // Upload sources have no folder — label them by the original filename instead.
+    var subLabel = t === 'upload'
+      ? (g.source.originalFilename || g.source.filename || 'Spreadsheet')
+      : (g.source.folderPath || g.source.folderId || '');
+    var countLabel = (!g.error && g.files.length) ? (' &middot; ' + g.files.length + ' item' + (g.files.length === 1 ? '' : 's')) : '';
     html += '<div style="margin-bottom:18px;">' +
-      '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:6px;">' + escHtml(typeLabel) + ' &middot; ' + escHtml(g.source.folderPath || g.source.folderId || '') + '</div>';
+      '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:6px;">' + escHtml(typeLabel) + (subLabel ? ' &middot; ' + escHtml(subLabel) : '') + countLabel + '</div>';
     if (g.error) {
       html += '<div style="color:#ef4444;font-size:0.72rem;padding:8px;border:1px solid #fecaca;background:#fef2f2;">' + escHtml(g.error) + '</div>';
     } else if (!g.files.length) {
-      html += '<div style="color:var(--text-muted);font-size:0.72rem;padding:6px 0;">No files in this folder.</div>';
+      html += '<div style="color:var(--text-muted);font-size:0.72rem;padding:6px 0;">' + (t === 'upload' ? 'No rows parsed from this upload — re-open the rule and re-upload the spreadsheet.' : 'No files in this folder.') + '</div>';
     } else {
       g.files.forEach(function(f, fi) {
         var safeName = escHtml(f.name);
+        // Surface per-row spreadsheet metadata (multi-column xlsx upload rows).
+        var metaBits = [];
+        if (f.subCategory) metaBits.push('Sub-cat: ' + escHtml(f.subCategory));
+        if (f.tags)        metaBits.push('Tags: ' + escHtml(f.tags));
+        var metaLine = metaBits.length ? '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + metaBits.join(' &middot; ') + '</div>' : '';
+        var procChip = f.processed ? '<span style="background:rgba(94,234,212,0.15);color:#0a7a62;padding:1px 6px;font-size:0.58rem;font-weight:700;flex-shrink:0;">Done</span>' : '';
         html += '<label style="display:flex;align-items:center;gap:10px;padding:6px 4px;border-bottom:1px solid var(--border);cursor:pointer;">' +
           '<input type="checkbox" class="src-file-cb" data-name="' + safeName + '" onchange="updateSourceFilesSelCount()" />' +
-          '<span style="flex:1;font-size:0.74rem;color:var(--text);">' + safeName + '</span>' +
-          (f.url ? '<a href="' + escHtml(f.url) + '" target="_blank" style="font-size:0.65rem;color:var(--sla-navy);text-decoration:underline;">open ↗</a>' : '') +
+          '<span style="flex:1;min-width:0;font-size:0.74rem;color:var(--text);"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + safeName + '</div>' + metaLine + '</span>' +
+          procChip +
+          (f.url ? '<a href="' + escHtml(f.url) + '" target="_blank" style="font-size:0.65rem;color:var(--sla-navy);text-decoration:underline;flex-shrink:0;">open ↗</a>' : '') +
         '</label>';
       });
     }
@@ -6832,6 +6982,8 @@ async function openRuleWizard(editId) {
   setTimeout(function() {
     var hourEl = document.getElementById('wizHour');
     if (hourEl) hourEl.value = '7';
+    var minEl = document.getElementById('wizMinutes');
+    if (minEl) minEl.value = '5';
     wizSetFreq('weekly');
     wizSetDay(1);
     wizUpdateCronPreview();
@@ -6887,6 +7039,11 @@ async function openRuleWizard(editId) {
             urlColumn: s.urlColumn || '', notesColumn: s.notesColumn || '', wpLinkColumn: s.wpLinkColumn || '',
             // Bibliography-specific fields
             bibId: s.bibId || '', mode: s.mode || 'daily',
+            // Upload-specific fields (inline rawText + multi-column per-row rows)
+            filename: s.filename || '', rawText: s.rawText || '',
+            rows: Array.isArray(s.rows) ? s.rows : [], originalFilename: s.originalFilename || '',
+            urls: Array.isArray(s.urls) ? s.urls : [], titlesOnly: Array.isArray(s.titlesOnly) ? s.titlesOnly : [],
+            consumedTitles: Array.isArray(s.consumedTitles) ? s.consumedTitles : [],
           };
         });
         // Pre-load bibliography cache if any source is bibliography
@@ -6907,6 +7064,8 @@ async function openRuleWizard(editId) {
           _wizScheduleDow  = parsed.dow;
           var hourEl = document.getElementById('wizHour');
           if (hourEl) hourEl.value = String(parsed.hour);
+          var minEl = document.getElementById('wizMinutes');
+          if (minEl && parsed.minutes) minEl.value = String(parsed.minutes);
           wizSetFreq(_wizScheduleFreq);
           wizSetDay(_wizScheduleDow);
           wizUpdateCronPreview();
@@ -7044,6 +7203,88 @@ function wizRemoveSource(id) {
   _wizRenderSources();
 }
 
+// Parse an uploaded spreadsheet (.xls/.xlsx/.csv) into per-row article items so
+// each row becomes one article (Title required; optional Sub-Category / Tags /
+// Notes columns). Non-spreadsheet files fall back to a single rawText document.
+function wizHandleUploadFile(el, srcId) {
+  var src = _wizSources.find(function(x){ return x.id === srcId; });
+  if (!src || !el.files[0]) return;
+  var file = el.files[0];
+  src.filename = file.name;
+  var nm = file.name.toLowerCase();
+  var isSheet = nm.endsWith('.xls') || nm.endsWith('.xlsx') || nm.endsWith('.csv');
+  if (isSheet) {
+    var r = new FileReader();
+    r.onload = function(e) {
+      try {
+        var wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+        var ws = wb.Sheets[wb.SheetNames[0]];
+        var aoa = XLSX.utils.sheet_to_json(ws, { header: 1, blankrows: false, defval: '' });
+        var hdr = (aoa[0] || []).map(function(h){ return String(h == null ? '' : h).toLowerCase().trim(); });
+        function col(names){ for (var i = 0; i < hdr.length; i++){ if (names.indexOf(hdr[i]) >= 0) return i; } return -1; }
+        var ti = col(['title','article title','headline','topic']);
+        var si = col(['sub-category','subcategory','sub category','subcat','sub-cat']);
+        var gi = col(['tags','tag','keywords']);
+        var ni = col(['notes','note','comments','comment']);
+        var di = col(['date','pub date','publish date','publishing date','published','published date','date published','publication date','published on','post date','article date']);
+        if (ti < 0) ti = 0;
+        var rows = [];
+        for (var i = 1; i < aoa.length; i++) {
+          var row = aoa[i] || [];
+          var title = String(row[ti] == null ? '' : row[ti]).trim();
+          if (!title) continue;
+          var dateVal = '';
+          if (di >= 0) {
+            var dcell = row[di];
+            // xlsx may give a JS Date object for date-formatted cells; otherwise a string.
+            if (dcell instanceof Date && !isNaN(dcell)) dateVal = dcell.toISOString().slice(0, 10);
+            else dateVal = String(dcell == null ? '' : dcell).trim();
+          }
+          rows.push({
+            title: title,
+            subCategory: si >= 0 ? String(row[si] == null ? '' : row[si]).trim() : '',
+            tags: gi >= 0 ? String(row[gi] == null ? '' : row[gi]).trim() : '',
+            notes: ni >= 0 ? String(row[ni] == null ? '' : row[ni]).trim() : '',
+            date: dateVal
+          });
+        }
+        src.rows = rows;
+        src.rawText = '';
+        src.originalFilename = file.name;
+        src.urls = [];
+        src.titlesOnly = [];
+        src.consumedTitles = [];
+        // Validate per-row Sub-Category against the rule category's fixed set
+        // (e.g. BlitzSpirit). Recognized values are normalized to the canonical
+        // display name; unrecognized ones are collected so the source status can
+        // warn before the rule runs (an unknown value posts under the parent only).
+        var wizCatEl = document.getElementById('wizCategory');
+        var catId = wizCatEl ? wizCatEl.value : '';
+        var unknownSubCats = [];
+        if (CATEGORY_SUBCATEGORIES[catId]) {
+          rows.forEach(function(row) {
+            if (!row.subCategory) return;
+            var canon = normalizeSubCategory(catId, row.subCategory);
+            if (canon) row.subCategory = canon.name;
+            else if (unknownSubCats.indexOf(row.subCategory) < 0) unknownSubCats.push(row.subCategory);
+          });
+        }
+        src.subCatWarnings = unknownSubCats;
+      } catch (err) {
+        src.rows = [];
+        src.rawText = '';
+        alert('Could not parse spreadsheet "' + file.name + '": ' + err.message);
+      }
+      _wizRenderSources();
+    };
+    r.readAsArrayBuffer(file);
+  } else {
+    var r2 = new FileReader();
+    r2.onload = function(e) { src.rawText = e.target.result; src.rows = []; _wizRenderSources(); };
+    r2.readAsText(file);
+  }
+}
+
 function _wizRenderSources() {
   var list = document.getElementById('wizSourcesList');
   var html = _wizSources.map(function(s) {
@@ -7053,10 +7294,13 @@ function _wizRenderSources() {
     if (s.type === 'github') {
       inputHtml = '<input placeholder="owner/repo" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.repo=el.value;})(this)" value="' + escHtml(s.repo||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;"> <input placeholder="path (optional)" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.path=el.value;})(this)" value="' + escHtml(s.path||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">';
     } else if (s.type === 'upload') {
-      var uploadStatus = s.rawText ? ('<span style="font-size:0.75rem;color:var(--success,#16a34a);">' + escHtml(s.filename || 'File loaded') + ' (' + Math.round(s.rawText.length / 1024) + ' KB)</span>') : '<span style="font-size:0.75rem;color:var(--text-muted);">No file selected</span>';
+      var uploadStatus = (Array.isArray(s.rows) && s.rows.length) ? ('<span style="font-size:0.75rem;color:var(--success,#16a34a);">' + escHtml(s.filename || 'Spreadsheet') + ' — ' + s.rows.length + ' rows (1 article per row)</span>') : (s.rawText ? ('<span style="font-size:0.75rem;color:var(--success,#16a34a);">' + escHtml(s.filename || 'File loaded') + ' (' + Math.round(s.rawText.length / 1024) + ' KB)</span>') : '<span style="font-size:0.75rem;color:var(--text-muted);">No file selected</span>');
+      var subCatWarn = (Array.isArray(s.subCatWarnings) && s.subCatWarnings.length)
+        ? '<span style="font-size:0.72rem;color:#dc2626;">⚠ Unrecognized sub-category: ' + escHtml(s.subCatWarnings.join(', ')) + ' — posts under the parent only. Allowed: ' + escHtml((CATEGORY_SUBCATEGORIES[(document.getElementById('wizCategory')||{}).value] || []).map(function(x){ return x.name; }).join(', ')) + '</span>'
+        : '';
       inputHtml = '<div style="display:flex;flex-direction:column;gap:4px;flex:1;">'
-        + '<input type="file" accept=".txt,.html,.md,.csv,.xls,.xlsx" onchange="(function(el){var srcId=\'' + s.id + '\';var src=_wizSources.find(function(x){return x.id===srcId;});if(!src||!el.files[0])return;src.filename=el.files[0].name;var file=el.files[0];var nm=file.name.toLowerCase();if(nm.endsWith(\'.xls\')||nm.endsWith(\'.xlsx\')){var r=new FileReader();r.onload=function(e){var wb=XLSX.read(e.target.result,{type:\'array\'});var lines=[];wb.SheetNames.forEach(function(sn){var ws=wb.Sheets[sn];var csv=XLSX.utils.sheet_to_csv(ws);if(csv.trim())lines.push(\'Sheet: \'+sn+\'\\n\'+csv);});src.rawText=lines.join(\'\\n\\n\');_wizRenderSources();};r.readAsArrayBuffer(file);}else{var r=new FileReader();r.onload=function(e){src.rawText=e.target.result;_wizRenderSources();};r.readAsText(file);}})(this)" style="flex:1;padding:4px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">'
-        + uploadStatus + '</div>';
+        + '<input type="file" accept=".txt,.html,.md,.csv,.xls,.xlsx" onchange="wizHandleUploadFile(this,\'' + s.id + '\')" style="flex:1;padding:4px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;">'
+        + uploadStatus + subCatWarn + '</div>';
     } else if (s.type === 'google_drive') {
       inputHtml = '<input placeholder="Google Drive folder ID (from URL)" oninput="(function(el){var src=_wizSources.find(function(x){return x.id===\'' + s.id + '\'});if(src)src.folderId=el.value.trim();})(this)" value="' + escHtml(s.folderId||'') + '" style="flex:1;padding:6px 10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.82rem;" title="Paste the folder ID from the Drive URL: drive.google.com/drive/folders/FOLDER_ID">';
     } else if (s.type === 'dropbox') {
@@ -7130,8 +7374,13 @@ function wizSetFreq(freq) {
     btn.style.color        = active ? '#fff' : 'var(--text-muted)';
     btn.style.borderColor  = active ? 'var(--sla-navy)' : 'var(--border)';
   });
+  var isMin = freq === 'minutes';
   var dayRow = document.getElementById('wizDayRow');
   if (dayRow) dayRow.style.display = freq === 'weekly' ? '' : 'none';
+  var minRow = document.getElementById('wizMinutesRow');
+  if (minRow) minRow.style.display = isMin ? '' : 'none';
+  var timeRow = document.getElementById('wizTimeRow');
+  if (timeRow) timeRow.style.display = isMin ? 'none' : '';
   wizUpdateCronPreview();
 }
 
@@ -7152,8 +7401,17 @@ function wizUpdateCronPreview() {
   if (previewEl) previewEl.textContent = _wizScheduleLabel(hour);
 }
 
+// Read + clamp the "run every N minutes" interval input (1–59).
+function _wizMinutesVal() {
+  var v = parseInt((document.getElementById('wizMinutes') || {}).value || '5', 10);
+  if (!v || v < 1) v = 1;
+  if (v > 59) v = 59;
+  return v;
+}
+
 function _wizBuildCron(hour) {
   switch (_wizScheduleFreq) {
+    case 'minutes':  return '*/' + _wizMinutesVal() + ' * * * *';
     case 'daily':    return '0 ' + hour + ' * * *';
     case 'weekly':   return '0 ' + hour + ' * * ' + _wizScheduleDow;
     case 'biweekly': return '0 ' + hour + ' 1,15 * *';
@@ -7166,6 +7424,7 @@ function _wizScheduleLabel(hour) {
   var h = String(hour).padStart(2, '0') + ':00 GMT';
   var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   switch (_wizScheduleFreq) {
+    case 'minutes':  { var mN = _wizMinutesVal(); return 'Every ' + mN + ' minute' + (mN === 1 ? '' : 's') + ' (requires external scheduler)'; }
     case 'daily':    return 'Every day at ' + h;
     case 'weekly':   return 'Every ' + days[_wizScheduleDow] + ' at ' + h;
     case 'biweekly': return '1st and 15th of each month at ' + h;
@@ -7177,10 +7436,17 @@ function _wizScheduleLabel(hour) {
 // Parse a cron expression back into frequency/dow/hour for the schedule UI.
 // Handles the four standard patterns; anything else defaults to weekly Mon 07:00.
 function _wizParseCron(cron) {
-  var result = { freq: 'weekly', dow: 1, hour: 7 };
+  var result = { freq: 'weekly', dow: 1, hour: 7, minutes: 5 };
   if (!cron) return result;
   var parts = cron.trim().split(/\s+/);
   if (parts.length < 5) return result;
+  // Every-N-minutes pattern: "*/N * * * *"
+  var minMatch = /^\*\/(\d+)$/.exec(parts[0]);
+  if (minMatch && parts[1] === '*' && parts[2] === '*' && parts[3] === '*' && parts[4] === '*') {
+    result.freq = 'minutes';
+    result.minutes = parseInt(minMatch[1], 10) || 5;
+    return result;
+  }
   result.hour = parseInt(parts[1]) || 7;
   var dom = parts[2], dow = parts[4];
   if (dom === '1,15') {
@@ -7275,7 +7541,7 @@ async function _wizSubmit() {
   var payload = {
     name: document.getElementById('wizName').value.trim(),
     category: document.getElementById('wizCategory').value,
-    sources: _wizSources.map(function(s) { var o = {type:s.type}; if(s.url)o.url=s.url; if(s.repo)o.repo=s.repo; if(s.path)o.path=s.path; if(s.branch)o.branch=s.branch; if(s.folderId)o.folderId=s.folderId; if(s.folderPath!==undefined)o.folderPath=s.folderPath; if(s.type==='gmail'){if(s.from!==undefined)o.from=s.from;if(s.subjectContains!==undefined)o.subjectContains=s.subjectContains;if(s.labelIds)o.labelIds=s.labelIds;if(s.maxResults)o.maxResults=s.maxResults;} if(s.type==='google_sheets'){if(s.sheetId)o.sheetId=s.sheetId;if(s.sheetName)o.sheetName=s.sheetName;if(s.urlColumn)o.urlColumn=s.urlColumn;if(s.notesColumn)o.notesColumn=s.notesColumn;if(s.wpLinkColumn)o.wpLinkColumn=s.wpLinkColumn;} if(s.type==='bibliography'){if(s.bibId)o.bibId=s.bibId;if(s.mode)o.mode=s.mode;} if(s.type==='upload'){if(s.filename)o.filename=s.filename;if(s.rawText)o.rawText=s.rawText;} return o; }),
+    sources: _wizSources.map(function(s) { var o = {type:s.type}; if(s.url)o.url=s.url; if(s.repo)o.repo=s.repo; if(s.path)o.path=s.path; if(s.branch)o.branch=s.branch; if(s.folderId)o.folderId=s.folderId; if(s.folderPath!==undefined)o.folderPath=s.folderPath; if(s.type==='gmail'){if(s.from!==undefined)o.from=s.from;if(s.subjectContains!==undefined)o.subjectContains=s.subjectContains;if(s.labelIds)o.labelIds=s.labelIds;if(s.maxResults)o.maxResults=s.maxResults;} if(s.type==='google_sheets'){if(s.sheetId)o.sheetId=s.sheetId;if(s.sheetName)o.sheetName=s.sheetName;if(s.urlColumn)o.urlColumn=s.urlColumn;if(s.notesColumn)o.notesColumn=s.notesColumn;if(s.wpLinkColumn)o.wpLinkColumn=s.wpLinkColumn;} if(s.type==='bibliography'){if(s.bibId)o.bibId=s.bibId;if(s.mode)o.mode=s.mode;} if(s.type==='upload'){if(s.filename)o.filename=s.filename;if(s.originalFilename)o.originalFilename=s.originalFilename;if(Array.isArray(s.rows)&&s.rows.length){o.rows=s.rows;}else if(s.rawText){o.rawText=s.rawText;}if(Array.isArray(s.urls)&&s.urls.length)o.urls=s.urls;if(Array.isArray(s.titlesOnly)&&s.titlesOnly.length)o.titlesOnly=s.titlesOnly;if(Array.isArray(s.consumedTitles)&&s.consumedTitles.length)o.consumedTitles=s.consumedTitles;} return o; }),
     trigger: {
       type: trigType,
       cron: trigType === 'schedule' ? cronExpr : null,
@@ -7842,7 +8108,10 @@ var __inboxContentCache = {};
 async function loadAutoInbox() {
   var list = document.getElementById('autoInboxList');
   if (!list) return;
-  list.innerHTML = '<p style="color:var(--text-muted);padding:16px;">Loading...</p>';
+  // Keep this tab live: a content change (e.g. a new automation article)
+  // triggers the poll, which re-runs loadAutoInbox to refresh job titles.
+  activeContentRender = loadAutoInbox;
+  if (!list.innerHTML) list.innerHTML = '<p style="color:var(--text-muted);padding:16px;">Loading...</p>';
   try {
     var jobs = await apiFetch('/api/automation/jobs');
     if (!jobs || !jobs.length) {
@@ -7850,9 +8119,10 @@ async function loadAutoInbox() {
       return;
     }
     jobs.sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
-    // Resolve titles from /api/content (one batched fetch) instead of N round-trips
+    // Resolve titles from the slim content cache (tiny ?slim=1 payload, deduped)
+    // instead of pulling every full article body just to read titles.
     try {
-      var allContent = await contentApi.getAll();
+      var allContent = await contentCache.refresh();
       var byId = {};
       (allContent || []).forEach(function(c) { byId[c.id] = c; });
       jobs.forEach(function(j) { if (byId[j.contentId]) __inboxContentCache[j.id] = byId[j.contentId]; });
@@ -9156,6 +9426,7 @@ function loadArchiveItem(id) {
   loadReviewRequestCard();
 
   switchTab('generator');
+  document.getElementById('view-generator')?.classList.add('viewing-article');
 }
 
 async function approveCurrentArticle() {
@@ -9174,6 +9445,13 @@ async function approveCurrentArticle() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ jobId: job.id, action: 'approve', channel: 'manual' }),
       });
+      const data = await res.json().catch(function() { return {}; });
+      if (res.ok && data.status === 'pending_review') {
+        // mode 'all' — vote recorded, but more reviewers are still required.
+        showToast(`Approval recorded (${data.approvals}/${data.threshold} — awaiting others)`);
+        if (btn) { btn.disabled = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><polyline points="20 6 9 17 4 12"/></svg> Approve &amp; Publish'; }
+        return;
+      }
       if (res.ok) {
         showToast('Article approved and published to WordPress');
         if (btn) btn.style.display = 'none';
@@ -9210,10 +9488,24 @@ async function approveCurrentArticle() {
   }
 }
 
+// Tab the user was on when they opened an article, so the in-article Back
+// button can return there. Null/'generator' → no meaningful back target.
+let __articleOrigin = null;
+
 async function viewArticleFromPipeline(itemId) {
+  // Remember where we came from (before switchTab flips to the generator view).
+  const activeBefore = document.querySelector('.tab-view.active');
+  const originTab = activeBefore ? activeBefore.id.replace('view-', '') : null;
+  if (originTab && originTab !== 'generator') __articleOrigin = originTab;
+
   let item = null;
-  try { item = (await contentApi.getAll()).find(function(i) { return i.id === itemId; }); } catch(e) {}
-  if (!item) { item = (publishingQueue || []).find(function(i) { return i.id === itemId; }); }
+  // Fetch the single full record (carries the body) instead of downloading
+  // every article's body via getAll() just to read one.
+  try {
+    const r = await fetch('/api/content/' + itemId, { credentials: 'same-origin' });
+    if (r.ok) item = await r.json();
+  } catch(e) {}
+  if (!item) { item = (contentCache.list || publishingQueue || []).find(function(i) { return i.id === itemId; }); }
   if (!item) return;
 
   // Set category context so prompts / buttons are correct
@@ -9280,10 +9572,12 @@ async function viewArticleFromPipeline(itemId) {
     else { wpBtn.style.display = 'none'; }
   }
 
-  // Show Approve & Publish button only when article is pending review
+  // Show Approve & Publish only while the article is awaiting review (in_review)
+  // or approved-but-not-yet-published. Content items use the 'in_review' status;
+  // 'pending_review' is the automation-JOB vocabulary and never appears here.
   const approveBtn = document.getElementById('approveArticleBtn');
   if (approveBtn) {
-    approveBtn.style.display = (item.status === 'pending_review' || item.status === 'approved') && !item.wpPostUrl ? '' : 'none';
+    approveBtn.style.display = (item.status === 'in_review' || item.status === 'approved') && !item.wpPostUrl ? '' : 'none';
   }
 
   // Link the pipeline record so the Review Requests card can load
@@ -9293,6 +9587,109 @@ async function viewArticleFromPipeline(itemId) {
   if (typeof renderArticleComments === 'function') renderArticleComments(item);
 
   switchTab('generator');
+  document.getElementById('view-generator')?.classList.add('viewing-article');
+  // Reveal the in-article toolbar controls now that an article is loaded.
+  updateArticleBackButton();
+  var replaceBtn = document.getElementById('replaceHeroBtn');
+  if (replaceBtn) replaceBtn.style.display = '';
+}
+
+// Back button in the article toolbar — returns to the list the article was
+// opened from (Pipeline / Notifications / Monitoring …). Hidden when there is
+// no meaningful origin (e.g. a freshly generated article).
+function updateArticleBackButton() {
+  var btn = document.getElementById('articleBackBtn');
+  if (!btn) return;
+  if (__articleOrigin && __articleOrigin !== 'generator') {
+    var label = (typeof TAB_TITLES === 'object' && TAB_TITLES[__articleOrigin]) || 'Back';
+    var labelEl = document.getElementById('articleBackBtnText');
+    if (labelEl) labelEl.textContent = '← ' + label;
+    btn.style.display = '';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function goBackFromArticle() {
+  var dest = __articleOrigin;
+  __articleOrigin = null;
+  document.getElementById('view-generator')?.classList.remove('viewing-article');
+  switchTab(dest && dest !== 'generator' ? dest : 'pipeline');
+}
+
+// ── Hard refresh — clear caches + service workers, then reload cleanly ──
+async function hardRefresh() {
+  var btn = document.getElementById('hardRefreshBtn');
+  var label = document.getElementById('hardRefreshText');
+  if (btn) btn.classList.add('syncing');
+  if (label) label.textContent = 'Refreshing…';
+  try {
+    if ('caches' in window) {
+      var keys = await caches.keys();
+      await Promise.all(keys.map(function(k){ return caches.delete(k); }));
+    }
+    if ('serviceWorker' in navigator) {
+      var regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(function(r){ return r.unregister(); }));
+    }
+  } catch (e) { /* non-fatal — proceed to reload */ }
+  var url = new URL(window.location.href);
+  url.searchParams.delete('_r');
+  window.location.replace(url.pathname + (url.search ? url.search : '') + url.hash);
+}
+
+// ── Replace hero image — relocate the live #heroLeftCard picker into the modal ──
+// The hero picker lives in the Generate sidebar; the article view reuses it by
+// moving the live panel into the modal on open and moving it back on close.
+var _heroHomeParent = null, _heroHomeNext = null;
+function moveHeroCardToModal() {
+  var card = document.getElementById('heroLeftCard');
+  var mount = document.getElementById('heroModalMount');
+  if (!card || !mount) return;
+  if (!_heroHomeParent) { _heroHomeParent = card.parentNode; _heroHomeNext = card.nextSibling; }
+  if (card.parentNode !== mount) mount.appendChild(card);
+}
+function restoreHeroCardHome() {
+  var card = document.getElementById('heroLeftCard');
+  if (card && _heroHomeParent && card.parentNode !== _heroHomeParent) {
+    _heroHomeParent.insertBefore(card, _heroHomeNext);
+  }
+}
+function openHeroModal() {
+  if (!currentContentId) {
+    if (typeof showAlert === 'function') showAlert('generateAlert', 'Open a saved article first.', 'error');
+    return;
+  }
+  moveHeroCardToModal();
+  // Reflect the article's current hero in the panel preview, if any.
+  if (typeof heroImageUrl !== 'undefined' && heroImageUrl && typeof heroLeftSelectImageDirect === 'function') {
+    heroLeftSelectImageDirect(heroImageUrl, 'Current hero image', null);
+  }
+  var m = document.getElementById('heroModal');
+  if (m) m.style.display = 'flex';
+}
+function closeHeroModal() {
+  var m = document.getElementById('heroModal');
+  if (m) m.style.display = 'none';
+  restoreHeroCardHome();
+}
+async function saveHeroFromModal() {
+  if (!currentContentId) { closeHeroModal(); return; }
+  var payload = {
+    heroImageUrl: (typeof heroImageUrl !== 'undefined' ? heroImageUrl : null) || null,
+    heroImageType: (typeof heroImageType !== 'undefined' ? heroImageType : null) || null,
+  };
+  try {
+    var updated = await contentApi.update(currentContentId, payload);
+    if (!updated) throw new Error('save failed');
+    var q = (publishingQueue || []).find(function(i) { return i.id === currentContentId; });
+    if (q) { q.heroImageUrl = payload.heroImageUrl; q.heroImageType = payload.heroImageType; }
+    if (typeof updateArticleHeroPreview === 'function') updateArticleHeroPreview();
+    if (typeof showToast === 'function') showToast('Hero image updated');
+    closeHeroModal();
+  } catch (e) {
+    if (typeof showAlert === 'function') showAlert('generateAlert', 'Hero update failed: ' + (e.message || e), 'error');
+  }
 }
 
 async function deleteArchiveItem(id) {
@@ -9715,7 +10112,7 @@ function copyArticle() {
 function formatArticleHTML(text) {
   const lines = text.split('\n');
   let html = '', inMetaBlock = false, titleDone = false, subtitleDone = false;
-  const sectionHeaders = /^(\*{0,2})(Background|Study Design|Patient Population|Key Findings|Discussion|Safety|Authors|Reference|Clinical Relevance|Conclusions|Disclaimer|Industry|Op-Ed|Cyrus Accord|Abraham Accords)/i;
+  const sectionHeaders = /^(\*{0,2})(Background|Study Design|Patient Population|Key Findings|Discussion|Safety|Authors|Reference|Clinical Relevance|Conclusions|Disclaimer|Industry|BlitzSpirit|Op-Ed|Cyrus Accords?|Abraham Accords)/i;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -9794,7 +10191,7 @@ function extractTitleFromArticle(text) {
   for (const line of lines) {
     let clean = line.replace(/^#+\s*/, '').trim();
     // Strip known category prefixes that legacy or fallback prompts may have injected into the title
-    clean = clean.replace(/^(Diplomatic Analysis|Op Ed|IBD Breaking News|Breaking News|Cyrus Accord|Abraham Accords|Living with IBD)\s*:\s*/i, '').trim();
+    clean = clean.replace(/^(Diplomatic Analysis|Op Ed|IBD Breaking News|Breaking News|Cyrus Accords?|Abraham Accords|Living with IBD)\s*:\s*/i, '').trim();
     if (clean.length > 10 && clean.length < 200) return clean;
   }
   return null;
@@ -9935,12 +10332,97 @@ async function approveDirect(contentId) {
   }
 }
 
+// Approve an in-review article directly from the Pipeline kanban card. Mirrors
+// the view-article "Approve & Publish" path: resolve the article's automation
+// job and approve it via /api/automation/approve, which records the manual vote
+// and — once the rule's reviewer threshold is met — flips the job to approved
+// and publishes to WordPress. For manually-created in_review items that have no
+// automation job, falls back to a direct content-status approve.
+async function approveInReview(contentId) {
+  const btn = event?.target?.closest('.btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Approving…'; }
+  try {
+    const jobsRes = await fetch('/api/automation/jobs');
+    const jobs = jobsRes.ok ? await jobsRes.json() : [];
+    const job = jobs.find(function(j) { return j.contentId === contentId && j.status === 'pending_review'; });
+    if (job) {
+      const res = await fetch('/api/automation/approve', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jobId: job.id, action: 'approve', channel: 'manual' }),
+      });
+      const data = await res.json().catch(function() { return {}; });
+      if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+      // mode 'all' records only a partial vote until every reviewer approves —
+      // report that honestly rather than claiming it published.
+      showToast(data.status === 'pending_review'
+        ? `Approval recorded (${data.approvals}/${data.threshold} — awaiting others)`
+        : 'Article approved and published to WordPress');
+      loadPipeline();
+      return;
+    }
+    // No automation job (manual in_review item) — direct content approve.
+    const r = await fetch(`/api/content/${contentId}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'approved' }),
+    });
+    const data = await r.json().catch(function() { return {}; });
+    if (!r.ok) throw new Error(data.error || r.statusText);
+    showToast('Article approved');
+    loadPipeline();
+  } catch(e) {
+    alert('Approve failed: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Approve'; }
+  }
+}
+
 // ── Prompt-name → WP sub-category routing (frontend mechanism) ───────────────
 // Empty by default for Merlows — diplomacy categories have no sub-category split
 // today, matching the backend run.js which also uses an empty map. When a prompt
 // name should route a category's output into a WP sub-category, add an entry like
 // { 'category-id': { 'prompt name lowercased': 'Sub-Category Display Name' } }.
 const PROMPT_SUBCATEGORY_MAP = {};
+
+// Canonical WP sub-categories per app category. Mirror of CATEGORY_SUBCATEGORIES
+// in lib/core/handlers/publish.js — keep both in sync. A category listed here has
+// a FIXED set: spreadsheet Sub-Category values are matched (by slug) to one of
+// these and an unrecognized value is flagged (it would post under the parent only,
+// never auto-create a junk child term). Categories absent here accept free text.
+const CATEGORY_SUBCATEGORIES = {
+  'op-eds': [ // BlitzSpirit — internal id stays 'op-eds'; WP parent slug 'blitzspirit'
+    { slug: 'original-spirit', name: 'Original Spirit' },
+    { slug: 'explainers',      name: 'Explainers' },
+    { slug: 'blitz-echoes',    name: 'Blitz Echoes' },
+    { slug: 'spirit-today',    name: 'Spirit Today' },
+    { slug: 'carry-on',        name: 'Carry On' },
+  ],
+  'abraham-accords': [ // WP parent slug 'abraham-accords'
+    { slug: 'normalisation-diplomacy', name: 'Normalisation & Diplomacy' },
+    { slug: 'regional-security',       name: 'Regional Security' },
+    { slug: 'trade-connectivity',      name: 'Trade & Connectivity' },
+  ],
+  'cyrus-accord': [ // WP parent slug 'cyrus-accords'
+    { slug: 'the-cyrus-vision',        name: 'The Cyrus Vision' },
+    { slug: 'persian-jewish-heritage', name: 'Persian-Jewish Heritage' },
+    { slug: 'conflict-diplomacy',      name: 'Conflict & Diplomacy' },
+  ],
+};
+
+// Slugify the way WP's sanitize_title() + wp-taxonomy.slugify() do.
+function subCatSlugify(s) {
+  return String(s == null ? '' : s).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Match a free-text sub-category value (slug, display name, or case/spacing
+// variant) to the canonical entry for a category. Returns { slug, name } or null.
+// Categories without a fixed set pass the trimmed value through as a free name.
+function normalizeSubCategory(categoryId, raw) {
+  var value = String(raw == null ? '' : raw).trim();
+  if (!value) return null;
+  var set = CATEGORY_SUBCATEGORIES[categoryId];
+  if (!set) return { slug: subCatSlugify(value), name: value };
+  var key = subCatSlugify(value);
+  return set.find(function(s){ return s.slug === key; }) || null;
+}
 
 // The name of the currently-loaded prompt preset, or '' if none is active.
 // Mirrors the active-prompt badge (#activePromptName, shown via #activePromptBadge).
@@ -10370,8 +10852,8 @@ function downloadHeroImage() {
 const BUILTIN_CATEGORY_META = {
   'diplomatic-analysis': { description: 'Structured, objective summaries of published clinical trials for physician audiences', sources: ['single'], wpCategorySlug: 'diplomatic-analysis', icon: '🔬' },
   'breaking-news':    { description: 'Latest healthcare industry news, trends and developments', sources: ['links', 'paste'], wpCategorySlug: 'healthcare-news', icon: '📰' },
-  'op-eds':           { description: 'Expert opinions and editorials on healthcare topics', sources: ['multiple'], wpCategorySlug: 'expert-opinions', icon: '💡' },
-  'cyrus-accord':     { description: 'Comprehensive research and position papers', sources: ['multiple'], wpCategorySlug: 'cyrus-accord', icon: '📄' },
+  'op-eds':           { description: 'The history, myth and modern meaning of the British Blitz Spirit', sources: ['upload', 'multiple'], wpCategorySlug: 'blitzspirit', icon: '🛡️' },
+  'cyrus-accord':     { description: 'Comprehensive research and position papers', sources: ['multiple'], wpCategorySlug: 'cyrus-accords', icon: '📄' },
   'abraham-accords':     { description: 'Visual content and data summaries', sources: ['single'], wpCategorySlug: 'infographic-gallery', icon: '📊' },
   'regional-voices':       { description: 'Patient-focused content for people living with IBD', sources: ['links', 'paste'], wpCategorySlug: 'living-with-ibd', icon: '🫀' },
 };
@@ -10380,7 +10862,7 @@ const BUILTIN_CATEGORY_META = {
 const CATEGORY_SVG_ICONS = {
   'diplomatic-analysis': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"/><polyline points="9 3 9 9 15 9 15 3"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="12" y2="18"/><path d="M19 3l-2 2 2 2 2-2-2-2z"/></svg>',
   'breaking-news':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>',
-  'op-eds':           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  'op-eds':           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
   'cyrus-accord':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
   'abraham-accords':     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
   'regional-voices':       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
@@ -11260,6 +11742,8 @@ window.addEventListener('DOMContentLoaded', () => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
   bootAuth();
+  // Live-sync polling for content list tabs (Pipeline / Notifications).
+  initContentPolling();
   // Restore sidebar collapsed state
   if (localStorage.getItem('sla_sidebar_collapsed') === '1') {
     document.body.classList.add('sidebar-collapsed');
@@ -12191,7 +12675,7 @@ async function heroLeftGenerate() {
   if (!text) { showHeroLeftStatus('error', 'Generate an article first, or upload a source document.'); return; }
   const btn = document.getElementById('heroLeftActionBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
-  const model = (document.getElementById('heroAiModelSelect') || {}).value || 'google/gemini-3.1-flash-image-preview-20260226';
+  const model = (document.getElementById('heroAiModelSelect') || {}).value || 'google/gemini-3.1-flash-image';
   showHeroLeftStatus('info', 'Generating image with AI… this can take 15–30 seconds');
   const kws = extractKeywordsFromText(text, 6);
   const prompt = kws.join(', ') + ', medical healthcare professional, clinical setting, high quality, Merlows brand navy and teal. Absolutely no text, words, letters, numbers, or typography anywhere in the image.';
@@ -12711,8 +13195,8 @@ const STATUS_COLS = [
 const CATEGORY_LABELS = {
   'diplomatic-analysis': 'Diplomatic Analysis',
   'breaking-news':    'Breaking News',
-  'op-eds':           'Op-Ed',
-  'cyrus-accord':     'Cyrus Accord',
+  'op-eds':           'BlitzSpirit',
+  'cyrus-accord':     'Cyrus Accords',
   'abraham-accords':     'Abraham Accords',
   'regional-voices':       'Regional Voices',
 };
@@ -12760,16 +13244,25 @@ function pipelineNewArticle(catId) {
 
 async function loadPipeline() {
   const board = document.getElementById('pipelineBoard');
-  board.innerHTML = '<div class="pipeline-loading">Loading…</div>';
+  // Only show the loading shimmer on a cold cache; a warm cache paints instantly.
+  if (!contentCache.list) board.innerHTML = '<div class="pipeline-loading">Loading…</div>';
 
   // Restore active layout button
-  const layout = getPipelineLayout();
   ['kanban-h','kanban-v','list'].forEach(function(l) {
     const btn = document.getElementById('layout-btn-' + l);
-    if (btn) btn.classList.toggle('active', l === layout);
+    if (btn) btn.classList.toggle('active', l === getPipelineLayout());
   });
 
-  const items = await contentApi.getAll();
+  // Stale-while-revalidate: paint from the slim cache now, repaint on change.
+  // Register renderPipeline so the live-sync poll keeps the board current.
+  activeContentRender = renderPipeline;
+  withContent(renderPipeline);
+}
+
+function renderPipeline(items) {
+  const board = document.getElementById('pipelineBoard');
+  if (!board) return;
+  const layout = getPipelineLayout();
   const cols = {};
   STATUS_COLS.forEach(c => { cols[c.id] = []; });
   items.forEach(item => {
@@ -12777,8 +13270,8 @@ async function loadPipeline() {
   });
 
   const total = items.length;
-  document.getElementById('pipelineSubtitle').textContent =
-    `${total} article${total !== 1 ? 's' : ''} across all stages`;
+  const sub = document.getElementById('pipelineSubtitle');
+  if (sub) sub.textContent = `${total} article${total !== 1 ? 's' : ''} across all stages`;
 
   if (layout === 'list') {
     board.className = 'pipeline-board layout-list';
@@ -12880,7 +13373,9 @@ function renderListRow(item) {
 function renderKanbanCard(item) {
   const catLabel = CATEGORY_LABELS[item.category] || item.category;
   const dateStr  = item.createdAt ? new Date(item.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'2-digit' }) + ' ' + new Date(item.createdAt).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' }) : '';
-  const wordCount = item.body ? item.body.split(/\s+/).filter(Boolean).length : 0;
+  const wordCount = (typeof item.wordCount === 'number')
+    ? item.wordCount
+    : (item.body ? item.body.split(/\s+/).filter(Boolean).length : 0);
 
   let badge = '';
   let extra = '';
@@ -12895,6 +13390,10 @@ function renderKanbanCard(item) {
       <div class="review-prog-label">${approved} / ${total || '?'} approved</div>
       <div class="review-prog-track"><div class="review-prog-fill" style="width:${pct}%"></div></div>`;
     actions = `
+      <button class="btn btn-approve-pipeline btn-sm" onclick="approveInReview('${item.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
+        Approve &amp; Publish
+      </button>
       <button class="btn btn-outline btn-sm" onclick="sendForReview('${item.id}')">Resend Email</button>`;
   } else if (item.status === 'approved') {
     badge   = `<div class="kbadge kbadge-approved">✓ Approved</div>`;
@@ -14460,6 +14959,7 @@ async function viewTrashedArticle(id, type, catId) {
     document.getElementById('emptyState').style.display = 'none';
     switchTab('generator');
   }
+  document.getElementById('view-generator')?.classList.add('viewing-article');
 }
 
 async function emptyTrash() {
@@ -14581,7 +15081,7 @@ function updateTrashBadge(count) {
             <button type="button" data-wiz-dow="0" onclick="wizSetDay(0)" style="padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.8rem;cursor:pointer;">Sun</button>
           </div>
         </div>
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:14px;" id="wizTimeRow">
           <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Time (GMT)</label>
           <select id="wizHour" onchange="wizUpdateCronPreview()" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:0.875rem;">
             <option value="0">00:00 GMT</option><option value="1">01:00 GMT</option><option value="2">02:00 GMT</option><option value="3">03:00 GMT</option><option value="4">04:00 GMT</option><option value="5">05:00 GMT</option><option value="6">06:00 GMT</option><option value="7" selected>07:00 GMT</option><option value="8">08:00 GMT</option><option value="9">09:00 GMT</option><option value="10">10:00 GMT</option><option value="11">11:00 GMT</option><option value="12">12:00 GMT</option><option value="13">13:00 GMT</option><option value="14">14:00 GMT</option><option value="15">15:00 GMT</option><option value="16">16:00 GMT</option><option value="17">17:00 GMT</option><option value="18">18:00 GMT</option><option value="19">19:00 GMT</option><option value="20">20:00 GMT</option><option value="21">21:00 GMT</option><option value="22">22:00 GMT</option><option value="23">23:00 GMT</option>
