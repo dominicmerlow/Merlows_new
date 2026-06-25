@@ -11,7 +11,7 @@
  *  - llms.txt           (auto-served, no physical file needed)
  *  - Schema.org JSON-LD (NewsArticle on every post)
  *  - AI Crawler control (robots.txt filter)
- *  - Settings dashboard (IBD Research Centre → AI Visibility, 8 tabs)
+ *  - Settings dashboard (Merlows Newsroom → AI Visibility, 8 tabs)
  *  - AI Summaries       (Claude or OpenAI, on-publish / nightly / manual)
  *  - API Analytics      (logged to wp_aiv_api_log)
  *  - Citation Tracking  (logs AI-referral page views to wp_aiv_citations)
@@ -144,6 +144,7 @@ class AIV_System {
             'excluded_categories'     => [],
             'llms_description'        => '',
             'llms_topics'             => '',
+            'llms_max_articles'       => 30,
             'schema_enabled'          => true,
             'crawlers'                => [
                 'GPTBot'          => true,
@@ -345,40 +346,104 @@ class AIV_System {
         $name        = $this->get_setting( 'publication_name', get_bloginfo( 'name' ) );
         $description = $this->get_setting( 'llms_description' ) ?: $this->get_setting( 'publication_description', '' );
         $topics      = $this->get_setting( 'llms_topics' ) ?: $this->get_setting( 'key_topics', '' );
-        $home        = home_url();
-        $api_url     = rest_url( 'theme/v1/posts-markdown' );
-        $date        = current_time( 'Y-m-d' );
 
+        status_header( 200 );
         header( 'Content-Type: text/plain; charset=utf-8' );
         header( 'Cache-Control: public, max-age=3600' );
         header( 'X-Robots-Tag: noindex' );
 
-        $topic_list = array_filter( array_map( 'trim', explode( ',', $topics ) ) );
-        $topic_lines = implode( "\n", array_map( fn( $t ) => "- {$t}", $topic_list ) );
-
-        echo "# {$name}\n\n";
-        echo "> {$description}\n\n";
-        echo "## About\n\n{$description}\n\n";
-        echo "## Topics\n\n{$topic_lines}\n\n";
-        echo "## Key URLs\n\n";
-        echo "- Homepage: {$home}\n";
-        echo "- Articles: {$home}/news/\n";
-        echo "- Markdown API: {$api_url}\n\n";
-        $per_post_url = rest_url( 'theme/v1/post-markdown/{slug}' );
-
-        echo "## API Access\n\n";
-        echo "### Bulk Feed (authenticated)\n";
-        echo "Endpoint: {$api_url}\n";
-        echo "Authentication: X-Markdown-API-Key header (contact publisher for key)\n";
-        echo "Supports ?after=ISO8601 for daily incremental fetches, ?per_page=, ?page=, ?categories=\n\n";
-        echo "### Per-Post Markdown (public)\n";
-        echo "Endpoint: {$per_post_url}\n";
-        echo "No authentication required. Replace {slug} with any post slug.\n";
-        echo "Returns text/markdown directly — suitable for direct LLM ingestion.\n\n";
-        echo "## Freshness\n\n";
-        echo "Last updated: {$date}\n";
+        echo $this->render_llms_document( $name, $description, $topics );
 
         exit;
+    }
+
+    /**
+     * Build the llms.txt document body from resolved settings.
+     * Shared by serve_llms_txt() (live) and build_llms_preview() (admin) so the
+     * two can never drift apart.
+     */
+    private function render_llms_document( string $name, string $description, string $topics ): string {
+        $home         = home_url();
+        $api_url      = rest_url( 'theme/v1/posts-markdown' );
+        $per_post_url = rest_url( 'theme/v1/post-markdown/{slug}' );
+        $date         = current_time( 'Y-m-d' );
+
+        $topic_list  = array_filter( array_map( 'trim', explode( ',', $topics ) ) );
+        $topic_lines = $topic_list
+            ? implode( "\n", array_map( fn( $t ) => "- {$t}", $topic_list ) )
+            : '- (none configured)';
+
+        $out  = "# {$name}\n\n";
+        $out .= "> {$description}\n\n";
+        $out .= "## About\n\n{$description}\n\n";
+        $out .= "## Topics\n\n{$topic_lines}\n\n";
+
+        $articles = $this->get_llms_article_lines();
+        if ( $articles ) {
+            $out .= "## Recent Articles\n\n";
+            $out .= "Each link returns clean Markdown (no authentication) suitable for direct LLM ingestion.\n\n";
+            $out .= "{$articles}\n\n";
+        }
+
+        $out .= "## Key URLs\n\n";
+        $out .= "- Homepage: {$home}\n";
+        $out .= "- Articles: {$home}/news/\n";
+        $out .= "- Bulk Markdown API: {$api_url}\n";
+        $out .= "- Per-Post Markdown: {$per_post_url}\n\n";
+
+        $out .= "## API Access\n\n";
+        $out .= "### Bulk Feed (authenticated)\n";
+        $out .= "Endpoint: {$api_url}\n";
+        $out .= "Authentication: X-Markdown-API-Key header (contact publisher for key)\n";
+        $out .= "Supports ?after=ISO8601 for daily incremental fetches, ?per_page=, ?page=, ?categories=\n\n";
+        $out .= "### Per-Post Markdown (public)\n";
+        $out .= "Endpoint: {$per_post_url}\n";
+        $out .= "No authentication required. Replace {slug} with any post slug.\n";
+        $out .= "Returns text/markdown directly — suitable for direct LLM ingestion.\n\n";
+
+        $out .= "## Freshness\n\n";
+        $out .= "Last updated: {$date}\n";
+
+        return $out;
+    }
+
+    /**
+     * Markdown link lines for the most recent published posts, each pointing at
+     * the public per-post markdown endpoint. Respects configured post types and
+     * excluded categories (same rules as the bulk feed).
+     */
+    private function get_llms_article_lines(): string {
+        $limit = (int) $this->get_setting( 'llms_max_articles', 30 );
+        if ( $limit < 1 ) {
+            return '';
+        }
+
+        $args = [
+            'post_type'        => $this->get_setting( 'post_types', [ 'post' ] ),
+            'post_status'      => 'publish',
+            'posts_per_page'   => $limit,
+            'orderby'          => 'date',
+            'order'            => 'DESC',
+            'no_found_rows'    => true,
+            'ignore_sticky_posts' => true,
+        ];
+
+        $excluded = $this->get_setting( 'excluded_categories', [] );
+        if ( $excluded ) {
+            $args['category__not_in'] = array_map( 'intval', (array) $excluded );
+        }
+
+        $query = new WP_Query( $args );
+        $lines = [];
+        foreach ( $query->posts as $post ) {
+            $md    = rest_url( 'theme/v1/post-markdown/' . $post->post_name );
+            $when  = get_the_date( 'Y-m-d', $post );
+            $title = html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' );
+            $lines[] = "- [{$title}]({$md}) ({$when})";
+        }
+        wp_reset_postdata();
+
+        return implode( "\n", $lines );
     }
 
     // ─── SCHEMA.ORG ───────────────────────────────────────────────────────────
@@ -1200,6 +1265,14 @@ curl -H "<span class="hl">X-Markdown-API-Key: <span class="aiv-key-placeholder">
                             <input type="text" id="aiv-llms-topics" name="llms_topics"
                                    value="<?php echo esc_attr( $settings['llms_topics'] ?? '' ); ?>">
                         </div>
+                        <div class="aiv-field">
+                            <label for="aiv-llms-max">Recent Articles in llms.txt
+                                <span style="font-weight:400;color:#6b7280;">(0–200; how many recent posts to list as Markdown links. Set 0 to hide the section.)</span>
+                            </label>
+                            <input type="number" id="aiv-llms-max" name="llms_max_articles" min="0" max="200" step="1"
+                                   value="<?php echo esc_attr( (string) ( $settings['llms_max_articles'] ?? 30 ) ); ?>"
+                                   style="max-width:120px;">
+                        </div>
                     </div>
                     <div class="aiv-card">
                         <h3><span class="dashicons dashicons-visibility"></span> Live Preview</h3>
@@ -1457,39 +1530,8 @@ curl -H "<span class="hl">X-Markdown-API-Key: <span class="aiv-key-placeholder">
         $name        = $settings['publication_name'] ?? get_bloginfo( 'name' );
         $description = ( $settings['llms_description'] ?? '' ) ?: ( $settings['publication_description'] ?? '' );
         $topics      = ( $settings['llms_topics'] ?? '' ) ?: ( $settings['key_topics'] ?? '' );
-        $home        = home_url();
-        $api_url     = rest_url( 'theme/v1/posts-markdown' );
-        $date        = current_time( 'Y-m-d' );
 
-        $topic_lines = implode(
-            "\n",
-            array_map(
-                fn( $t ) => '- ' . trim( $t ),
-                array_filter( explode( ',', $topics ) )
-            )
-        );
-
-        $per_post_url = rest_url( 'theme/v1/post-markdown/{slug}' );
-
-        return "# {$name}\n\n"
-             . "> {$description}\n\n"
-             . "## About\n\n{$description}\n\n"
-             . "## Topics\n\n{$topic_lines}\n\n"
-             . "## Key URLs\n\n"
-             . "- Homepage: {$home}\n"
-             . "- Articles: {$home}/news/\n"
-             . "- Bulk Markdown API: {$api_url}\n"
-             . "- Per-Post Markdown: {$per_post_url}\n\n"
-             . "## API Access\n\n"
-             . "### Bulk Feed (authenticated)\n"
-             . "Endpoint: {$api_url}\n"
-             . "Authentication: X-Markdown-API-Key header (contact publisher)\n"
-             . "Supports ?after=ISO8601 for incremental daily fetches\n\n"
-             . "### Per-Post Markdown (public)\n"
-             . "Endpoint: {$per_post_url}\n"
-             . "No authentication required. Returns text/markdown directly.\n\n"
-             . "## Freshness\n\n"
-             . "Last updated: {$date}\n";
+        return $this->render_llms_document( $name, $description, $topics );
     }
 
     // ─── AJAX HANDLERS ────────────────────────────────────────────────────────
@@ -1587,6 +1629,7 @@ curl -H "<span class="hl">X-Markdown-API-Key: <span class="aiv-key-placeholder">
             'excluded_categories'     => array_map( 'absint', (array) ( $raw['excluded_categories'] ?? [] ) ),
             'llms_description'        => sanitize_textarea_field( $raw['llms_description'] ?? '' ),
             'llms_topics'             => sanitize_text_field( $raw['llms_topics'] ?? '' ),
+            'llms_max_articles'       => min( 200, max( 0, absint( $raw['llms_max_articles'] ?? 30 ) ) ),
             'schema_enabled'          => isset( $raw['schema_enabled'] ),
             'summaries_enabled'       => isset( $raw['summaries_enabled'] ),
             'summaries_provider'      => in_array( $raw['summaries_provider'] ?? '', [ 'claude', 'openai' ], true )
