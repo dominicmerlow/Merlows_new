@@ -398,10 +398,211 @@ if ( is_category() ) {
     border-color: var(--primary-color);
 }
 
+/* ── Sub-category layouts: Bento ───────────────────────────────── */
+.arc-bento {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: dense;
+}
+.arc-bento .dispatch-card:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+.arc-bento .dispatch-card:first-child .dispatch-card__img { height: 100%; min-height: 320px; }
+.arc-bento .dispatch-card:first-child .dispatch-card__title { font-size: 28px; }
+
+/* ── Sub-category layouts: List ────────────────────────────────── */
+.arc-list { display: flex; flex-direction: column; gap: 20px; }
+.arc-list .dispatch-card { flex-direction: row; }
+.arc-list .dispatch-card__img { width: 300px; height: auto; min-height: 200px; flex-shrink: 0; }
+.arc-list .dispatch-card__body { flex: 1; }
+
+/* ── Sub-category layouts: Magazine ────────────────────────────── */
+.arc-mag {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 36px;
+    align-items: start;
+}
+.arc-mag__lead .dispatch-card__img { height: 360px; }
+.arc-mag__lead .dispatch-card__title { font-size: 26px; }
+.arc-mag__list { display: flex; flex-direction: column; }
+.arc-mag__item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #E2E8F0;
+    text-decoration: none;
+}
+.arc-mag__item:first-child { padding-top: 0; }
+.arc-mag__item-img {
+    width: 104px;
+    height: 78px;
+    background-size: cover;
+    background-position: center;
+    background-color: #E2E8F0;
+    flex-shrink: 0;
+}
+.arc-mag__item-body { display: flex; flex-direction: column; gap: 5px; }
+.arc-mag__item-date {
+    font-family: var(--font-main);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94A3B8;
+}
+.arc-mag__item-title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #0F172A;
+    transition: color 0.2s;
+}
+.arc-mag__item:hover .arc-mag__item-title { color: var(--primary-color); }
+
+/* ── Under-hero blocks: shared ─────────────────────────────────── */
+.catx-block { padding: 60px 0; }
+.catx-block__eyebrow {
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-color);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.catx-block__eyebrow::before { content: ''; width: 32px; height: 2px; background: var(--accent-color); }
+
+/* ── Featured Article block ────────────────────────────────────── */
+.catx-featured__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    align-items: center;
+}
+.catx-featured.pos-right .catx-featured__media { order: 2; }
+.catx-featured__media {
+    height: 380px;
+    background-size: cover;
+    background-position: center;
+    background-color: #E2E8F0;
+}
+.catx-featured__cat {
+    display: inline-block;
+    background: var(--accent-color);
+    color: #0F172A;
+    font-family: var(--font-main);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    margin-bottom: 14px;
+}
+.catx-featured__title {
+    font-family: var(--font-heading);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0F172A;
+    margin: 0 0 16px;
+}
+.catx-featured__title a { color: inherit; text-decoration: none; }
+.catx-featured__title a:hover { color: var(--primary-color); }
+.catx-featured__excerpt {
+    font-family: var(--font-main);
+    font-size: 17px;
+    line-height: 1.65;
+    color: #475569;
+    margin: 0 0 24px;
+}
+.catx-featured__link {
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+}
+.catx-featured__link:hover { gap: 10px; }
+
+/* ── Latest Articles block ─────────────────────────────────────── */
+.catx-latest__title {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: #0F172A;
+    margin: 0 0 28px;
+}
+
+/* ── Promo block ───────────────────────────────────────────────── */
+.catx-promo__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    align-items: center;
+}
+.catx-promo.pos-right .catx-promo__media { order: 2; }
+.catx-promo.no-image .catx-promo__inner { grid-template-columns: 1fr; text-align: center; }
+.catx-promo__media {
+    height: 320px;
+    background-size: cover;
+    background-position: center;
+    background-color: #E2E8F0;
+}
+.catx-promo__title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0F172A;
+    margin: 0 0 16px;
+}
+.catx-promo__text {
+    font-family: var(--font-main);
+    font-size: 17px;
+    line-height: 1.65;
+    color: #475569;
+    margin: 0 0 24px;
+}
+.catx-promo__btn {
+    display: inline-block;
+    background: var(--primary-color);
+    color: #fff;
+    font-family: var(--font-main);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    padding: 14px 32px;
+    transition: opacity 0.2s;
+}
+.catx-promo__btn:hover { opacity: 0.9; }
+
 @media (max-width: 768px) {
     .arc-masthead__inner { grid-template-columns: 1fr; }
     .arc-masthead__stat { display: none; }
     .arc-grid { grid-template-columns: 1fr; }
+    .arc-bento { grid-template-columns: 1fr; }
+    .arc-bento .dispatch-card:first-child { grid-column: auto; grid-row: auto; }
+    .arc-list .dispatch-card { flex-direction: column; }
+    .arc-list .dispatch-card__img { width: 100%; height: 200px; }
+    .arc-mag { grid-template-columns: 1fr; }
+    .catx-featured__inner,
+    .catx-promo__inner { grid-template-columns: 1fr; }
+    .catx-featured.pos-right .catx-featured__media,
+    .catx-promo.pos-right .catx-promo__media { order: 0; }
+    .catx-featured__media { height: 240px; }
 }
 </style>
 
@@ -502,6 +703,139 @@ if ( is_category() ) {
     $arc_subcat_limit = 12; // cards shown per sub-category on the landing
     ?>
 
+    <?php
+    // ── Under-hero blocks: Featured Article, Latest Articles, Promo ──
+    // Per-category, configured in Customizer → Category Pages. Rendered in the
+    // fixed order requested (Featured → Latest → Promo) directly under the hero.
+    if ( is_category() && isset( $cat ) ) :
+        $tid = $cat->term_id;
+
+        // ── 1. Featured Article ──────────────────────────────────────
+        if ( get_theme_mod( "mlws_catx_feat_show_{$tid}", false ) ) :
+            $feat_id   = absint( get_theme_mod( "mlws_catx_feat_post_{$tid}", 0 ) );
+            $feat_post = null;
+            if ( $feat_id ) {
+                $maybe = get_post( $feat_id );
+                if ( $maybe && $maybe->post_status === 'publish' ) { $feat_post = $maybe; }
+            }
+            if ( ! $feat_post ) {
+                $fq = new WP_Query( array(
+                    'cat'                 => $tid,
+                    'post_type'           => 'any',
+                    'posts_per_page'      => 1,
+                    'ignore_sticky_posts' => true,
+                ) );
+                if ( $fq->have_posts() ) { $feat_post = $fq->posts[0]; }
+                wp_reset_postdata();
+            }
+            if ( $feat_post ) :
+                $fp_id   = $feat_post->ID;
+                $f_pref  = "mlws_catx_feat_{$tid}";
+                $f_pos   = get_theme_mod( "mlws_catx_feat_pos_{$tid}", 'left' );
+                $f_head  = get_theme_mod( "mlws_catx_feat_heading_{$tid}", 'Featured' );
+                $f_thumb = get_the_post_thumbnail_url( $fp_id, 'large' );
+                if ( ! $f_thumb ) {
+                    $f_thumb = $arc_hero_bg;
+                    foreach ( (array) get_the_category( $fp_id ) as $pc ) {
+                        if ( isset( $card_hero_map[ $pc->slug ] ) ) {
+                            $f_thumb = get_template_directory_uri() . '/assets/img/' . $card_hero_map[ $pc->slug ];
+                            break;
+                        }
+                    }
+                }
+                $f_cats = get_the_category( $fp_id );
+                ?>
+                <section class="catx-block catx-featured pos-<?php echo esc_attr( $f_pos ); ?>"<?php echo mlws_catx_style_attr( $f_pref, array( 'background-color' => 'bg' ) ); ?>>
+                    <div class="container">
+                        <div class="catx-featured__inner">
+                            <div class="catx-featured__media" style="background-image:url('<?php echo esc_url( $f_thumb ); ?>');"></div>
+                            <div class="catx-featured__content">
+                                <?php if ( $f_head ) : ?>
+                                    <p class="catx-block__eyebrow"><?php echo esc_html( $f_head ); ?></p>
+                                <?php endif; ?>
+                                <?php if ( ! empty( $f_cats ) ) : ?>
+                                    <span class="catx-featured__cat"><?php echo esc_html( $f_cats[0]->name ); ?></span>
+                                <?php endif; ?>
+                                <h2 class="catx-featured__title"<?php echo mlws_catx_style_attr( $f_pref, array( 'color' => 'title_color', 'font-size' => 'title_size' ) ); ?>>
+                                    <a href="<?php echo esc_url( get_permalink( $fp_id ) ); ?>"><?php echo esc_html( get_the_title( $fp_id ) ); ?></a>
+                                </h2>
+                                <div class="catx-featured__excerpt"<?php echo mlws_catx_style_attr( $f_pref, array( 'color' => 'text_color', 'font-size' => 'text_size' ) ); ?>>
+                                    <?php echo wp_kses_post( wpautop( get_the_excerpt( $fp_id ) ) ); ?>
+                                </div>
+                                <a class="catx-featured__link" href="<?php echo esc_url( get_permalink( $fp_id ) ); ?>">
+                                    Read Dispatch
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php
+        // ── 2. Latest Articles ───────────────────────────────────────
+        if ( get_theme_mod( "mlws_catx_latest_show_{$tid}", false ) ) :
+            $l_pref   = "mlws_catx_latest_{$tid}";
+            $l_count  = absint( get_theme_mod( "mlws_catx_latest_count_{$tid}", 4 ) );
+            if ( $l_count < 1 ) { $l_count = 4; }
+            $l_layout = get_theme_mod( "mlws_catx_layout_{$tid}", 'grid' );
+            $l_head   = get_theme_mod( "mlws_catx_latest_heading_{$tid}", 'Latest Articles' );
+            $lq = new WP_Query( array(
+                'cat'                 => $tid,
+                'post_type'           => 'any',
+                'posts_per_page'      => $l_count,
+                'ignore_sticky_posts' => true,
+            ) );
+            if ( $lq->have_posts() ) : ?>
+                <section class="catx-block catx-latest"<?php echo mlws_catx_style_attr( $l_pref, array( 'background-color' => 'bg' ) ); ?>>
+                    <div class="container">
+                        <?php if ( $l_head ) : ?>
+                            <h2 class="catx-latest__title"<?php echo mlws_catx_style_attr( $l_pref, array( 'color' => 'title_color', 'font-size' => 'title_size' ) ); ?>><?php echo esc_html( $l_head ); ?></h2>
+                        <?php endif; ?>
+                        <?php mlws_catx_render_layout( $lq, $l_layout, $card_hero_map ); ?>
+                    </div>
+                </section>
+            <?php endif;
+            wp_reset_postdata();
+        endif;
+        ?>
+
+        <?php
+        // ── 3. Promo ─────────────────────────────────────────────────
+        if ( get_theme_mod( "mlws_catx_promo_show_{$tid}", false ) ) :
+            $p_pref  = "mlws_catx_promo_{$tid}";
+            $p_head  = get_theme_mod( "mlws_catx_promo_heading_{$tid}", '' );
+            $p_text  = get_theme_mod( "mlws_catx_promo_text_{$tid}", '' );
+            $p_img   = get_theme_mod( "mlws_catx_promo_image_{$tid}", '' );
+            $p_btn   = get_theme_mod( "mlws_catx_promo_btn_text_{$tid}", '' );
+            $p_link  = get_theme_mod( "mlws_catx_promo_btn_link_{$tid}", '' );
+            $p_pos   = get_theme_mod( "mlws_catx_promo_pos_{$tid}", 'right' );
+            ?>
+            <section class="catx-block catx-promo pos-<?php echo esc_attr( $p_pos ); ?><?php echo $p_img ? '' : ' no-image'; ?>"<?php echo mlws_catx_style_attr( $p_pref, array( 'background-color' => 'bg' ) ); ?>>
+                <div class="container">
+                    <div class="catx-promo__inner">
+                        <?php if ( $p_img ) : ?>
+                            <div class="catx-promo__media" style="background-image:url('<?php echo esc_url( $p_img ); ?>');"></div>
+                        <?php endif; ?>
+                        <div class="catx-promo__content">
+                            <?php if ( $p_head ) : ?>
+                                <h2 class="catx-promo__title"<?php echo mlws_catx_style_attr( $p_pref, array( 'color' => 'title_color', 'font-size' => 'title_size' ) ); ?>><?php echo esc_html( $p_head ); ?></h2>
+                            <?php endif; ?>
+                            <?php if ( $p_text ) : ?>
+                                <div class="catx-promo__text"<?php echo mlws_catx_style_attr( $p_pref, array( 'color' => 'text_color', 'font-size' => 'text_size' ) ); ?>><?php echo wp_kses_post( wpautop( $p_text ) ); ?></div>
+                            <?php endif; ?>
+                            <?php if ( $p_btn && $p_link ) : ?>
+                                <a class="catx-promo__btn" href="<?php echo esc_url( $p_link ); ?>"><?php echo esc_html( $p_btn ); ?></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
+
+    <?php endif; ?>
+
     <!-- Articles -->
     <section class="arc-section">
         <div class="container">
@@ -529,11 +863,10 @@ if ( is_category() ) {
                             </a>
                         <?php endif; ?>
                     </div>
-                    <div class="arc-grid">
-                        <?php while ( $sub_q->have_posts() ) : $sub_q->the_post(); ?>
-                            <?php mlws_render_dispatch_card( $card_hero_map ); ?>
-                        <?php endwhile; ?>
-                    </div>
+                    <?php
+                    $child_layout = get_theme_mod( "mlws_catx_layout_{$child->term_id}", 'grid' );
+                    mlws_catx_render_layout( $sub_q, $child_layout, $card_hero_map );
+                    ?>
                 </div>
                 <?php wp_reset_postdata(); ?>
             <?php endforeach; ?>

@@ -3109,6 +3109,11 @@ add_action( 'save_post', 'mlws_save_testimonial_meta' );
  */
 require_once get_template_directory() . '/customizer-pages.php';
 
+/**
+ * Category Pages Customizer (per-category layouts + Featured/Latest/Promo blocks)
+ */
+require_once get_template_directory() . '/inc/category-customizer.php';
+
 
 
 /**
