@@ -29,7 +29,7 @@
     { "path": "/api/cron/publish",                  "schedule": "0 8 * * *" },
     { "path": "/api/automation/run",                "schedule": "0 7-12 * * *" },
     { "path": "/api/social/cron",                   "schedule": "0 9 * * *" },
-    { "path": "/api/social/autopilot",              "schedule": "*/10 * * * *" },
+    { "path": "/api/social/autopilot",              "schedule": "*/10 5-21 * * *" },
     { "path": "/api/social/connections/check",      "schedule": "0 6 * * *" },
     { "path": "/api/social/digest",                 "schedule": "45 22 * * *" }
   ]
