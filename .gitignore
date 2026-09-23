@@ -10,3 +10,8 @@ node_modules/
 .env.*
 !.env.example
 .claude/settings.local.json
+# Author-team scripts: generated WP passwords + backfill idempotency state / reports (SECRET)
+scripts/.create-wp-authors-output.json
+scripts/.backfill-authors-state.json
+scripts/.backfill-authors-report*.csv
+.env*

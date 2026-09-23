@@ -2232,7 +2232,6 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
 #genPromptCustom, #genPromptSaveName { border-radius: 0; font-family: 'Montserrat', sans-serif; }
 #genSrcPane-upload .upload-zone { cursor: pointer; }
 .gen-url-input { border-radius: 6px; font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); }
-#genCatOptionsCard { }
 
 .trash-page { max-width: 900px; margin: 0 auto; padding: 24px; }
 .trash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 16px; }
@@ -2286,9 +2285,9 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       <input id="oldPwd" type="password" autocomplete="current-password" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
     </div>
     <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;">New password</label>
-    <input id="newPwd" type="password" autocomplete="new-password" required minlength="4" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
+    <input id="newPwd" type="password" autocomplete="new-password" required minlength="10" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:12px;font-family:inherit;"/>
     <label style="display:block;font-size:0.7rem;font-weight:700;color:var(--sla-navy);margin-bottom:4px;">Confirm new password</label>
-    <input id="newPwd2" type="password" autocomplete="new-password" required minlength="4" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:6px;font-family:inherit;"/>
+    <input id="newPwd2" type="password" autocomplete="new-password" required minlength="10" style="width:100%;padding:10px 12px;border:1px solid #dde3ea;font-size:0.85rem;margin-bottom:6px;font-family:inherit;"/>
     <div id="changePwdError" style="font-size:0.7rem;color:#c0392b;min-height:16px;margin-bottom:10px;"></div>
     <div style="display:flex;gap:8px;">
       <button type="button" id="changePwdCancelBtn" onclick="closeChangePwd()" style="flex:1;padding:10px;background:#f0f2f5;color:var(--sla-navy);border:1px solid #dde3ea;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;">Cancel</button>
@@ -2594,47 +2593,6 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       </div>
     </div>
 
-    <!-- Category-specific options card (shown conditionally) -->
-    <div class="card" id="genCatOptionsCard" style="display:none;">
-      <div class="card-header">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93L17.66 6.34M6.34 17.66L4.93 19.07M19.07 19.07L17.66 17.66M6.34 6.34L4.93 4.93M20 12H22M2 12H4M12 2V4M12 20V22"/></svg>Category Options</h2>
-      </div>
-      <div class="card-body">
-        <!-- Tone (op-eds) -->
-        <div id="genOptTone" style="display:none;margin-bottom:12px;">
-          <label style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block;">Tone</label>
-          <div class="tone-btn-group">
-            <button class="tone-btn active" onclick="setTone('practitioner')" id="tone-practitioner">Practitioner</button>
-            <button class="tone-btn" onclick="setTone('patient')" id="tone-patient">Patient-Facing</button>
-          </div>
-        </div>
-        <!-- Word Count (cyrus-accord) -->
-        <div id="genOptWordCount" style="display:none;margin-bottom:12px;">
-          <div class="option-row">
-            <label>Word Count</label>
-            <input type="number" id="wpWordCount" value="2000" min="500" max="10000" step="250" style="max-width:110px;" />
-            <span style="font-size:0.68rem;color:var(--text-muted);">words (approx.)</span>
-          </div>
-        </div>
-        <!-- Design Style (cyrus-accord) -->
-        <div id="genOptDesign" style="display:none;margin-bottom:12px;">
-          <div style="font-size:0.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Design Style</div>
-          <div class="design-options-grid" id="wpDesignGrid">
-            <button class="design-option-btn active" onclick="setDesignOption(this,'Executive Summary')" data-design="Executive Summary">Executive Summary<br><span style="font-weight:400;font-size:0.62rem;">Concise, decision-focused</span></button>
-            <button class="design-option-btn" onclick="setDesignOption(this,'Technical Deep-Dive')" data-design="Technical Deep-Dive">Technical Deep-Dive<br><span style="font-weight:400;font-size:0.62rem;">Data-rich, detailed</span></button>
-            <button class="design-option-btn" onclick="setDesignOption(this,'Narrative Report')" data-design="Narrative Report">Narrative Report<br><span style="font-weight:400;font-size:0.62rem;">Story-driven, accessible</span></button>
-            <button class="design-option-btn" onclick="setDesignOption(this,'Regulatory Briefing')" data-design="Regulatory Briefing">Regulatory Briefing<br><span style="font-weight:400;font-size:0.62rem;">Formal, compliance-ready</span></button>
-          </div>
-        </div>
-        <!-- Abraham Accords notice -->
-        <div id="genOptAbraham Accords" style="display:none;">
-          <div class="alert" style="background:rgba(244,121,32,0.08);border:1px solid rgba(244,121,32,0.25);color:var(--sla-orange);font-size:0.72rem;padding:8px 12px;border-radius:6px;margin-bottom:0;">
-            <strong>Note:</strong> Abraham Accords generation uses models optimised for structured visual content. The model selector is pre-filtered to the most capable options.
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- HERO IMAGE (Left Panel) -->
     <div class="card" id="heroLeftCard">
       <div class="card-header">
@@ -2652,6 +2610,7 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
         <div id="heroAiModelRow" style="display:none;margin-bottom:8px;">
           <label style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Image Model</label>
           <select id="heroAiModelSelect" style="width:100%;padding:5px 8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.75rem;font-family:'Montserrat',sans-serif;">
+            <option value="google/gemini-3.1-flash-lite-image">Gemini 3.1 Flash Lite Image (cheapest)</option>
             <option value="google/gemini-3.1-flash-image">Gemini 3.1 Flash Image</option>
             <option value="google/gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
             <option value="google/gemini-3-pro-image">Gemini 3 Pro Image</option>
@@ -2766,37 +2725,15 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <label style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin-bottom:5px;display:block;">Change LLM</label>
           <select id="modelSelect" class="llm-quick-select" onchange="updateLLMStatus()" style="width:100%;max-width:100%;">
             <optgroup label="── Recommended ──">
-              <option value="arcee-ai/trinity-large-preview:free" selected>Arcee AI: Trinity Large Preview ★</option>
-              <option value="google/gemma-3-27b-it:free">Google: Gemma 3 27B ★</option>
-              <option value="google/gemma-3-12b-it:free">Google: Gemma 3 12B ★</option>
-              <option value="deepseek/deepseek-r1-0528:free">DeepSeek: R1 0528 ★</option>
-              <option value="qwen/qwen3-235b-a22b:free">Qwen: Qwen3 235B ★</option>
+              <option value="google/gemma-3-27b-it" selected>Google: Gemma 3 27B ★</option>
+              <option value="meta-llama/llama-3.3-70b-instruct">Meta: Llama 3.3 70B ★</option>
+              <option value="google/gemma-3-12b-it">Google: Gemma 3 12B ★</option>
+              <option value="qwen/qwen3-30b-a3b">Qwen: Qwen3 30B ★</option>
+              <option value="deepseek/deepseek-r1-0528">DeepSeek: R1 0528 ★</option>
             </optgroup>
-            <optgroup label="── All Free Models ──">
-              <option value="arcee-ai/trinity-mini:free">Arcee AI: Trinity Mini</option>
-              <option value="deepseek/deepseek-r1:free">DeepSeek: R1</option>
-              <option value="deepseek/deepseek-v3-0324:free">DeepSeek: V3 0324</option>
-              <option value="google/gemma-3-4b-it:free">Google: Gemma 3 4B</option>
-              <option value="google/gemma-3n-e4b-it:free">Google: Gemma 3n 4B</option>
-              <option value="google/gemma-3n-e2b-it:free">Google: Gemma 3n 2B</option>
-              <option value="liquid/lfm-2.5-1.2b-instruct:free">LiquidAI: LFM2.5 1.2B Instruct</option>
-              <option value="liquid/lfm-2.5-1.2b-thinking:free">LiquidAI: LFM2.5 1.2B Thinking</option>
-              <option value="meta-llama/llama-3.2-3b-instruct:free">Meta: Llama 3.2 3B</option>
-              <option value="meta-llama/llama-3.3-70b-instruct:free">Meta: Llama 3.3 70B</option>
-              <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral: Mistral Small 3.1 24B</option>
-              <option value="nvidia/nemotron-3-nano-30b-a3b:free">NVIDIA: Nemotron 3 Nano 30B</option>
-              <option value="nvidia/nemotron-3-super-120b-a12b:free">NVIDIA: Nemotron 3 Super 120B</option>
-              <option value="nvidia/nemotron-nano-12b-v2-vl:free">NVIDIA: Nemotron Nano 12B</option>
-              <option value="nvidia/nemotron-nano-9b-v2:free">NVIDIA: Nemotron Nano 9B</option>
-              <option value="nousresearch/hermes-3-llama-3.1-405b:free">Nous: Hermes 3 405B</option>
-              <option value="qwen/qwen3-30b-a3b:free">Qwen: Qwen3 30B</option>
-              <option value="qwen/qwen3-14b:free">Qwen: Qwen3 14B</option>
-              <option value="qwen/qwen3-8b:free">Qwen: Qwen3 8B</option>
-              <option value="qwen/qwen3-4b:free">Qwen: Qwen3 4B</option>
-              <option value="qwen/qwen3-coder:free">Qwen: Qwen3 Coder 480B</option>
-              <option value="stepfun/step-3.5-flash:free">StepFun: Step 3.5 Flash</option>
-              <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Venice: Uncensored</option>
-              <option value="z-ai/glm-4.5-air:free">Z.ai: GLM 4.5 Air</option>
+            <optgroup label="── More Models ──">
+              <option value="mistralai/mistral-small-3.1-24b-instruct">Mistral: Small 3.1 24B</option>
+              <option value="google/gemma-3-4b-it">Google: Gemma 3 4B</option>
             </optgroup>
             <optgroup label="── Premium (key required) ──">
               <option value="claude-opus-4-5">Claude Opus (Anthropic)</option>
@@ -3069,6 +3006,11 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><polyline points="20 6 9 17 4 12"/></svg>
       Posted
     </button>
+    <button class="social-tab-btn" id="socialTabBtn-autopilot" onclick="switchSocialTab('autopilot')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      Autopilot
+      <span id="autopilotPausedBadge" style="background:#B91C1C;color:#fff;font-size:0.55rem;font-weight:800;padding:1px 6px;border-radius:20px;margin-left:2px;display:none;">PAUSED</span>
+    </button>
     <button class="social-tab-btn" id="socialTabBtn-prompts" onclick="switchSocialTab('prompts')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
       Prompt Library
@@ -3154,8 +3096,39 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
   </div>
 </div>
 
+<!-- Autopilot pane — the social pipeline: one row per story, plus the kill switch -->
+<div class="social-pane" id="socialPane-autopilot">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 14px;">
+    <button class="btn btn-orange btn-sm" id="autopilotPauseBtn" onclick="toggleAutopilotPause()">Pause production</button>
+    <button class="btn btn-outline btn-sm" onclick="loadAutopilot()">Refresh</button>
+    <span id="autopilotStateNote" style="font-size:0.7rem;color:var(--text-muted);"></span>
+  </div>
+  <div id="autopilotBoard">
+    <div class="social-empty">Loading…</div>
+  </div>
+</div>
+
 <!-- Connections pane -->
 <div class="social-pane" id="socialPane-connections">
+  <div class="social-prompts-header">
+    <div class="social-prompts-header-text">
+      <h2>Platform Connections</h2>
+      <p>Live social accounts used for posting, connected via Composio. Multiple accounts per platform are supported; the default is used unless a kit picks another.</p>
+    </div>
+  </div>
+
+  <!-- ── Primary: Composio connected accounts (live posting) ── -->
+  <div style="background:rgba(55,65,81,0.05);border-left:3px solid var(--sla-navy);padding:10px 14px;margin:0 0 14px;font-size:0.7rem;color:var(--text-muted);">
+    <strong style="color:var(--sla-navy);">Connected accounts</strong> — these are the live accounts used for posting, connected via Composio. Multiple accounts per platform are supported; the <span style="color:#15803d;font-weight:700;">default</span> is used unless a kit picks another.
+  </div>
+
+  <div id="socialComposioConnectBar" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;">
+    <!-- populated by renderComposioConnectBar() -->
+  </div>
+
+  <div id="socialComposioList" style="display:flex;flex-direction:column;gap:14px;margin:0 0 26px;">
+    <div style="color:var(--text-muted);font-size:0.82rem;padding:1.25rem;">Loading accounts…</div>
+  </div>
 </div>
 
   <!-- ── Pane: Prompt Library ── -->
@@ -4132,12 +4105,18 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
     <div class="settings-section">
       <div class="settings-section-header">
         <h3>Social Media Connections</h3>
-        <p>Configure credentials for direct posting of generated social content</p>
+        <p>Live posting runs through Composio connected accounts — manage them in Social → Connections</p>
       </div>
       <div class="settings-section-body">
-        <div class="social-conn-list" id="socialConnList">
-          <!-- Rendered by loadSettings() -->
+        <div id="socialComposioSummary" style="margin:0 0 18px;">
+          <!-- Rendered by renderComposioSummary() -->
         </div>
+        <details style="border-top:1px solid var(--border);padding-top:14px;">
+          <summary style="cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;list-style:revert;">Legacy per-browser credentials (not used when a Composio account is connected)</summary>
+          <div class="social-conn-list" id="socialConnList" style="margin-top:12px;">
+            <!-- Rendered by loadSettings() -->
+          </div>
+        </details>
       </div>
     </div>
 
@@ -4363,6 +4342,13 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
           <span style="font-weight:600;">Auto-generate AI hero image</span>
         </label>
         <p style="font-size:0.72rem;color:var(--text-muted);margin:4px 0 0 26px;">Generate a hero image from the article content using AI. Uses OpenRouter credits.</p>
+      </div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+        <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text);">Author byline</label>
+        <select id="wizAuthor" style="width:100%;padding:8px 12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:0.875rem;">
+          <option value="">Auto — dedicated sub-category author (+~10% guest)</option>
+        </select>
+        <p style="font-size:0.72rem;color:var(--text-muted);margin:4px 0 0;">Default <strong>Auto</strong> assigns each article to its sub-category's exclusive author, with about 10% routed to the category's guest writer. Pick a name to pin every article from this rule to one author.</p>
       </div>
     </div>
     <!-- Step 4: Review -->
@@ -5012,41 +4998,34 @@ function initContentPolling() {
 //  CONSTANTS
 // ═══════════════════════════════════════════════════════════
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+// OpenRouter retired the shared :free tier for this (paid) account — all :free
+// slugs now 404. These are the verified paid slugs (all extremely cheap, e.g.
+// gemma-3-27b ≈ $0.08/$0.16 per MILLION tokens → a fraction of a cent per article).
 const FALLBACK_MODELS = [
-  'arcee-ai/trinity-large-preview:free',
-  'google/gemma-3-27b-it:free',
-  'google/gemma-3-12b-it:free',
-  'deepseek/deepseek-r1-0528:free',
-  'qwen/qwen3-30b-a3b:free',
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'mistralai/mistral-small-3.1-24b-instruct:free',
-  'qwen/qwen3-14b:free',
-  'qwen/qwen3-4b:free',
-  'google/gemma-3-4b-it:free',
-  'meta-llama/llama-3.2-3b-instruct:free',
-  'liquid/lfm-2.5-1.2b-instruct:free'
+  'google/gemma-3-27b-it',
+  'google/gemma-3-12b-it',
+  'meta-llama/llama-3.3-70b-instruct',
+  'qwen/qwen3-30b-a3b',
+  'mistralai/mistral-small-3.1-24b-instruct',
+  'google/gemma-3-4b-it',
+  'deepseek/deepseek-r1-0528'
 ];
 
 // Models optimised for structured/visual content (Abraham Accords)
 const INFOGRAPHIC_MODELS = [
-  'arcee-ai/trinity-large-preview:free',
-  'deepseek/deepseek-r1-0528:free',
-  'google/gemma-3-27b-it:free',
-  'google/gemma-3-12b-it:free',
-  'qwen/qwen3-30b-a3b:free',
-  'qwen/qwen3-14b:free',
-  'qwen/qwen3-8b:free',
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'deepseek/deepseek-v3-0324:free'
+  'meta-llama/llama-3.3-70b-instruct',
+  'google/gemma-3-27b-it',
+  'deepseek/deepseek-r1-0528',
+  'qwen/qwen3-30b-a3b',
+  'google/gemma-3-12b-it'
 ];
 
 // Pexels API key
 const PEXELS_API_KEY = '61644jNcCg5JfspIckM3rGG4lDwaNuUVmbIXCjbxYZDeqGiaNBftxKdJ';
 
-const GH_API    = 'https://api.github.com';
-const GH_REPO   = 'dominicmerlow/Merlows_new';
-const GH_BRANCH = 'ContentGenerator';
-const GH_TOKEN  = String.fromCharCode(103,104,112,95,67,80,48,74,118,97,76,67,110,50,120,77,102,87,56,122,110,89,100,50,101,71,89,48,118,85,49,121,56,71,49,116,112,109,74,115);
+// No GitHub token in this file: it is public. The data files are read and written
+// server-side via /api/content/gh-data, which uses GITHUB_TOKEN and needs a session.
+const GH_DATA_ENDPOINT = '/api/content/gh-data';
 
 const CATEGORIES = [
   { id: 'diplomatic-analysis', label: 'Diplomatic Analysis' },
@@ -5080,40 +5059,47 @@ Total length: 800–1,100 words. UK British English. Attribute all findings clea
 
 // ─── Category-specific default prompts ───────────────────────────────────────
 
-const DEFAULT_PROMPT_INDUSTRY_NEWS = `You are a journalist writing breaking news for Merlows — an independent digital news portal covering Israel-Iran relations, the Cyrus Accord, and the Abraham Accords. Transform the source material into a concise, urgent, factual news report for merlows.com.
+const DEFAULT_PROMPT_INDUSTRY_NEWS = `You are a senior news reporter for Merlows, writing in the hard-edged, authoritative register of The Daily Telegraph. Work ONLY from the supplied source material — real, published reporting drawn from The Sun, The Daily Telegraph, the Daily Mail, Fox News and The Jerusalem Post. Identify the single biggest story of the day that appears across MORE THAN ONE of these outlets and report THAT story. Never invent facts, quotations, figures, names or events; if the sources do not support a claim, leave it out.
+
+EDITORIAL FOCUS
+Give priority to stories about: trade and the economy; peace and diplomacy; antisemitism; the overreach of "woke" politics; and national sovereignty and pro-nation themes. Where stories compete, choose the one most widely carried across the outlets that also fits these priorities.
 
 TONE & STYLE
-Urgent, factual, direct. Journalistic wire-service style. Active voice. No editorialising, no speculation beyond what is confirmed. Lead with the most important fact.
+Hard news in the Telegraph manner: crisp, confident, declarative and unsentimental. Active voice, short sentences, no hedging or throat-clearing. Rigorously factual — attribute every claim to the reporting. Written plainly for an intelligent British readership. UK British English throughout.
 
 STRUCTURE
-1. Headline (~8–12 words): factual, no clickbait.
-2. Lede (40–60 words): the 5 Ws — who, what, where, when, why.
-3. Background (75–100 words): essential context a general reader needs.
-4. Latest Developments (150–200 words): key facts from the source in chronological or order-of-importance sequence.
-5. What's Next (50–75 words): expected next steps, upcoming events, or open questions.
-6. Source attribution line.
+1. Headline (~8–12 words) — sharp and factual, no clickbait.
+2. Standfirst: "## {{CATEGORY_PREFIX}}:" + a one-line summary of the story.
+3. Lede (35–55 words) — the five Ws of the most-reported story.
+4. The Story (170–230 words) — the confirmed facts, attributed to the outlets.
+5. Reaction & Context (90–130 words) — key quotes or positions, and why it matters.
+6. What Happens Next (35–55 words).
+7. Sources line — name the outlets the report draws on.
 
 OUTPUT FORMAT
-Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + one-line summary. All other headers use "## ".
-Total length: 350–500 words. UK British English. Do not reproduce verbatim text from the source.`;
+Output in markdown. First line: "# " + headline. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + summary. All other headers use "## ".
+ABSOLUTE MAXIMUM 500 words — do not exceed it under any circumstances. UK British English. Report only what the sourced material verifies; attribute, and do not editorialise beyond the facts.`;
 
-const DEFAULT_PROMPT_BLITZSPIRIT = `You are a writer for BlitzSpirit — an independent British publication exploring the "Blitz Spirit": the history, the myth, and the modern meaning of resilience, solidarity and "Keep Calm and Carry On" under pressure. Turn the source material (a title/topic plus any notes) into an engaging, well-researched article for a general British readership.
+const DEFAULT_PROMPT_BLITZSPIRIT = `You are a writer for BlitzSpirit — an independent British publication that reads CURRENT events through the enduring "Blitz spirit": resilience, stoicism, community solidarity and "Keep Calm and Carry On" under pressure. Work from the supplied source material — a RECENT news story (plus any notes / source link) — and write a timely piece that uses today's story to illuminate that spirit, drawing the through-line from 1940 to now.
+
+APPROACH
+Lead with the recent story. Then show how it embodies, echoes, tests or revives the Blitz spirit — the way ordinary people, communities and services carry on, rally round and refuse to be cowed under pressure. Use the wartime parallel to add depth, never to flatten the present into nostalgia.
 
 TONE & STYLE
-Warm, vivid and accessible. Grounded in real history and honest about it — celebrate genuine courage and community, but acknowledge the myths, hardships and debates rather than flattening them into nostalgia. Respectful, never jingoistic. Active voice. Write for a curious general reader, not an academic.
+Warm, vivid and accessible, but current and grounded. Celebrate genuine courage and community while being honest about hardship and about the limits of the "Blitz spirit" myth — never jingoistic, never saccharine. Active voice. Write for a curious general British reader, not an academic.
 
 STRUCTURE
-1. Title (~6–12 words) — evocative and specific, no category label.
-2. Subtitle (~8–14 words) — the hook or core idea.
-3. Opening (80–120 words) — a vivid scene, question or fact that draws the reader in.
-4. Body (450–650 words) in 2–4 short "## " sections suited to the topic — e.g. what happened, the human story, myth vs reality, the legacy.
-5. Why It Matters Today (100–150 words) — connect to contemporary resilience, community or current affairs where it is honest to do so.
-6. Close (60–100 words) — a reflective takeaway or, where fitting, a gentle call to action (remember, visit, volunteer, prepare, check on a neighbour).
-7. Sources / further reading line where the source material supports it.
+1. Title (~6–12 words) — about the CURRENT story, evocative and specific, no category label.
+2. Subtitle (~8–14 words) — the hook tying today's story to the spirit.
+3. Opening (70–110 words) — the recent story: who, what, where, when, drawn from the source.
+4. The Spirit in Action (200–300 words, 1–2 "## " sections) — the resilience, community or defiance on show, grounded in the source.
+5. Echoes of 1940 (140–200 words) — the honest historical parallel to the Blitz / home front, and where it holds or breaks down.
+6. Close (60–100 words) — a reflective takeaway or a fitting call to action (support, volunteer, remember, prepare, check on a neighbour).
+7. Sources line — name the outlet(s) the report draws on.
 
 OUTPUT FORMAT
 Output in markdown. First line: "# " + title. Next non-empty line: "## {{CATEGORY_PREFIX}}:" + subtitle. All other headers use "## ".
-Total length: 700–1,000 words. UK British English. Do not invent specific quotations, casualty figures or personal testimony the source does not support — for a "personal story" topic with no sourced testimony, write clearly-framed representative social history, not fabricated eyewitness quotes.`;
+Total length: 700–1,000 words. UK British English. Work ONLY from the sourced material — do NOT invent quotations, casualty figures, names or events. If the source is thin, keep the wartime parallel general and clearly framed rather than fabricating present-day detail.`;
 
 const DEFAULT_PROMPT_WHITE_PAPERS = `You are a policy analyst writing for Merlows — an independent news portal covering the Cyrus Accord and its role in reshaping Israel-Iran relations. Produce a comprehensive, authoritative report for merlows.com.
 
@@ -5237,34 +5223,25 @@ CATEGORIES.forEach(c => {
 // ═══════════════════════════════════════════════════════════
 //  GITHUB HELPERS
 // ═══════════════════════════════════════════════════════════
-function getToken() { return GH_TOKEN; }
-
 async function ghGetFile(path) {
-  const res = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}&t=${Date.now()}`, {
-    headers: { 'Authorization': `token ${getToken()}`, 'Accept': 'application/vnd.github.v3+json' }
+  const res = await fetch(`${GH_DATA_ENDPOINT}?path=${encodeURIComponent(path)}&t=${Date.now()}`, {
+    credentials: 'same-origin', cache: 'no-store'
   });
-  if (res.status === 404) return { content: [], sha: null };
-  if (!res.ok) throw new Error(`GitHub GET ${path}: ${res.status}`);
-  const data = await res.json();
-  const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
-  return { content: decoded, sha: data.sha };
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `GitHub GET ${path}: ${res.status}`);
+  return { content: data.content, sha: data.sha };
 }
 
 async function ghPutFile(path, content, sha, message) {
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
-  const body = { message, content: encoded, branch: GH_BRANCH };
-  if (sha) body.sha = sha;
-  const res = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}`, {
+  const res = await fetch(GH_DATA_ENDPOINT, {
     method: 'PUT',
-    headers: { 'Authorization': `token ${getToken()}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path, content, sha, message })
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `GitHub PUT ${path} failed: ${res.status}`);
-  }
-  const data = await res.json();
-  return data.content.sha;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `GitHub PUT ${path} failed: ${res.status}`);
+  return data.sha;
 }
 
 function catPath(catId, type) {
@@ -5519,6 +5496,9 @@ function syncPromptToEditor() {
 async function saveGenPrompt() {
   var name = (document.getElementById('genPromptSaveName') || {}).value;
   var body = (document.getElementById('genPromptCustom') || {}).value;
+  // The shared prompt library is writable by admin/content only (enforced server-side
+  // in /api/content/gh-data). Anyone can still generate from an unsaved custom prompt.
+  if (!isContentPlus()) { showToast('Only admin or content users can save prompts to the library. You can still generate with this prompt.'); return; }
   if (!name || !name.trim()) { showToast('Enter a name for this prompt first.'); return; }
   if (!body || !body.trim()) { showToast('Prompt is empty.'); return; }
   var nameInput = document.getElementById('promptNameInput');
@@ -5713,7 +5693,7 @@ function toggleSidebar() {
 
 // ── Social page sub-tab switching ────────────────────────────────────────────
 function switchSocialTab(tab) {
-  var tabs = ['kit', 'queue', 'posted', 'prompts', 'connections'];
+  var tabs = ['kit', 'queue', 'posted', 'autopilot', 'prompts', 'connections'];
   tabs.forEach(function(t) {
     var btn = document.getElementById('socialTabBtn-' + t);
     var pane = document.getElementById('socialPane-' + t);
@@ -5723,8 +5703,209 @@ function switchSocialTab(tab) {
   if (tab === 'kit') loadKitArticleSelect();
   if (tab === 'queue') loadSocialQueue();
   if (tab === 'posted') loadSocialPosted();
+  if (tab === 'autopilot') loadAutopilot();
   if (tab === 'prompts') loadSocialPromptsTab();
-  if (tab === 'connections') renderSocialConnections();
+  if (tab === 'connections') renderComposioAccounts();
+}
+
+// ── Autopilot board ───────────────────────────────────────────────────────────
+// The social pipeline, one row per story. Read-only apart from two controls: the
+// kill switch, and a retry for a story that failed. Everything else is the
+// worker's business — a button here that edited a pack mid-flight would race the
+// cron that is already working on it.
+var AUTOPILOT_STAGES = ['queued','scripted','voiced','imaged','rendering','rendered','slotted','done'];
+
+function autopilotStageIndex(status) {
+  var i = AUTOPILOT_STAGES.indexOf(status);
+  return i < 0 ? -1 : i;
+}
+
+function autopilotStatusChip(pack) {
+  var colour = 'var(--sla-navy)';
+  var label = pack.status;
+  if (pack.status === 'failed')  { colour = '#B91C1C'; }
+  if (pack.status === 'dropped') { colour = '#64748B'; }
+  if (pack.status === 'done')    { colour = 'var(--sla-teal)'; }
+  if (pack.status === 'rendered' && pack.review && pack.review.requestedAt && !pack.review.decision) {
+    colour = '#B45309'; label = 'awaiting review';
+  }
+  return '<span style="background:' + colour + ';color:#fff;font-size:0.55rem;font-weight:800;'
+       + 'padding:2px 7px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;">'
+       + escapeHtml(label) + '</span>';
+}
+
+function autopilotPostLine(post) {
+  var when = '';
+  try { when = new Date(post.at).toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }); }
+  catch (e) { when = post.at || ''; }
+  var state = post.status === 'published' ? '✅' : (post.status === 'failed' ? '🔴' : '🕒');
+  var label = escapeHtml(post.format) + ' · ' + escapeHtml(when);
+  // A published post links out; a failed one shows why. Neither is editable here —
+  // nothing in this app can unpublish, so an "undo" button would be a lie.
+  // https only. escapeHtml stops attribute breakout but says nothing about the scheme, and
+  // this URL arrives from the Zernio webhook — a javascript: one would run in the session of
+  // whichever admin clicked it.
+  if (post.url && /^https:\/\//i.test(post.url)) {
+    return state + ' <a href="' + escapeHtml(post.url) + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
+  }
+  if (post.error) return state + ' ' + label + ' — <span style="color:#B91C1C;">' + escapeHtml(String(post.error).slice(0, 90)) + '</span>';
+  return state + ' ' + label;
+}
+
+function renderAutopilotBoard(packs) {
+  var host = document.getElementById('autopilotBoard');
+  if (!host) return;
+  if (!packs || !packs.length) {
+    host.innerHTML = '<div class="social-empty">No stories in the pipeline yet.</div>';
+    return;
+  }
+  var rows = packs.map(function(pack) {
+    var stage = autopilotStageIndex(pack.status);
+    var pips = AUTOPILOT_STAGES.map(function(name, i) {
+      var on = stage >= i && stage >= 0;
+      return '<span title="' + name + '" style="width:8px;height:8px;display:inline-block;margin-right:3px;'
+           + 'background:' + (on ? 'var(--sla-teal)' : '#CBD5E1') + ';"></span>';
+    }).join('');
+    var posts = (pack.posts || []).map(function(p) {
+      return '<div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">' + autopilotPostLine(p) + '</div>';
+    }).join('');
+    var err = pack.error && pack.error.message
+      ? '<div style="font-size:0.68rem;color:#B91C1C;margin-top:4px;">' + escapeHtml(String(pack.error.message).slice(0, 160)) + '</div>'
+      : '';
+    var retry = pack.status === 'failed'
+      ? '<button class="btn btn-outline btn-sm" onclick="retryAutopilotPack(\'' + escapeHtml(pack.contentId) + '\')">Retry</button>'
+      : '';
+    // Approve/Reject appear only while a decision can still change anything: once the pack
+    // leaves `rendered` the posts are scheduled with Zernio and nothing here can recall them.
+    // `!posts.length` as well: a pack can still be `rendered` with some posts already handed
+    // to Zernio (a schedule that ran out of tick budget, or failed part-way). Offering
+    // Reject there promised something the server cannot deliver.
+    var awaitingDecision = pack.status === 'rendered'
+      && !(pack.review && pack.review.decision)
+      && !(pack.posts && pack.posts.length);
+    var review = awaitingDecision
+      ? '<button class="btn btn-orange btn-sm" onclick="reviewAutopilotPack(\'' + escapeHtml(pack.contentId) + '\',\'approved\')">Approve</button>'
+        + ' <button class="btn btn-outline btn-sm" onclick="reviewAutopilotPack(\'' + escapeHtml(pack.contentId) + '\',\'rejected\')">Reject</button>'
+      : '';
+    var decided = pack.review && pack.review.decision
+      ? '<span style="font-size:0.62rem;color:var(--text-muted);">' + escapeHtml(pack.review.decision)
+        + (pack.review.by ? ' by ' + escapeHtml(pack.review.by) : '') + '</span>'
+      : '';
+    return '<div style="border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;">'
+         + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">'
+         +   autopilotStatusChip(pack)
+         +   '<strong style="font-size:0.82rem;">' + escapeHtml(pack.title || pack.contentId) + '</strong>'
+         +   (pack.sensitive ? '<span style="font-size:0.6rem;font-weight:800;color:#B45309;">SENSITIVE</span>' : '')
+         +   '<span style="margin-left:auto;display:flex;gap:6px;align-items:center;">' + decided + review + retry + '</span>'
+         + '</div>'
+         + '<div style="margin-top:8px;">' + pips + '</div>'
+         + (pack.hook ? '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">' + escapeHtml(pack.hook) + '</div>' : '')
+         + posts + err
+         + '</div>';
+  }).join('');
+  host.innerHTML = rows;
+}
+
+function loadAutopilot() {
+  var host = document.getElementById('autopilotBoard');
+  if (host) host.innerHTML = '<div class="social-empty">Loading…</div>';
+  fetch('/api/social/autopilot/pause', { credentials: 'same-origin' })
+    .then(function(r) {
+      // A failed read must NOT render as "Running." — this tab is what someone opens during
+      // an incident, and an expired session would otherwise look identical to a healthy
+      // autopilot.
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(state) {
+      var badge = document.getElementById('autopilotPausedBadge');
+      var btn = document.getElementById('autopilotPauseBtn');
+      var note = document.getElementById('autopilotStateNote');
+      var paused = state && state.paused;
+      if (badge) badge.style.display = paused ? '' : 'none';
+      if (btn) btn.textContent = paused ? 'Resume production' : 'Pause production';
+      if (note) {
+        // byEnv means SOCIAL_AUTOPILOT=off, which a button here cannot clear — saying so
+        // stops someone clicking Resume and wondering why nothing happens.
+        note.textContent = state && state.byEnv
+          ? 'Paused by SOCIAL_AUTOPILOT=off — this needs an env change and a redeploy, not this button.'
+          : (paused ? 'Paused. Nothing is generated or posted.' : 'Running.');
+      }
+    })
+    .catch(function() {
+      var note = document.getElementById('autopilotStateNote');
+      var badge = document.getElementById('autopilotPausedBadge');
+      if (badge) badge.style.display = 'none';
+      if (note) note.textContent = 'State unknown — could not read the pause flag.';
+    });
+  fetch('/api/social/autopilot/packs?limit=50', { credentials: 'same-origin' })
+    .then(function(r) {
+      if (r.status === 401 || r.status === 403) throw new Error('Not authorised');
+      return r.json();
+    })
+    .then(function(data) { renderAutopilotBoard(data && data.packs); })
+    .catch(function(err) {
+      if (host) host.innerHTML = '<div class="social-empty">Could not load the board: ' + escapeHtml(err.message) + '</div>';
+    });
+}
+
+function toggleAutopilotPause() {
+  var btn = document.getElementById('autopilotPauseBtn');
+  var wantPause = !btn || btn.textContent.indexOf('Pause') === 0;
+  if (btn) btn.disabled = true;
+  fetch('/api/social/autopilot/pause', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paused: wantPause }),
+  })
+    // `r.ok` checked before anything is claimed: a 401 body still parses as JSON, so
+    // reporting success from the .then() told an operator production was paused while it
+    // carried on running.
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(state) {
+      var reallyPaused = state && state.paused;
+      if (typeof showToast === 'function') showToast(reallyPaused ? 'Production paused' : 'Production resumed');
+      loadAutopilot();
+    })
+    .catch(function(err) { if (typeof showToast === 'function') showToast('Could not change the pause state: ' + err.message); loadAutopilot(); })
+    .then(function() { if (btn) btn.disabled = false; });
+}
+
+function reviewAutopilotPack(contentId, decision) {
+  // Rejecting is terminal — the pack is dropped and there is no route back — so it asks.
+  // Approving is not, because the pack still has to pass everything after the gate.
+  if (decision === 'rejected' && !window.confirm('Reject this story? It will not be posted, and this cannot be undone.')) return;
+  fetch('/api/social/autopilot/review', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contentId: contentId, decision: decision }),
+  })
+    .then(function(r) { return r.json().then(function(b) { return { ok: r.ok, body: b }; }); })
+    .then(function(res) {
+      if (typeof showToast === 'function') {
+        showToast(res.ok ? (decision === 'approved' ? 'Approved — scheduling' : 'Rejected — not posting')
+                         : ((res.body && res.body.error) || 'Could not record that'));
+      }
+      loadAutopilot();
+    })
+    .catch(function() { if (typeof showToast === 'function') showToast('Could not record that decision'); });
+}
+
+function retryAutopilotPack(contentId) {
+  fetch('/api/social/autopilot/retry', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contentId: contentId }),
+  })
+    .then(function(r) { return r.json().then(function(b) { return { ok: r.ok, body: b }; }); })
+    .then(function(res) {
+      if (typeof showToast === 'function') showToast(res.ok ? 'Re-queued' : (res.body && res.body.error) || 'Could not retry');
+      loadAutopilot();
+    })
+    .catch(function() { if (typeof showToast === 'function') showToast('Could not retry'); });
 }
 
 // ── Kit Builder state ─────────────────────────────────────────────────────────
@@ -5806,6 +5987,25 @@ var SOCIAL_PLAT_LABELS = {
   twitter: 'X / Twitter', facebook: 'Facebook', substack: 'Substack',
 };
 
+// platform → connected accounts, for the per-platform account picker in the kit
+// header. Loaded once per page life; a change in Connections re-primes it there.
+var _socialAcctsByPlat = null;
+var _socialAcctsLoading = null;
+function ensureSocialAccountsCache() {
+  if (_socialAcctsByPlat) return Promise.resolve(_socialAcctsByPlat);
+  if (_socialAcctsLoading) return _socialAcctsLoading;
+  _socialAcctsLoading = fetch('/api/social/accounts')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var by = {};
+      (d.accounts || []).forEach(function(a) { (by[a.platform] = by[a.platform] || []).push(a); });
+      _socialAcctsByPlat = by;
+      return by;
+    })
+    .catch(function() { _socialAcctsByPlat = {}; return {}; });
+  return _socialAcctsLoading;
+}
+
 function renderKitAccordion(kit) {
   var accordion = document.getElementById('kitAccordion');
   var label = document.getElementById('kitReviewLabel');
@@ -5813,6 +6013,13 @@ function renderKitAccordion(kit) {
   if (!accordion) return;
   if (label) label.style.display = '';
   if (deployBar) deployBar.style.display = '';
+
+  // Prime the accounts cache; re-render once so account dropdowns appear.
+  if (!_socialAcctsByPlat) {
+    ensureSocialAccountsCache().then(function(by) {
+      if (_currentKit === kit && Object.keys(by).length) renderKitAccordion(kit);
+    });
+  }
 
   accordion.innerHTML = SOCIAL_PLAT_ORDER.map(function(platform) {
     return renderKitRow(kit, platform, false);
@@ -5839,6 +6046,7 @@ function renderKitRow(kit, platform, expanded) {
       (hasImage ? '<span class="kit-badge media">Image \u2713</span>' : '') +
       (hasVideo ? '<span class="kit-badge media">Video \u2713</span>' : '') +
       (videoLoading ? '<span class="kit-badge gen-pending">Video generating\u2026</span>' : '') +
+      renderKitAccountSelect(platform, data, isSubstack) +
       (isSubstack
         ? '<button class="btn-kit-approve" onclick="copySubstackTeaser(event)" style="margin-left:auto;">\ud83d\udccb Copy Teaser</button>'
         : '<button class="btn-kit-approve' + (approved ? ' approved' : '') + '" id="kit-approve-' + platform + '" onclick="toggleKitApprove(event,\'' + platform + '\')">' + (approved ? 'APPROVED \u2713' : 'Approve') + '</button>'
@@ -5848,6 +6056,35 @@ function renderKitRow(kit, platform, expanded) {
     '</div>' +
     (expanded ? renderKitRowBody(platform, data) : '') +
   '</div>';
+}
+
+// Per-platform posting-account picker (multi-account via Composio). Rendered
+// only when the platform actually has connected accounts; otherwise posting
+// stays on the default/legacy path and no control is shown.
+function renderKitAccountSelect(platform, data, isSubstack) {
+  if (isSubstack) return '';
+  var accts = (_socialAcctsByPlat || {})[platform] || [];
+  if (!accts.length) return '';
+  var opts = '<option value=""' + (!data.accountId ? ' selected' : '') + '>Default account</option>' +
+    accts.map(function(a) {
+      return '<option value="' + a.id + '"' + (data.accountId === a.id ? ' selected' : '') + '>' +
+        escHtml(a.label || a.platform) + (a.isDefault ? ' ★' : '') + '</option>';
+    }).join('');
+  return '<select class="kit-acct-select" title="Posting account" ' +
+    'onclick="event.stopPropagation()" onchange="onKitAccountChange(\'' + platform + '\', this.value)" ' +
+    'style="font-size:0.62rem;padding:2px 6px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text);max-width:150px;">' +
+    opts + '</select>';
+}
+
+function onKitAccountChange(platform, value) {
+  if (!_currentKit) return;
+  var data = _currentKit.platforms[platform] || {};
+  data.accountId = value || null;
+  _currentKit.platforms[platform] = data;
+  apiFetch('/api/social/kits/' + _currentKit.id, {
+    method: 'PATCH',
+    body: JSON.stringify({ platforms: { [platform]: { accountId: value || null } } }),
+  }).catch(function(e) { console.warn('kit account patch failed:', e); });
 }
 
 function renderKitRowBody(platform, data) {
@@ -6072,11 +6309,47 @@ async function loadSocialPosted() {
   list.innerHTML = '<div class="social-empty">Posted history coming soon.</div>';
 }
 
+// Open a media URL in a new tab. Image models return the image as a base64
+// `data:` URL, and modern browsers BLOCK top-level navigation to data: URLs
+// (anti-phishing) → window.open() just yields an empty about:blank tab. So we
+// convert data: URLs to a Blob object-URL (which browsers DO allow to open) and
+// open regular http(s) URLs directly.
+function openMediaUrl(url) {
+  if (!url) { showToast('Media not ready yet'); return; }
+  try {
+    if (/^data:/i.test(url)) {
+      var comma = url.indexOf(',');
+      var meta = url.slice(5, comma);                 // e.g. "image/png;base64"
+      var isB64 = /;base64/i.test(meta);
+      var mime = meta.split(';')[0] || 'application/octet-stream';
+      var payload = url.slice(comma + 1);
+      var binary = isB64 ? atob(payload) : decodeURIComponent(payload);
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      var objUrl = URL.createObjectURL(new Blob([bytes], { type: mime }));
+      var w = window.open(objUrl, '_blank');
+      if (!w) { showToast('Popup blocked — allow popups to view media'); }
+      setTimeout(function () { URL.revokeObjectURL(objUrl); }, 60000);
+    } else {
+      window.open(url, '_blank');
+    }
+  } catch (e) {
+    // Last resort: render an <img> into a blank tab (data: src inside <img> is allowed).
+    var win = window.open('', '_blank');
+    if (win) {
+      win.document.write('<title>Media</title><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="' + url + '" style="max-width:100%;max-height:100vh"></body>');
+      win.document.close();
+    } else {
+      showToast('Could not open media — ' + (e.message || 'popup blocked'));
+    }
+  }
+}
+
 function viewKitMedia(platform, type) {
   if (!_currentKit) return;
   var data = (_currentKit.platforms[platform] || {})[type];
   if (!data || !data.url) { showToast('Media not ready yet'); return; }
-  window.open(data.url, '_blank');
+  openMediaUrl(data.url);
 }
 
 async function regenKitMedia(platform, type) {
@@ -6196,9 +6469,30 @@ function switchTab(tab) {
 // ═══════════════════════════════════════════════════════════
 //  API KEY MANAGEMENT
 // ═══════════════════════════════════════════════════════════
-const DEFAULT_API_KEY = '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';
+// No built-in OpenRouter key: this file is public. Server-side calls use OPENROUTER_API_KEY via /api/content/llm-proxy.
 
-function getApiKey() { return localStorage.getItem('sla_openrouter_key') || DEFAULT_API_KEY; }
+// The user's own saved key, or '' when none — in which case calls go through the server.
+function getApiKey() { return localStorage.getItem('sla_openrouter_key') || ''; }
+
+// POST a chat-completions payload to OpenRouter. With a user-saved key the browser calls
+// OpenRouter directly (their key, their credits); otherwise it goes through
+// /api/content/llm-proxy, which adds the server key and requires a signed-in session.
+// Returns the raw fetch Response either way, so streaming callers read it unchanged.
+function llmFetch(payload, title, apiKey) {
+  if (apiKey) {
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': title },
+      body: JSON.stringify(payload),
+    });
+  }
+  return fetch('/api/content/llm-proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: JSON.stringify(payload),
+  });
+}
 
 function clearApiKey() {
   localStorage.removeItem('sla_openrouter_key');
@@ -6215,10 +6509,10 @@ function loadApiKeyUI() {
     status.innerHTML = '<span style="color:#27ae60;">&#10003; Custom key saved</span>';
     document.getElementById('apiKeyCard').style.borderColor = 'rgba(39,174,96,0.3)';
   } else {
-    // Using the built-in default key
+    // No saved key: generation runs through the server's key (/api/content/llm-proxy)
     input.value = '';
-    input.placeholder = 'Using built-in key — enter a new one to override';
-    status.innerHTML = '<span style="color:#27ae60;">&#10003; Using built-in key</span>';
+    input.placeholder = 'Using server key — enter your own to override';
+    status.innerHTML = '<span style="color:#27ae60;">&#10003; Using server key</span>';
     document.getElementById('apiKeyCard').style.borderColor = 'rgba(39,174,96,0.3)';
   }
   updateGenerateButton();
@@ -6845,8 +7139,11 @@ function showAutoMessage(text, type) {
   msg.querySelector('button').onclick = function() { clearTimeout(timer); msg.remove(); };
   c.appendChild(msg);
   // Mirror into the log endpoint so the Log tab also shows it
+  // (The log endpoint is admin|content only, so other roles skip the mirror.)
   try {
-    apiFetch('/api/automation/logs', { method:'POST', body: JSON.stringify({ level: type || 'info', message: text }) });
+    if (isContentPlus()) {
+      apiFetch('/api/automation/logs', { method:'POST', body: JSON.stringify({ level: type || 'info', message: text }) }).catch(function() {});
+    }
   } catch(e) {}
 }
 
@@ -7001,6 +7298,9 @@ async function openRuleWizard(editId) {
     if (catSel) catSel.innerHTML = catOpts;
     if (tplSel) tplSel.innerHTML = catOpts;
   }
+  // Byline dropdown: list this category's authors first; refresh order on change.
+  wizPopulateAuthors('');
+  if (catSel) catSel.onchange = function() { wizPopulateAuthors((document.getElementById('wizAuthor') || {}).value || ''); };
 
   document.getElementById('ruleWizardTitle').textContent = editId ? 'Edit Rule' : 'New Automation Rule';
   document.getElementById('wizName').value = '';
@@ -7089,6 +7389,7 @@ async function openRuleWizard(editId) {
         }
         var heroImgEl = document.getElementById('wizHeroImage');
         if (heroImgEl) heroImgEl.checked = rule.generation.heroImage !== false;
+        wizPopulateAuthors(rule.generation.authorMode === 'fixed' ? (rule.generation.fixedAuthorUsername || '') : '');
       }
 
       // Review
@@ -7554,6 +7855,10 @@ async function _wizSubmit() {
       combineMode: combineEl ? combineEl.value : 'one-per-item',
       model: document.getElementById('wizModel').value || null,
       heroImage: document.getElementById('wizHeroImage').checked,
+      // Byline: '' → auto (sub-category author + ~10% floater); a username pins
+      // every article from this rule to that author. See lib/authors.js.
+      authorMode: (document.getElementById('wizAuthor') || {}).value ? 'fixed' : 'auto',
+      fixedAuthorUsername: (document.getElementById('wizAuthor') || {}).value || null,
     },
     review: {
       required: reviewReq,
@@ -8940,7 +9245,7 @@ function updateGenerateButton() {
 
 async function generateReview() {
   if (isGenerating) return;
-  // getApiKey() always returns at least the built-in default key
+  // No key check needed: without a user-saved key, llmFetch uses the server route.
 
   // Build source text from unified source input
   let sourceText = extractedText;
@@ -9041,9 +9346,13 @@ async function generateReview() {
       return;
     } catch (err) {
       lastError = err.message;
-      const isRetryable = /provider|rate.?limit|429|503|overload|unavailable|temporarily/i.test(err.message);
-      if (!isRetryable) break;
-      await sleep(800);
+      // Only a genuine auth failure is fatal (every model shares the same key —
+      // retrying other models won't help). Any model-specific error (404 "no
+      // endpoints found", "unavailable for free", invalid model id, rate-limit,
+      // provider overload) should fall through to the next model in the queue.
+      const isAuthFatal = /invalid or expired|user not found|401|unauthorized|invalid.*key|missing.*auth/i.test(err.message);
+      if (isAuthFatal) break;
+      await sleep(600);
     }
   }
 
@@ -9064,15 +9373,15 @@ async function generateReview() {
 
 async function attemptGeneration(model, systemPrompt, sourceText) {
   const truncatedText = (sourceText || extractedText).length > 60000 ? (sourceText || extractedText).substring(0, 60000) + '\n\n[Text truncated due to length]' : (sourceText || extractedText);
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'Merlows Content Generator' },
-    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please generate content based on the following source material:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 4000, temperature: 0.3 })
-  });
+  const userKey = getApiKey();
+  const response = await llmFetch(
+    { model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please generate content based on the following source material:\n\n---\n${truncatedText}\n---` }], stream: true, max_tokens: 4000, temperature: 0.3 },
+    'Merlows Content Generator', userKey);
   if (!response.ok) {
     let errMsg = `HTTP ${response.status}`;
     try { const errData = await response.json(); errMsg = errData?.error?.metadata?.raw || errData?.error?.message || errMsg; } catch (_) {}
-    if (response.status === 401 || response.status === 403) {
+    // Only a user-saved key can be "invalid"; through the server route a 401 means the session expired.
+    if (userKey && (response.status === 401 || response.status === 403)) {
       clearApiKey();
       throw new Error('API key invalid or expired — please enter a new OpenRouter key in the API Key settings panel.');
     }
@@ -9339,7 +9648,7 @@ function renderArchive() {
         <div class="archive-card-meta">
           <span class="archive-meta-tag tag-date">${date}</span>
           <span class="archive-meta-tag tag-model">${escapeHtml(modelShort)}</span>
-          <span class="archive-meta-tag tag-words">${(r.wordCount||0).toLocaleString()} words</span>
+          <span class="archive-meta-tag tag-words">${(Number(r.wordCount)||0).toLocaleString()} words</span>
         </div>
       </div>
       <div class="archive-card-actions">
@@ -9431,6 +9740,7 @@ function loadArchiveItem(id) {
 
 async function approveCurrentArticle() {
   if (!currentContentId) return;
+  if (!requireContentPlusAction('approve and publish articles')) return;
   const btn = document.getElementById('approveArticleBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Publishing…'; }
   try {
@@ -9577,7 +9887,7 @@ async function viewArticleFromPipeline(itemId) {
   // 'pending_review' is the automation-JOB vocabulary and never appears here.
   const approveBtn = document.getElementById('approveArticleBtn');
   if (approveBtn) {
-    approveBtn.style.display = (item.status === 'in_review' || item.status === 'approved') && !item.wpPostUrl ? '' : 'none';
+    approveBtn.style.display = (item.status === 'in_review' || item.status === 'approved') && !item.wpPostUrl && isContentPlus() ? '' : 'none';
   }
 
   // Link the pipeline record so the Review Requests card can load
@@ -9844,11 +10154,9 @@ Specific, actionable improvements for the weaker item(s).`;
 }
 
 async function attemptAnalysis(model, systemPrompt, reviewsText) {
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${getApiKey()}`, 'Content-Type': 'application/json', 'HTTP-Referer': window.location.href, 'X-Title': 'Merlows Content Comparison' },
-    body: JSON.stringify({ model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please analyse and compare the following ${reviewsText.split('=== ITEM').length - 1} content items:\n\n${reviewsText}` }], stream: true, max_tokens: 2500, temperature: 0.2 })
-  });
+  const response = await llmFetch(
+    { model, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Please analyse and compare the following ${reviewsText.split('=== ITEM').length - 1} content items:\n\n${reviewsText}` }], stream: true, max_tokens: 2500, temperature: 0.2 },
+    'Merlows Content Comparison', getApiKey());
   if (!response.ok) {
     let errMsg = `HTTP ${response.status}`;
     try { const errData = await response.json(); errMsg = errData?.error?.metadata?.raw || errData?.error?.message || errMsg; } catch (_) {}
@@ -9990,7 +10298,7 @@ function loadReport(id) {
       card.innerHTML = `
         <div class="comparison-review-header">
           <span class="comparison-review-title">Item ${i+1}: ${escapeHtml(r.title.slice(0,50))}</span>
-          <span style="font-size:0.65rem;opacity:0.65;">${(r.model||'').replace(':free','')}</span>
+          <span style="font-size:0.65rem;opacity:0.65;">${escapeHtml((r.model||'').replace(':free',''))}</span>
         </div>
         <div class="comparison-review-body">${formatArticleHTML(r.text)}</div>`;
     } else {
@@ -10310,6 +10618,7 @@ async function toggleQueueItem(id, btnEl) {
 
 // Direct approve in pipeline — jump straight to approved, bypassing email
 async function approveDirect(contentId) {
+  if (!requireContentPlusAction('approve articles')) return;
   const btn = event?.target?.closest('.btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Approving…'; }
   try {
@@ -10339,6 +10648,7 @@ async function approveDirect(contentId) {
 // and publishes to WordPress. For manually-created in_review items that have no
 // automation job, falls back to a direct content-status approve.
 async function approveInReview(contentId) {
+  if (!requireContentPlusAction('approve and publish articles')) return;
   const btn = event?.target?.closest('.btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Approving…'; }
   try {
@@ -10405,11 +10715,61 @@ const CATEGORY_SUBCATEGORIES = {
     { slug: 'persian-jewish-heritage', name: 'Persian-Jewish Heritage' },
     { slug: 'conflict-diplomacy',      name: 'Conflict & Diplomacy' },
   ],
+  'breaking-news': [ // WP parent slug 'breaking-news' — editorial focus themes
+    { slug: 'trade-economy',   name: 'Trade & Economy' },
+    { slug: 'peace-diplomacy', name: 'Peace & Diplomacy' },
+    { slug: 'antisemitism',    name: 'Antisemitism' },
+    { slug: 'culture-war',     name: 'Culture War' },
+    { slug: 'nationalism',     name: 'Nationalism' },
+  ],
+  'diplomatic-analysis': [ // WP parent slug 'diplomatic-analysis' (was free-text; fixed 2026-06-26)
+    { slug: 'great-power-politics',  name: 'Great-Power Politics' },
+    { slug: 'security-strategy',     name: 'Security & Strategy' },
+    { slug: 'treaties-institutions', name: 'Treaties & Institutions' },
+  ],
+  'regional-voices': [ // WP parent slug 'regional-voices' (was free-text; fixed 2026-06-26)
+    { slug: 'gulf-perspectives',  name: 'Gulf Perspectives' },
+    { slug: 'israeli-society',    name: 'Israeli Society' },
+    { slug: 'diaspora-dialogues', name: 'Diaspora Dialogues' },
+  ],
 };
 
 // Slugify the way WP's sanitize_title() + wp-taxonomy.slugify() do.
 function subCatSlugify(s) {
   return String(s == null ? '' : s).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Author-team roster for the rule-wizard byline dropdown. MIRROR of lib/authors.js
+// AUTHOR_REGISTRY (display labels only — assignment logic lives server-side). Keep
+// the usernames in sync; the server resolves username → WP user id at publish.
+const AUTHOR_ROSTER = {
+  'breaking-news':       { label: 'Breaking News',       authors: [['adi-rosen','Adi Rosen — Trade & Economy'],['layla-mansour','Layla Mansour — Peace & Diplomacy'],['daniel-roth','Daniel Roth — Antisemitism'],['marcus-whitfield','Marcus Whitfield — Culture War'],['yael-bar-on','Yael Bar-On — Nationalism'],['tomer-avidan','Tomer Avidan — Guest (floater)']] },
+  'op-eds':              { label: 'BlitzSpirit',          authors: [['edith-caldwell','Edith Caldwell — Original Spirit'],['jonathan-pearce','Jonathan Pearce — Explainers'],['margaret-ellison','Margaret Ellison — Blitz Echoes'],['henry-ashworth','Henry Ashworth — Spirit Today'],['clara-bennett','Clara Bennett — Carry On'],['reuben-stein','Reuben Stein — Guest (floater)']] },
+  'cyrus-accord':        { label: 'Cyrus Accords',        authors: [['darius-kohan','Darius Kohan — The Cyrus Vision'],['shirin-hakimi','Shirin Hakimi — Persian-Jewish Heritage'],['cyrus-nazarian','Cyrus Nazarian — Conflict & Diplomacy'],['esther-yaghoubi','Esther Yaghoubi — Guest (floater)']] },
+  'abraham-accords':     { label: 'Abraham Accords',      authors: [['khalid-al-mansoori','Khalid Al-Mansoori — Normalisation & Diplomacy'],['noa-friedman','Noa Friedman — Regional Security'],['faisal-al-rashid','Faisal Al-Rashid — Trade & Connectivity'],['rana-haddad','Rana Haddad — Guest (floater)']] },
+  'diplomatic-analysis': { label: 'Diplomatic Analysis',  authors: [['gregory-halloran','Gregory Halloran — Great-Power Politics'],['avner-cohen','Avner Cohen — Security & Strategy'],['amira-suleiman','Amira Suleiman — Treaties & Institutions'],['daniel-okonkwo','Daniel Okonkwo — Guest (floater)']] },
+  'regional-voices':     { label: 'Regional Voices',      authors: [['mariam-al-sabah','Mariam Al-Sabah — Gulf Perspectives'],['itai-ben-david','Itai Ben-David — Israeli Society'],['rachel-goldstein','Rachel Goldstein — Diaspora Dialogues'],['samir-khoury','Samir Khoury — Guest (floater)']] },
+};
+
+// Populate the wizard byline <select>. Lists the selected category's authors first
+// (optgroup), then everyone else, so a fixed byline can be picked from any category.
+function wizPopulateAuthors(selectedUsername) {
+  const sel = document.getElementById('wizAuthor');
+  if (!sel) return;
+  const cat = (document.getElementById('wizCategory') || {}).value || '';
+  while (sel.options.length > 1) sel.remove(1);
+  const order = Object.keys(AUTHOR_ROSTER).sort((a, b) => (a === cat ? -1 : b === cat ? 1 : 0));
+  for (const c of order) {
+    const grp = document.createElement('optgroup');
+    grp.label = AUTHOR_ROSTER[c].label + (c === cat ? ' (this rule)' : '');
+    for (const [u, label] of AUTHOR_ROSTER[c].authors) {
+      const o = document.createElement('option');
+      o.value = u; o.textContent = label;
+      grp.appendChild(o);
+    }
+    sel.appendChild(grp);
+  }
+  sel.value = selectedUsername || '';
 }
 
 // Match a free-text sub-category value (slug, display name, or case/spacing
@@ -11597,6 +11957,73 @@ let _currentUser = null;
 function isRole(...roles) { return _currentUser && roles.includes(_currentUser.appRole); }
 function isAdmin()        { return isRole('admin'); }
 function isContentPlus()  { return isRole('admin','content'); }
+// Pipeline actions (publish, schedule, send for review, approve) are admin|content
+// server-side. Guard for the action functions: toast and stop for other roles,
+// the same pattern as saveGenPrompt().
+function requireContentPlusAction(what) {
+  if (isContentPlus()) return true;
+  showToast('Only admin or content users can ' + what + '.');
+  return false;
+}
+
+// GitHub data loads through /api/content/gh-data, which needs a session. Boot calls this
+// in parallel with bootAuth (a returning user's cookie is already set); submitLogin calls
+// it again, because on a fresh sign-in the boot load was refused.
+// Publishing queue + Published count from the slim content cache. /api/content needs a
+// session, so like loadGhData this runs at boot and again after submitLogin.
+async function loadPublishingQueue(fresh) {
+  // After sign-in, don't reuse a refresh that was sent while signed out (it will
+  // resolve to the stale/empty list): let it finish, then fetch again.
+  if (fresh && contentCache.inflight) await contentCache.inflight.catch(() => {});
+  return contentCache.refresh().then(items => {
+    window._publishedCount = items.filter(i => i.status === 'published').length;
+    publishingQueue = items.filter(i => i.status !== 'published');
+    renderQueuePanel();
+    updateQueueHeaderBtn();
+    loadDashboard(); // refresh published count once pipeline data arrives
+    // If monitoring is visible, refresh it too
+    if (document.getElementById('view-monitoring')?.classList.contains('active')) loadMonitoring();
+  });
+}
+
+// A 401 from our own API while signed in means the session is gone (expired, or
+// invalidated when JWT_SECRET changed). Show the login overlay instead of letting
+// actions fail with raw errors and lists silently go stale. /api/auth/* is excluded:
+// login and /me report their own 401s.
+function onUnauthorized() {
+  // A pending forced password change is refused everywhere by design: keep the
+  // change dialog up rather than bouncing to the login screen.
+  if (!_currentUser || _currentUser.mustChangePassword) return;
+  _currentUser = null;
+  document.getElementById('loginOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('loginEmail')?.focus(), 50);
+}
+(function () {
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = async function (input, init) {
+    // Only act if the same user is still signed in as when the request started: a
+    // 401 from a request sent while signed out (or under an old session) must not
+    // bounce someone who has just signed in.
+    const who = _currentUser;
+    const res = await nativeFetch(input, init);
+    if (res.status === 401 && who && who === _currentUser) {
+      try {
+        const u = new URL(typeof input === 'string' ? input : input.url, location.href);
+        if (u.origin === location.origin && u.pathname.startsWith('/api/') && !u.pathname.startsWith('/api/auth/')) onUnauthorized();
+      } catch (_) {}
+    }
+    return res;
+  };
+})();
+
+function loadGhData() {
+  return ghLoadCustomCategories().then(function() {
+    return ghLoadAll();
+  }).then(function() {
+    updateCategoryHeader(currentCategory);
+    loadDashboard();
+  });
+}
 
 async function bootAuth() {
   try {
@@ -11607,6 +12034,8 @@ async function bootAuth() {
       document.getElementById('authBootCover').style.display = 'none';
       if (typeof loadReviewers === 'function') loadReviewers().catch(() => {});
       applyRoleGating();
+      // A pending password change gets nothing but the change dialog: the server
+      // refuses every other route for this session until the change is made.
       if (_currentUser.mustChangePassword) openChangePwd(true);
       return true;
     }
@@ -11635,9 +12064,16 @@ async function submitLogin() {
     _currentUser = data.user;
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('loginPassword').value = '';
-    if (typeof loadReviewers === 'function') loadReviewers().catch(() => {});
     applyRoleGating();
-    if (_currentUser.mustChangePassword) openChangePwd(true);
+    if (_currentUser.mustChangePassword) {
+      // The server refuses every other route until the password is changed;
+      // submitChangePassword reloads the page afterwards to load everything.
+      openChangePwd(true);
+    } else {
+      if (typeof loadReviewers === 'function') loadReviewers().catch(() => {});
+      loadGhData();
+      loadPublishingQueue(true);
+    }
   } catch (e) {
     errEl.textContent = e.message;
   } finally {
@@ -11686,7 +12122,7 @@ async function submitChangePassword() {
   const errEl = document.getElementById('changePwdError');
   errEl.textContent = '';
   if (newPassword !== newPassword2) { errEl.textContent = 'New passwords do not match.'; return; }
-  if (newPassword.length < 4) { errEl.textContent = 'Password must be at least 4 characters.'; return; }
+  if (newPassword.length < 10) { errEl.textContent = 'Password must be at least 10 characters.'; return; }
   try {
     const r = await fetch('/api/auth/change-password', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
@@ -11694,9 +12130,12 @@ async function submitChangePassword() {
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error || 'Failed');
+    const wasForced = !!_currentUser?.mustChangePassword;
     if (_currentUser) _currentUser.mustChangePassword = false;
     document.getElementById('changePwdModal').style.display = 'none';
     if (typeof showToast === 'function') showToast('Password updated');
+    // Every data load was refused while the change was pending; start clean.
+    if (wasForced) setTimeout(() => location.reload(), 600);
   } catch (e) {
     errEl.textContent = e.message;
   }
@@ -11722,6 +12161,7 @@ function applyRoleGating() {
     'tab-settings':    isAdmin(),
     'tab-distribution': isContentPlus(),
     'tab-monitoring':  isContentPlus(),
+    'tab-bibliography': isContentPlus(),
   };
   Object.entries(navItems).forEach(([id, show]) => {
     const el = document.getElementById(id);
@@ -11803,22 +12243,12 @@ window.addEventListener('DOMContentLoaded', () => {
   // Load custom categories from GitHub first (cross-browser sync),
   // then load all category data — order matters because ghLoadAll() iterates CATEGORIES,
   // which only includes custom cats after activateCustomCategories() has been called.
-  ghLoadCustomCategories().then(function() {
-    return ghLoadAll();
-  }).then(function() {
-    updateCategoryHeader(currentCategory);
-    loadDashboard();
-  });
-  // Load publishing queue from API (falls back to empty if API not available)
-  contentApi.getAll().then(items => {
-    window._publishedCount = items.filter(i => i.status === 'published').length;
-    publishingQueue = items.filter(i => i.status !== 'published');
-    renderQueuePanel();
-    updateQueueHeaderBtn();
-    loadDashboard(); // refresh published count once pipeline data arrives
-    // If monitoring is visible, refresh it too
-    if (document.getElementById('view-monitoring')?.classList.contains('active')) loadMonitoring();
-  });
+  loadGhData();
+  // Load publishing queue from the slim content cache (metadata only — every
+  // consumer here uses status/title/id; anything needing a body refetches the
+  // single record by id). Also warms the cache so the first Pipeline /
+  // Notifications open paints instantly.
+  loadPublishingQueue();
   renderQueuePanel();
   updateQueueHeaderBtn();
 });
@@ -12005,22 +12435,13 @@ function closeMonDrawer() {
 // ═══════════════════════════════════════════════════════════
 async function callOpenRouter(prompt, apiKey, model) {
   model = model || (document.getElementById('modelSelect') && document.getElementById('modelSelect').value) || 'arcee-ai/trinity-large-preview:free';
-  const resp = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': window.location.href,
-      'X-Title': 'Merlows Content Generator',
-    },
-    body: JSON.stringify({
-      model,
-      messages: [{ role: 'user', content: prompt }],
-      stream: false,
-      max_tokens: 1000,
-      temperature: 0.7,
-    }),
-  });
+  const resp = await llmFetch({
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    stream: false,
+    max_tokens: 1000,
+    temperature: 0.7,
+  }, 'Merlows Content Generator', apiKey);
   if (!resp.ok) {
     const err = await resp.text();
     throw new Error(`OpenRouter ${resp.status}: ${err}`);
@@ -12675,7 +13096,7 @@ async function heroLeftGenerate() {
   if (!text) { showHeroLeftStatus('error', 'Generate an article first, or upload a source document.'); return; }
   const btn = document.getElementById('heroLeftActionBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
-  const model = (document.getElementById('heroAiModelSelect') || {}).value || 'google/gemini-3.1-flash-image';
+  const model = (document.getElementById('heroAiModelSelect') || {}).value || 'google/gemini-3.1-flash-lite-image';
   showHeroLeftStatus('info', 'Generating image with AI… this can take 15–30 seconds');
   const kws = extractKeywordsFromText(text, 6);
   const prompt = kws.join(', ') + ', medical healthcare professional, clinical setting, high quality, Merlows brand navy and teal. Absolutely no text, words, letters, numbers, or typography anywhere in the image.';
@@ -12944,8 +13365,9 @@ function loadDashboard() {
   // Load automation sequences summary
   var dashAutoList = document.getElementById('dashAutoList');
   if (dashAutoList) {
-    fetch('/api/automation/rules').then(function(r) { return r.json(); }).then(function(rules) {
-      if (!rules || rules.length === 0) {
+    // Rules are admin|content server-side; a 'user' gets 403 → treat as no sequences.
+    fetch('/api/automation/rules').then(function(r) { return r.ok ? r.json() : []; }).then(function(rules) {
+      if (!Array.isArray(rules) || rules.length === 0) {
         dashAutoList.innerHTML = '<div class="dash-auto-empty">No automation sequences yet.</div>';
         return;
       }
@@ -13166,6 +13588,7 @@ function calPopupEditSchedule() {
 
 async function calPopupRemoveSchedule() {
   if (!_calPopupItem) return;
+  if (!requireContentPlusAction('change the schedule')) return;
   const title = _calPopupItem.title || 'this article';
   if (!confirm('Remove schedule for "' + title + '"?\nThe article will return to Approved status.')) return;
   const id = _calPopupId;
@@ -13344,14 +13767,18 @@ async function bulkDeletePipeline() {
   const ids = Array.from(selectedPipelineIds);
   // Use the same path movePipelineToTrash uses, so the canonical status string
   // ('trash', not 'trashed') is applied and the Trash page picks them up.
+  // contentApi.update returns null on refusal (e.g. a basic user and an article
+  // in review/approved/scheduled/published), so count what actually moved.
+  let moved = 0;
   for (const id of ids) {
-    try { await contentApi.update(id, { status: 'trash' }); } catch(e){}
+    try { if (await contentApi.update(id, { status: 'trash' })) moved++; } catch(e){}
   }
   selectedPipelineIds.clear();
   updatePipelineBulkBar();
   loadPipeline();
   if (typeof updateTrashBadge === 'function') updateTrashBadge();
-  showToast('Moved ' + ids.length + ' to trash');
+  const skipped = ids.length - moved;
+  showToast('Moved ' + moved + ' to trash' + (skipped ? ' — ' + skipped + ' not moved (needs admin or content role)' : ''));
 }
 
 function renderListRow(item) {
@@ -13380,6 +13807,10 @@ function renderKanbanCard(item) {
   let badge = '';
   let extra = '';
   let actions = '';
+  // Publish / schedule / review-send / approve are admin|content server-side;
+  // don't render those buttons for other roles. (Built into the template rather
+  // than data-require-role, because applyRoleGating() resets inline display.)
+  const canPipelineAct = isContentPlus();
 
   if (item.status === 'in_review') {
     const total    = (item.reviewers || []).length;
@@ -13389,7 +13820,7 @@ function renderKanbanCard(item) {
     extra  = `
       <div class="review-prog-label">${approved} / ${total || '?'} approved</div>
       <div class="review-prog-track"><div class="review-prog-fill" style="width:${pct}%"></div></div>`;
-    actions = `
+    actions = !canPipelineAct ? '' : `
       <button class="btn btn-approve-pipeline btn-sm" onclick="approveInReview('${item.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
         Approve &amp; Publish
@@ -13397,7 +13828,7 @@ function renderKanbanCard(item) {
       <button class="btn btn-outline btn-sm" onclick="sendForReview('${item.id}')">Resend Email</button>`;
   } else if (item.status === 'approved') {
     badge   = `<div class="kbadge kbadge-approved">✓ Approved</div>`;
-    actions = `
+    actions = !canPipelineAct ? '' : `
       <button class="btn btn-orange btn-sm" onclick="openScheduleModal('${item.id}','${escapeHtml(item.title)}','${item.category||''}')">Schedule Post</button>
       <button class="btn btn-outline btn-sm" onclick="publishNow('${item.id}')">Publish Now</button>`;
   } else if (item.status === 'scheduled') {
@@ -13406,7 +13837,7 @@ function renderKanbanCard(item) {
     extra = item.gcalEventId
       ? `<div class="kcard-service-row"><svg viewBox="0 0 24 24" fill="none" stroke="#4285f4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Google Calendar synced ✓</div>`
       : '';
-    actions = `
+    actions = !canPipelineAct ? '' : `
       <button class="btn btn-outline btn-sm" onclick="openScheduleModal('${item.id}','${escapeHtml(item.title)}','${item.category||''}')">Edit Schedule</button>
       <button class="btn btn-orange btn-sm" onclick="publishNow('${item.id}')">Publish Now</button>`;
   } else if (item.status === 'published') {
@@ -13447,7 +13878,7 @@ function renderKanbanCard(item) {
       </button>`;
   } else {
     // draft — show Send for Review AND direct Approve (bypass email)
-    actions = `
+    actions = !canPipelineAct ? '' : `
       <button class="btn btn-orange btn-sm" onclick="sendForReview('${item.id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         Send for Review
@@ -13747,6 +14178,7 @@ async function resetToDraft(contentId) {
 }
 
 async function sendForReview(contentId) {
+  if (!requireContentPlusAction('send articles for review')) return;
   const requireAll = document.getElementById('requireAllApprovals')?.checked ?? false;
   const btn = event?.target;
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
@@ -13918,6 +14350,7 @@ async function resendReview() {
 // Toolbar "Send for Review" — queues first if not already in pipeline, then sends
 async function sendForReviewFromToolbar() {
   if (!rawArticleText) return;
+  if (!requireContentPlusAction('send articles for review')) return;
   const btn = document.getElementById('sendForReviewBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
   try {
@@ -13938,6 +14371,7 @@ async function sendForReviewFromToolbar() {
 }
 
 async function publishNow(contentId) {
+  if (!requireContentPlusAction('publish articles')) return;
   const item = (publishingQueue || []).find(function(i) { return i.id === contentId; });
   const hasSocial = item && (item.socialPosts || socialPostCache[contentId]);
   let scheduleSocial = false;
@@ -14008,7 +14442,8 @@ async function deletePipelineItem(contentId) {
 }
 
 async function movePipelineToTrash(contentId) {
-  await contentApi.update(contentId, { status: 'trash' });
+  const moved = await contentApi.update(contentId, { status: 'trash' });
+  if (!moved) { showToast('Not moved to trash — this article needs an admin or content user'); return; }
   loadPipeline();
   showToast('Moved to trash — restore from Trash page');
   updateTrashBadge();
@@ -14021,6 +14456,7 @@ let _schedContentId = null;
 let _schedGcalOn    = true;
 
 function openScheduleModal(contentId, title, category) {
+  if (!requireContentPlusAction('schedule articles')) return;
   _schedContentId = contentId;
   document.getElementById('schedModalTitle').textContent = title;
   // Default to tomorrow 09:00
@@ -14066,6 +14502,7 @@ function updateSchedGcalToggle() {
 
 async function confirmSchedule() {
   if (!_schedContentId) return;
+  if (!requireContentPlusAction('schedule articles')) return;
   const scheduledAt = document.getElementById('schedDateTime').value;
   if (!scheduledAt) { alert('Please pick a date and time.'); return; }
 
@@ -14113,6 +14550,7 @@ let _reviewers = [];
 async function loadSettings() {
   await loadReviewers();
   renderSocialConnections();
+  renderComposioSummary();
   loadCloudIntegrationStatus();
 }
 
@@ -14325,7 +14763,228 @@ async function removeReviewer(id) {
   renderReviewerList();
 }
 
-// ─── Social Connections ───
+// ── Composio connected accounts (live posting) — primary connections view ──────
+var COMPOSIO_PLAT_META = {
+  facebook:  { label: 'Facebook',    cfgKey: 'pageId',    cfgLabel: 'Page ID' },
+  instagram: { label: 'Instagram',   cfgKey: 'igUserId',  cfgLabel: 'IG user' },
+  linkedin:  { label: 'LinkedIn',    cfgKey: 'authorUrn', cfgLabel: 'Author' },
+  twitter:   { label: 'X / Twitter', cfgKey: null,        cfgLabel: '' },
+  tiktok:    { label: 'TikTok',      cfgKey: null,        cfgLabel: '' },
+};
+
+function composioStatusColor(status) {
+  var s = (status || '').toUpperCase();
+  if (s === 'ACTIVE') return '#22c55e';
+  if (s === 'EXPIRED' || s === 'INACTIVE' || s === 'FAILED') return '#f59e0b';
+  return '#cbd5e1';
+}
+
+// id → label/config caches so inline onclick handlers pass only the (safe-slug) account id.
+var _composioAcctLabels = {};
+var _composioAcctCfg = {};
+
+function renderComposioConnectBar() {
+  var bar = document.getElementById('socialComposioConnectBar');
+  if (!bar) return;
+  bar.innerHTML = Object.keys(COMPOSIO_PLAT_META).map(function(plat) {
+    var meta = COMPOSIO_PLAT_META[plat];
+    return '<button class="btn btn-outline btn-sm" onclick="connectComposioAccount(\'' + plat + '\')">+ Connect ' + escapeHtml(meta.label) + '</button>';
+  }).join('');
+}
+
+async function connectComposioAccount(platform) {
+  var meta = COMPOSIO_PLAT_META[platform] || { label: platform, cfgKey: null, cfgLabel: '' };
+  try {
+    var r = await fetch('/api/social/accounts/link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: platform })
+    });
+    var data = await r.json().catch(function(){return{};});
+    if (!r.ok) throw new Error(data.error || ('HTTP ' + r.status));
+    if (!data.redirectUrl) throw new Error('No redirect URL returned');
+    window.open(data.redirectUrl, 'composio-connect-' + platform, 'width=620,height=760');
+    var done = confirm('A Composio authorisation window has opened for ' + meta.label + '.\n\nComplete the sign-in there, then click OK to register the account here.\n(Cancel aborts registration — you can re-list it later.)');
+    if (!done) return;
+    var label = prompt('Label for this ' + meta.label + ' account (e.g. "Merlows main"):', meta.label) || platform;
+    var config = null;
+    if (meta.cfgKey) {
+      var idVal = prompt(meta.label + ' requires a ' + meta.cfgLabel + ' to post.\nEnter it now (or leave blank to add later via Edit ID):', '');
+      if (idVal && idVal.trim()) { config = {}; config[meta.cfgKey] = idVal.trim(); }
+    }
+    var reg = await fetch('/api/social/accounts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ platform: platform, label: label, connectedAccountId: data.connectionId, config: config })
+    });
+    if (!reg.ok) { var e = await reg.json().catch(function(){return{};}); throw new Error(e.error || ('HTTP ' + reg.status)); }
+    showToast(meta.label + ' account registered');
+    _socialAcctsByPlat = null; _socialAcctsLoading = null; // re-prime kit account pickers
+    await renderComposioAccounts();
+    if (typeof renderComposioSummary === 'function') renderComposioSummary();
+  } catch (err) {
+    alert('Could not connect ' + meta.label + ': ' + (err.message || err));
+  }
+}
+
+async function editComposioAccountId(id, platform) {
+  var meta = COMPOSIO_PLAT_META[platform];
+  if (!meta || !meta.cfgKey) return;
+  var val = prompt('Enter the ' + meta.cfgLabel + ' for this ' + meta.label + ' account:', _composioAcctCfg[id] || '');
+  if (val === null) return;
+  try {
+    var config = {}; config[meta.cfgKey] = val.trim();
+    var r = await fetch('/api/social/accounts/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ config: config })
+    });
+    if (!r.ok) { var e = await r.json().catch(function(){return{};}); throw new Error(e.error || ('HTTP ' + r.status)); }
+    await renderComposioAccounts();
+  } catch (err) {
+    alert('Could not save ' + meta.cfgLabel + ': ' + (err.message || err));
+  }
+}
+
+async function renderComposioAccounts() {
+  renderComposioConnectBar();
+  var list = document.getElementById('socialComposioList');
+  if (!list) return;
+  list.innerHTML = '<div style="color:var(--text-muted);font-size:0.82rem;padding:1.25rem;">Loading accounts…</div>';
+  try {
+    var r = await fetch('/api/social/accounts');
+    var data = await r.json();
+    var accounts = data.accounts || [];
+    if (!accounts.length) {
+      list.innerHTML = '<div style="background:#fff;border:1px dashed var(--border);border-radius:6px;padding:22px;text-align:center;">' +
+        '<div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:4px;">No accounts connected yet</div>' +
+        '<div style="font-size:0.7rem;color:var(--text-muted);">Use a <strong>+ Connect</strong> button above to link an account via Composio. Posting falls back to the legacy env-var method until an account is connected.</div>' +
+      '</div>';
+      return;
+    }
+    // Group by platform, preserving a stable platform order.
+    var order = ['facebook', 'instagram', 'linkedin', 'twitter', 'tiktok'];
+    var groups = {};
+    _composioAcctLabels = {};
+    _composioAcctCfg = {};
+    accounts.forEach(function(a) {
+      _composioAcctLabels[a.id] = a.label || a.platform;
+      var m = COMPOSIO_PLAT_META[a.platform];
+      if (m && m.cfgKey && a.config) _composioAcctCfg[a.id] = a.config[m.cfgKey] || '';
+      (groups[a.platform] = groups[a.platform] || []).push(a);
+    });
+    var platforms = Object.keys(groups).sort(function(a, b) {
+      var ia = order.indexOf(a); var ib = order.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+
+    list.innerHTML = platforms.map(function(plat) {
+      var meta = COMPOSIO_PLAT_META[plat] || { label: plat, cfgKey: null, cfgLabel: '' };
+      var rows = groups[plat].map(function(a) {
+        var dot = composioStatusColor(a.status);
+        var isDefault = !!a.isDefault;
+        var cfgVal = meta.cfgKey && a.config ? a.config[meta.cfgKey] : '';
+        var cfgLine = '';
+        if (meta.cfgKey) {
+          cfgLine = cfgVal
+            ? '<div style="font-family:monospace;font-size:0.65rem;color:var(--text-muted);margin:4px 0 0 20px;">' + meta.cfgLabel + ': ' + escapeHtml(String(cfgVal)) + '</div>'
+            : '<div style="font-size:0.65rem;color:#b45309;margin:4px 0 0 20px;">⚠ ' + meta.cfgLabel + ' not set — required to post. Use Edit ID.</div>';
+        }
+        var defaultBadge = isDefault
+          ? '<span style="font-size:0.6rem;font-weight:700;color:#15803d;background:rgba(34,197,94,0.12);padding:1px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:0.4px;">Default</span>'
+          : '';
+        var setDefaultBtn = isDefault
+          ? ''
+          : '<button class="btn btn-outline btn-sm" onclick="setComposioDefault(\'' + a.id + '\')">Set default</button>';
+        return '<div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;">' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:10px;">' +
+              '<span title="' + escapeHtml(a.status || 'unknown') + '" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + dot + ';flex-shrink:0;"></span>' +
+              '<strong style="font-size:0.82rem;">' + escapeHtml(a.label || plat) + '</strong>' +
+              defaultBadge +
+              '<span style="font-size:0.62rem;color:var(--text-muted);">· ' + escapeHtml((a.status || '').toLowerCase()) + '</span>' +
+            '</div>' +
+            cfgLine +
+          '</div>' +
+          '<div style="display:flex;gap:6px;align-items:center;justify-content:flex-end;">' +
+            (meta.cfgKey ? '<button class="btn btn-outline btn-sm" onclick="editComposioAccountId(\'' + a.id + '\',\'' + plat + '\')">Edit ID</button>' : '') +
+            setDefaultBtn +
+            '<button class="btn btn-outline btn-sm" onclick="removeComposioAccount(\'' + a.id + '\')" title="Remove account" aria-label="Remove ' + escapeHtml(a.label || plat) + '">Remove</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+      return '<div>' +
+        '<div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--sla-navy);margin:0 0 8px;">' + escapeHtml(meta.label) + '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;">' + rows + '</div>' +
+      '</div>';
+    }).join('');
+  } catch (err) {
+    list.innerHTML = '<div style="color:#ef4444;font-size:0.78rem;padding:1rem;">Failed to load accounts: ' + escapeHtml(err.message || String(err)) + '</div>';
+  }
+}
+
+async function setComposioDefault(id) {
+  try {
+    var r = await fetch('/api/social/accounts/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isDefault: true })
+    });
+    if (!r.ok) { var e = await r.json().catch(function(){return{};}); throw new Error(e.error || ('HTTP ' + r.status)); }
+    await renderComposioAccounts();
+    if (typeof renderComposioSummary === 'function') renderComposioSummary();
+  } catch (err) {
+    alert('Could not set default: ' + (err.message || err));
+  }
+}
+
+async function removeComposioAccount(id) {
+  var label = _composioAcctLabels[id] || 'this account';
+  if (!confirm('Remove "' + label + '"? Posting for it will fall back to the default account (or the legacy method).')) return;
+  try {
+    var r = await fetch('/api/social/accounts/' + encodeURIComponent(id), { method: 'DELETE' });
+    if (!r.ok) { var e = await r.json().catch(function(){return{};}); throw new Error(e.error || ('HTTP ' + r.status)); }
+    _socialAcctsByPlat = null; _socialAcctsLoading = null; // re-prime kit account pickers
+    await renderComposioAccounts();
+    if (typeof renderComposioSummary === 'function') renderComposioSummary();
+  } catch (err) {
+    alert('Could not remove account: ' + (err.message || err));
+  }
+}
+
+// Compact read-only summary for the Settings → Social Media Connections section.
+async function renderComposioSummary() {
+  var el = document.getElementById('socialComposioSummary');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:0.5rem 0;">Loading connected accounts…</div>';
+  try {
+    var r = await fetch('/api/social/accounts');
+    var data = await r.json();
+    var accounts = data.accounts || [];
+    if (!accounts.length) {
+      el.innerHTML = '<div style="font-size:0.72rem;color:var(--text-muted);padding:2px 0 10px;">No accounts connected yet. Manage accounts in <strong>Social → Connections</strong>.</div>';
+      return;
+    }
+    var order = ['facebook', 'instagram', 'linkedin', 'twitter', 'tiktok'];
+    accounts.sort(function(a, b) { return order.indexOf(a.platform) - order.indexOf(b.platform); });
+    el.innerHTML =
+      '<div style="font-size:0.72rem;color:var(--text-muted);margin:0 0 10px;">Live posting runs through these Composio accounts — manage them in <strong>Social → Connections</strong>.</div>' +
+      accounts.map(function(a) {
+        var meta = COMPOSIO_PLAT_META[a.platform] || { label: a.platform };
+        var dot = composioStatusColor(a.status);
+        var def = a.isDefault ? '<span style="font-size:0.58rem;font-weight:700;color:#15803d;margin-left:6px;">DEFAULT</span>' : '';
+        return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.74rem;">' +
+          '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + dot + ';flex-shrink:0;"></span>' +
+          '<span style="color:var(--text-muted);min-width:74px;">' + escapeHtml(meta.label) + '</span>' +
+          '<strong style="color:var(--text);">' + escapeHtml(a.label || a.platform) + '</strong>' + def +
+        '</div>';
+      }).join('');
+  } catch (err) {
+    el.innerHTML = '<div style="color:#ef4444;font-size:0.72rem;">Failed to load accounts: ' + escapeHtml(err.message || String(err)) + '</div>';
+  }
+}
+
+// ─── Social Connections (legacy per-browser credential forms) ───
 function renderSocialConnections() {
   const el = document.getElementById('socialConnList');
   if (!el) return;

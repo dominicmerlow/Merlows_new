@@ -7,6 +7,9 @@ test('Telegram webhook handler', async (t) => {
   process.env.TELEGRAM_WEBHOOK_SECRET = 'test-secret';
   process.env.TELEGRAM_BOT_TOKEN = 'bot-token';
   process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000';
+  // The publish call after an approval is server-to-server and carries the
+  // internal CRON_SECRET bearer (lib/cron-auth.js internalAuthHeaders).
+  process.env.CRON_SECRET = 'test-cron-secret';
 
   await t.test('returns 405 for non-POST requests', async () => {
     let fetchCalls = [];
@@ -165,6 +168,8 @@ test('Telegram webhook handler', async (t) => {
     const publishCall = fetchCalls.find((c) => c.url.includes('/api/publish'));
     assert.ok(publishCall, 'publish API should be called');
     assert.deepEqual(JSON.parse(publishCall.opts.body), { contentId: 'content_1' });
+    // /api/publish is gated to admin|content or the internal bearer.
+    assert.equal(publishCall.opts.headers.Authorization, 'Bearer test-cron-secret');
   });
 
   await t.test('rejects job and updates status', async () => {
@@ -324,5 +329,40 @@ test('Telegram webhook handler', async (t) => {
     assert.ok(telegramCall, 'answerCallbackQuery should be called');
     const body = JSON.parse(telegramCall.opts.body);
     assert.ok(body.text.includes('Already'));
+  });
+  // Fail-closed checks. A small recording res so a handler that never answers
+  // fails the test instead of passing vacuously.
+  function recRes() {
+    const r = { statusCode: null, body: null };
+    r.status = (c) => { r.statusCode = c; return r; };
+    r.json = (b) => { r.body = b; return r; };
+    return r;
+  }
+  const callbackBody = { callback_query: { data: 'approve:job_x', id: 'cq_x' } };
+  const touchKv = { get: async () => { throw new Error('kv must not be read'); }, set: async () => { throw new Error('kv must not be written'); } };
+
+  await t.test('503 when TELEGRAM_WEBHOOK_SECRET is unset, even with no header (was: undefined === undefined → open)', async () => {
+    const saved = process.env.TELEGRAM_WEBHOOK_SECRET;
+    delete process.env.TELEGRAM_WEBHOOK_SECRET;
+    try {
+      const res = recRes();
+      await createHandler(touchKv)({ method: 'POST', headers: {}, body: callbackBody }, res);
+      assert.equal(res.statusCode, 503);
+      assert.match(res.body.error, /TELEGRAM_WEBHOOK_SECRET/);
+    } finally {
+      process.env.TELEGRAM_WEBHOOK_SECRET = saved;
+    }
+  });
+
+  await t.test('401 when the secret header is missing', async () => {
+    const res = recRes();
+    await createHandler(touchKv)({ method: 'POST', headers: {}, body: callbackBody }, res);
+    assert.equal(res.statusCode, 401);
+  });
+
+  await t.test('401 when the secret header differs only in length', async () => {
+    const res = recRes();
+    await createHandler(touchKv)({ method: 'POST', headers: { 'x-telegram-bot-api-secret-token': 'test-secret-longer' }, body: callbackBody }, res);
+    assert.equal(res.statusCode, 401);
   });
 });

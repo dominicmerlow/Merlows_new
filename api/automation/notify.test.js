@@ -1,6 +1,11 @@
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildTelegramPayload, buildApprovalEmailHtml, sendNotifications } from './notify.js';
+
+// Approval-email tokens are signed with JWT_SECRET, which no longer has a
+// built-in fallback (lib/auth.js getSessionSecret). Set a test value before
+// the module loads.
+process.env.JWT_SECRET ??= 'test-jwt-secret-for-notify-tests';
+const { buildTelegramPayload, buildApprovalEmailHtml, sendNotifications } = await import('./notify.js');
 
 // ── 1. buildTelegramPayload ───────────────────────────────────────────────────
 

@@ -8,6 +8,21 @@
 import publishHandler from '../../lib/core/handlers/publish.js';
 import reviewersHandler from '../../lib/core/handlers/reviewers.js';
 import scheduleHandler from '../../lib/core/handlers/schedule.js';
+import { LEVEL, enforce } from '../../lib/route-auth.js';
+
+// Access policy per route (see lib/route-auth.js). Unlisted (method, route)
+// pairs return null and fall back to DEFAULT_LEVEL (admin) in enforce().
+export function corePolicy(method, slug) {
+  const [first] = slug;
+  // Publishing and scheduling put an article on the public site (the cron
+  // publishes anything 'scheduled'), so they need admin|content — or the
+  // internal bearer (cron, automation approve/run, Telegram approval).
+  if (first === 'publish')   return method === 'POST' ? LEVEL.CONTENT : null;
+  if (first === 'schedule')  return method === 'POST' ? LEVEL.CONTENT : null;
+  // Anyone signed in can read the reviewer list; changing it is admin-only.
+  if (first === 'reviewers') return method === 'GET' ? LEVEL.SESSION : LEVEL.ADMIN;
+  return null;
+}
 
 export default async function handler(req, res) {
   // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
@@ -21,6 +36,8 @@ export default async function handler(req, res) {
     ? rawSlug
     : String(rawSlug).split('/').filter(Boolean);
   const [first] = slug;
+
+  if (!(await enforce(req, res, corePolicy(req.method, slug)))) return;
 
   // Query strings like ?id= pass through untouched — handlers read req.query.
   if (first === 'publish')   return publishHandler(req, res);

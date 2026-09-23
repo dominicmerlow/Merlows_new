@@ -6,6 +6,18 @@
 
 import tokenHandler from '../../lib/review/handlers/token.js';
 import sendHandler from '../../lib/review/handlers/send.js';
+import { LEVEL, enforce } from '../../lib/route-auth.js';
+
+// Access policy per route (see lib/route-auth.js). Unlisted (method, route)
+// pairs return null and fall back to DEFAULT_LEVEL (admin) in enforce().
+export function reviewPolicy(method, slug) {
+  const [first] = slug;
+  // Sending review emails is a pipeline action: admin|content or internal.
+  if (first === 'send') return method === 'POST' ? LEVEL.CONTENT : null;
+  // /api/review/<token>: the signed JWT in the path is the credential.
+  // (A bare /api/review falls through to the 404 below.)
+  return LEVEL.PUBLIC;
+}
 
 export default async function handler(req, res) {
   // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
@@ -19,6 +31,8 @@ export default async function handler(req, res) {
     ? rawSlug
     : String(rawSlug).split('/').filter(Boolean);
   const [first] = slug;
+
+  if (!(await enforce(req, res, reviewPolicy(req.method, slug)))) return;
 
   if (first === 'send') return sendHandler(req, res);
 

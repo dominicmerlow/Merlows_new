@@ -1,7 +1,10 @@
 # MERLOWS Content Generator — Claude Context
 
 ## Architecture
-- **Single-file app**: entire UI lives in `index.html` (inline JS/CSS). No build step.
+- **Single-file app**: entire UI lives in `public/index.html` (inline JS/CSS). No build step.
+- **Vercel serves ONLY `public/`** (`"outputDirectory": "public"` pinned in vercel.json); `api/`
+  functions are unaffected (they're built, not statically served). Never recreate a root-level
+  `index.html` — it would not be served.
 - **No local dev server**: verify by deploying — `vercel --prod --yes`. Never run preview_start for this project.
 - **ES Modules**: `"type": "module"` in package.json; all imports must use `.js` extension.
 - **KV persistence**: `@vercel/kv` for all data. Env vars: `KV_REST_API_URL`, `KV_REST_API_TOKEN`.
@@ -91,7 +94,7 @@
 | `api/content/word-limits.js` | Per-category word ceiling config |
 | `lib/ab-test.js` | A/B testing harness: pickVariant, pickModelForGeneration |
 | `lib/article-history.js` | logEvent, snapshotBody, MAX_VERSIONS=10 |
-| `lib/auth.js` | Scrypt auth, JWT sessions, INITIAL_USERS, SEED_PASSWORD='2026' |
+| `lib/auth.js` | Scrypt auth, JWT sessions, INITIAL_USERS, SEED_PASSWORD='2026' (removed 2026-09-23 — see 'Password-change enforcement + seed password removed') |
 | `lib/email-content.js` | Article HTML renderer for email — color #0D9488 |
 | `lib/revise.js` | callRevisionLLM, buildRevisionPrompt — X-Title 'Merlows Content Revision' |
 | `lib/usage.js` | LLM token usage tracking, OpenRouter live pricing + fallbacks |
@@ -121,7 +124,7 @@
 - User-Agent: `MerlowsBot/1.0; +https://merlows.com`
 - CATEGORY_SLUG_MAP: breaking-news, diplomatic-analysis, op-eds, cyrus-accord, abraham-accords, regional-voices
 - DEFAULT_MODEL: `google/gemma-3-27b-it:free`
-- SEED_PASSWORD: `2026`
+- SEED_PASSWORD: `2026` (removed 2026-09-23 — see 'Password-change enforcement + seed password removed')
 - App name in LLM X-Title headers: `Merlows Content Generator` / `Merlows Content Revision`
 
 ---
@@ -459,3 +462,1027 @@ workarounds:
   `cd content-generator && VERCEL_TOKEN=<slapharma-token> npx vercel --prod --yes`
   (`npx vercel whoami --token …` → `slapharma`). The old "Dominic Merlows owner token"
   instruction elsewhere in this doc is obsolete.
+
+---
+
+## Frontend perf + UX: slim contentCache, polling, header/article controls (2026-06-25)
+
+Ported VANCE-alpha frontend optimisations + UX into `index.html` (the slim backend
+`?slim=1` already existed; the frontend never used it). All in `index.html`.
+
+### Performance
+- **`contentCache`** (SWR) after `contentApi`: one deduped `GET /api/content?slim=1`
+  (~81 KB vs the ~38 MB full payload), signature-diffed, instant paint from cache.
+  `contentApi.getAll()` left UNCHANGED (still full) so body-readers keep working;
+  slim applied surgically. `withContent(render)` = cache paint + revalidate-on-change.
+- **`loadPipeline`** split into `loadPipeline` + `renderPipeline(items)`, renders via
+  `withContent`. `renderKanbanCard` now uses slim `item.wordCount` (body is stripped).
+- **`loadAutoInbox`** (Notifications): title hydration via `contentCache.refresh()`.
+  `__inboxContentCache` holds slim (title+id only); the DETAIL view
+  (`openAutoInboxJob`) already refetches the full record by id, so body is intact.
+- **`viewArticleFromPipeline`**: fetches the single record `/api/content/:id` instead
+  of `getAll()`-then-find (no more pulling every body to read one).
+- **Boot** (`DOMContentLoaded`): publishing-queue load switched `contentApi.getAll()`
+  → `contentCache.refresh()` — warms the cache so first Pipeline/Notifications open is
+  instant; `publishingQueue` consumers are metadata-only or refetch body by id.
+- **Live-sync polling**: `initContentPolling()` (called on boot), `activeContentRender`
+  (reset at top of `switchTab`, set by pipeline/inbox loaders). ~15s while visible,
+  paused when hidden, immediate refresh on refocus, repaint only on sig change.
+
+### UX
+- **Logo → Home**: `.sidebar-logo` now `onclick="switchTab('dashboard')"`.
+- **Hard-refresh button** in topbar (`#hardRefreshBtn` / `hardRefresh()`): clears
+  caches + unregisters service workers, reloads (spin animation reuses `@keyframes spin`).
+- **Back button** in article toolbar (`#articleBackBtn` / `goBackFromArticle()`):
+  `__articleOrigin` captured in `viewArticleFromPipeline`, label from `TAB_TITLES`.
+  Both Back + Image buttons hidden on every `switchTab`, re-shown after view-article.
+- **Replace-image modal** (`#heroModal` / `openHeroModal`/`closeHeroModal`/
+  `saveHeroFromModal`): relocates the live `#heroLeftCard` picker into the modal
+  (reusing its search/AI-gen wiring), saves via `contentApi.update(id,{heroImageUrl,
+  heroImageType})`, toasts. Button `#replaceHeroBtn` in the article Content toolbar group.
+
+### Not migrated (deliberate)
+- `contentApi.getAll()` stays full (Monitoring/Calendar/Distribution/Library/Trash/
+  social `allSocialItems` still use it — some read bodies). Migrating those to slim
+  would need per-caller body-refetch audits; left as a future opt-in.
+
+### Verify / deploy
+- Both inline `<script>` blocks pass a `vm.Script` syntax check.
+- **Deployed to prod 2026-06-25** (dpl_54mwosWCN74UpKvDQV4QjsAt224m, aliased
+  merlows.vercel.app). CLI already logged in as `slapharma`; `vercel --prod --yes`.
+  Verified new markers present in served HTML + `?slim=1` → 200 (~81 KB).
+
+## Breaking News — Telegraph prompt + 5 theme sub-categories + seed calendar (2026-06-26)
+
+- **Category prompt rewritten** (run.js `DEFAULT_PROMPT_BREAKING_NEWS` + index.html
+  `DEFAULT_PROMPT_INDUSTRY_NEWS`): Daily Telegraph hard-news register, **ABSOLUTE MAX 500 words**,
+  write ONLY from supplied sources, pick the one story common to MORE THAN ONE of The Sun /
+  Telegraph / Daily Mail / Fox News / Jerusalem Post, prioritise trade / peace / antisemitism /
+  anti-woke / nationalism. **Hero image prompt deliberately untouched.**
+- **5 sub-categories registered** in `CATEGORY_SUBCATEGORIES` (publish.js + index.html):
+  `trade-economy`, `peace-diplomacy`, `antisemitism`, `culture-war` (Culture War), `nationalism`.
+- **Seed calendar** in `../breaking-news-calendar/` (85 researched, dated, sourced top stories
+  Jun 2025–Jun 2026; a **Notes** column carries each story's source URL). Deliberately NOT a
+  fabricated 365-day back-fill (would violate the "sourced & verified" rule); day-to-day news is
+  meant to come from a **live daily rule** reading the 5 outlets' RSS feeds (see setup doc).
+- **Open item:** the runner generates one article per RSS item — it does NOT yet reconcile "the
+  story most common across the 5 outlets" (a "combine all feeds → one prompt" mode is the missing
+  piece for requirement #5). Verified `node --check` + test suite (same 5 baseline failures).
+  **Deployed to prod 2026-06-26.**
+
+## Author team — per-sub-category bylines + 10% floater (2026-06-26)
+
+Replaced the single-`WP_USERNAME` byline (every post attributed to one account) with a
+**28-author roster**: one EXCLUSIVE author per sub-category + one FLOATER per parent
+category who takes a random **~10%** of that category's articles. Roster + bios approved in
+`../tasks/author-team-plan.md`.
+
+- **`lib/authors.js`** — single source of truth. `AUTHOR_REGISTRY` (category → subcats/floater,
+  each `{name, username, bio}`), `pickAuthor(category, subCategory, {rand})` (rolls once: <0.10 →
+  floater, else dedicated sub-cat author; unknown sub-cat → category `default`; unknown category →
+  null), `listAuthors()`, `emailFor()`. `FLOATER_SHARE` (env `AUTHOR_FLOATER_SHARE`, default 0.10),
+  `AUTHOR_EMAIL_DOMAIN` (env, default `authors.merlows.com`). **Sub-cat slugs MUST match
+  `CATEGORY_SUBCATEGORIES`** in publish.js. Tested in `lib/authors.test.js` (9 tests incl. ~10%
+  distribution).
+- **Assignment chokepoint = `buildContentItem`** (`lib/content/handlers/index.js`): both manual
+  and automation content flow through it. An explicit `authorUsername`/`wpAuthorId`/`authorName`
+  wins (fixed-author rules, backfill re-apply); otherwise `pickAuthor(category, subCategory)`. New
+  record fields: `wpAuthorId` (numeric, lazy-resolved), `authorUsername` (registry slug, canonical),
+  `authorName` (display byline). Rolled ONCE here → stable across re-edits/re-publish.
+- **Publish** (`lib/core/handlers/publish.js`): `resolveWpAuthorId(username)` does
+  `GET /wp/v2/users?slug=` and **caches the id in KV** (`author:wpid:<slug>`), so creating/renaming
+  WP authors needs **no redeploy**. `buildWpPayload(item, cats, tags, media, authorId)` adds
+  `author:` only when an id resolved (else omit → falls back to WP_USERNAME, legacy behaviour).
+  Resolved id snapshotted onto the content record (`wpAuthorId`).
+- **Rule schema** (`rule-schema.js` generation): `authorMode` `'auto'`(default)|`'fixed'`,
+  `fixedAuthorUsername`, `fixedAuthorId`. `run.js` passes the override through to `/api/content`
+  only when `authorMode==='fixed'`; otherwise auto-assignment happens in buildContentItem.
+- **UI** (`index.html`): rule-wizard Generation panel byline `<select id="wizAuthor">` — "Auto" or a
+  pinned author. `AUTHOR_ROSTER` JS mirror of the registry (display labels; keep usernames in sync),
+  `wizPopulateAuthors()` (this rule's category first), wired into open/edit/save (`authorMode`/
+  `fixedAuthorUsername`).
+- **Two free-text categories became FIXED sets** (added to `CATEGORY_SUBCATEGORIES` in BOTH
+  publish.js and index.html): `diplomatic-analysis` → great-power-politics / security-strategy /
+  treaties-institutions; `regional-voices` → gulf-perspectives / israeli-society /
+  diaspora-dialogues. Consequence: an incoming sub-cat outside these now posts under the parent
+  only (no more free-text auto-create for these two).
+- **Scripts** (`scripts/`, run locally with WP admin creds — NOT Vercel functions):
+  `create-wp-authors.js` (idempotent; creates role-`author` WP users from the roster, `--dry-run`,
+  writes secret `.create-wp-authors-output.json` with generated passwords) and
+  `backfill-authors.js` (pages published+future posts, classifies by sub-cat/parent term, assigns
+  via `pickAuthor` with a **persisted per-post roll** in `.backfill-authors-state.json` for
+  idempotent ~10%, PATCHes only changed posts, `--dry-run` writes a CSV report). Secret/state/report
+  files are gitignored.
+- **EXECUTED 2026-06-26.** Deployed to prod (dpl_62MSVKDFRigKV7fW7tYDxC6WE9GB, aliased
+  merlows.vercel.app). Ran `create-wp-authors.js` live as admin **MikeHemmings** (the publishing
+  account IS an administrator) → 28 WP users created, **ids 10–37**. Ran `backfill-authors.js` live
+  → **545 published+future posts reassigned**, 0 failed/unclassified; re-run is idempotent
+  (changed=0). Per-category floater share landed 8.8–19.5% (overall ~12.5% — independent per-post
+  rolls, "~10%" is expectation not quota). Generated author passwords in gitignored
+  `scripts/.create-wp-authors-output.json`.
+- **Parent-only archive fix:** all 77 Abraham-Accords posts were published before sub-cats existed
+  (no sub-cat term). `backfill-authors.js` spreads such parent-only posts EVENLY across the
+  category's dedicated authors by `post.id % nSubcats` (deterministic/idempotent) instead of dumping
+  them all on the default author. This lives ONLY in the backfill script; the forward-path
+  `pickAuthor` still maps unknown sub-cat → category default (forward posts carry a real sub-cat).
+- WP creds are **Sensitive** Vercel vars (`vercel env pull` returns them blank) — must be supplied
+  out-of-band to re-run the scripts. `WP_SITE_URL=https://merlows.com`.
+- Verified: `node --check` all touched JS + both index.html inline blocks (vm.Script) pass; suite
+  **103 pass / same 5 pre-existing baseline failures** (added 9 authors.test.js, run 7/7,
+  content 3/3).
+
+## "Our Writers" page (2026-06-26)
+
+Public bios page for the 28-author team, under the **ABOUT** nav dropdown.
+- **Source of truth:** `scripts/writers-data.js` (`WRITER_GROUPS` — each writer's name, WP
+  slug, beat, age, location, experience, interests, grouped by parent category). Mirrors the
+  byline roster in `lib/authors.js`; keep in sync.
+- **Builder:** `scripts/build-writers-page.js` (needs admin WP creds) renders writer-cards once
+  and (1) creates/updates WP **page id 1774** `/our-writers/` via REST, content wrapped in a
+  `<!-- wp:html -->` block, (2) adds a child menu item under ABOUT (Main Menu id **19**, ABOUT
+  item id **43**), (3) writes the `wordpress-theme/merlows/page-our-writers.php` template.
+- **Hero matches Our Mission:** renders a self-contained copy of page-our-heritage.php's
+  `msn-masthead` (navy grid, gold rotating stamp, ticker, TOC, stats), CSS copied + scoped under
+  `.mlws-writers` (the `msn-*` styles are NOT global). On the live page the builder **hides
+  `page.php`'s `.hero` + `.inner-cat-nav-wrapper`, zeroes the container top padding, and breaks the
+  masthead out to full width** — all scoped to `body.page-id-1774.page-template-default`, so the
+  overrides auto-disable if the custom template (no `page-template-default` class) is deployed.
+- **Two render paths:** the LIVE page uses the **default `page.php`** (hero + container), so its
+  self-contained content must survive `the_content` filters — the builder **minifies the
+  `<style>`/`<script>` to single lines and strips blank lines** so wpautop/wptexturize can't
+  inject `<br>`/`<p>` into the CSS/JS (verified: 28 cards, no mangling). The committed
+  `page-our-writers.php` is a full-bleed template mirroring `page-our-heritage.php` (msn-masthead)
+  — optional upgrade: deploy via cPanel, then select the "Our Writers" template on the page (the
+  template's baked-in cards then replace the_content). Card markup/`<style>` are shared between
+  both paths, so they stay identical.
+- Cards: monogram placeholder avatar (initials, navy disc + gold ring), name, beat (gold for
+  guest/floaters), Age/Location/Experience meta, Writing interests, and a link to the author
+  archive `/author/<slug>/`. Re-run the builder to update after editing `writers-data.js`.
+
+## BlitzSpirit → current-affairs reboot (2026-06-26)
+
+BlitzSpirit pivoted from an evergreen-history calendar to **reading recent/current events
+through the Blitz-spirit lens**.
+- **Prompt rewritten** (run.js `DEFAULT_PROMPT_BLITZSPIRIT` + index.html mirror): lead from the
+  supplied RECENT story, show the resilience/community/defiance on show, then an honest "Echoes
+  of 1940" parallel; work ONLY from the source (no fabrication); 700–1,000 words. Hero prompt
+  untouched. **Deployed to prod 2026-06-26**; same 5-baseline test failures (no regressions).
+- **New seed calendar** `../blitzspirit-calendar/BlitzSpirit-Current-Calendar.xlsx` (+ generator
+  `generate_blitzspirit_current.py`): 32 real, dated, sourced recent stories (Jul 2025–Mar 2026)
+  with source URLs in a Notes column, across the 5 existing sub-categories (Spirit Today /
+  Original Spirit / Carry On / Blitz Echoes / Explainers). **Supersedes the old evergreen
+  `BlitzSpirit-Content-Calendar.xlsx`.** No sub-category code change (the 5 were already
+  registered). Day-to-day "current" relevance is meant to come from a live daily UK-news RSS rule
+  → this prompt (see BlitzSpirit-Current-Setup.md). Explainers is genuinely thin (research finding).
+
+---
+
+## Composio multi-account social posting + media-model env switch (2026-06-30)
+
+Two changes to the **social distribution** module (kit→queue→cron→scheduler
+architecture UNCHANGED; only the posting layer + media model selection touched).
+
+### Media model now env-driven (`lib/social/media.js`)
+- The fal.ai text-to-video endpoint was hard-coded to Kling v2.1. It's now built
+  from `SOCIAL_VIDEO_MODEL` (default `fal-ai/kling-video/v2.1/standard/text-to-video`
+  → **byte-identical default behaviour**). Per-model request params live in
+  `VIDEO_PARAMS` (`videoParamsFor()`); unknown models fall back to Kling's
+  `{duration:'10', aspect_ratio:'9:16'}`. Cheaper options to A/B via the env var:
+  `fal-ai/minimax/hailuo-02/standard/text-to-video`, `fal-ai/veo3/fast`,
+  `fal-ai/wan/v2.2-5b/text-to-video` (verify each model's duration/aspect schema).
+  `startVideoGeneration` now also returns `model`. Images were left on
+  `gemini-2.5-flash-image` (already cheap + env-overridable via `SOCIAL_IMAGE_MODELS`).
+
+### Composio multi-account adapter (NEW)
+Adds "connect multiple accounts to post to" via Composio's per-userID
+connected-accounts model. **All five platforms are natively covered** by Composio
+toolkits (X, LinkedIn incl. org, Facebook Pages, Instagram image+Reels, TikTok video)
+— no hybrid fallback needed, but the legacy env-var adapters remain as the default
+when no Composio account is configured.
+- `lib/social/composio.js` — lazy-loaded SDK wrapper (`@composio/core` ^0.13.1).
+  `linkAccount(platform)` (hosted OAuth `link()`), `listConnections()`,
+  `executeTool(slug,{connectedAccountId,arguments})`. Env: `COMPOSIO_API_KEY`,
+  `COMPOSIO_USER_ID` (default `merlows`), `COMPOSIO_AUTHCONFIG_<PLATFORM>` (ac_… ids).
+- `lib/social/platforms/composio.js` — `postViaComposio(platform,data,account)`;
+  per-platform tool slugs + arg builders. **⚠️ slugs/args are marked `// VERIFY`
+  — confirm against the live toolkit schema on first real post.**
+- `lib/social/accounts.js` — KV `social:accounts` registry (`resolveAccount`,
+  add/remove/setDefault). Kit `platforms[x].accountId` selects the account;
+  null → legacy env-var path.
+- `lib/social/platforms/index.js` — `dispatch(platform,data,account)` routes to
+  Composio when `account.provider==='composio'`, else legacy adapter.
+- `lib/social/handlers/accounts.js` — `/api/social/accounts*` CRUD + `/link`.
+  Registered in the `api/social/[...slug].js` catch-all.
+- `post.js`/`cron.js` resolve the account and pass it to dispatch. **cron retry is
+  now capped** at `SOCIAL_MAX_RETRIES` (default 5) → status `failed` instead of
+  re-queuing forever.
+
+### Still TODO (not done this pass)
+- **Live-verify the `// VERIFY` tool slugs + argument field names** in
+  `platforms/composio.js` (Composio dashboard → toolkit → Tools, or `composio generate`).
+- **UI** (`index.html`): Connections sub-tab account-manager (list/+connect via the
+  `/accounts/link` popup/remove/set-default) and a per-platform **account dropdown**
+  in Kit Builder writing `platformData.accountId`. Backend API is ready.
+- Optional **X $0.20/URL-post guard**.
+- Verified: `node --check` all changed JS; `@composio/core` installs+imports;
+  suite **103 pass / same 5 baseline failures**. NOT yet deployed/live-tested.
+
+---
+
+## Scheduled runs produced nothing: connection surge in processTimeouts (2026-09-23)
+
+From roughly 2026-08-19 to 2026-09-22, scheduled automation produced **no articles**
+for BlitzSpirit, Cyrus Accord, Abraham Accords, Regional Voices, or Diplomatic
+Analysis, and Breaking News only landed on ~60% of days. Manual runs from the UI
+(forced `ruleId`) kept working the whole time, which is why it went unnoticed.
+
+### Root cause
+`processTimeouts` (`lib/automation/handlers/run.js`) runs on every **scheduled**
+cron tick only — `executeRun` skips it when `forcedRuleId` is set (manual/UI run).
+It used to `Promise.all` a `kv.get` over every `automation:job:*` id — **1,138**
+jobs by the time this was diagnosed. `@upstash/redis` 1.25.1 doesn't pipeline, so
+each `get` opens its own socket: measured **1,139 simultaneous connections** for
+one tick, blowing past Vercel's ~1,024 file-descriptor ceiling (first crossed when
+job #1024 was created on 2026-08-03). While those sockets lingered, every *new*
+outbound fetch — OpenRouter LLM calls, RSS source fetches — failed instantly with
+`"fetch failed"`; KV calls kept working because they reused already-pooled sockets.
+Breaking News runs last in the rule evaluation order, so it sometimes finished
+before the descriptor pool was exhausted, which is why it partially survived and
+the others didn't.
+
+This was masked before 2026-08-19 by an external cron-job.org pinger hitting the
+run endpoint every 5 minutes — on 2026-08-18 that produced 6 LLM successes against
+1,650 failures, i.e. it was already broken, just retried into occasional success.
+Once the pinger was removed, only the 6 scheduled ticks/day (07:00–12:00 UTC) were
+left, and none of them succeeded. `CRON_SECRET` and the Vercel cron registration
+were both fine throughout — the cron hit `/api/automation/run` and got a 202 every
+hour, 07:00–12:00 UTC; the failure was entirely inside the background `waitUntil`
+work.
+
+### Fix
+`lib/kv.js` gained two batched readers:
+- **`mgetBatched(keys, store = kv, batchSize = 200)`** — sequential batched MGET.
+  For small records only (Upstash caps a single response at 10 MB). `processTimeouts`
+  now uses this: 1,138 jobs → 6 requests, 1 connection, ~0.97s (was ~6.5s and 1,139
+  connections).
+- **`getLimited(keys, store = kv, concurrency = 10)`** — bounded-parallel `get`,
+  at most `concurrency` sockets open at once. `api/cron/publish.js` uses this, **not**
+  `mget`, because content records reach 2.58 MB each and a 200-key MGET batch would
+  exceed Upstash's 10 MB response limit (`ERR max request size exceeded`).
+
+Error visibility was also fixed: `err.cause?.code` is now included in LLM error
+messages (`run.js` `generateArticle`, `fetch.js` source fetches), and scheduled-path
+LLM failures are `console.error`'d — previously they were pushed onto the `results`
+object only, which cron runs discard, so the failures were silently invisible in logs.
+
+**Rule for future code: never `Promise.all(ids.map(id => kv.get(...)))` over an
+index that can grow unbounded.** Use `mgetBatched` for small records or `getLimited`
+for large ones — see the warning comments on both in `lib/kv.js`.
+
+### Not fixed — same pattern elsewhere (separate work)
+These open the same style of unbounded parallel-get during a *scheduled* tick and
+could reproduce the failure on a shared Fluid instance: `lib/content/handlers/index.js`
+(lines ~107, ~209, ~451), `lib/automation/handlers/jobs-index.js:9`,
+`lib/automation/log.js:39`. A `pending_review`-only job index would also cut
+`processTimeouts` from reading all 1,138 jobs every tick, most of which aren't
+pending review at all.
+
+Also noted but not fixed: `run.js` calls `recordLlmFailure({ ..., reason: '...' })`,
+but `lib/usage.js`'s `recordLlmFailure` signature takes `failureReason`, not `reason`
+— the failure reason is silently dropped on every call (the failure *count* still
+records correctly).
+
+### Verification
+New tests: `lib/kv-batch.test.js`, `api/cron/publish.test.js`, plus a 250-job
+boundary case added to `run-timeouts.test.js`. Full suite: 221 tests, 216 pass, same
+5 pre-existing baseline failures as before this change.
+
+**Deployed to prod 2026-09-23 ~06:4x UTC** (`dpl_9AZCY2jcTFfJoejZLLFcncxVcPaL`).
+**Verified on the real scheduled path:** 07:00 tick — Breaking News generated + published,
+cron→"Cron tick" gap 1.1 s (was ~10 s). For the 08:00 tick the five other rules' crons were
+temporarily set to `56 7 * * *` so all were due: BlitzSpirit, Cyrus Accord, Abraham Accords and
+Regional Voices all generated + auto-published (08:01–08:04), no `fetch failed`; Diplomatic
+Analysis (5th in rule order) was deferred by the run's own `NEW_ARTICLE_CUTOFF` budget (~249 s
+elapsed), not a failure — expected when 5 rules share one tick; it ran at the 09:00 tick.
+Original crons restored 12:10 UTC the same day and read back: Breaking News 0 7, Diplomatic
+Analysis 0 8, Regional Voices 0 9, BlitzSpirit 0 10, Abraham Accords 0 11, Cyrus Accord 0 12.
+
+## Composio LLM tool-calling helper (Vercel AI SDK) (2026-07-01)
+
+Added a **general-purpose** Composio helper so agents/features can let an LLM drive
+connectors (Gmail, Slack, Notion, GitHub, …). This is SEPARATE from the social path:
+`lib/social/composio.js` executes fixed tool slugs for multi-account posting; this new
+module hands an LLM a live tool set shaped for the **Vercel AI SDK**.
+
+- **`lib/composio/tools.js`** (NEW) — static-imports `@composio/core` + `@composio/vercel`
+  (NOT the `ai` package, so it stays light in any Vercel function bundle). Exports:
+  `getComposio()` (cached client wired to `new VercelProvider()`), `getTools({toolkits|tools,
+  limit, userId})` → AI-SDK tools for `generateText({ tools })`, `connectToolkit(toolkit)`
+  (hosted OAuth → `{redirectUrl, id, waitForConnection}`), `listConnections({activeOnly})`,
+  `isComposioConfigured()`, `COMPOSIO_USER_ID`. Reuses the same env vars as the social module
+  (`COMPOSIO_API_KEY`, `COMPOSIO_USER_ID` default `merlows`).
+- **`scripts/composio-agent-example.mjs`** (NEW, local-run) — `list` / `connect <toolkit>` /
+  `run "<prompt>" [toolkit]`. Consumes the tools via `ai` v7 `generateText` +
+  `stopWhen: stepCountIs(5)`, model = OpenRouter through `@ai-sdk/openai` `createOpenAI`
+  (env `COMPOSIO_AGENT_MODEL`, default `openai/gpt-4o-mini` — must be tool-calling-capable).
+- **Deps added**: `@composio/vercel@^0.11.0`, `ai@7`, `@ai-sdk/openai@4`. No `api/*` route added
+  (no Vercel function-count impact); no existing file changed.
+- **Verified**: `node --check` both files, import smoke test (exports load, `getComposio()`
+  throws without key as designed), full suite **103 pass / same 5 baseline failures**.
+  Not deployed (helper/example are inert until called). **Same gate as the social path: a valid
+  `COMPOSIO_API_KEY` — the old one 401s.** For LLM tool-calling to work end-to-end you must also
+  `connectToolkit(...)` the relevant toolkit once (OAuth) so a connection exists for the user.
+- Composio CLI is macOS/Linux only (no Windows build); on Windows everything is done through
+  this SDK, not the CLI.
+
+### Follow-up — keys, connect flow, social slug verification (2026-07-01)
+- **Two different Composio credentials.** MCP-connect key `ck_…` (Bearer) authenticates the
+  universal MCP endpoint `https://connect.composio.dev/mcp` ONLY — it 401s the platform API.
+  The **platform** key `ak_…` (app.composio.dev → Settings → API Keys) is what the SDK +
+  social backend need in `COMPOSIO_API_KEY`. Verified `ak_REDACTED-rotate-this-key` works (auth +
+  `tools.get`); it must go into **Vercel env** (`vercel env add COMPOSIO_API_KEY production`,
+  slapharma token) — rotate after sharing.
+- **Connect flow corrected.** `toolkits.authorize` and `connectedAccounts.initiate` are
+  DEPRECATED (both 400 "no longer supported"). Current flow = `authConfigs.create(toolkit,
+  {type:'use_composio_managed_auth'})` (reuse if one exists) → `connectedAccounts.link(userId,
+  authConfigId)` → `{redirectUrl, waitForConnection}`. `lib/composio/tools.js` `connectToolkit`
+  was rewritten to this (added `findAuthConfig`). NB: the social module's `linkAccount`
+  already used `link()` (correct). Gmail managed auth config created live: `ac_78QOa6ZBGB76`.
+- **Social tool slugs VERIFIED against live schema** (`GET /api/v3/tools?toolkit_slug=<x>` —
+  note singular `toolkit_slug`) and `lib/social/platforms/composio.js` corrected:
+  Twitter `TWITTER_CREATION_OF_A_POST` (reply arg → `reply__in__reply__to__tweet__id`);
+  LinkedIn `LINKEDIN_CREATE_LINKED_IN_POST` (req `author` URN + `commentary`, no media);
+  Facebook `FACEBOOK_CREATE_POST`/`FACEBOOK_CREATE_PHOTO_POST` (was `..._PAGE_POST`; req
+  `page_id`); Instagram `INSTAGRAM_CREATE_MEDIA_CONTAINER`→`INSTAGRAM_CREATE_POST` (was
+  `..._IG_USER_MEDIA`; req `ig_user_id`); TikTok `TIKTOK_UPLOAD_VIDEO` (arg `file_to_upload`
+  not `video_url`, `publish:true`).
+- **Remaining social blocker (non-slug):** LinkedIn/Facebook/Instagram tools require an
+  account-scoped id (`author` URN / `page_id` / `ig_user_id`) known only after a real
+  connection. The adapter now reads `acct.authorUrn/pageId/igUserId` and throws clearly if
+  absent — these must be captured into the `social:accounts` record (lib/social/accounts.js)
+  at connect time, and per-platform auth configs created (only Gmail managed-auth exists so
+  far; social platforms had no default auth config). Verified `node --check` + suite 103/5
+  (same baseline). NOT deployed.
+
+## DEPLOYED + KV-isolation finding + login fix (2026-08-19 ~14:11 UTC)
+
+**Deploy:** `dpl_6AmSYxDB6BU2F4SAHdwQsqHPzdb2` → merlows.vercel.app (CLI as
+cliftonflack; note `vercel whoami` errors on this CLI version even when auth is
+fine — probe with `vercel teams ls`. Git-Bash deploy uploads are flaky
+(`fetch failed`) — retry, or use PowerShell). Ships: CRON_SECRET gates
+(automation/run 401, social/cron 401 — was 404), processTimeouts convergence,
+Composio multi-account UI/backend, `COMPOSIO_AUTHCONFIG_{LINKEDIN,FACEBOOK,
+INSTAGRAM}` prod env vars (verified end-to-end: all 3 `/accounts/link` return
+live Composio redirect URLs).
+
+**KV isolation — correcting HANDOVER-2026-08-19 §4:** `KV_PREFIX="merlows"` has
+been set (all envs, byte-clean) and live for months. Prod reads Merlows' own
+namespace (rules endpoint returns Merlows' 10 rules, no Vance data). The
+handover concluded "(none)" because its `scripts/*.mjs` hit the store via raw
+REST at the ROOT namespace — which is Vance's data — bypassing `lib/kv.js`.
+**LANDMINE: `scripts/{list-users,list-rules,reset-password,change-user-email}.mjs`
+read/WRITE Vance's production data. Never run them without adding the
+`merlows:` prefix.** Upstash DB is still shared; token rotation (P1) still due.
+
+**Login fix:** `merlows:users` already held 5 valid users (cflack@slapharma.com
+is admin). Added `cliftonflack@gmail.com` (admin, seed password, forced change)
+via a prefix-respecting upsert through lib/users.js. Verified: POST
+/api/auth/login → 200.
+
+**Verify tomorrow (2026-08-20):** the 4 Vercel crons must pass the new gates
+(Vercel auto-injects `Authorization: Bearer $CRON_SECRET`; unproven until a
+tick lands — if articles stop, check runtime logs for 401s on the cron paths);
+P4 full-day pinger-gone check; P9 `/api/cron/publish` at 08:00 UTC.
+
+---
+
+## processTimeouts convergence + /api/social/cron fix (2026-08-19 PM)
+
+Working `../HANDOVER-2026-08-19.md` (P3 + P8). LOCAL, NOT DEPLOYED — **do not deploy
+before the P0 KV isolation env change**: processTimeouts writes would land in Vance's
+shared store (marking Vance's 103 stuck jobs terminal is the data owner's call, P5).
+
+- **P3 (`lib/automation/handlers/run.js` `processTimeouts`)** — the approve/reject
+  timeout branch fired `/api/automation/approve` and ignored the result; a failing
+  approve re-processed the same job every tick forever. Now: response checked
+  (thrown fetch = failure), failures counted in `job.timeoutAttempts`, terminal
+  `status:'timeout_failed'` at `TIMEOUT_APPROVE_MAX_ATTEMPTS` (env, default 3);
+  a job whose rule was deleted → terminal `status:'orphaned'` (was: silent
+  `continue`, retried forever). `processTimeouts(now, fetchFn, kvStore)` is now
+  exported with an injectable kv for tests — `run-timeouts.test.js`, 7 tests.
+- **P8 (`api/social/[...slug].js` + `lib/social/handlers/cron.js`)** — the daily
+  09:00 UTC `/api/social/cron` 404'd because **Vercel cron sends GET** and the
+  branch was POST-only. Branch now GET|POST behind `verifyCronSecret` (same gate
+  as automation/run); the handler's weaker inline auth was removed (its
+  `x-vercel-cron: 1` check was client-spoofable, and with CRON_SECRET unset it
+  matched `Bearer undefined` — verifyCronSecret 503s instead of falling open).
+- Suite: **122 tests / 117 pass / same 5 pre-existing baseline failures.**
+- P4 partial verify: 0 hits on `/api/automation/run` in the 55 min ending 13:51 UTC
+  (project-wide log count via Vercel MCP) — the deleted cron-job.org pinger would
+  have produced ~11. Full-day + `/api/cron/publish` (P9) re-check due after the
+  next 08:00 UTC tick.
+
+---
+
+## Composio go-live: config capture, connect/kit UI, auth configs (2026-08-19)
+
+Finished the remaining handover work (docs/handover-2026-07-01-social-connectors.md §6).
+
+### Environment discovery (UPDATES STALE DOCS)
+- **The merlows Vercel project moved AGAIN: slapharma → `CliftonAiTeam`**
+  (`team_2OpDi6isFOmWWFqujeyuMZNY`, matches `.vercel/project.json`). Every doc
+  saying "deploy under slapharma" is stale for THIS project. Latest prod deploy
+  2026-08-15, healthy.
+- **Prod already runs the Composio backend** (a mid-Aug session deployed the
+  2026-07-01 work): `/api/social/accounts` live, **`COMPOSIO_API_KEY` set in prod**
+  (returns live Gmail connections), July Connections UI in served HTML.
+- The platform key `ak_REDACTED-rotate-this-key` still authenticates (tested 200).
+- **Vercel CLI is logged in as `slapharma`, which cannot see merlows** (CliftonAiTeam).
+  `vercel whoami` errors "Not authorized" but `vercel teams ls` works and shows the
+  slapharma scope. Fix: `npx vercel login` as **cliftonflack@gmail.com**. (See
+  `../HANDOVER-2026-08-19.md` §2 — that handover supersedes assumptions here.)
+
+### Code (this session)
+- `lib/social/accounts.js`: accounts now persist `config` (`authorUrn`/`pageId`/
+  `igUserId`); new `updateAccount(id,{label,config})` (shallow-merge).
+- `lib/social/handlers/accounts.js`: POST accepts `config`; PATCH accepts
+  `label`/`config` alongside `isDefault`.
+- `lib/social/platforms/composio.js`: `postViaComposio` flattens `account.config`
+  onto the account so routers read `acct.pageId` etc. regardless of shape.
+- `index.html`: Connections pane gains **+ Connect <platform>** bar
+  (`connectComposioAccount`: POST /accounts/link → popup → register with label +
+  optional platform id) and **Edit ID** per account (`editComposioAccountId`,
+  PATCH config; warning line when the required id is missing). Kit Builder head
+  gains a **per-platform account dropdown** (`renderKitAccountSelect`/
+  `onKitAccountChange`, writes `platformData.accountId` via kit PATCH — deep-merge
+  confirmed in `kits-id.js`). Accounts cached in `_socialAcctsByPlat`
+  (`ensureSocialAccountsCache`), invalidated on connect/remove.
+- Verified: `node --check` all touched JS, vm.Script both index.html blocks,
+  suite **110 pass / same 5 pre-existing baseline failures** (count grew from 103
+  as tests were added; failure set identical).
+
+### Composio auth configs (created live this session)
+- linkedin `ac_E5Z2cD2f77dr` (pre-existing, managed) · facebook `ac_5dHQuQU-qj5L`
+  (created, managed) · instagram `ac_HKLkOLyOm-sd` (created, managed).
+- **Twitter + TikTok have NO Composio-managed auth** — connecting them requires
+  creating auth configs from the user's own X/TikTok developer-app credentials.
+
+### Remaining (blocked on Vercel auth — user must `npx vercel login` first)
+1. `vercel env add` COMPOSIO_AUTHCONFIG_LINKEDIN / _FACEBOOK / _INSTAGRAM
+   (production) with the ac_ ids above (or add via dashboard).
+2. Deploy this session's changes: `npx vercel --prod --yes` from content-generator.
+3. After connect: LinkedIn needs `authorUrn`, Facebook `pageId`, Instagram
+   `igUserId` — enter via the new Edit ID button (values from each platform's
+   settings, or Composio dashboard → connected account).
+
+---
+
+### Connections UI — Composio account manager, ported from Vance (2026-07-01)
+- **Bug:** the social-distribution **Connections tab was blank** — `socialPane-connections`
+  was an empty `<div>`, yet `switchSocialTab('connections')` called `renderSocialConnections()`
+  which writes to `#socialConnList` (an element that lives only on the Settings page).
+- **Fix = port Vance's Composio account manager** (`VANCE-Content-Generator/index.html`),
+  adapting `--vance-dark`→`--sla-navy`, plain same-origin `fetch` (session cookie):
+  - Connections pane now holds `#socialComposioList`; `switchSocialTab` connections branch →
+    `renderComposioAccounts()`. Lists `/api/social/accounts` grouped by platform with status
+    dot, Default badge, Set-default (PATCH) and Remove (DELETE) buttons.
+  - Settings → Social Media Connections: added `#socialComposioSummary` (read-only,
+    `renderComposioSummary()` from `loadSettings()`); legacy localStorage forms (`#socialConnList`,
+    still `renderSocialConnections()`) demoted into a `<details>`.
+  - New JS: `COMPOSIO_PLAT_META`, `composioStatusColor`, `renderComposioAccounts`,
+    `setComposioDefault`, `removeComposioAccount`, `renderComposioSummary`.
+- Account record has no `config` field yet, so the per-account id line renders empty until
+  capture is added — matches Vance (read-only display). Verified both inline `<script>` blocks
+  pass `vm.Script`, single IDs (no dupes). NOT yet deployed.
+
+---
+
+## Social Autopilot Phase 0: social auth gate, OpenRouter key out of the page, Zernio health (2026-09-22)
+
+Groundwork for the Instagram + TikTok autopilot (plan: `../tasks/social-media-automation-plan.md`).
+Edited IN PLACE on the dirty `ContentGenerator` tree. **Production is deployed from uncommitted work, so
+never deploy from a worktree or a fresh checkout; it would roll prod back.** No code had changed since
+the 2026-08-19 deploy before this session.
+
+- **`/api/social/*` is now gated** (`api/social/[...slug].js`). `cron` and `connections/check` accept
+  GET|POST behind `verifyCronSecret`. `POST image` needs any signed-in session, because the
+  Generator's hero card is open to every role. Every other route needs `requireRole(me,'admin','content')`,
+  the same roles the UI shows the Social tab to. Previously every social route was public, including
+  post, deploy and accounts/link. `connections.js` lost its inline check auth, which trusted a spoofable
+  `x-vercel-cron` header and fell open with no CRON_SECRET.
+- **Hardcoded OpenRouter key removed from `index.html`.** It was served publicly: key `sk-or-v1-694e...063a`.
+  **Revoke it at OpenRouter**, because old immutable deployments still serve it. The browser now calls
+  `POST /api/content/llm-proxy` (`lib/content/handlers/llm-proxy.js`, content catch-all NAMED route):
+  - It requires a session (any role) and uses the server `OPENROUTER_API_KEY`.
+  - It forwards only `model, messages, stream, max_tokens, temperature, top_p`, and streams the body through.
+  - An upstream 401/403 becomes a 502 naming the server key.
+  - Errors use the shape `{error:{message}}`.
+
+  `llmFetch(payload, title, apiKey)` in index.html calls OpenRouter directly only when the user saved
+  their own key.
+- **Zernio health check**: `connections.js` platform `zernio` (env `ZERNIO_API_KEY`). It checks
+  `GET /v1/accounts/health` plus TikTok `creator-info`, and fails unless Instagram and TikTok can both
+  post and TikTok offers `PUBLIC_TO_EVERYONE`. It runs in the daily 06:00 check with a Telegram alert.
+  The Telegram alert now escapes Markdown `_ * `` ` `` [` (an unmatched `_` made Telegram reject the
+  whole alert silently) and logs rejected sends. `testOpenRouter` now shows the OpenRouter key label.
+- **Live Zernio accounts (2026-09-22):**
+  - Instagram `@merlows.news`, id `6ab29cf68d284ffb212e1818`. Its token expires 2026-11-21.
+  - TikTok `@merlows.news`, id `6ab29cb58d284ffb212e1733`, public posting OK.
+  - Profile `6ab2985ea77a696ba3a9610f`.
+- **`.vercelignore` now excludes `CLAUDE.md`, `scripts/`, `_drive.*`, `.superpowers/`, `.env.local`.**
+  The project has no output directory, so Vercel served every uploaded file. `/CLAUDE.md` exposed the
+  Composio `ak_` key (now redacted here; **rotate it**), and `/scripts/.create-wp-authors-output.json`
+  exposed all 28 WordPress author passwords (**rotate them**). `/lib/*.js` is still served (it holds the
+  seed emails and password); that is a separate task, which is to move static files into `public/`.
+- Tests: `lib/social/handlers/social-router.test.js`, `lib/social/handlers/connections.test.js`,
+  `lib/content/handlers/llm-proxy.test.js`. The suite gives **164 tests / 159 pass / the same 5 baseline failures**.
+- Open (Medium/Worth-knowing, not fixed):
+  - The proxy has no model allowlist or `max_tokens` cap, and doesn't abort upstream when the client closes.
+  - The Generator retries all fallback models on a proxy 401/503.
+  - `testZernio` calls creator-info even when TikTok needs a reconnect.
+
+## GitHub data sync moved server-side: /api/content/gh-data (2026-09-23)
+
+Root cause of the UI's "Sync failed — using cache" status: index.html shipped a GitHub PAT
+(disguised as a `String.fromCharCode` list) so the page could call the GitHub Contents API
+directly. index.html is public, so the token was readable by anyone, and GitHub had revoked
+it (401 Bad credentials).
+
+The prompt library, archive (reviews), reports (comparisons) and custom categories all live
+as JSON files in the **public** repo `dominicmerlow/Merlows_new`, branch `ContentGenerator`,
+at `data/<cat>/{reviews,prompts,comparisons}.json` and `data/config/custom-categories.json`.
+
+- **New handler** `lib/content/handlers/gh-data.js`, registered as the NAMED route `gh-data`
+  in the existing content catch-all (`api/content/[...slug].js`) — no new serverless function.
+  - `GET /api/content/gh-data?path=…` → `{content, sha}`; a missing file (GitHub 404) →
+    `{content: [], sha: null}` (200), not an error.
+  - `PUT /api/content/gh-data` with `{path, content, sha?, message?}` → `{sha}`.
+  - Requires a signed-in session. Any role may read and may write reviews/comparisons (the
+    Generator saves the archive for every role). PUT to `prompts.json` or
+    `custom-categories.json` needs admin|content (`needsContentRole`), matching the UI.
+  - PUT content must be an array of objects whose `id` matches `^[A-Za-z0-9_-]{1,80}$`
+    (`isValidContent`): index.html interpolates ids into innerHTML/onclick unescaped, so this
+    stops a low-role write from becoming stored XSS in an admin's session. Two non-id sinks
+    were escaped too (renderArchive `wordCount` → `Number()`, loadReport `model` → `escapeHtml`).
+  - Slugs allow `_` because custom category ids are `cat_<timestamp>`.
+  - Uses env `GITHUB_TOKEN` server-side only. Unset → 503. GitHub 401/403 → 502 naming
+    `GITHUB_TOKEN` (a raw 401 pass-through would read in the browser as "you're signed out",
+    this route's own 401).
+  - `GH_DATA_REPO` / `GH_DATA_BRANCH` env overrides, defaulting to
+    `dominicmerlow/Merlows_new` / `ContentGenerator`.
+  - Strict path allowlist (`isAllowedPath`) — only the exact `data/<cat>/{reviews,prompts,
+    comparisons}.json` and `data/config/custom-categories.json` shapes are reachable; nothing
+    else in the repo is.
+- **index.html**: `ghGetFile`/`ghPutFile` now call this proxy instead of GitHub directly.
+  New `loadGhData()` runs at boot, and again after `submitLogin()` — the boot-time load is
+  refused (401) before sign-in, since the route requires a session.
+- `saveGenPrompt()` returns early with a toast for non-admin/content users (the Generator's
+  custom-prompt Save row is visible to every role).
+- Tests: `lib/content/handlers/gh-data.test.js`. Suite: **201 tests / 196 pass /
+  same 5 pre-existing baseline failures.**
+- `GITHUB_TOKEN` was added to Vercel prod by the user on 2026-09-23. It should be a
+  fine-grained PAT scoped to Contents read/write on `Merlows_new` only. Note `GITHUB_TOKEN`
+  is also read by `lib/automation/fetch.js` for source-document fetching — same env var,
+  unrelated use.
+- **Remaining exposure**: the revoked token string is still present in the public repo's
+  index.html history (harmless now that it's revoked, but visible to anyone who checks out
+  an old commit). Recommend making `dominicmerlow/Merlows_new` private.
+- **Deployed to prod 2026-09-23** (dpl_ALxQJN3fnEHyn9HjbUi62vFyWeXD, aliased merlows.vercel.app).
+  Verified live: old token absent from the served page, `loadGhData` present, and
+  `/api/content/gh-data` answers 401 signed-out (was 404 before the deploy).
+
+---
+
+## Social Autopilot Phase 2: the pipeline (2026-09-23)
+
+Every article published to merlows.com becomes Instagram/TikTok assets, one stage per
+10-minute cron tick. Plan: `../tasks/social-media-automation-plan.md`.
+
+**Shape.** `publish.js` → `enqueuePack` (idempotent; a re-publish cannot double-post, and
+neither platform allows deleting a post through the API) → `/api/social/autopilot` tick:
+`queued → scripted → voiced → imaged → rendering → rendered` → (Phase 3) `slotted → done`.
+
+- **`lib/social/pack/store.js`** — KV record, queue, state machine. `claim` is a LEASE
+  (`zrem`, then re-`zadd` at `now + LEASE_MS`, with `leaseUntil` on the record and the
+  record — not the queue entry — deciding the winner). A tick killed mid-stage therefore
+  loses nothing; `leaseAttempts` caps a pack that reliably crashes the function. `hold()`
+  parks a pack whose stage has no runner yet instead of dropping it.
+- **`lib/social/pack/build-pack.js`** — one OpenRouter JSON call, three candidate hooks, the
+  first that passes the guard wins, plus ONE repair round that feeds the guard's complaints
+  back. The article is FENCED in `<<<uuid>>>` markers and labelled untrusted: bodies arrive
+  from RSS and from a content route that (as of today) needs no auth.
+- **`lib/social/pack/fact-guard.js`** — deterministic, never a second LLM pass. Checks names,
+  figures (including numbers spelled out in words), the pull quote verbatim, and the caption
+  text that actually ships. **Scope, honestly:** it proves a clip matches its ARTICLE; it
+  cannot prove the article is true, and whoever can write the article controls both sides.
+- **`lib/social/pack/voice.js`** — three British voices (Colin/Sophia/Richard), rotated per
+  story by hash and pinned for the whole pack; clips to Blob under the CONTENT id.
+- **`lib/social/pack/images.js`** — 2 stills per story from the script's image briefs.
+- **`lib/social/pack/render.js`** — client for the render service. Videos are detached: start,
+  then poll on later ticks. A render in progress makes the pack STAY at its stage rather than
+  counting a failure.
+
+**Rendering lives in `merlows-studio`, not here.** `renderMediaOnVercel` pushes the Remotion
+bundle into the sandbox from the CALLING function's filesystem, so the caller needs a build
+step — and this app deliberately has none. The studio is a separate Vercel project with
+`api/render.ts` behind `RENDER_API_SECRET`; set `RENDER_SERVICE_URL` here to point at it.
+Route chosen over AWS Lambda because we are already on Vercel Pro (~$14/month at 400
+renders); `@remotion/vercel` is marked experimental, so the call sits behind a thin interface.
+
+**Controls.** `SOCIAL_AUTOPILOT=off` (env, applies at deploy) or the KV flag
+`social:autopilot:paused` via `POST /api/social/autopilot/pause` (applies next tick — Vercel
+env vars only change on deploy, which is no use mid-incident). Board:
+`GET /api/social/autopilot/packs`. Manual re-queue: `POST /api/social/autopilot/retry`
+(failed packs only, resumes at the stage that failed, capped at 3).
+
+**New env vars:** `SOCIAL_TTS_API_KEY` (voice runs on its OWN OpenRouter key so a runaway
+voice job cannot drain the article budget), `BLOB_READ_WRITE_TOKEN`, `SOCIAL_PACK_MODEL`,
+`SOCIAL_AUTOPILOT`, `SOCIAL_STILLS_PER_PACK`, `BRAND_SITE_HOST`, `RENDER_SERVICE_URL`,
+`RENDER_API_SECRET`.
+
+**Tests:** 432 total / 427 pass / the same 5 long-standing failures.
+
+**Known limits, not fixed:**
+- Per-render QA checks that a real video of a sane size exists; it does NOT re-examine frames.
+  The seamless loop is structural (static hook frame + crossfade tail) and verified
+  frame-by-frame only by `merlows-studio/scripts/check_video.py` during template work.
+- `sensitive` is computed and shown but gates nothing yet; Phase 3's review gate is the
+  control that makes posting safe, so it is load-bearing rather than belt-and-braces.
+- Nothing posts yet. `STAGE_RUNNERS` stops at `rendering`; a rendered pack is held.
+
+---
+
+## Dashboard list reads batched (2026-09-23)
+
+Two separate batching mechanisms guard against the KV failure modes in the section above
+(1,024-fd ceiling from unbounded parallel `kv.get`, and Upstash's 10 MB response cap on MGET).
+
+- **Content records** (`lib/content/handlers/index.js`) can reach ~2.5 MB each (inline
+  base64 hero images), so list/slim/summary/review-tasks reads never MGET them. `readContent(ids)`
+  = `getLimited(ids.map(id => \`content:${id}\`), kv, 25)` — 25 `kv.get` calls in flight at once,
+  not one MGET and not 1,000+ parallel. `?slim=1` additionally strips `body`, `versions`,
+  `auditLog`, and inline `data:` hero URLs before the response is sent.
+- **Automation logs and jobs** are small enough to MGET, but still bounded: `lib/automation/log.js`
+  `readLogs(limit)` and `lib/automation/handlers/jobs-index.js` both use `mgetBatched` from
+  `lib/kv.js` on the id list.
+- `readLogs` always pulls up to 200 records (`MAX_LOGS`) in one MGET, so `lib/automation/log.js`
+  `writeLog` caps every record's serialised JSON to `MAX_RECORD_BYTES` (16 KB) via `fitRecord`:
+  `ruleId`/`ruleName`/`jobId`/`contentId`/`level` are capped at 200 chars, `message` at 4,000 chars
+  and then halved repeatedly if still over budget, and `meta` is replaced with `{truncated: true}`
+  if it alone pushes the record over budget. 200 records × 16 KB ≈ 3.2 MB (~4.3 MB after Upstash's
+  base64), safely under the 10 MB response cap.
+- Tests: `lib/content/handlers/index.test.js`, `lib/automation/handlers/jobs-index.test.js`,
+  `lib/automation/log.test.js`.
+
+## API auth gates + JWT_SECRET (2026-09-23)
+
+**Before this pass**, nearly every API route was unauthenticated — anonymous callers could
+create → approve → publish an article to WordPress, rewrite rules/reviewers/OAuth config, and
+stuff votes into the JSON approve endpoint via `body.channel`. `JWT_SECRET` was unset in prod, so
+every session and review-token was signed with a public fallback string — `lib/` is served
+statically, so that fallback was readable by anyone.
+
+**Now:**
+
+- **`lib/route-auth.js`** defines `LEVEL` (`PUBLIC`, `SELF`, `CRON`, `SESSION`, `CONTENT`, `ADMIN`)
+  and `resolveAuth`/`authorize`/`enforce`/`parseSlug`. Each catch-all —
+  `api/{core,content,automation,review}/[...slug].js` — exports its own `(method, slug, query)`
+  policy function and calls `enforce(req, res, policy(...))` before dispatch. Any `(method, route)`
+  pair the policy function doesn't explicitly return a level for falls through to
+  `DEFAULT_LEVEL = LEVEL.ADMIN` — a newly added route is closed by default.
+  Policy tables, read from source:
+  - **`core`** (`corePolicy`): `POST publish` and `POST schedule` → CONTENT; `GET reviewers` →
+    SESSION, all other `reviewers` methods → ADMIN.
+  - **`content`** (`contentPolicy`): bare `/api/content` `GET`/`POST` → SESSION, except
+    `?action=email-diagnostic` or `?action=backfill-review-sync` → ADMIN. Named config routes
+    (`ab-config`, `article-prompts`, `hero-prompts`, `master-prompt`, `usage-record`,
+    `usage-summary`, `word-limits`, `llm-proxy`, `gh-data`) → SESSION at the gate (finer role
+    checks live inside each handler). `/api/content/:id` `GET`/`PUT`/`DELETE` → SESSION (a PUT
+    that moves status into `approved`/`scheduled`/`published` needs CONTENT — enforced inside
+    `item.js`, which knows the current status). `:id/ai-revise`, `:id/apply-revision`,
+    `:id/comment` → CONTENT.
+  - **`automation`** (`automationPolicy`): `GET approve?token=` and `POST approve?token=` →
+    PUBLIC (the JWT in the token is the credential); `POST approve` with no token → CONTENT.
+    `POST telegram` → SELF (secret header checked in the handler). `backfill-heroes` and
+    `backfill-missing-heroes` → SELF (`x-backfill-auth`, checked in the handler). `GET run` →
+    CRON (Vercel cron tick); `POST run` → CONTENT ("Run now" from the UI). `telegram-test` and
+    `sources-list` → CONTENT. `logs`, `rules`, `bibliography` → CONTENT. `GET jobs` → SESSION.
+    `auth/{google,dropbox}/callback` `GET` → PUBLIC (OAuth redirect target); `GET auth/status` →
+    CONTENT; every other `auth/*` route → ADMIN.
+  - **`review`** (`reviewPolicy`): `POST send` → CONTENT; `/api/review/<token>` → PUBLIC (the
+    signed JWT in the path is the credential).
+- **Internal server-to-server calls** send `Authorization: Bearer $CRON_SECRET` via
+  `lib/cron-auth.js` `internalAuthHeaders()`. `isInternalRequest(req)` (true iff `CRON_SECRET` is
+  set AND the bearer matches) and `verifyCronSecret(req)` use `safeEqual` — a `timingSafeEqual`
+  wrapper that returns `false` (not a throw) on length mismatch. An unset `CRON_SECRET` returns
+  **503** (misconfigured), never 401 and never fail-open. Callers that send this header: `run.js`
+  (→ `/api/content`, `/api/publish`, `/api/schedule`), `approve.js` (→ `/api/publish`),
+  `telegram.js` (→ `/api/publish`), `backfill-heroes.js` (→ `/api/automation/approve`),
+  `api/cron/publish.js` (→ `/api/publish`). **`CRON_SECRET` is therefore required for automation
+  to ever publish.** `NEXT_PUBLIC_APP_URL` must be the app's own prod URL
+  (`https://merlows.vercel.app`) since that's where the bearer is sent.
+- **`lib/auth.js`**: `JWT_SECRET` is read lazily via `getSessionSecret()`, never at import — no
+  fallback string. `isJwtSecretConfigured()` gates session verification (missing → every token
+  treated as invalid); signing with no secret throws `JwtSecretError` (`status: 503`), consumed by
+  login, review send/token, and automation notify/approve. `JWT_SECRET` was set in Vercel
+  Production on 2026-09-23 (this invalidates all outstanding sessions and review links once).
+- **`lib/automation/handlers/telegram.js`**: fails closed with **503** when
+  `TELEGRAM_WEBHOOK_SECRET` is unset (previously an unset secret let requests without the header
+  through via `undefined === undefined`); a set-but-mismatched header → 401 via `safeEqual`
+  against `x-telegram-bot-api-secret-token`. When enabling Telegram, set the secret and
+  re-register the webhook with `secret_token`.
+- **`lib/content/handlers/item.js`** `sanitizeUpdates(updates, item, auth)`: browser callers can
+  never set `id`, `createdAt`, `auditLog`, `versions` (`SERVER_OWNED_FIELDS`). A basic `user`
+  (not admin/content) additionally can't set `approvals`, `rejections`, `rejectionComments`,
+  `reviewers`, `reviewerIds`, `requireAllApprovals`, `scheduledAt`, `approvedAt`, `publishedAt`,
+  `sentForReviewAt`, `gcalEventId`, `wpPostId`, `wpPostUrl`, `wpAuthorId`, `authorUsername`,
+  `authorName`, `automationRuleId`, `publishedChannels`, `socialSchedule`, `heroMediaId`,
+  `wpCategorySlug`, `publishDate` (`CONTENT_PLUS_FIELDS`), and gets a 403 on any `PUT` to an item
+  whose current status is `in_review`, `approved`, `scheduled`, or `published`
+  (`USER_LOCKED_STATUSES`). A `PUT` that moves `status` into `approved`/`scheduled`/`published`
+  needs CONTENT (checked separately, via `requireRole`).
+- **JSON approve** (no-token flavour) records the voter as the authenticated user's id, or
+  `'internal'` when the internal bearer called it with no session.
+- **`lib/automation/handlers/auth.js`** `oauthDonePage(message, success)` now runs `message`
+  through `escapeHtml` before interpolating into the response HTML (reflected-XSS fix — the page
+  echoes the OAuth provider's `error` query param).
+- **`index.html`**: `requireContentPlusAction(what)` guards pipeline action buttons (approve,
+  publish, schedule, send-for-review); those buttons are only rendered for content+ roles; the
+  Bibliography tab is content+ only. A global fetch wrapper's `onUnauthorized()` shows the login
+  overlay on a same-origin `/api/` 401 (but not `/api/auth/*`), only when the same user was
+  already signed in when the request started. `loadPublishingQueue()` and `loadGhData()` re-run
+  after `submitLogin()`.
+- **Tests**: `lib/route-auth.test.js` — a generated dispatch simulation over
+  `MATRIX` (68 routes across the four catch-alls) × `WHO` (`anon`, `user`, `content`, `admin`,
+  `internal`) = 340 combinations, 3 skipped as not safely exercisable (would start a real
+  automation run), plus a handful of standalone assertions (Telegram secret-header behaviour, the
+  `req.query.slug` rewrite path gated the same as `req.query['...slug']`). Also
+  `lib/content/handlers/item-sanitize.test.js`, `lib/automation/handlers/auth-page.test.js`, and
+  updated telegram/run-timeouts/notify/index/cron-publish tests.
+- **Deployed 2026-09-23** as dpl_EMRyx1E3GkUPNdR2XYZJPwAPT4Do, with `SOCIAL_AUTOPILOT=off` (the
+  concurrent social-autopilot work from the section above shipped dormant in the same deploy).
+  Verified live signed-out: gated routes return 401, Telegram webhook returns 503, the OAuth
+  callback page escapes its message. End-to-end proof of the internal bearer is pending the next
+  scheduled automation publish.
+- **Open / deferred** (separate work, not done this pass): static files should move to `public/`
+  so `lib/` stops being served (the seed password `'2026'` is visible in `lib/auth.js` source);
+  `mustChangePassword` isn't enforced server-side (done 2026-09-23 — see 'Password-change
+  enforcement + seed password removed'); no login rate limiting; OAuth callbacks have no
+  state-based CSRF check; a basic user can still `DELETE /api/content/:id` (hard delete — the
+  route's SESSION-level policy allows any signed-in user); `api/proxy-image.js` serves
+  `image/svg+xml` from the app's own origin (XSS vector), and `fetch-url`/`proxy-image` are open
+  server-side proxies; the backfill routes use `KV_REST_API_TOKEN` as an HTTP password; the UI
+  still renders edit buttons that basic users can't successfully use.
+
+## Social Autopilot Phase 2 — review pass: what the reviews changed (2026-09-23)
+
+The pipeline in the section above was reviewed by `code-reviewer` (render/image stages) and
+`security-auditor` (the new public render endpoint), then re-reviewed as confirmation runs. Both
+found defects that would have stopped it working, and the second round found three more that the
+first round's fixes introduced. What follows is the corrected behaviour, because the section above
+describes the version that did not work.
+
+**Four ways a pack could never reach a finished video:**
+- `leaseAttempts` counted every claim, not every crash. Four claims are spent just reaching
+  `rendering`, so a render taking longer than about two minutes — the normal case — failed the
+  pack. Any outcome now resets it (`clearLease` in `store.js`, applied by `advance`, `fail`,
+  `hold`, the stay path and `/retry`). A wall clock on the handle bounds a render that never
+  terminates instead.
+- A cut whose render failed had its handle deleted and was never restarted; the next tick found
+  nothing to poll and advanced the pack to `rendered` with the video missing. `stagePollRenders`
+  now iterates the CUTS, not the handle keys, and a cut with neither handle nor video sends the
+  pack back to `imaged` — the one place that starts renders — bounded by `cutAttempts`
+  (`MAX_CUT_ATTEMPTS`, default 2) and then by the stage attempt cap.
+- `stageStartRenders` had no time budget and saved nothing when it crashed: six to eight stills
+  plus two renders do not fit in what remains of a 300s tick. It now has its own clock, stays when
+  the stills are unfinished, and carries paid-for stills and started handles on the thrown error.
+- The snapshot id was written to `.vercel/.env.production.local`, which is a Vercel CLI artefact
+  that never becomes a deployed function's env. Every render would have paid the full cold cost and
+  timed out. It is now `.remotion/snapshot-id.txt`, which ships via `includeFiles`, read once at
+  module load with a log line either way.
+
+**The deadline mismatch, found only by the confirmation run:** the render service capped its
+detached sandbox at 8 minutes while the caller polls on a 10-minute cron, so a correct, uploaded
+video was always reported `expired` and re-rendered until the pack died. Render deadlines must
+exceed the POLL LATENCY, not the render time: the sandbox extension is 25 minutes (and it is an
+extension, added to the platform default, not a total), and `SOCIAL_RENDER_MAX_MS` is 40 minutes so
+the service's own `expired` is what reports a dead render. `stagePollRenders` also polls BEFORE
+applying its deadline — checking the clock first threw away answers that were sitting there.
+
+**Four High security findings on the render endpoint:**
+- The caller chose the storage key and got no random suffix, so `social/<id>/reel.mp4` was
+  derivable: one leaked URL gave up every other asset for that story, including cuts that failed
+  QA and everything that exists before a human has seen the pack. The body now carries
+  `storyId` and `name`, each `[A-Za-z0-9_-]{1,64}`, and the service builds the key with a random
+  suffix — matching what the voice and image steps already did.
+- The video path leaked a sandbox on every error and pinned it to Remotion's 30-minute default.
+- `images[].src` and every audio field were unconstrained URLs fetched by Chrome inside a sandbox
+  with full outbound access: an arbitrary-GET proxy, and the still path returns the rendered JPEG,
+  so it had a readback channel. `assetRef` in the templates' schema now allows only a bundled asset
+  name or an https URL on the brand site or our own Blob, and the sandbox gets a host allowlist.
+  The allowlist MUST include `vercel.com` — `@vercel/blob` v2 posts there, inside the sandbox, so
+  omitting it fails every render at upload and the documented remedy is to switch the lock off.
+- `point.seconds` had no ceiling: a 400-byte request could ask for a 24-hour render. Bounded at 30s
+  per slide, 120s per timeline, 12 images, and a 256 KB request body.
+
+A hero image that the schema would reject is now dropped in `stageScript` rather than sent to the
+renderer, because a rejected hero fails the whole pack at composition selection — losing both cuts
+and every still over one image. The usual source is a rule's `heroImageFallbackUrl`, which an
+operator can set to any host.
+
+**Tests:** 806 total, 801 pass, the same 5 long-standing baseline failures. The silent-drop guard,
+the lease reset and the poll-before-deadline order were each broken on purpose and observed failing
+before being restored.
+
+**Reported, deliberately not fixed:** no rate limit or concurrency ceiling on the render endpoint
+(every route is behind the shared secret and the only caller is the cron-gated autopilot, so this is
+hardening for the day the secret leaks); `imageBrief` is the one LLM-written field the fact guard
+never inspects, and it is piped into a second model's prompt; Blob uploads still refuse overwrites,
+so a re-render of the same key would fail if the key were not now random; the bearer secret is
+compared with `===` rather than a constant-time comparison.
+
+**Before this can run:** deploy `merlows-studio` as its own Vercel project, set `RENDER_SERVICE_URL`
+and a shared `RENDER_API_SECRET` in both projects, and `BLOB_READ_WRITE_TOKEN` in the studio. The
+network allowlist has not been proved against a real render — `tsc` cannot see it and no test covers
+it, so the first live still and the first live video are the check.
+
+**Host allowlists must be changed in TWO places.** `ASSET_HOSTS` in `merlows-studio/src/schema.ts`
+and `isRenderableAsset` in `lib/social/pack/render.js` are the same list, deliberately hardcoded in
+both. The caller's copy does NOT read `BRAND_SITE_HOST`, even though the fact guard does: the
+studio's copy runs inside the render sandbox, where that variable does not exist, so an env override
+would only teach the caller to pass assets the renderer still refuses — which costs the whole pack.
+Every asset URL entering a pack goes through the caller's copy: the hero in `stageScript`, and a
+model-hosted image URL in `image-client.js` (which now throws rather than passing one through).
+
+## merlows-studio deployed as its own Vercel project (2026-09-23)
+
+The render service is live at **https://merlows-studio.vercel.app**, project `merlows-studio`
+under **CliftonAiTeam** (`team_2OpDi6isFOmWWFqujeyuMZNY`, Pro — Hobby's 60s cap cannot run a
+300s render). Deploy with `npx vercel --prod --yes` from `C:\dev\merlows-studio`; the Drive copy
+is a mirror and cannot `npm install`.
+
+**Blob store `merlows-social`** (`store_KPse4AedYZkqBX9l`, iad1, access public) was created for
+this and its token is set in BOTH projects — the studio uploads renders, the Content Generator
+uploads voice clips and generated stills. Public access is required: Zernio fetches the finished
+files over plain HTTPS, which is why the random suffix on every key matters.
+
+**Env now set in production:** studio has `RENDER_API_SECRET` and `BLOB_READ_WRITE_TOKEN`; merlows
+has `RENDER_API_SECRET` (same value), `BLOB_READ_WRITE_TOKEN` (same store) and
+`RENDER_SERVICE_URL`. **The secret is stored Sensitive, so `vercel env pull` returns
+`[SENSITIVE]` and it cannot be read back.** To rotate it, generate once and write it to both
+projects in a single shell invocation, then redeploy the studio — a mismatch is a silent 401 on
+every render.
+
+**Two build/runtime defects fixed to get the first deploy working**, both diagnosed by `debugger`
+with a negative control:
+- `addBundleToSandbox` in @remotion/vercel 4.0.527 never creates its own sandbox-side root, and
+  `sandbox.mkDir` is not recursive — so the bundle upload dies on the first subdirectory. A flat
+  bundle never notices; ours carries `public/`. `ensureSandboxBundleRoot()` runs `mkdir -p` first,
+  in `scripts/create-snapshot.mjs` and in `api/render.ts`'s cold path. Upstream bug, worth
+  reporting; the workaround is idempotent so an upgrade will not break it.
+- `package.json` needed `"type": "module"`. `tsconfig.json` has `"module": "Preserve"`, so the
+  function is emitted as ESM, and without the type field Node loaded it as CommonJS and every
+  invocation was `FUNCTION_INVOCATION_FAILED`. It did not reproduce locally because Node 24
+  auto-detects ESM and the deployed Node does not. Do NOT switch tsconfig to CommonJS to "fix"
+  this: `@remotion/vercel` has no `require` export and cannot be loaded that way.
+
+**Verified live, not assumed:** unauthenticated and wrong-bearer GETs both return
+`401 {"error":"Unauthorised"}` (so no Vercel deployment protection is in the way), and a real
+still render returned a 1080x1350 JPEG with the WordPress hero visibly composited in — which
+proves the sandbox network allowlist reaches both `merlows.com` and the Blob API at `vercel.com`,
+the one thing no test or typecheck could cover. The test blob was deleted afterwards.
+
+**Known, not fixed:** Blob returns a `downloadUrl` (`?download=1`, `Content-Disposition:
+attachment`). It serves the bytes fine, but Phase 3 should strip the query before handing a URL to
+Zernio. The store is in `iad1` while functions run `fra1`, so every upload crosses the Atlantic.
+The build ran the snapshot step twice in one deploy, so snapshots accumulate faster than one per
+deploy — prune them occasionally.
+
+**Nothing renders automatically yet:** `SOCIAL_AUTOPILOT=off`, and the new env vars only take
+effect on the Content Generator's next deploy.
+
+### Hero images carry baked-in text, and the pack lies about their shape (2026-09-23)
+
+Two facts the social templates had to be taught, both originating here:
+
+- **WordPress heroes often have the article's own title burned into the picture**, on the left,
+  despite `craftImagePrompt` in `lib/social/media.js` forbidding text. The image models ignore it.
+  The carousel cover now crops to the right of the frame and fades the left edge to hide whatever
+  remains, and point slides no longer fall back to the hero at all. The real fix is at this end:
+  until it happens, every template that shows a hero is working around it.
+- **`stageScript` stamps `aspect: 16 / 9` on the hero without measuring the file**
+  (`lib/social/handlers/autopilot.js`). Anything that is not 16:9 — an operator's
+  `heroImageFallbackUrl`, an image replaced through the UI — is then framed as if it were. The
+  still templates now measure the real dimensions in `calculateMetadata` and override the
+  declared value; the VIDEO templates still trust it, so a wrong aspect still mis-frames a reel.
+  Measuring once here, when the pack is built, would fix both.
+
+## Social Autopilot: the paused-production backlog gate (2026-09-23)
+
+`enqueuePack` runs on EVERY publish whether or not the autopilot is paused — only the worker
+tick checks `isPausedNow()`. That is deliberate: the pack record is also the idempotency guard,
+so skipping it during a pause would mean a story published in that window could never be queued
+afterwards, and the enqueue costs one KV write. The consequence is a queue that fills while
+production is off, and switching back on would have bought an LLM script, ~9 voice clips and 2
+images for every article published during the outage, however stale.
+
+**The gate is in the worker, not at the door.** A pack still at `queued` and older than
+`SOCIAL_MAX_PACK_AGE_HOURS` (default 24) is retired to a new terminal status `dropped` —
+deliberately NOT `failed`, because nothing went wrong and a board full of alarms trains people
+to ignore it. A pack past `queued` is never dropped however old: the money is spent and posting
+it is the cheapest outcome. There is no purge to run; the backlog clears itself.
+
+**Two things that were nearly shipped broken, both found in review:**
+- **The board's Retry was a trapdoor.** A script-stage failure resumes at `queued`, and
+  staleness measured from `createdAt` — so retrying the next morning, which is what the board is
+  for, spent one of three manual retries and had the pack retired on the very next tick, with no
+  route back from `dropped`. Staleness now measures from `requeuedAt ?? createdAt`, and `/retry`
+  stamps `requeuedAt`. Anything that ever revives a dropped pack must do the same.
+- **A long backlog crowded out today's stories.** The queue is scored by when a pack is next
+  due, and an unworked pack keeps its enqueue time, so stale packs are always a PREFIX. Reading
+  the first N ids meant that once the backlog passed the window, every id the tick could see was
+  stale and today's article was never claimed. `runTick` now reads the two ENDS of the queue
+  (`dueContentIdsInRange`) so draining and working are independent.
+
+**Also hardened:** `nextStage` guards `indexOf === -1` (it returned `queued` for a terminal
+status, which would have restarted the whole paid chain); `MAX_PACK_AGE_MS` is floored at 1h (a
+negative env value made every pack stale and would have wiped the queue irreversibly); each drop
+logs, because a cron tick's response body goes nowhere — see the month of silently-missing
+articles recorded above; `runTick` returns `counts` so a saturated read window is visible; and a
+terminal pack found in the queue is removed rather than re-held every 6 hours forever.
+
+**Tests:** 841 total / 836 pass / the same 5 baseline failures. The pre-existing queue stubs
+return every id whatever score range they are asked for, so they CANNOT exercise the two-window
+read — the new tests use a stub that honours scores. Both fixes were sabotage-checked.
+
+**Known, reported, not fixed:** the fresh window reads exactly `PACKS_PER_TICK` ids with no
+slack, so an id that does not become work costs a slot; the terminal-leftover branch sits after
+`worked++` and so consumes one; the paused early return omits `counts`, so a future consumer
+reading `counts.dueSeen` would throw on a paused tick; the tick-full path claims before it knows
+it has no room (6 KV ops to conclude nothing); `dueContentIdsInRange` transfers the whole
+matching range before slicing; and there is no route back from `dropped` short of deleting the
+KV key.
+
+---
+
+## Static files moved to public/ (2026-09-23)
+
+`index.html`, `logo.png`, `logo.svg` moved to `public/` (bytes verified). The project's Output
+Directory setting is "public if it exists, or `.`" — before this move, `public/` didn't exist, so
+Vercel served **every uploaded file in the repo root** statically. `/lib/auth.js` exposed the seed
+password `'2026'`, the session cookie name, and — until `JWT_SECRET` was set earlier the same
+day — the fallback JWT secret; `/lib/**` also documented internal structure. `vercel.json` now
+pins `"outputDirectory": "public"` so a missing `public/` fails the deploy instead of silently
+re-exposing the root. `.vercelignore`'s root-file excludes (`CLAUDE.md`, `scripts/`, `_drive.mjs`,
+`_drive.log`, `.superpowers/`, `.env.local`) are kept as defence in depth (comment updated).
+
+Deployed 2026-09-23 12:43 UTC, `dpl_GNGb1crTkxe1RXRzpG4dtyZ6qafz`. Verified live: `/lib/auth.js`,
+`/lib/kv.js`, `/CLAUDE.md`, `/package.json`, `/vercel.json`, `/.env.example`, `/data/...` → 404;
+`/` serves the app; `/logo.png` byte-identical.
+
+**Still open:** the seed password `'2026'` remains valid for any account that never changed it,
+and `mustChangePassword` isn't enforced server-side (both done 2026-09-23 — see 'Password-change
+enforcement + seed password removed'); no login rate limiting.
+
+## Password-change enforcement + seed password removed (2026-09-23)
+
+Four never-used seed accounts — `jslagel`, `lslagel`, `myaniv` (@slapharma.com, `content` role) and
+`dgershon` (@slapharma.com, `user` role) — still accepted the shared seed password `'2026'`, which
+was publicly readable in `lib/auth.js` until the `public/` move earlier the same day. Removed from
+KV `merlows:users` on Clifton's decision: records backed up locally first, and none was referenced
+by any rule, notification, or pending job. Only two users remain, `cflack@slapharma.com` and
+`cliftonflack@gmail.com`, both `admin`. There is no admin UI for creating users or resetting
+passwords — only the scripts.
+
+`lib/auth.js` `getCurrentUser(req, { allowPendingPasswordChange })` now returns `null` for a
+`mustChangePassword` user unless the caller opts in; only `/api/auth/me` and
+`/api/auth/change-password` opt in, so a pending session can do nothing else. This is enforced in
+`getCurrentUser` itself, so route-auth, the social router, and every handler that calls it directly
+all inherit the gate. `SEED_PASSWORD` is gone; `INITIAL_USERS` is now `cliftonflack@gmail.com`
+(admin) only; a new `randomTemporaryPassword()` generates the fallback. `buildUser` (`lib/users.js`)
+and `loadUsers`'s empty-store seeding path both use it when no password is supplied, so a seeded
+account gets a random, unknowable password and is locked until an admin sets one out of band.
+
+`lib/auth/handlers/change-password.js`: `MIN_PASSWORD_LENGTH` is 10. The handler writes only the
+`users` KV key directly (`kv.set('users', users)`), not `saveUsers()` — `saveUsers` also regenerates
+the `reviewers` list from the user list, which would silently clobber the list curated through
+`/api/reviewers`. The reviewers list is separate data now.
+
+UI (`public/index.html`): a `mustChangePassword` session sees only the forced-change dialog and no
+other data loads while pending; `onUnauthorized()` is a no-op while pending
+(`_currentUser.mustChangePassword` check); the page reloads after a forced change completes; both
+password fields have `minlength="10"`.
+
+Tests: `lib/auth-password-policy.test.js` (18 tests, new). Suite baseline 859 total / 854 pass / 5
+long-standing failures (unchanged from before this change).
+
+Deployed 2026-09-23 13:02 UTC, `dpl_27dSmLeVyoXedij8mWiN8uJnU9mb`. Verified live: a seed-password
+login attempt returns 401; an anonymous call to `/api/auth/change-password` returns 401.
+
+**Open (separate work, not done this pass):** no login rate limiting (Medium); login response
+timing reveals whether an email exists (Low); `scryptSync` runs with Node's default cost parameter
+`N=2^14` (Low); sessions are not revoked on password change — the JWT is valid for its full 30-day
+TTL with no password-version claim to invalidate it early; `scripts/reset-password.mjs` still calls
+`saveUsers()` (clobbers `reviewers`), allows passwords as short as 4 characters, and writes to the
+root KV namespace if `KV_PREFIX` is unset in the shell it runs from; `lib/users.js` `loadUsers()`'s
+empty-store path still rewrites `reviewers`.

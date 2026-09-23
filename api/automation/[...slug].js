@@ -16,6 +16,56 @@ import authHandler from '../../lib/automation/handlers/auth.js';
 import logsHandler from '../../lib/automation/handlers/logs.js';
 import sourcesListHandler from '../../lib/automation/handlers/sources-list.js';
 import bibliographyHandler from '../../lib/automation/handlers/bibliography.js';
+import backfillHeroesHandler from '../../lib/automation/handlers/backfill-heroes.js';
+import backfillMissingHeroesHandler from '../../lib/automation/handlers/backfill-missing-heroes.js';
+import { LEVEL, enforce } from '../../lib/route-auth.js';
+
+// Access policy per route (see lib/route-auth.js). Unlisted (method, route)
+// pairs return null and fall back to DEFAULT_LEVEL (admin) in enforce().
+export function automationPolicy(method, slug, query = {}) {
+  const [first, second, third] = slug;
+  switch (first) {
+    case 'approve':
+      // Signed-token flavour (email links + the feedback form): the JWT is the
+      // credential. The JSON flavour (no token) is an in-app or internal vote —
+      // admin|content or internal; the handler derives the voter from the auth.
+      if (method === 'GET') return LEVEL.PUBLIC;
+      if (method === 'POST') return query.token ? LEVEL.PUBLIC : LEVEL.CONTENT;
+      return null;
+    case 'telegram':
+      // Telegram webhook: authenticated by its secret header inside the handler.
+      return method === 'POST' ? LEVEL.SELF : null;
+    case 'backfill-heroes':
+    case 'backfill-missing-heroes':
+      return LEVEL.SELF; // x-backfill-auth, checked in the handler
+    case 'run':
+      // GET = Vercel cron tick. POST = "Run now" from the UI (or internal).
+      if (method === 'GET') return LEVEL.CRON;
+      if (method === 'POST') return LEVEL.CONTENT;
+      return null;
+    case 'telegram-test':
+    case 'sources-list':
+      return method === 'POST' ? LEVEL.CONTENT : null;
+    case 'logs':
+    case 'rules':
+    case 'bibliography':
+      return LEVEL.CONTENT;
+    case 'jobs':
+      return method === 'GET' ? LEVEL.SESSION : null;
+    case 'auth':
+      // OAuth redirect target: the provider's browser redirect carries no session
+      // guarantee, so it stays public. Everything else (client-secret config,
+      // status, connect, disconnect) is admin-only.
+      if (method === 'GET' && (second === 'google' || second === 'dropbox') && third === 'callback') {
+        return LEVEL.PUBLIC;
+      }
+      // Read-only connected/not-connected flags; the rule wizard (content+) shows them.
+      if (method === 'GET' && second === 'status') return LEVEL.CONTENT;
+      return LEVEL.ADMIN;
+    default:
+      return null;
+  }
+}
 
 export default async function handler(req, res) {
   // In non-Next.js Vercel serverless, [...slug].js exposes matched segments as
@@ -31,7 +81,11 @@ export default async function handler(req, res) {
     : String(rawSlug).split('/').filter(Boolean);
   const [first, second] = slug;
 
+  if (!(await enforce(req, res, automationPolicy(req.method, slug, req.query)))) return;
+
   if (first === 'approve') return approveHandler(req, res);
+  if (first === 'backfill-heroes') return backfillHeroesHandler(req, res);
+  if (first === 'backfill-missing-heroes') return backfillMissingHeroesHandler(req, res);
   if (first === 'run') return runHandler(req, res);
   if (first === 'telegram-test') return telegramTestHandler(req, res);
   if (first === 'telegram') return telegramHandler(req, res);
