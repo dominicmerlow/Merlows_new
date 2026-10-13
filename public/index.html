@@ -3103,6 +3103,19 @@ body.sidebar-collapsed .nav-item-child { padding-left: 10px; }
     <button class="btn btn-outline btn-sm" onclick="loadAutopilot()">Refresh</button>
     <span id="autopilotStateNote" style="font-size:0.7rem;color:var(--text-muted);"></span>
   </div>
+  <!-- Auto-approve: releases an undecided story after the window. Sensitive ones too, unless the server's sensitive hold is on. -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;">
+    <button class="btn btn-outline btn-sm" id="autopilotAutoBtn" onclick="toggleAutopilotAutoApprove()" disabled>Auto-approve: …</button>
+    <label for="autopilotAutoMinutes" style="font-size:0.7rem;color:var(--text-muted);">after</label>
+    <select id="autopilotAutoMinutes" class="btn-sm" onchange="changeAutopilotAutoMinutes()" style="font-size:0.75rem;">
+      <option value="30">30 min</option>
+      <option value="60">60 min</option>
+      <option value="120" selected>120 min</option>
+      <option value="240">4 hours</option>
+      <option value="480">8 hours</option>
+    </select>
+    <span id="autopilotAutoNote" style="font-size:0.7rem;color:var(--text-muted);"></span>
+  </div>
   <div id="autopilotBoard">
     <div class="social-empty">Loading…</div>
   </div>
@@ -5716,6 +5729,11 @@ function switchSocialTab(tab) {
 var AUTOPILOT_STAGES = ['queued','scripted','voiced','imaged','rendering','rendered','slotted','done'];
 
 function autopilotStageIndex(status) {
+  // An archived pack REACHED `rendered` — that is the whole point of archiving instead of
+  // dropping: the script, voice clips, images and both renders are finished and kept. It is
+  // not on the stage list, so without this every pip would be off and the board would say the
+  // opposite of the truth about a pack we have already paid in full to build.
+  if (status === 'archived') return AUTOPILOT_STAGES.indexOf('rendered');
   var i = AUTOPILOT_STAGES.indexOf(status);
   return i < 0 ? -1 : i;
 }
@@ -5723,9 +5741,14 @@ function autopilotStageIndex(status) {
 function autopilotStatusChip(pack) {
   var colour = 'var(--sla-navy)';
   var label = pack.status;
-  if (pack.status === 'failed')  { colour = '#B91C1C'; }
-  if (pack.status === 'dropped') { colour = '#64748B'; }
-  if (pack.status === 'done')    { colour = 'var(--sla-teal)'; }
+  // The scale is deliberate: amber means a person still has to act, slate means nothing more
+  // will happen, red means something went wrong. `archived` is a DEEPER amber than "awaiting
+  // review" because it is the same state grown old — still yours to decide, not an error and
+  // not discarded. It must not look like `dropped`, which is inert and has no buttons.
+  if (pack.status === 'failed')   { colour = '#B91C1C'; }
+  if (pack.status === 'dropped')  { colour = '#64748B'; }
+  if (pack.status === 'done')     { colour = 'var(--sla-teal)'; }
+  if (pack.status === 'archived') { colour = '#92400E'; }
   if (pack.status === 'rendered' && pack.review && pack.review.requestedAt && !pack.review.decision) {
     colour = '#B45309'; label = 'awaiting review';
   }
@@ -5752,6 +5775,49 @@ function autopilotPostLine(post) {
   return state + ' ' + label;
 }
 
+// https only, for the same reason the post links are checked: these URLs are stored server
+// side and a scheme other than https has no business in a src or an href.
+function autopilotSafeUrl(url) {
+  return (typeof url === 'string' && /^https:\/\//i.test(url)) ? url : null;
+}
+
+// What the reviewer actually judges. Videos are preload="none" so opening the board does not
+// pull ~20 MB per story; they load when played.
+function autopilotPreview(pack) {
+  var media = pack.media || {};
+  var bits = [];
+  ['reel', 'tiktok'].forEach(function(cut) {
+    var url = autopilotSafeUrl(media[cut]);
+    if (!url) return;
+    bits.push('<figure style="margin:0;">'
+      + '<video src="' + escapeHtml(url) + '" controls preload="none" playsinline '
+      + 'style="width:150px;aspect-ratio:9/16;background:#000;display:block;"></video>'
+      + '<figcaption style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em;">'
+      + escapeHtml(cut) + '</figcaption></figure>');
+  });
+  [['cover', 'carousel'], ['story', 'story']].forEach(function(pair) {
+    var url = autopilotSafeUrl(media[pair[0]]);
+    if (!url) return;
+    bits.push('<figure style="margin:0;">'
+      + '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">'
+      + '<img src="' + escapeHtml(url) + '" alt="' + escapeHtml(pair[1]) + '" loading="lazy" '
+      + 'style="width:120px;display:block;border:1px solid var(--border);"></a>'
+      + '<figcaption style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em;">'
+      + escapeHtml(pair[1]) + '</figcaption></figure>');
+  });
+  (media.slides || []).forEach(function(slide, i) {
+    var url = autopilotSafeUrl(slide);
+    if (!url) return;
+    bits.push('<figure style="margin:0;">'
+      + '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">'
+      + '<img src="' + escapeHtml(url) + '" alt="slide ' + (i + 1) + '" loading="lazy" '
+      + 'style="width:90px;display:block;border:1px solid var(--border);"></a>'
+      + '<figcaption style="font-size:0.6rem;color:var(--text-muted);margin-top:3px;">' + (i + 1) + '</figcaption></figure>');
+  });
+  if (!bits.length) return '';
+  return '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:flex-start;">' + bits.join('') + '</div>';
+}
+
 function renderAutopilotBoard(packs) {
   var host = document.getElementById('autopilotBoard');
   if (!host) return;
@@ -5761,11 +5827,28 @@ function renderAutopilotBoard(packs) {
   }
   var rows = packs.map(function(pack) {
     var stage = autopilotStageIndex(pack.status);
+    // Pips say how far along; the caption says WHERE. The status chip answers a different
+    // question ("what does this need from me?") — "awaiting review" is not a pipeline stage,
+    // so without this the actual stage was only discoverable by hovering a 8px square.
     var pips = AUTOPILOT_STAGES.map(function(name, i) {
       var on = stage >= i && stage >= 0;
-      return '<span title="' + name + '" style="width:8px;height:8px;display:inline-block;margin-right:3px;'
+      var current = stage === i;
+      return '<span title="' + name + '" style="width:' + (current ? 14 : 8) + 'px;height:8px;'
+           + 'display:inline-block;margin-right:3px;vertical-align:middle;'
            + 'background:' + (on ? 'var(--sla-teal)' : '#CBD5E1') + ';"></span>';
     }).join('');
+    // `archived` borrows `rendered`'s pips (see autopilotStageIndex) but must NOT borrow its
+    // caption: it is not still in the pipeline, it has left the queue and is waiting on a
+    // person. Saying "step 6 of 8" would read as work in progress.
+    var stageLabel = pack.status === 'archived'
+      ? '<span style="font-size:0.62rem;color:var(--text-muted);margin-left:6px;vertical-align:middle;">'
+        + 'archived · built and kept, waiting on your decision</span>'
+      : stage >= 0
+      ? '<span style="font-size:0.62rem;color:var(--text-muted);margin-left:6px;vertical-align:middle;">'
+        + escapeHtml(AUTOPILOT_STAGES[stage]) + ' · step ' + (stage + 1) + ' of ' + AUTOPILOT_STAGES.length + '</span>'
+      // `failed` and `dropped` are not on the pipeline, so there is no step number to give.
+      : '<span style="font-size:0.62rem;color:var(--text-muted);margin-left:6px;vertical-align:middle;">'
+        + escapeHtml(pack.status) + '</span>';
     var posts = (pack.posts || []).map(function(p) {
       return '<div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">' + autopilotPostLine(p) + '</div>';
     }).join('');
@@ -5775,16 +5858,26 @@ function renderAutopilotBoard(packs) {
     var retry = pack.status === 'failed'
       ? '<button class="btn btn-outline btn-sm" onclick="retryAutopilotPack(\'' + escapeHtml(pack.contentId) + '\')">Retry</button>'
       : '';
-    // Approve/Reject appear only while a decision can still change anything: once the pack
-    // leaves `rendered` the posts are scheduled with Zernio and nothing here can recall them.
+    // Approve/Reject appear only while a decision can still change anything: once posts are
+    // scheduled with Zernio, nothing here can recall them.
+    //
+    // `archived` counts as well as `rendered`. An archived pack is one nobody answered within
+    // SOCIAL_REVIEW_ARCHIVE_HOURS: it has left the queue and holds no work slot, but its
+    // assets are kept and the server still accepts a decision on it — approving restores it to
+    // `rendered` and schedules it, rejecting drops it. Leaving the buttons off here would make
+    // the archive unreachable from the only screen that shows it.
+    //
     // `!posts.length` as well: a pack can still be `rendered` with some posts already handed
     // to Zernio (a schedule that ran out of tick budget, or failed part-way). Offering
     // Reject there promised something the server cannot deliver.
-    var awaitingDecision = pack.status === 'rendered'
+    //
+    // Retry stays failed-only, deliberately — the server refuses it for anything else.
+    var awaitingDecision = (pack.status === 'rendered' || pack.status === 'archived')
       && !(pack.review && pack.review.decision)
       && !(pack.posts && pack.posts.length);
     var review = awaitingDecision
       ? '<button class="btn btn-orange btn-sm" onclick="reviewAutopilotPack(\'' + escapeHtml(pack.contentId) + '\',\'approved\')">Approve</button>'
+        + ' <button class="btn btn-outline btn-sm" onclick="reviewAutopilotPack(\'' + escapeHtml(pack.contentId) + '\',\'approved\',true)">Approve &amp; post now</button>'
         + ' <button class="btn btn-outline btn-sm" onclick="reviewAutopilotPack(\'' + escapeHtml(pack.contentId) + '\',\'rejected\')">Reject</button>'
       : '';
     var decided = pack.review && pack.review.decision
@@ -5798,8 +5891,13 @@ function renderAutopilotBoard(packs) {
          +   (pack.sensitive ? '<span style="font-size:0.6rem;font-weight:800;color:#B45309;">SENSITIVE</span>' : '')
          +   '<span style="margin-left:auto;display:flex;gap:6px;align-items:center;">' + decided + review + retry + '</span>'
          + '</div>'
-         + '<div style="margin-top:8px;">' + pips + '</div>'
+         + '<div style="margin-top:8px;">' + pips + stageLabel + '</div>'
          + (pack.hook ? '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">' + escapeHtml(pack.hook) + '</div>' : '')
+         + ((pack.points && pack.points.length)
+             ? '<ol style="margin:6px 0 0;padding-left:18px;font-size:0.68rem;color:var(--text-muted);">'
+               + pack.points.map(function(c) { return '<li>' + escapeHtml(c) + '</li>'; }).join('') + '</ol>'
+             : '')
+         + autopilotPreview(pack)
          + posts + err
          + '</div>';
   }).join('');
@@ -5838,6 +5936,7 @@ function loadAutopilot() {
       if (badge) badge.style.display = 'none';
       if (note) note.textContent = 'State unknown — could not read the pause flag.';
     });
+  loadAutopilotAutoApprove();
   fetch('/api/social/autopilot/packs?limit=50', { credentials: 'same-origin' })
     .then(function(r) {
       if (r.status === 401 || r.status === 403) throw new Error('Not authorised');
@@ -5847,6 +5946,100 @@ function loadAutopilot() {
     .catch(function(err) {
       if (host) host.innerHTML = '<div class="social-empty">Could not load the board: ' + escapeHtml(err.message) + '</div>';
     });
+}
+
+// Auto-approve switch. The server state is the truth: every change re-reads it, and a failed
+// read shows "unknown" rather than a guess — an "Off" that is really on would mean stories
+// going out unreviewed while the board says otherwise.
+var _autopilotAuto = null;
+
+function renderAutopilotAutoApprove(state) {
+  _autopilotAuto = state;
+  var btn = document.getElementById('autopilotAutoBtn');
+  var sel = document.getElementById('autopilotAutoMinutes');
+  var note = document.getElementById('autopilotAutoNote');
+  if (!state) {
+    if (btn) { btn.textContent = 'Auto-approve: unknown'; btn.disabled = false; }
+    if (note) note.textContent = 'Could not read the auto-approve setting.';
+    return;
+  }
+  if (btn) {
+    btn.textContent = state.enabled ? 'Auto-approve: On' : 'Auto-approve: Off';
+    btn.className = state.enabled ? 'btn btn-orange btn-sm' : 'btn btn-outline btn-sm';
+    btn.disabled = false;
+  }
+  if (sel && state.enabled) {
+    var value = String(state.minutes);
+    // A window set elsewhere (the env var) may not be in the list; show it rather than lie.
+    if (!Array.prototype.some.call(sel.options, function(o) { return o.value === value; })) {
+      var opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = value + ' min';
+      sel.appendChild(opt);
+    }
+    sel.value = value;
+  }
+  if (note) {
+    note.textContent = state.enabled
+      ? (state.holdSensitive
+        ? 'Routine stories with no decision go out ' + state.minutes + ' min after the review request. Sensitive stories always wait for you.'
+        : 'Every story with no decision goes out ' + state.minutes + ' min after the review request, sensitive ones included.')
+      : 'Nothing goes out until someone approves it.';
+  }
+}
+
+function loadAutopilotAutoApprove() {
+  fetch('/api/social/autopilot/auto-approve', { credentials: 'same-origin' })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(renderAutopilotAutoApprove)
+    .catch(function() { renderAutopilotAutoApprove(null); });
+}
+
+function saveAutopilotAutoApprove(enabled, minutes) {
+  var btn = document.getElementById('autopilotAutoBtn');
+  if (btn) btn.disabled = true;
+  return fetch('/api/social/autopilot/auto-approve', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ enabled: enabled, minutes: minutes }),
+  })
+    .then(function(r) {
+      return r.json().catch(function() { return {}; }).then(function(body) {
+        if (!r.ok) throw new Error(body.error || ('HTTP ' + r.status));
+        return body;
+      });
+    })
+    .then(function(state) {
+      renderAutopilotAutoApprove(state);
+      if (typeof showToast === 'function') showToast(state.enabled ? 'Auto-approve on (' + state.minutes + ' min)' : 'Auto-approve off');
+    })
+    .catch(function(err) {
+      if (typeof showToast === 'function') showToast('Could not change auto-approve: ' + err.message);
+      loadAutopilotAutoApprove();
+    });
+}
+
+function toggleAutopilotAutoApprove() {
+  var sel = document.getElementById('autopilotAutoMinutes');
+  var minutes = Number(sel ? sel.value : 120);
+  // Unknown state: read it again rather than guessing which way to flip.
+  if (!_autopilotAuto) { loadAutopilotAutoApprove(); return; }
+  if (!_autopilotAuto.enabled) {
+    // Turning it on means stories reach the live accounts without anyone looking, and
+    // neither Instagram nor TikTok lets the API delete a post, so it asks.
+    var who = _autopilotAuto.holdSensitive
+      ? 'Routine stories nobody has decided on will post to the live Instagram and TikTok accounts ' + minutes + ' minutes after the review request. Sensitive stories still wait for you.'
+      : 'Every story nobody has decided on, sensitive ones included, will post to the live Instagram and TikTok accounts ' + minutes + ' minutes after the review request.';
+    if (!window.confirm('Turn on auto-approve?\n\n' + who + ' Posts cannot be deleted through the API.')) return;
+  }
+  saveAutopilotAutoApprove(!_autopilotAuto.enabled, minutes);
+}
+
+function changeAutopilotAutoMinutes() {
+  var sel = document.getElementById('autopilotAutoMinutes');
+  // Only saved while it is on; when off, the choice is used the next time it is turned on.
+  if (_autopilotAuto && _autopilotAuto.enabled && sel) saveAutopilotAutoApprove(true, Number(sel.value));
 }
 
 function toggleAutopilotPause() {
@@ -5872,21 +6065,27 @@ function toggleAutopilotPause() {
     .then(function() { if (btn) btn.disabled = false; });
 }
 
-function reviewAutopilotPack(contentId, decision) {
+function reviewAutopilotPack(contentId, decision, postNow) {
   // Rejecting is terminal — the pack is dropped and there is no route back — so it asks.
   // Approving is not, because the pack still has to pass everything after the gate.
   if (decision === 'rejected' && !window.confirm('Reject this story? It will not be posted, and this cannot be undone.')) return;
+  // Post-now asks too, and says plainly what it does: these go to the live accounts within
+  // minutes, and neither Instagram nor TikTok lets us delete them afterwards.
+  if (postNow && !window.confirm('Post this story now?\n\nEvery finished format goes to the live Instagram and TikTok accounts over the next few minutes, ignoring today\'s schedule. Posts cannot be deleted through the API.')) return;
   fetch('/api/social/autopilot/review', {
     method: 'POST',
     credentials: 'same-origin',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contentId: contentId, decision: decision }),
+    body: JSON.stringify({ contentId: contentId, decision: decision, postNow: postNow === true }),
   })
     .then(function(r) { return r.json().then(function(b) { return { ok: r.ok, body: b }; }); })
     .then(function(res) {
       if (typeof showToast === 'function') {
-        showToast(res.ok ? (decision === 'approved' ? 'Approved — scheduling' : 'Rejected — not posting')
-                         : ((res.body && res.body.error) || 'Could not record that'));
+        showToast(res.ok
+          ? (decision === 'approved'
+              ? (postNow ? 'Approved — posting within a few minutes' : 'Approved — scheduling into today\'s grid')
+              : 'Rejected — not posting')
+          : ((res.body && res.body.error) || 'Could not record that'));
       }
       loadAutopilot();
     })

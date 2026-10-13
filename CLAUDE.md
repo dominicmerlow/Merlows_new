@@ -63,9 +63,35 @@
 - Fallback chains: `FALLBACK_MODELS` (general) and `INFOGRAPHIC_MODELS` (structured content).
 
 ## Telegram Bot
-- Token and chat ID stored as Vercel env vars: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
-- Webhook secret: `TELEGRAM_WEBHOOK_SECRET`. Verified via `x-telegram-bot-api-secret-token` header.
-- Test endpoint: `GET /api/automation/telegram-test`.
+- Two bots, one webhook each: Merlows uses its own dedicated bot, never SLA Health's
+  `SLAhealth_bot` — Telegram allows only one webhook URL per bot, so pointing Merlows at that bot
+  would cut off SLA Health's approvals. Approvals arrive in a private DM between the approver and
+  the Merlows bot.
+- Env vars, all Vercel **Production, Sensitive**: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`,
+  `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_APPROVER_IDS` (comma-separated Telegram user ids; when
+  set, only those users may press a review button — unset allows anyone in `TELEGRAM_CHAT_ID`'s
+  chat; **set but blank is read the same as unset** — a known Low, see "Telegram review loop
+  hardened" below). Also `SOCIAL_REVIEW_GATE` (`on`|`sensitive`|`off`), `SOCIAL_REVIEW_HOLD_SENSITIVE`
+  (added 2026-10-01: default off; exactly `on` makes sensitive packs never auto-approve; env only,
+  needs a redeploy — see "Sensitive stories now auto-approve (2026-10-01)" at the end),
+  `SOCIAL_REVIEW_AUTO_MINUTES`
+  (an undecided pack auto-approves after this many minutes; `0` disables auto-approve; unset
+  means 0/off since 2026-09-24, was 60 — read as a fallback only, see below), the board's auto-approve switch (KV
+  `social:autopilot:auto-approve`, `on`|`off` + minutes, 5–1440 or 0 for off, default 120 when
+  switched on — overrides `SOCIAL_REVIEW_AUTO_MINUTES` once loaded, since Vercel env vars only take
+  effect on a redeploy; loaded once at the start of every autopilot tick and every digest so all
+  packs in one run see the same value; a KV read failure falls back to the env var; see "Social
+  Autopilot: board switch for auto-approve minutes" below), `SOCIAL_REVIEW_POLL_MS` (how often a pack waiting on review is re-checked; default 20 min),
+  `SOCIAL_REVIEW_ARCHIVE_HOURS` (archive an undecided pack after this long with no decision,
+  instead of holding it forever; default 72h), and `SOCIAL_TIKTOK_MIN_BUDGET_MS` (don't start a
+  TikTok post with less tick time left than this — the re-upload to Zernio needs it; default 75s)
+  — all read by `lib/social/pack/review.js` and `lib/social/handlers/autopilot.js`.
+- Webhook: `POST https://merlows.vercel.app/api/automation/telegram`, registered by hand with
+  `setWebhook` + `secret_token` — nothing in the code calls `setWebhook`. Unset
+  `TELEGRAM_WEBHOOK_SECRET` → 503; a header that doesn't match → 401.
+- Test endpoint: `POST /api/automation/telegram-test`, body `{ "chatId": "..." }`. Sends a plain
+  "connected" message to that chat via `TELEGRAM_BOT_TOKEN` — it still carries the old SLA Health
+  wording and doesn't check `getWebhookInfo`.
 
 ## Stop Hook
 - The `[Preview Required]` stop hook from plugins does not apply to this project — there is no local dev server. Ignore or disable it.
@@ -987,7 +1013,9 @@ the 2026-08-19 deploy before this session.
   whole alert silently) and logs rejected sends. `testOpenRouter` now shows the OpenRouter key label.
 - **Live Zernio accounts (2026-09-22):**
   - Instagram `@merlows.news`, id `6ab29cf68d284ffb212e1818`. Its token expires 2026-11-21.
-  - TikTok `@merlows.news`, id `6ab29cb58d284ffb212e1733`, public posting OK.
+  - TikTok `@merlows.news`, id `6ab29cb58d284ffb212e1733`, public posting OK. (Queried on
+    2026-09-24 because a similar handle `@merlowsnews` also exists; Clifton confirmed the
+    DOTTED one above is correct for both platforms. Recorded so the question is not reopened.)
   - Profile `6ab2985ea77a696ba3a9610f`.
 - **`.vercelignore` now excludes `CLAUDE.md`, `scripts/`, `_drive.*`, `.superpowers/`, `.env.local`.**
   The project has no output directory, so Vercel served every uploaded file. `/CLAUDE.md` exposed the
@@ -1486,3 +1514,742 @@ TTL with no password-version claim to invalidate it early; `scripts/reset-passwo
 `saveUsers()` (clobbers `reviewers`), allows passwords as short as 4 characters, and writes to the
 root KV namespace if `KV_PREFIX` is unset in the shell it runs from; `lib/users.js` `loadUsers()`'s
 empty-store path still rewrites `reviewers`.
+
+## Comment-to-DM automations: Zernio adapter + payload builder (2026-09-23)
+
+Two new modules for the "Comment VOICES and we'll DM you the full story" feature (steps **Z2**
+and **Z3** of `../tasks/comment-to-dm-plan.md`). Zernio's own Meta app watches Instagram comments
+and sends the DM; these modules only configure and validate it.
+
+**`lib/social/platforms/zernio.js`** gained a Comment-to-DM automations section after
+`retryPost`: `interpretAutomation` (normalises both stats naming schemes Zernio uses across
+endpoints — `dmsSent` vs `totalSent` — deliberately drops `delivered`, because Instagram has no
+delivery receipt for a DM, and reads a missing `isActive` as live, since every automation is
+created active and only an explicit `false` means paused); `createCommentAutomation` (a 409 means
+a second active automation on the same post, surfaced as `err.status` for the caller to decide it
+means "already done"); `updateCommentAutomation` (partial patch, e.g. `{isActive:false}` to pause
+one — the only way to switch one off short of deleting it); `deleteCommentAutomation`;
+`listCommentAutomations` (filtered by `profileId` — omitting it lists automations across ALL
+profiles on the API key); `getCommentAutomationLogs` (`status`/`limit`/`skip`, log entries passed
+through unchanged because Zernio's field names for them are undocumented). Every function takes an
+`apiKey` option, so comment-to-DM calls can run on `ZERNIO_DM_API_KEY` instead of the posting key.
+
+**`lib/social/dm/automation.js`** builds the Zernio payload and refuses to let a bad one out.
+Constants: `DM_KEYWORD = 'VOICES'`, `DM_MATCH_MODE = 'word'` (whole-word; `contains` fires on any
+substring and is never used), `CAPTION_CTA`, `DISCLOSURE` (Meta requires an automated chat to say
+so up front), `PUBLIC_REPLY_VARIANTS` (rotated under the reader's comment), and
+`DM_MAX_CHARS = 640` — deliberately below Meta's 1,000-character plain-text limit, so that adding
+a button later (640 is the cap once buttons are attached) can't push a live DM over the limit.
+`articleLink` tags the URL with UTM params and throws on anything not an https URL on the brand's
+own site (checked via `new URL()`, not a string prefix). `buildDmMessage` assembles the DM text.
+`buildAutomation` scopes the automation by `platformPostId`, `postId`, or an explicit
+`accountWide: true`. It sends no `isActive` field and THROWS if the caller passes one: Zernio's
+create endpoint ignores `isActive` — the Z1 spike sent `isActive: false` and got back an
+automation that was live and answering comments — so every automation is LIVE the moment it is
+created. Pausing is a separate call afterwards, `updateCommentAutomation(id, { isActive: false })`.
+
+`validateAutomation`/`assertValidAutomation` list every reason a payload must not be sent, not
+just the first: no keywords (would DM every commenter), a match mode other than `word`/`exact`,
+typo tolerance on, an empty or over-length DM, a missing disclosure, an unfilled template
+placeholder, a link off the brand's site, buttons or a template card (a rejected button message
+uses up Meta's one private reply per comment, ever), and — the self-trigger rule — any public
+reply variant that itself contains the keyword, since our own public reply is a comment and could
+retrigger the automation that posted it. A headline containing a bare domain (e.g. `gov.uk`,
+`X.com`) also fails validation: conservative on purpose, because Instagram linkifies bare domains
+inside DMs. It also checks the payload against `existing` automations for a same-scope keyword
+collision, and that check runs for an ordinary create payload too: a create carries no `isActive`
+and is live anyway, so only an explicit `isActive: false` (a pause) skips it.
+
+**Tests:** `lib/social/platforms/zernio.test.js` and `lib/social/dm/automation.test.js`,
+124/124 passing. Full suite (2026-09-23, after Z4 below): 1294 tests / 1289 pass / the same 5
+long-standing baseline failures. The empty-keyword and self-trigger rules were broken on purpose,
+seen failing (5 tests red), and restored byte-identical.
+
+**Z1 spike — done** (run 3, 2026-09-23; results in `../tasks/comment-to-dm-plan.md` §5 Z1).
+`scripts/zernio-dm-spike.mjs` is read-only by default (lists profiles/accounts/existing
+automations/candidate posts); a LIVE test automation needs `--live` plus `--platform-post-id` or
+`--post-id` — never account-wide (`--account-wide` is refused outright); the key comes only from
+`ZERNIO_API_KEY` typed at a hidden prompt, never a flag; each run overwrites the git-ignored
+`scripts/.zernio-dm-spike-output.json` — run 3's evidence is copied to
+`../tasks/zernio-z1-spike-run3-2026-09-23.json`. Results: Zernio ignores `isActive` on create — a
+payload sent `isActive: false` came back **active**, account-wide, live for < 0.4s before delete,
+0 triggered / 0 sent in that window; the recorded ids are confirmed correct (profile
+`6ab2985ea77a696ba3a9610f`, Instagram account `6ab29cf68d284ffb212e1818` — earlier 404s
+("Profile not found or access denied") were a key from the wrong Zernio workspace, not a wrong
+id); logs come back as `{logs, pagination, misses:{total, retentionDays:14, samples}}` —
+`misses` keeps non-matching comments for 14 days, and a key is scoped to one Zernio workspace.
+Still open, moved to **Z7** (needs real comments on a live automation): `word` vs `exact`
+behaviour on "VOICES please"/"voice"/"#RegionalVoices", how `commentReply` and
+`commentReplyVariations` rotate, per-post vs account-wide precedence, and what `linkTracking`
+does to the visible link.
+
+## Comment-to-DM automations: Z4 sweeper + cron (2026-09-23)
+
+Step **Z4** (`../tasks/comment-to-dm-plan.md` §5). A sweeper, not a publish-path hook — another
+session held `schedule.js`/`autopilot.js`/`review.js` at the time. Shared cross-project playbook:
+`../../../.claude/comment-to-dm-playbook.md`.
+
+**`lib/social/dm/sync.js`** `syncDmAutomations()` reads the pack board (`listPacks`) and builds
+candidates via `candidatesFrom` (Instagram `reel`/`carousel` only, once per `zernioPostId`,
+skipping failed posts and packs with no `url`). Per candidate: `resolveScope` decides what the
+automation binds to (below); a short `nx` KV lease keyed on the Zernio post id keeps two runs off
+one post; a live automation already answering for the post is **adopted**, not recreated; a failed
+create is retried on later runs up to `MAX_ATTEMPTS=3`, then recorded `gave-up`; a payload
+`validateAutomation` rejects is recorded once and never retried; one post's storage failure is
+isolated into `errors` and does not stop the run; the run itself throws only when unconfigured or
+the initial `listCommentAutomations` call fails.
+**`lib/social/handlers/dm-sync.js`** wraps it: always 200 with `{ok:true, ...summary}` (a summary
+reporting `rejected`/`gaveUp`/`errors` is logged via `console.error`, not turned into a failure
+response); a thrown error (e.g. the 503 from unconfigured `dmConfig`) becomes that status. Wired
+into the existing catch-all — no new function — as `GET|POST /api/social/dm-sync`, gated by
+`CRON_SECRET` like the other cron routes; `vercel.json` schedules it `*/5 * * * *`.
+
+**Fixed: no second automation on a retried create.** Zernio's API reference
+(https://docs.zernio.com/llms-full.txt) shows nothing on Zernio's side dedupes a retried create:
+`x-request-id` is honoured only by `POST /posts`, the comment-automations list response carries no
+`postId`, and the documented 409 is only for a duplicate `platformPostId`. So every automation this
+sweeper creates is NAMED `merlows-dm <zernioPostId>` (`nameFor`) — a name that does not change when
+the post moves from scheduled to published. `liveFor(automations, zernioPostId, scope)` adopts any
+live automation whose name matches that, or whose scope (`postId`/`platformPostId`) matches —
+checked both before creating and again on the re-list after a `409`. This replaces the "second
+automation" finding recorded here earlier today: it was under review, and is now fixed.
+
+**Overlapping runs.** The board and any KV records are batch-read once before the loop. Once a
+post's lease is held, its record is read again (`store.get`): a record that has since finished
+(state outside `retry`/`waiting`) counts as `raced` and the post is skipped; a record that changed
+but is still open means another run touched Zernio in between, so `listCommentAutomations` is
+re-fetched before deciding create vs. adopt.
+
+**Scope (`resolveScope`).** A post is named by Zernio's own `postId` only while it is certainly
+unpublished: board status not `published`/`posted` AND its scheduled `at` not yet passed. Once
+either is true, `getPost` decides — matching Zernio's docs, where `postId` is for a not-yet-
+published post and "arms itself when that post publishes", and per-post automations take priority
+over account-wide ones. Published with an Instagram media id reported → `{platformPostId}`; still
+scheduled → `{postId}`; publishing, failed, no media id yet, or the lookup itself failing → `null`
+(the caller waits rather than guessing).
+
+**Waiting.** A `null` scope costs no create attempt: the record is saved `state: 'waiting'` with a
+`since` timestamp (kept from the first time it waited, not reset each run). A post still not
+nameable `WAIT_LIMIT_MS` (24h) after `since` is given up — `state: 'gave-up'`, reason `'never
+nameable by its Instagram media id'` — so it stops costing a lookup every tick.
+
+**Run bounds and order.** `SOCIAL_DM_MAX_PER_RUN` (default 5, floors to 1 on 0/negative/non-numeric)
+caps *create attempts* per run — only `created`/`retrying`/`gaveUp` outcomes count against it;
+`adopted`/`waiting`/`rejected` don't. At most twice that many posts are examined per run regardless
+of outcome. Within a run, never-tried posts go first, then `retry` records, then `waiting` records,
+so posts stuck waiting on Zernio can't crowd out new ones. None of this bounds wall-clock time: a
+slow Zernio can still walk a run into the function's 300s `maxDuration`. A killed run loses
+nothing — records are saved per post, a lease expires on its own, and a lost create is found again
+by name on the next run.
+
+**Env:** `SOCIAL_DM` must be exactly `"on"` (trimmed, case-insensitive) — anything else, including
+unset, is off. **`SOCIAL_DM=off` stops NEW automations only; it does NOT pause automations already
+created** (that kill-all is Z6). `ZERNIO_DM_API_KEY` (separate Sensitive key, no fallback to the
+posting `ZERNIO_API_KEY` — missing is a 503 before any network call), `ZERNIO_PROFILE_ID`,
+`ZERNIO_INSTAGRAM_ACCOUNT_ID`, `SOCIAL_DM_MAX_PER_RUN` (optional). **KV** (through `lib/kv.js`, so
+`KV_PREFIX` applies): `social:dm:auto:<zernioPostId>` — the lasting record (`state`, `automationId`,
+`scope`, `attempts`, `since`, `reason`; TTL 180 days, 7 days while `retry` or `waiting`) — plus
+`social:dm:auto:<zernioPostId>:lease` (TTL 300s).
+
+**Summary keys** (from `syncDmAutomations`): `enabled`, `candidates`, `pending`, `created`,
+`adopted`, `rejected`, `retrying`, `gaveUp`, `waiting`, `busy`, `raced`, `deferred`, plus `errors`
+when a post's own storage call fails. `waiting` and `raced` are new since the fix above.
+
+**Tests:** `lib/social/dm/sync.test.js` (42 cases), `lib/social/handlers/dm-sync.test.js`, and the
+`dm-sync` cases in `lib/social/handlers/social-router.test.js` (cron auth: no bearer → 401 before
+the sweeper runs; right bearer + `SOCIAL_DM` off → 200 `{enabled:false}`, no KV/Zernio call). The
+fake Zernio in `sync.test.js` is shaped from Zernio's documented responses — list and create
+responses carry no `postId` (only the single-automation GET does); an earlier fake echoed it back
+and hid the duplicate-automation bug from every test. Each fix above was sabotage-checked. Full
+suite: 1305 tests, 1300 pass, the same 5 long-standing baseline failures (unrelated to this work).
+
+**Reviews:** `code-reviewer` (full review plus two confirmation runs, clear to ship);
+`security-auditor` (no findings reachable in this diff); `test-writer` (added edge-case coverage,
+including the scope-switch-on-retry case that surfaced the bug fixed above).
+
+**Status: NOT deployed.** Needs `ZERNIO_DM_API_KEY` (Sensitive), `ZERNIO_PROFILE_ID=6ab2985ea77a696ba3a9610f`,
+and `ZERNIO_INSTAGRAM_ACCOUNT_ID` set in Vercel, then a deploy. Stays inert even after deploy until
+`SOCIAL_DM=on` — turning that on is the go-live decision, step **Z7**.
+
+## Telegram review loop hardened (2026-09-23/24)
+
+The social-autopilot Telegram approve/reject buttons (`lib/automation/handlers/telegram.js`,
+`lib/social/pack/review.js`, `lib/social/pack/store.js`, `lib/social/handlers/autopilot.js`,
+`lib/social/handlers/digest.js`) had no reviewer check and a save-order race that could silently
+undo a Reject. A follow-up pass the next day added an archive stage so a pack nobody answers
+does not sit in the queue, or block a work slot, forever. Plan:
+`../tasks/telegram-activation-plan.md`.
+
+**Approver check, fail closed.** `isAllowedReviewer` (`telegram.js`) requires the button press to
+come from `TELEGRAM_CHAT_ID`'s own chat — with `TELEGRAM_CHAT_ID` unset, nothing is allowed,
+since there is then no chat the message could legitimately have been sent to. When
+`TELEGRAM_APPROVER_IDS` (comma-separated Telegram user ids) is also set, `from.id` must be in
+that list; left unset, anyone in the configured chat may press the button. **Known gap, not
+fixed:** a variable that is *set but blank* (`TELEGRAM_APPROVER_IDS=`) splits to `['']`, which
+`.filter(Boolean)` reduces to an empty list — the same list as unset — so it is read as "no
+allowlist" instead of "allow nobody". Reported as a security Low; left as-is. A refused press
+answers "Not authorised to review" and records nothing.
+
+**Decisions live in their own key.** `DECISION_KEY(contentId)` = `social:pack:<id>:decision`,
+written exactly once via `recordDecision` (`store.set(key, record, { nx: true })`). Before this, a
+decision lived as a field on the pack record itself, and both `decide()` and the worker tick did a
+read-modify-write on that whole record: whoever saved last won, so a Reject tapped while a tick
+held an older copy of the pack was erased by the tick's own save — the pack then auto-approved on
+schedule while Telegram still showed "Rejected — not posting", onto accounts no API can delete a
+post from. `SET NX` makes the first decision final in one atomic step instead of two. On success,
+`decide()` also re-queues the pack due now (`zadd`s the queue with `score: Date.now()`), so a
+decision takes effect on the next tick rather than waiting out a review poll. A pack decided
+before the decision key existed keeps whatever decision is on its own record — `withDecision`
+layers the key over `pack.review`, and `decide()` refuses to overwrite an existing one.
+
+**The automatic approval is recorded as late as possible, and can still be taken back.**
+`stageSchedule` (`autopilot.js`) does not record "auto-approved" the moment the review window
+lapses. It records it only after `claimSlots` has already won the pack a place in the day's grid,
+immediately before the first `schedulePost` call — so a pack still waiting for a slot stays
+rejectable, since nothing about it is public yet. It's recorded the same atomic way a person's
+decision is (`recordDecision`), so a Reject pressed at that exact moment races for the same key:
+if the Reject wins, the pack's just-claimed grid slots are released (`releaseSlots`) and the pack
+is dropped; if the auto-approval wins, the reviewer is told it's too late rather than "not
+posting" about a story that's about to go out. If the pass then posts nothing at all — every slot
+ends up deferred for lack of tick time, or the first `schedulePost` call fails in a way that
+certainly happened before the request could reach Zernio — the auto-approval this pass recorded
+is deleted again (`kv.del(DECISION_KEY(...))`), so the pack stays rejectable until a post really
+does go out. A doubtful failure keeps the approval instead (see `mayHaveReachedZernio` below). The
+"auto-approved, being scheduled now" Telegram note (`announce()` → `closeReviewMessage`) is sent
+only once a post has actually reached Zernio, so a kept-but-doubtful approval sends no note either
+— the buttons stay live on a story a press can no longer reject (**reported, not fixed**, below).
+
+**`mayHaveReachedZernio` decides kept vs. retracted.** A timeout, a dropped connection or a 5xx
+can all arrive after Zernio has already scheduled the post, so only a failure that certainly
+happened before the request could land retracts the approval; anything doubtful keeps it and
+leaves the retry's own request id to dedupe. `mayHaveReachedZernio(err)` (`autopilot.js`) keeps
+the approval for `err.reachedZernio === true`, `err.name` of `AbortError`, `TimeoutError` or
+`TypeError`, any `status >= 500`, or a message starting `'Zernio accepted the request'` — what
+`schedulePost` throws once `POST /posts` has answered 2xx, including a 2xx whose body then
+stalled, dropped or came back empty, which `zernioFetch` reads as `{}` (proven against a real
+socket by the security audit). **Open follow-up for the `schedule.js`/`zernio.js` owner, not
+fixed here:** nothing in `schedule.js` ever sets `err.reachedZernio = true`, and `zernioFetch`
+returns `{}` instead of throwing (with the status) for an unreadable 2xx on a POST — the
+message-text match above is a stopgap for both.
+
+**Known gap, not fixed: a Reject after slots were claimed on an earlier tick.** The grid slots a
+pack has won live in `SLOTS_KEY`, independent of the decision key. If a pack claimed slots on one
+tick, deferred every post for lack of tick time (so its auto-approval was rolled back, per above),
+and a Reject is then recorded before the next tick runs, `stageSchedule` sees `reviewState(pack)
+.rejected` at the very top of the function and calls `drop()` — a path that does not call
+`releaseSlots`. The pack is dropped correctly; the slots it held stay marked taken in that day's
+grid until the day rolls over.
+
+**Per-post time budget.** Each `schedulePost` call is given `budgetMs` = whatever the tick has
+left, minus a 10s margin (`SAVE_MARGIN_MS`) kept back for saving the pack record once the posting
+loop stops. A TikTok post is not started with less than `SOCIAL_TIKTOK_MIN_BUDGET_MS` left
+(default 75s): `schedulePost` reserves 30s of whatever budget it's given for the `createPost` call
+that follows the media upload, so the 75s floor leaves the upload — reading the file back out of
+Blob, then `PUT`-ing it into Zernio's own storage (TikTok won't fetch from our Blob domain) — 45s.
+Instagram has no upload leg and floors at 10s (`POST_MIN_BUDGET_MS`) — one JSON call. A slot that
+doesn't clear its format's minimum is not started; it stays `deferred` and is offered back on the
+next tick under the same request id, so nothing here is retried or double-posted. The post-now
+branch (`pack.review.postNow`, used when an approver asks for immediate posting instead of the
+grid) applies the identical per-format guard.
+
+**Sensitive packs never auto-approve.** *(Changed 2026-10-01 — this is now true only when
+`SOCIAL_REVIEW_HOLD_SENSITIVE=on`; by default sensitive packs auto-approve like any other. See
+"Sensitive stories now auto-approve (2026-10-01)" at the end.)* `reviewState` (`review.js`) returns `released: false` —
+reason `"sensitive — waiting for a person, never auto-approved"` — for any pack with
+`social.sensitive` true, every time the auto-approve window would otherwise release it. A human
+approval still releases a sensitive pack; only the clock is blocked.
+
+**A pack with a decision is never held on `requestedAt` alone, and never archived.**
+`reviewState` (`review.js`) checks the recorded decision BEFORE `requestedAt`, so a story approved
+or rejected in the app before its review message ever went out is released or dropped instead of
+held forever — a decided pack skips the send step, so it would otherwise never get a
+`requestedAt` for the old check to find. `stageSchedule`'s archive check mirrors this: it archives
+only when `!pack.review?.decision`, so a pack someone has already ruled on is never a candidate.
+
+**Unanswered reviews are archived, not held forever.** A pack awaiting review is re-checked every
+`SOCIAL_REVIEW_POLL_MS` (default 20 min) instead of every tick; a decision still re-queues the
+pack immediately, so this only bounds how soon the auto-approve window's own lapse is noticed, not
+how soon a real decision takes effect. If no decision arrives within `SOCIAL_REVIEW_ARCHIVE_HOURS`
+(default 72h) of the review request — or, for a request that was never delivered, of the render
+finishing — `store.js`'s `archive()` parks the pack: status `'archived'`, taken out of the queue,
+every asset kept, `archivedAt`/`archivedReason` recorded, and a Telegram reply via `noteArchived`
+on the original message. Because the archive and the decision read are two separate steps,
+`stageSchedule` re-reads the decision key right after `archive()` returns and re-queues the pack
+at once if a decision raced in between — otherwise it would sit invisible, since nothing else ever
+looks at an archived pack. This is Clifton's decision from 2026-09-24: never drop a paid-for pack —
+script, voice, images and renders already bought — for want of an answer. A decision on an
+archived pack — from the Telegram buttons (still live on the original message) or the app's
+`POST /api/social/autopilot/review` route — is the only way back into the queue for it, so
+`decide()` tries the re-queue `zadd` twice for an archived pack (once for any other). A second
+press on a pack already decided is refused the normal way ("already approved"/"already rejected")
+but still re-queues it again, in case the first press's own re-queue was the one that got lost.
+`stageArchived` (`autopilot.js`) then either restores it to `rendered` (stamping `restoredAt`) or
+drops it on reject; with no decision recorded when it's re-queued for some other reason,
+`stageArchived` just takes it off the queue again and leaves it archived. Restoring resets the
+grid-slot deadline: `stageSchedule`'s "gave up waiting for a slot" clock (`SOCIAL_UNSLOTTED_MAX_HOURS`,
+default 72h — a separate knob from the review-archive one above) measures from `restoredAt` when
+it's set, not from the pack's original render. **Warn:** anything that ever prunes the
+`merlows-social` Blob store must exclude archived packs, or a pack approved after archiving comes
+back with its media already deleted.
+
+**Preview buttons, and the message closes after a decision.** `previewButtons` adds a row of URL
+buttons under Approve/Reject: Reel, TikTok, and Carousel — whichever of
+`renders.videos.reel.url`, `renders.videos.tiktok.url` and `renders.stills.cover` exist, each
+stripped of Blob's `?download=1` so it plays instead of downloading. There is no Board button: the
+app has no URL that opens the Autopilot tab directly (`switchTab` is client-side state, never
+reflected in the page's own URL), so there is nothing a Telegram URL button could point at.
+`closeReviewMessage` removes the Approve/Reject buttons (the preview links stay) and posts who
+decided and from where. It runs after a Telegram button decides a pack (`telegram.js`) and after
+the app's `POST /api/social/autopilot/review` route decides one (`autopilot.js`) — so the buttons
+never stay live on a story that's already been ruled on, from either side.
+
+**Legacy in-record decisions are still honoured.** `withDecision` lays the decision key over
+`pack.review`, so a pack decided before the decision key existed keeps whatever decision is on its
+own record — `decide()` refuses to overwrite it.
+
+**Digest.** `buildDigest` (`digest.js`) merges every listed pack with its decision key before
+counting anything, so an approved-but-unslotted pack isn't miscounted as still awaiting review.
+The "waiting on your review" line says what will actually happen, not a blanket "auto-approves":
+routine stories auto-approve after `autoApproveMinutes` (from `SOCIAL_REVIEW_AUTO_MINUTES`)
+minutes, sensitive ones never do *(changed 2026-10-01: only while `SOCIAL_REVIEW_HOLD_SENSITIVE=on`;
+otherwise the line says they all auto-approve after N min)*, and — when the timer is 0 — the line says nothing goes out
+until a decision is made. A "📦 N archived without a decision" line counts every archived pack on
+the board with no decision recorded, not just ones archived in the last 24h: an archived pack can
+wait indefinitely, and the digest is the routine place a person hears about it. The digest handler
+(`digest.js`'s default export) also catches an archived pack whose decision never made it back
+into the queue: before sending, it re-`zadd`s every archived pack that already has a decision
+recorded, and its problems-first line — ahead of everything else in the message — reads "🟠 N
+archived stor(y has|ies have) a decision that was never acted on — re-queued now; the next
+autopilot run acts on it".
+
+**Board support is pending, not done.** `public/index.html` has no handling for `archived` packs
+yet — no chip, no Approve / Approve-and-post-now / Reject actions for them. That's being added by
+the concurrent social-autopilot session, not this one.
+
+**Reviews:** `code-reviewer` (full review plus two confirmation runs, clear to ship);
+`security-auditor` (full review plus two confirmation runs — the last one's remaining finding was
+the `mayHaveReachedZernio` gap above, fixed after that final run and verified with its own probe
+script against a real socket, which flipped all three post-headers cases from RETRACTED to KEPT).
+
+**Tests:** `api/automation/telegram.test.js`, `lib/social/pack/review.test.js`,
+`lib/social/pack/store.test.js`, `lib/social/handlers/autopilot.test.js`,
+`lib/social/handlers/digest.test.js`. Full suite is green apart from the same 5 long-standing
+baseline failures, unrelated to this work.
+
+**Status: NOT deployed — and, correcting what this section said before, not because the env vars
+are missing.** `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET` and
+`TELEGRAM_APPROVER_IDS` **are** set in Vercel Production — verified by name with `vercel env ls`
+on 2026-09-23 — and `SOCIAL_REVIEW_AUTO_MINUTES` is `0` there. What's actually true: none of this
+code is deployed yet, and the webhook has never been registered (`setWebhook` has not been run
+against it), so the live endpoint still answers 503 to every request until the next deploy.
+
+**Reported, not fixed, beyond the two gaps above:** a `SET NX` write that succeeds server-side but
+whose response is lost in transit could be retried by the Upstash client and misread its own win
+as a loss; `closeReviewMessage` and `noteArchived` call `fetch` with no timeout; `TELEGRAM_CHAT_ID`
+must be the numeric chat id — an `@channelname` never matches a callback query's numeric
+`chat.id`; the Telegram path passes `jobId` straight from `callback_query.data` into `decide()`
+with no shape check, unlike the app's `/review` route, which requires `contentId` to match
+`^[A-Za-z0-9_-]{1,80}$`; an approved auto-approval kept after a doubtful failure is never
+announced in Telegram (buttons stay live; a press is refused "already approved"); post-now returns
+at the first format that doesn't fit its budget instead of skipping it (can starve if
+`SOCIAL_TICK_BUDGET_MS` is set below ~85s); `stageArchived`'s no-decision stop leaves the claim's
+lease on the record; the digest's waiting line doesn't distinguish undelivered review requests.
+
+---
+
+## Zernio: two wrong API shapes, found by the first real posts (2026-09-23/24)
+
+The first live pack posted one Reel and nothing else. Both causes were **shapes taken from
+documentation and never checked against a real response**, which is the same mistake as the
+Composio tool slugs and the TikTok privacy-level objects before them. Zernio makes it expensive:
+`POST /posts` **silently ignores unknown keys**, so a wrong field name is not an error, it is a
+post that goes out wrong. Tests written against the guess passed the whole time.
+
+### 1. Instagram post type — `platformSpecificData.contentType`, and only for a Story
+
+`createPost` was sending `platforms[0].instagram = { postType: 'reel'|'story'|'carousel'|'post' }`.
+No such field. Verified at docs.zernio.com/platforms/instagram — Instagram infers the type from
+the media and takes only the Story as an explicit flag:
+
+| what you send | what Instagram makes |
+|---|---|
+| one video | Reel |
+| one image | feed post |
+| several media items | carousel |
+| `platformSpecificData: { contentType: 'story' }` | Story |
+
+So **only `format === 'story'` sends anything**. The consequence of the old code was that every
+Story published as a PERMANENT FEED POST — the opposite of a story's whole point, and
+unrecoverable, because neither platform's API can delete a post.
+
+Other fields on that object worth knowing before reaching for one: `shareToFeed` (Reels),
+`isAiGenerated` (our images are AI-generated and Instagram has a label for it — **not currently
+set, worth a decision**), `firstComment` (the only place a link can go, since captions have none),
+`collaborators`, `locationId`. Stories reject `isPaidPartnership` and `locationId` outright.
+
+### 2. TikTok media must be uploaded to Zernio first (error 40002)
+
+TikTok fetches media by `PULL_FROM_URL` and refuses any domain not verified against the calling
+app, so our `*.public.blob.vercel-storage.com` URL failed every TikTok post:
+
+    code 40002: Please review our URL ownership verification rules
+
+We cannot verify that domain — it is not ours, and **the app is Zernio's own shared
+TikTok-for-Business app**, not a Merlows-owned one, so there is no app of ours to be "in sandbox"
+and nothing for us to register. The route is `rehostMedia` in `lib/social/platforms/zernio.js`:
+`POST /media/presign` → `PUT` the bytes to the returned `uploadUrl` (no Authorization header; the
+signature in the URL is the credential) → post the returned `publicUrl`. Instagram is unaffected
+and still posts the Blob URL directly.
+
+**A Zernio upload is deleted after 7 days** unless a post referencing it has published by then —
+`UPLOAD_TTL_MS`. `schedulePost` refuses a TikTok slot further out than that. This matters more now
+that a pack can be `archived`: an archived pack approved later than its upload window needs a
+fresh upload, so `rehostMedia`'s returned `expiresAt` has to be re-checked wherever the upload
+eventually moves to.
+
+### What the review rounds changed, because the first version was worse than it looked
+
+- **The deadline covered time-to-headers only.** `fetch` resolves when response headers arrive, so
+  clearing the timer there left `arrayBuffer()` pulling a whole video with no clock on it. Both
+  stall tests were green because their fake never resolved the fetch at all. `withDeadline(what,
+  ms, fn)` now owns the entire leg. **A test whose fake never resolves the fetch cannot tell you
+  anything about the body.**
+- **A killed function is the double-publish path.** A stall past the platform limit is not a thrown
+  error, it is a kill — so `stageSchedule` never records posts already sent to Zernio, the next
+  tick re-plans the story into a different slot, `requestIdFor` changes, Zernio does not dedupe,
+  and it posts twice. This is why the media legs need deadlines derived from the CALLER's
+  remaining tick budget (`budgetMs` on `schedulePost` → `rehostMedia`), not a fixed constant.
+  `schedulePost` reserves 30s of it for the `createPost` that follows; the caller's floor for
+  starting a TikTok post must stay well above that or the two cancel out.
+- **The size cap ran after `arrayBuffer()`**, so it measured an OOM rather than preventing one. Now
+  refused on declared `content-length` first and enforced chunk by chunk while reading — which
+  also covers an honest length on a compressed body, since `content-length` counts compressed
+  bytes and undici decompresses transparently.
+- **`uploadUrl` is host-allowlisted (`UPLOAD_HOSTS`) and `redirect: 'error'`**, because we send the
+  whole file there unauthenticated; a redirect is followed with method and body intact.
+  `publicUrl` is deliberately https-checked but NOT host-restricted — it is only handed back to
+  Zernio, the host patterns have never been seen in a real presign response, and enforcing an
+  unverified guess would fail 100% of TikTok posts after the upload was paid for. It warns
+  instead, so the first live post reveals the real host.
+
+### Still unverified against a live response
+
+The presign contract itself — request `{filename, contentType, size}`, response
+`{uploadUrl, publicUrl}` — is pinned only by fixtures. **Capture one real presign response
+read-only before relying on it**, the way `scripts/zernio-dm-spike.mjs` does. Nothing else in this
+section is a guess any more.
+
+## Deployed, and the board learns `archived` (2026-09-24)
+
+**Deployed 05:29 UTC as `dpl_95uSMfKeV7oEfBBGzDmTJ2fSo7iF`** (Ready, production, merlows.vercel.app
+aliased to it). The first `vercel --prod` returned "Not authorized" and the retry with
+`--scope clifton-ai-team` went through — the usual account drift, recorded again here because it
+costs someone ten minutes every time. Proof the new build is serving: the Telegram webhook answers
+**401** without a secret and with a wrong one, where it answered **503** before.
+
+This shipped five sessions' work at once: the Zernio post-type and TikTok upload fixes above, the
+Telegram/review hardening, the comment-to-DM sweeper, and the archive behaviour.
+
+**Still unverified in production, because nothing has posted through the new build yet:**
+1. **A Story must land in the story ring and NOT in the grid.** That is the only real proof of the
+   post-type fix; everything else is inference.
+2. **The first TikTok reveals Zernio's real presign host.** Grep the runtime logs for
+   `presign public URL is on an unrecognised host` — if it appears, add the host to `UPLOAD_HOSTS`.
+3. `answered HTTP NNN but its body could not be read` means a request REACHED Zernio and the reply
+   was unreadable. Check Zernio's post list before retrying that pack by hand: the post may exist.
+
+### Two follow-ups from the security audit's final run
+
+- **`schedule.js`** throws its per-platform failure with `{ reachedZernio: true, zernioPostId }`.
+  By then `POST /posts` has answered 2xx, so Zernio already holds a post, and a blind retry makes a
+  second one that no platform API can delete. `mayHaveReachedZernio` reads the flag; matching the
+  message text was the fragile fallback.
+- **`zernioFetch`** no longer turns an unreadable 2xx body into `{}` and calls it success. For
+  POST/PUT/PATCH it throws with `status` and `reachedZernio: true`; GET, HEAD and DELETE stay
+  tolerant, because an empty body is legitimate there and failing them would break
+  `deleteCommentAutomation`.
+
+### The board (`public/index.html`)
+
+`archived` is offered **Approve / Approve & post now / Reject** on the same conditions as
+`rendered` (no decision yet, no posts already sent). Without it the archive is unreachable from the
+only screen that shows it. **Retry stays failed-only** — the server refuses it for anything else.
+
+Its chip is a deeper amber than "awaiting review", on a deliberate scale: **amber = a person must
+act, slate = nothing more will happen, red = something broke.** It must never read as `dropped`.
+
+`autopilotStageIndex('archived')` returns `rendered`'s index so the pips show real progress, with a
+caption that says "built and kept, waiting on your decision" rather than a step number. Archiving
+exists precisely because the work is finished and kept; every pip off would have said the opposite
+about a pack already paid for in full.
+
+### Watch out for
+
+- **A flaky test is worse than a failing one.** The first version of the new timeout tests used
+  millisecond-tight budgets and failed about one run in twelve. Loosened, then run ten times clean.
+- **Blob retention now constrains archiving.** An archived pack is only recoverable while its
+  renders are still in `merlows-social`. Nothing prunes that store today; anything that ever does
+  must exclude archived packs, or the archive hands back a pack whose assets are gone.
+- **Deferred, not moved: the TikTok rehost still happens at schedule time.** Moving it to render
+  time (cheaper retries, reviewer preview on the same URL) needs the `expiresAt` re-check, because
+  an archived pack can be approved long after the 7-day upload window closes. `rehostMedia` already
+  returns `expiresAt` and nothing reads it yet.
+
+---
+
+## Social Autopilot: per-production cost tracking (2026-09-24)
+
+Every pack now records what it actually cost to produce, stage by stage, so the digest and the
+board can show real spend instead of a guess. `lib/social/pack/cost.js` is the single source of
+the rates and the math; `lib/social/handlers/autopilot.js` calls it at each stage.
+
+**Two kinds of figure, and the record says which is which.** OpenRouter returns `usage.cost`
+(USD) on its chat completions, so the **script** and **image** calls are charged at what
+OpenRouter actually billed — `estimated: false`. The speech endpoint returns audio, not a bill,
+and the render sandbox reports no CPU time, so **voice** and **render** are always priced from
+the rates in `cost.js` and marked `estimated: true`. A response with no usage block at all (should
+not happen, but is handled) is charged nothing and still marked estimated, so a zero is never
+passed off as a measured figure.
+
+**Rates** (`rates()` in `cost.js`, re-read on every call so an env change takes effect without a
+redeploy): script fallback (used only when OpenRouter omits `usage.cost`) $0.30/M input tokens and
+$2.50/M output tokens (Gemini 2.5 Flash pricing), image fallback $0.03/image, voice $15/M
+characters (Fish Audio S2.1 Pro's published price — a `:free` TTS model is always $0), one
+rendered still (a carousel slide or story card) $0.0017 (measured 2026-09-24, ~$0.012 for seven
+stills), and a video render $0.0037/minute the sandbox is alive — wall time, not CPU time, because
+the sandbox bills until the next poll stops it, so a slow poll costs money (measured 2026-09-24,
+~$0.035 over a ~9.5-minute-alive sandbox). Each is overridable: `SOCIAL_COST_SCRIPT_IN_PER_M`,
+`SOCIAL_COST_SCRIPT_OUT_PER_M`, `SOCIAL_COST_TTS_PER_M_CHARS`, `SOCIAL_COST_IMAGE_USD`,
+`SOCIAL_COST_STILL_USD`, `SOCIAL_COST_VIDEO_USD_PER_MIN`.
+
+**Where it's written.** `addCost(cost, stage, charge)` returns a new `pack.cost` record shaped
+`{ script: {usd, estimated}, voice, images, render: {usd, estimated}, totalUsd }` — `render` folds
+together both the per-still and per-video-minute charges, since both happen in the render stage.
+`autopilot.js` calls it after scripting (`stageScript`), after voicing (`stageVoice`), after
+imaging (`stageImage`), after each still is rendered, and after each video cut's poll resolves
+(charged for the whole time the sandbox was alive, whether the render succeeded, failed, or
+expired). **A failed stage still keeps its spend**: `withCost(err, pack, stage)` attaches
+`err.cost` to a thrown error, and the tick's catch block (`if (err?.cost) progress.cost =
+err.cost`) saves it onto the pack record before marking the pack failed — money already spent
+survives the failure that stopped the pack going further.
+
+**Board.** `GET /api/social/autopilot/packs` now returns `cost` (`p.cost ?? null`) on every pack
+alongside `voice`/`error`/`updatedAt` — packs produced before this shipped have no `cost` field at
+all, not a zero one.
+
+**Digest.** `buildDigest` (`lib/social/handlers/digest.js`) calls `summariseCosts(finished,
+failed)` (`cost.js`) over every pack whose `renderedAt` falls in the trailing 24h window. It
+returns `{ stories, untracked, totalUsd, averageUsd, byStage, failedUsd, failedStories }`:
+`stories` is how many finished packs actually carry a `cost` record; `untracked` is
+`finished.length - stories` — packs from before this change, which the average deliberately
+excludes rather than silently treating as free; `failedUsd`/`failedStories` sum spend on packs
+that failed or were dropped in the window, since money paid for a story that will never go out is
+still worth seeing. `costLines()` renders the Telegram block, headed "💷 *Production cost*": total
++ per-story average, a `· script $x · voice $x · images $x · render $x` breakdown, an
+"N produced before cost tracking began, not counted" line when `untracked` is nonzero, a wasted-
+spend line when `failedUsd` is nonzero, and a closing note that voice/render are estimates while
+script/images are OpenRouter's billed amounts. The whole block is omitted when there is nothing to
+show (`!cost.stories && !cost.untracked && !cost.failedUsd`).
+
+No new env vars beyond the six rate overrides above — see `.env.example`.
+
+## Social Autopilot: board switch for auto-approve minutes (2026-09-24)
+
+**Status: deployed 2026-09-24** with the cost tracking above (Vercel deployment `84idSSdrtXeQJtNB35Q1EQprEh3y`, aliased merlows.vercel.app). Verified live: the served page contains the auto-approve controls, and `GET /api/social/autopilot/auto-approve` returns 401 when signed out. The switch starts Off; production's `SOCIAL_REVIEW_AUTO_MINUTES` is 0.
+
+A KV-backed switch on the Autopilot board lets an operator turn auto-approve on or off, and set
+its window, without a redeploy — `SOCIAL_REVIEW_AUTO_MINUTES` only takes effect on deploy, which
+is no use mid-incident (same reasoning as the existing pause flag).
+
+**Storage.** `lib/social/pack/review.js`: `AUTO_APPROVE_KEY = 'social:autopilot:auto-approve'`,
+written/read through `lib/kv.js`'s `kv` (so `KV_PREFIX` applies, same as every other social key).
+The stored value is `{ minutes, updatedAt }`, where `0` means off. `AUTO_APPROVE_DEFAULT_MINUTES`
+is 120 — used when the board switches auto-approve on without specifying minutes.
+`AUTO_APPROVE_MIN_MINUTES` (5) and `AUTO_APPROVE_MAX_MINUTES` (1440, i.e. 24h) bound the window:
+under 5 minutes isn't a review, and over a day is really "off".
+
+**Precedence.** `autoApproveMs()` reads `boardMinutes ?? process.env.SOCIAL_REVIEW_AUTO_MINUTES ??
+0` (the last default was 60 until 2026-09-24; with the env var unset a KV blip then turned
+auto-approve ON), so once the board's value has been loaded it overrides the env var entirely (including
+overriding it to a non-zero value when the env var is `0`, and vice versa). `loadAutoApprove(store
+= kv)` is what loads it — called once at the start of every autopilot tick and once at the start
+of building the digest, so every decision made within one run sees a single consistent value. A
+KV read failure, or a stored value that fails `validMinutes` (not `0` and not a whole number in
+range), falls back to the env var rather than an instance's previously-read value — and with the
+env var at `0` or unset, a KV blip fails towards "a person decides," never towards posting
+unreviewed. `autoApproveSetting()` reports `{enabled, minutes, source: 'env'|'board'}` for the
+board's status display and the endpoint below.
+
+**Endpoint.** `GET|POST /api/social/autopilot/auto-approve`, dispatched inside the existing
+`api/social/[...slug].js` catch-all (no new function), gated the same as the rest of `/api/social`
+— an admin or content session. `GET` returns `loadAutoApprove()`'s result. `POST` takes
+`{ enabled: boolean, minutes?: number }`: `enabled: false` stores `0`; `enabled: true` with no
+`minutes` uses the 120-minute default; a `minutes` value outside 5–1440 on an `enabled: true`
+request is rejected with 400. `setAutoApprove()` (`review.js`) does the validation and the KV
+write, then calls `loadAutoApprove()` again so the response reflects what was actually stored.
+
+**Sensitive stories are still never auto-approved, whatever this switch says.** *(Changed 2026-10-01:
+only while `SOCIAL_REVIEW_HOLD_SENSITIVE=on`. By default the board switch now covers sensitive
+stories too; the endpoint and the board note report `holdSensitive`. See the last section.)* The board setting
+only changes the *window* a routine story waits before release; `reviewState()` in `review.js`
+still refuses to release a pack with `social.sensitive` true on the clock, board switch or not —
+only a person can approve one of those.
+
+**Board UI** (`public/index.html`, Autopilot tab): a button (`#autopilotAutoBtn`,
+`toggleAutopilotAutoApprove()`) reading "Auto-approve: ON (120 min)" / "Auto-approve: OFF", next to
+a minutes `<select>` (`#autopilotAutoMinutes` — 30/60/120/240/480, `changeAutopilotAutoMinutes()`)
+and a status note (`#autopilotAutoNote`). `loadAutopilotAutoApprove()` GETs the setting on load;
+`saveAutopilotAutoApprove(enabled, minutes)` POSTs a change and toasts the result. **Turning it ON
+asks for confirmation first** (`window.confirm`): "Turn on auto-approve? Routine stories nobody
+has decided on will post to the live Instagram and TikTok accounts N minutes after the review
+request. Sensitive stories still wait for you. Posts cannot be deleted through the API." *(Changed
+2026-10-01: that sentence is shown only when `holdSensitive` is on; otherwise the prompt says every
+story, sensitive ones included, will post.)* Turning it
+off, or just changing the minutes while it's already on, does not prompt.
+
+No new env vars for this feature — it reuses the existing `SOCIAL_REVIEW_AUTO_MINUTES` as the
+fallback (see the corrected Telegram Bot section above).
+
+## The TikTok upload moved to render time (2026-09-24)
+
+The video is now uploaded into Zernio's storage as soon as every cut renders, not when the post
+is scheduled. A retry is then free, and Approve → published is one API call instead of a whole
+file transfer across the Atlantic.
+
+**What archiving forced.** A Zernio upload dies 7 days after it is MADE, and an archived pack can
+be approved days later. So the question at schedule time is never "is this upload alive now" but
+**"will it be alive when this post PUBLISHES"** — `uploadFor(pack, url, { publishesAt })` compares
+against `Math.max(publishesAt, now)` plus `UPLOAD_REFRESH_MARGIN_MS` (24h), and `schedulePost`
+uploads again when it will not. Storage is `pack.uploads[<source blob url>]`, one entry per pack:
+`videos.tiktok.url` is written once and never re-rendered once set, so the key is stable.
+
+Pieces: `ensureTiktokUpload` (schedule.js, called from `stagePollRenders`), `uploadFor`,
+`schedulePost`'s reuse-or-refresh loop, and `takeUpload` (autopilot.js).
+
+**The pre-upload is BEST EFFORT and must stay that way.** `stagePollRenders` catches and logs;
+`schedulePost` still uploads inline if it did not happen. Throwing there would discard a finished
+story — script, voice, images and both renders, all paid for — because a pre-fetch did not fit in
+a tick.
+
+### Three traps found in review, all of them the same shape
+
+1. **"No budget given" and "given, and there is none left" are OPPOSITE instructions.** A
+   `budgetMs > 0 ? budgetMs : DEFAULT` test reads a spent budget as absent and hands the FULL 90s
+   default to the one caller that must not start — which is how a tick gets killed, and a killed
+   tick loses the render costs just tallied. `rehostMedia` now keys on `undefined`/`null`; a
+   non-positive number reaches `withDeadline` and is refused. `ensureTiktokUpload` declines early.
+2. **A fresh upload must reach the CALLER.** `schedulePost` returns it as `upload`; `takeUpload`
+   lifts it onto `pack.uploads` and strips it from the post record, because `pack.posts` is the
+   published history and an expiring URL does not belong in it. Every patch in `stageSchedule`
+   that saves `posts` must also save `uploads`, including `Object.assign(err, { posts, uploads })`
+   and the tick's catch.
+3. **A guard that cries wolf gets silenced.** The structural test over `stageSchedule` first
+   flagged `stageConfirmPosts`, which never uploads; it is now scoped to the one function.
+
+### Watch out for
+
+- **Two of five sabotage checks did not go red first time**, and one of those was a `sed` that
+  silently mangled on a `||` — which looks exactly like a check that passed. **Print what the
+  sabotage changed, not just the test result.** The gaps that hid behind them: nothing caught the
+  loops simply not calling `takeUpload`, and nothing tested `rehostMedia`'s own budget layer
+  because `ensureTiktokUpload` refuses first. Both are now covered.
+- `uploadFor` re-checks staleness but NOT scheme or host. Safe by construction — the only writers
+  are in this file, from a `publicUrlTarget`-validated result, and no route accepts an `uploads`
+  field — not safe by code. The invariant is written above the function; anything that ever merges
+  into `pack.uploads` must validate.
+
+## Sensitive stories now auto-approve (2026-10-01)
+
+**Status: NOT deployed.** Behaviour change on Clifton's instruction. Why: the articles are checked
+before they are published, so a story the script flags `social.sensitive` no longer needs a
+separate permanent hold.
+
+- **New env var `SOCIAL_REVIEW_HOLD_SENSITIVE`**, read by `holdSensitive()` in
+  `lib/social/pack/review.js`. Default **off** (unset or anything else). Exactly `on` (trimmed,
+  case-insensitive) restores the old hold: a sensitive pack is never released on the clock. It is
+  env only, so it needs a redeploy, and **the board cannot switch it**.
+- **With it off**, `reviewState` releases a sensitive pack on the same clock as a routine one: the
+  board switch (KV `social:autopilot:auto-approve`) or `SOCIAL_REVIEW_AUTO_MINUTES`, once the review
+  request was delivered. Reason string: `auto-approved after N min`. With it on, the reason is
+  still `sensitive — waiting for a person, never auto-approved`.
+- **Unchanged:** a recorded Reject always wins (checked first in `reviewState`); a human Approve
+  still releases; `SOCIAL_REVIEW_GATE=sensitive` still means only flagged packs are sent for
+  review; auto-approve stays off when the minutes are 0.
+- **Telegram review message** (`reviewMessage`): the "Sensitive: this one waits for a person and
+  never auto-approves." line appears only when the pack is sensitive AND the hold is on. Otherwise
+  any pack, sensitive or not, gets "Auto-approves in N min if nobody replies." when auto-approve is
+  on. The `SENSITIVE` tag next to the category stays.
+- **Digest** (`digest.js`): `buildDigest` now returns `holdSensitive`. The "waiting on your review"
+  line says "N sensitive never do" only when the hold is on; otherwise it says "they auto-approve
+  after N min".
+- **Board / endpoint:** `autoApproveSetting()` (so `GET|POST /api/social/autopilot/auto-approve`)
+  now returns `{ enabled, minutes, source, holdSensitive }`. In `public/index.html` the note under
+  the switch and the turn-on confirmation say "sensitive ones included" when `holdSensitive` is
+  false, and keep "Sensitive stories still wait for you" when it is true.
+- **Consequence to know:** with the board switch on, a sensitive story now reaches the live
+  Instagram and TikTok accounts with no human decision, and neither platform's API can delete a
+  post. The control is now the pre-publication article check, not this gate.
+- To go live: deploy. No env change is needed for the new default; set
+  `SOCIAL_REVIEW_HOLD_SENSITIVE=on` and redeploy to go back to the old behaviour.
+
+## The posting ceiling now binds post-now too, and the ramp actually advances (2026-10-05)
+
+Two faults found while answering "how much are we posting per day".
+
+**1. The launch ramp never advanced.** `SOCIAL_LAUNCH_DATE` was never set, so `weeksLive()`
+parsed `undefined`, got NaN and returned 0 — pinning `capsFor` to RAMP week 1 (9 posts/day)
+for ever. Set in production to **2026-09-23**, the day the first social posts actually went
+out. Ramp: 9/day → 13/day now, 17/day (the full grid) from **2026-10-14**. It is an env var, so
+it only takes effect on a deploy.
+
+**2. "Approve & post now" walked straight past the ceiling.** `planDay` enforced the cap by how
+many grid times it considered, checking `used[format@time]` — and a post-now post has no grid
+time, so it counted against NOTHING. A day could take a full grid on top of a manual batch:
+production did **24 posts on 24 September and 23 on the 27th against a ceiling of 9**. The
+mechanism that exists to stop a quiet account bursting through an API was being bypassed by the
+normal human workflow, while the scheduled path it governs stayed throttled.
+
+Now: post-now books into the same day record under `format@now-<n>` (a time no grid slot uses),
+`planDay` counts every `format@…` key toward the cap, and `spentToday`/`claimImmediate` share
+one pool with the grid. Pieces: `claimImmediate`, `spentToday`, `immediateAssignments({remaining})`
+in schedule.js; the `spent`/`added` counters in `planDay`.
+
+### Three traps, each caught by a review round the previous round's tests had endorsed
+
+1. **A retry re-booked what the pack already held.** A post-now pass ending early is NORMAL —
+   TikTok goes first and needs 75s of tick. `claimImmediate` now reads the pack's OWN bookings
+   (`format@now-*` keyed to its contentId) and grants those without a ceiling check. Without it
+   one story ate both of the day's two TikTok slots, and once the ceiling filled, `remaining`
+   read 0 for a format the pack itself was holding — so that format was dropped and never posted.
+2. **`postNow` IS NOT ON THE PACK.** It lives in the decision record, which `decide()` writes
+   once with SET NX and never edits, and `stageSchedule` spreads that record over `pack.review`
+   on every tick (`withDecision`). So patching `review.postNow: false` is undone immediately.
+   The hand-off to the grid uses a TOP-LEVEL `postNowHandedToGrid` flag, which `withDecision`
+   does not overlay and `savePack({ ...pack, ...patch })` persists. **Anything that needs to
+   outlive a tick must not live under `review`.**
+3. **A deferred format must be re-routed or it is lost.** Advancing after a partial post-now
+   takes the pack to `slotted` and the grid never sees it. It now STAYS at `rendered` with the
+   flag set, and the grid books the remainder at a real slot time.
+
+### Watch out for
+
+- **A test can be green against code that cannot work.** The first version of the post-now tests
+  put `review: { postNow: true }` straight on the pack record with no decision key — a shape the
+  real approve flow never produces — so they passed against a fix the decision record undid on
+  the next tick. Rewritten to stub `DECISION_KEY` as `decide()` writes it and to run TWO ticks.
+  Reverting the source to the broken version now takes the suite from 0 failures to 2; before,
+  it stayed green. **Older tests at autopilot.test.js:2083 and :3639 still use the unrealistic
+  shape** — harmless, but they do not prove the production path.
+- **A sabotage that does not apply looks exactly like a passing check.** Two of four `sed`
+  mutations silently failed here, one of them on `||` in the pattern (use a different delimiter,
+  e.g. `s@...@...@`). Always print a before/after match count, not just the test result.
+
+## Social spend cuts (2026-10-13)
+
+Three changes to cut OpenRouter and fal spend. Plain-language reasons are in the code comments.
+
+- **One generated still per story by default.** `STILLS_PER_PACK` in `lib/social/pack/images.js` now defaults to 1 (was 2); the other key points reuse the hero. `SOCIAL_STILLS_PER_PACK=2` restores the old behaviour (env only, needs a redeploy). `imagePack` also takes a `stills` option. With NO hero the pack depends on its stills, so one spare brief is offered: if the first image fails, the next is tried, and it stops as soon as one works.
+- **Default image fallback chain is two models**: `google/gemini-3.1-flash-lite-image`, then `google/gemini-2.5-flash-image`. `google/gemini-3.1-flash-image` is no longer in the default chain (it is still a valid slug for `SOCIAL_IMAGE_MODELS`, the hero picker and `ALLOWED_MODELS` in `lib/social/handlers/image.js`). Supersedes the older notes above that call 3.1-flash-image the primary model.
+- **The fal.ai Kling video path is off.** `startVideoGeneration` in `lib/social/media.js` throws unless `SOCIAL_LEGACY_VIDEO=on`. "Generate Kit" used to start two clips per click and the autopilot never posts them (it renders its own video in Remotion). `FAL_KEY` is not set in production, so those calls were failing anyway.
+
+Not changed: the render sandbox stays alive ~9.5 minutes because the autopilot cron runs every 10 minutes and a finished render is only noticed on the next tick (about $2/month). Polling sooner means a faster cron, with overlapping ticks and faster retry exhaustion as the risk.

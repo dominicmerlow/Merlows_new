@@ -32,8 +32,9 @@ export default async function handler(req, res) {
     )
   );
 
-  const published = results.filter(r => r.status === 'fulfilled').length;
-  const failed    = results.filter(r => r.status === 'rejected').length;
+  // fetch() resolves on any HTTP response, so a 422 (publish guard) or 502 is a failure too.
+  const published = results.filter(r => r.status === 'fulfilled' && r.value.ok).length;
+  const failed    = results.length - published;
   console.log(`Cron: ${published} published, ${failed} failed, ${due.length} due`);
   return res.json({ published, failed, total: due.length });
 }

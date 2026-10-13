@@ -36,9 +36,11 @@ export default async function handler(req, res) {
     // automatically (the old POST-only cron branch made the daily 09:00 tick 404).
     //   GET|POST /social/cron               → queue drain
     //   GET|POST /social/connections/check  → daily platform health check + Telegram alert
+    //   GET|POST /social/dm-sync            → comment-to-DM automations for new Instagram posts
     const isCronRoute =
       resource === 'cron' ||
       resource === 'digest' || // the daily "what went out" report
+      resource === 'dm-sync' ||
       (resource === 'connections' && id === 'check') ||
       (resource === 'autopilot' && !id); // the worker tick; its sub-routes need a session
     if (isCronRoute) {
@@ -51,6 +53,10 @@ export default async function handler(req, res) {
       if (resource === 'digest') {
         const { default: digestHandler } = await import('../../lib/social/handlers/digest.js');
         return await digestHandler(req, res);
+      }
+      if (resource === 'dm-sync') {
+        const { default: dmSyncHandler } = await import('../../lib/social/handlers/dm-sync.js');
+        return await dmSyncHandler(req, res);
       }
       if (resource === 'autopilot') return await autopilotHandler(req, res, null);
       return await connectionsHandler(req, res, id);

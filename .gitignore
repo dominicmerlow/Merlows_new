@@ -14,4 +14,6 @@ node_modules/
 scripts/.create-wp-authors-output.json
 scripts/.backfill-authors-state.json
 scripts/.backfill-authors-report*.csv
+# Zernio comment-to-DM spike: raw API responses (account ids, no keys)
+scripts/.zernio-dm-spike-output.json
 .env*

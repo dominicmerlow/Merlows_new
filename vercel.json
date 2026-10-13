@@ -31,6 +31,7 @@
     { "path": "/api/social/cron",                   "schedule": "0 9 * * *" },
     { "path": "/api/social/autopilot",              "schedule": "*/10 5-21 * * *" },
     { "path": "/api/social/connections/check",      "schedule": "0 6 * * *" },
-    { "path": "/api/social/digest",                 "schedule": "45 22 * * *" }
+    { "path": "/api/social/digest",                 "schedule": "45 22 * * *" },
+    { "path": "/api/social/dm-sync",                "schedule": "*/5 * * * *" }
   ]
 }
