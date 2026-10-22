@@ -2253,3 +2253,23 @@ Three changes to cut OpenRouter and fal spend. Plain-language reasons are in the
 - **The fal.ai Kling video path is off.** `startVideoGeneration` in `lib/social/media.js` throws unless `SOCIAL_LEGACY_VIDEO=on`. "Generate Kit" used to start two clips per click and the autopilot never posts them (it renders its own video in Remotion). `FAL_KEY` is not set in production, so those calls were failing anyway.
 
 Not changed: the render sandbox stays alive ~9.5 minutes because the autopilot cron runs every 10 minutes and a finished render is only noticed on the next tick (about $2/month). Polling sooner means a faster cron, with overlapping ticks and faster retry exhaustion as the risk.
+
+## Two OpenRouter keys: articles vs social media (2026-10-22)
+
+Clifton issued separate OpenRouter keys so social spend cannot drain the article budget.
+
+- **`OPENROUTER_API_KEY`**: articles and hero images. Covers `run.js` (article LLM), `revise.js`,
+  `llm-proxy.js`, `generateImageFast` (automation and backfill heroes), `/api/social/image` (the
+  Generator's hero card, despite its path), plus the social TEXT calls (`build-pack.js` scripts,
+  `generate.js` captions) and the `connections.js` health check.
+- **`MERLOWS_OPENROUTER_KEY`**: social images and voice-over. Covers autopilot stills
+  (`image-client.js`), social-kit images (`generateImage` and its `craftImagePrompt` leg) and
+  `voice.js`. Read via `socialOpenRouterKey()` in `lib/social/media.js`, which throws
+  "MERLOWS_OPENROUTER_KEY is not configured". There is deliberately **no fallback** to the article
+  key.
+- `generateWithFallback` takes an `apiKey` option and defaults to `OPENROUTER_API_KEY`, so any new
+  hero caller is billed to the article key unless it passes the social key.
+- `SOCIAL_TTS_API_KEY` is retired and was deleted from Vercel.
+- The WordPress theme's AI chat (`wordpress-theme/merlows/inc/ai-chat.php`) also reads a constant
+  named `MERLOWS_OPENROUTER_KEY`, from `wp-config.php`. That is a separate runtime and setting:
+  changing the Vercel variable does not change the chat's key.
