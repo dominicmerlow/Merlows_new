@@ -2261,7 +2261,10 @@ Clifton issued separate OpenRouter keys so social spend cannot drain the article
 - **`OPENROUTER_API_KEY`**: articles and hero images. Covers `run.js` (article LLM), `revise.js`,
   `llm-proxy.js`, `generateImageFast` (automation and backfill heroes), `/api/social/image` (the
   Generator's hero card, despite its path), plus the social TEXT calls (`build-pack.js` scripts,
-  `generate.js` captions) and the `connections.js` health check.
+  `generate.js` captions).
+- **Daily health check** (`connections.js`, 06:00 cron): `openrouter` probes `OPENROUTER_API_KEY`
+  and `openrouterSocial` probes `MERLOWS_OPENROUTER_KEY`, both via `GET /api/v1/key`. A rejected
+  key sends a Telegram alert. An unset key is skipped silently, like every other platform.
 - **`MERLOWS_OPENROUTER_KEY`**: social images and voice-over. Covers autopilot stills
   (`image-client.js`), social-kit images (`generateImage` and its `craftImagePrompt` leg) and
   `voice.js`. Read via `socialOpenRouterKey()` in `lib/social/media.js`, which throws
